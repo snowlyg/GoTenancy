@@ -1,0 +1,7 @@
+{{$value := (raw_value_of .ResourceValue .Meta)}}
+{{$url := url_for $value}}
+{{if (and $url (defined_resource_show_page .Meta.Resource))}}
+  {{if not (is_new_record $value)}}<a data-url="{{$url}}" href="{{$url}}">{{.Value}}</a>{{end}}
+{{else}}
+  {{.Value}}
+{{end}}

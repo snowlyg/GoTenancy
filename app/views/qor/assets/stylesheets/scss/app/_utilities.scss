@@ -1,0 +1,62 @@
+// Utility classes
+// --------------------------------------------------
+
+// Floats
+// -------------------------
+
+.clearfix {
+    @include clearfix();
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.center-text {
+    text-align: center;
+}
+
+// Toggling content
+// -------------------------
+
+.shown,
+.is-shown {
+    display: block !important;
+}
+
+.hidden,
+.is-hidden {
+    display: none !important;
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.2s linear;
+
+    &.in {
+        opacity: 1;
+    }
+}
+
+.collapse {
+    display: none;
+
+    &.in {
+        display: block;
+    }
+}
+
+.collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+advanced-filter-group {
+    display: block;
+}

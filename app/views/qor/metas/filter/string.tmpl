@@ -1,0 +1,24 @@
+<advanced-filter-group class="qor-field clearfix" type="filter-string">
+  {{ $opt := .Context.Request.URL.Query.Get (print .InputNamePrefix ".Operation") }}
+
+  <label class="qor-field__label">
+    {{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}
+  </label>
+
+  <div class="qor-field__flexbox">
+    <select name="{{.InputNamePrefix}}.Operation" data-toggle="qor.selector" placeholder="{{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}">
+      <option value="conts" {{if (or (eq $opt "conts") (eq $opt ""))}}selected{{end}}>{{t "qor_admin.filter.strings.conts" "Contains"}}</option>
+      <option value="eq" {{if (eq $opt "eq")}}selected{{end}}>{{t "qor_admin.filter.strings.eq" "Equals"}}</option>
+      <option value="start_with" {{if (eq $opt "start_with")}}selected{{end}}>{{t "qor_admin.filter.strings.start_with" "Start with"}}</option>
+      <option value="end_with" {{if (eq $opt "end_with")}}selected{{end}}>{{t "qor_admin.filter.strings.end_with" "End with"}}</option>
+    </select>
+
+    {{ $value := .Context.Request.URL.Query.Get (print .InputNamePrefix ".Value") }}
+    <div class="qor-field__edit">
+      <div class="mdl-textfield mdl-js-textfield">
+        <label class="qor-field__label mdl-textfield__label"></label>
+        <input class="mdl-textfield__input" type="text" name="{{.InputNamePrefix}}.Value" value="{{$value}}" filter-required>
+      </div>
+    </div>
+  </div>
+</advanced-filter-group>

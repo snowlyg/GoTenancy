@@ -1,0 +1,22 @@
+<advanced-filter-group class="qor-field clearfix" type="filter-number">
+  <label class="qor-field__label">
+    {{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}
+  </label>
+
+  <div class="qor-field__flexbox">
+    {{ $opt := .Context.Request.URL.Query.Get (print .InputNamePrefix ".Operation") }}
+    <select name="{{.InputNamePrefix}}.Operation" data-toggle="qor.selector" placeholder="{{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}">
+      <option value="eq" {{if (or (eq $opt "eq") (eq $opt ""))}}selected{{end}}>{{t "qor_admin.filter.number.eq" "Equals"}}</option>
+      <option value="gt" {{if (eq $opt "gt")}}selected{{end}}>{{t "qor_admin.filter.number.gt" "Greater than"}}</option>
+      <option value="lt" {{if (eq $opt "lt")}}selected{{end}}>{{t "qor_admin.filter.number.lt" "Less than"}}</option>
+    </select>
+
+    {{ $value := .Context.Request.URL.Query.Get (print .InputNamePrefix ".Value") }}
+    <div class="qor-field__edit">
+      <div class="mdl-textfield mdl-js-textfield">
+        <label class="qor-field__label mdl-textfield__label"></label>
+        <input class="mdl-textfield__input" type="text" name="{{.InputNamePrefix}}.Value" value="{{$value}}" filter-required>
+      </div>
+    </div>
+  </div>
+</advanced-filter-group>

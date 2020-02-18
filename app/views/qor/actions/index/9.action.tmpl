@@ -1,0 +1,28 @@
+{{$context := .}}
+{{$result := .Result}}
+{{$allowed_actions := (allowed_actions $context.Resource.GetActions "batch")}}
+{{$resource := .Resource}}
+
+{{if gt (len $allowed_actions) 0 }}
+  <div class="qor-action-bulk-edit" data-toggle="qor.action.bulk">
+    <div class="qor-action-forms" style="display: none;">
+      {{range $action := $allowed_actions}}
+        {{render_with "shared/action_item" (to_map "Action" $action "Result" $result "Context" $context "Resource" $resource "BulkEdit" true)}}
+      {{end}}
+    </div>
+
+    <div class="qor-action-bulk-buttons">
+      <button class="mdl-button mdl-button--colored qor-action--bulk" type="button">{{t "qor_admin.actions.bulk_edit" "Bulk Edit"}}</button>
+      <button class="mdl-button mdl-button--accent qor-action--exit-bulk hidden" type="button">{{t "qor_admin.actions.exit_bulk_edit" "Exit Bulk Edit"}}</button>
+    </div>
+  </div>
+{{end}}
+
+{{$collection_actions := (allowed_actions $context.Resource.GetActions "collection")}}
+{{if gt (len $collection_actions) 0 }}
+  <div class="qor-actions qor-collection-actions" style="float: right">
+    {{range $action := $collection_actions}}
+      {{render_with "shared/action_item" (to_map "Action" $action "Result" $result "Context" $context "Resource" $resource "Multiple" true)}}
+    {{end}}
+  </div>
+{{end}}

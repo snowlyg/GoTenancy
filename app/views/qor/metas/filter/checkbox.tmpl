@@ -1,0 +1,17 @@
+<advanced-filter-group class="qor-field clearfix">
+  {{ $opt := .Context.Request.URL.Query.Get (print .InputNamePrefix ".Value") }}
+  <label class="qor-field__label">
+    {{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}
+  </label>
+
+  <div class="qor-field__flexbox">
+    <select name="{{.InputNamePrefix}}.Value" data-toggle="qor.selector" data-allow-clear="true" placeholder="{{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}">
+      <option></option>
+      <option value="t" {{if (eq $opt "t")}}selected{{end}}>{{t "qor_admin.filter.checkbox.true" "True"}}</option>
+      <option value="f" {{if (eq $opt "f")}}selected{{end}}>{{t "qor_admin.filter.checkbox.false" "False"}}</option>
+      <option disabled>---</option>
+      <option value="present" {{if (eq $opt "present")}}selected{{end}}>{{t "qor_admin.filter.checkbox.is_present" "Is Present"}}</option>
+      <option value="blank" {{if (eq $opt "blank")}}selected{{end}}>{{t "qor_admin.filter.checkbox.is_blank" "Is Blank"}}</option>
+    </select>
+  </div>
+</advanced-filter-group>
