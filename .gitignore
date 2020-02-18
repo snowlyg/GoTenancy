@@ -1,4 +1,5 @@
-backend/GoTenancy.exe
-backend/GoTenancy
+*.exe
+GoTenancy
 /.idea
 coverage.txt
+*.db
