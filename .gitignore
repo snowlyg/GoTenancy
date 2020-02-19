@@ -30,7 +30,7 @@ _testmain.go
 runner-build
 qor-example
 
-config/database*yml
+#config/database*yml
 #public/system
 public/downloads
 #config/admin/bindatafs/templates_bindatafs.go
