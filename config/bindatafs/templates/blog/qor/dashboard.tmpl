@@ -1,0 +1,70 @@
+<div class="qor-page__body">
+  {{render "shared/flashes"}}
+  {{render "shared/errors"}}
+
+  <div class="qor-section introduction">
+    <h5>This is the DEMO app for Qor</h5>
+    Github: <a href="http://github.com/qor/qor" target="_blank">github.com/qor/qor</a><br/>
+    WebSite: <a href="http://getqor.com" target="_blank">getqor.com</a><br/>
+    Source code of this demo: <a href="http://github.com/qor/qor-example" target="_blank">github.com/qor/qor-example</a><br/>
+  </div>
+
+  <!-- if have table please add qor-section__table className -->
+  <div class="qor-section qor-section__table qor-theme-slideout">
+    <div class="qor-section__header">
+      <h4 class="qor-section-title">{{t "Latest Orders"}}</h4>
+    </div>
+    <div class="qor-section__body qor-table-container">
+      {{render_latest_order .}}
+    </div>
+  </div>
+
+  <!-- if have table please add qor-section__table className -->
+  <div class="qor-section qor-section__table qor-theme-slideout">
+    <div class="qor-section__header">
+      <h4 class="qor-section-title">{{t "Latest Products"}}</h4>
+    </div>
+    <div class="qor-section__body qor-table-container">
+      {{render_latest_products .}}
+    </div>
+  </div>
+
+  <div class="qor-section reports">
+    <div class="qor-section__header">
+      <h4 class="qor-section-title">{{t "Reports"}}</h4>
+    </div>
+
+    <div class="mdl-grid reports-daterange">
+      <div class="mdl-cell">
+        <input class="mdl-textfield__input" id="startDate" type="text" data-toggle="qor.datepicker" >
+      </div>
+      <div class="mdl-cell datepicker-separator">
+        -
+      </div>
+      <div class="mdl-cell">
+        <input class="mdl-textfield__input" id="endDate" type="text" data-toggle="qor.datepicker" >
+      </div>
+
+      <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect j-update-record" > {{t "Update Report"}} </button>
+      <button class="mdl-button yesterday-reports" > {{t "Yesterday"}} </button>
+      <button class="mdl-button this-week-reports" > {{t "This Week"}} </button>
+      <button class="mdl-button last-week-reports" > {{t "Last Week"}} </button>
+    </div>
+
+    <script src="/vendors/Chart.min.js"></script>
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--6-col">
+        <h4 class="qor-section-title">{{t "Paid Orders Count"}}</h4>
+        <canvas id="orders_report"></canvas>
+      </div>
+
+      <div class="mdl-cell mdl-cell--6-col">
+        <h4 class="qor-section-title">{{t "Registered Users Count"}}</h4>
+        <canvas id="users_report"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link type="text/css" rel="stylesheet" href="/admin/assets/stylesheets/publish2.css?theme=publish2">
+<script src="/admin/assets/javascripts/publish2.js?theme=publish2"></script>

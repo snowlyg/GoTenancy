@@ -1,0 +1,94 @@
+<script type="text/javascript">
+  var amazonMerchantId = "{{amazon_payment_gateway.MerchantID}}";
+  var amazonOrderReferenceId = null;
+  var amazonOrderReference = null;
+
+  window.onAmazonLoginReady = function() {
+    amazon.Login.setClientId('{{amazon_payment_gateway.ClientID}}');
+  };
+
+  window.onAmazonPaymentsReady = function() {
+    $(function() {
+      if (location.pathname == "/cart") {
+        if ($("#amazon_login_widget").length > 0) {
+          showAmazonButton();
+        }
+      }
+
+      if (location.pathname == "/cart/checkout") {
+        showAmazonAddress();
+      }
+    })
+  };
+
+  function showAmazonButton(){
+    var authRequest;
+    OffAmazonPayments.Button("amazon_login_widget", amazonMerchantId, {
+      type:  "PwA",
+      color: "Gold",
+      size:  "medium",
+      authorization: function() {
+        loginOptions = {
+          scope: "profile payments:widget payments:shipping_address",
+          popup: "false"
+        };
+        authRequest = amazon.Login.authorize (loginOptions, "/cart/checkout");
+      }
+    });
+  }
+
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
+  function showAmazonAddress(){
+    new OffAmazonPayments.Widgets.AddressBook({
+      sellerId : amazonMerchantId,
+      onOrderReferenceCreate: function(orderReference) {
+        $("#amazon_login_widget").hide()
+        amazonOrderReference = orderReference
+        amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
+        console.log(orderReference)
+
+        $('#checkout-access-token').val(getParameterByName('access_token'))
+        $('#checkout-referenceid').val(amazonOrderReferenceId)
+        showAmazonWallet()
+      },
+      design : {
+        designMode: 'smartphoneCollapsible'
+      },
+      onAddressSelect : function(orderReference) {
+      },
+      onError : function(error) {
+      }
+    }).bind("amazon_addressbook_widget");
+  }
+
+  function showAmazonWallet(){
+    new OffAmazonPayments.Widgets.Wallet({
+      sellerId: amazonMerchantId,
+      amazonOrderReferenceId: amazonOrderReferenceId,
+      onPaymentSelect: function(orderReference) {
+        // Replace this code with the action that you want to perform
+        // after the payment method is selected.
+
+        // Ideally this would enable the next action for the buyer
+        // including either a "Continue" or "Place Order" button.
+      },
+      design: {
+        designMode: 'responsive'
+      },
+      onError: function(error) {
+        console.log(error.getErrorCode() + ': ' + error.getErrorMessage());
+      }
+    }).bind("amazon_wallet_widget");
+  }
+</script>
+
+<script async="async" src='https://static-fe.payments-amazon.com/OffAmazonPayments/jp/sandbox/lpa/js/Widgets.js'></script>

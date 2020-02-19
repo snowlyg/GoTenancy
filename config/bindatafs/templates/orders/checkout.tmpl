@@ -1,0 +1,66 @@
+<main class="container cart-show">
+<div class="grid">
+  {{if .HasAmazon}}
+    <div class="grid__col is-8 amazon-checkout">
+      <h1>Complete Purchase with Amazon Pay</h1>
+
+      <div id="amazon_addressbook_widget"></div>
+      <div id="amazon_wallet_widget"></div>
+
+      <form action="/cart/complete" method="POST">
+        <input id="checkout-access-token" type="hidden" value="" name="amazon_address_access_token" />
+        <input id="checkout-referenceid" type="hidden" value="" name="amazon_order_reference_id" />
+        <button class="button checkout-button__complete">Complete order</button>
+      </form>
+    </div>
+  {{else}}
+    <div class="grid__col is-8 creditcart-checkout">
+      <h1>Complete Purchase with Credit Cart <img src="/images/creditcards.png" height="32px" style="display: inline-block;vertical-align: middle;margin-left: 10px;"></h1>
+
+      <form action="/cart/complete/creditcard" method="POST">
+        <div class="grid" style="margin: 20px 0; padding: 20px; background-color: rgba(0, 0, 0, .02)">
+          <div class="grid__col is-4">
+            <label for="">Card number</label>
+            <input type="text" name="creditcard" />
+          </div>
+          <div class="grid__col is-2">
+            <label for="">Name</label>
+            <input type="text" name="name" />
+          </div>
+          <div class="grid__col is-2">
+            <label for="">Exp Month</label>
+            <input type="text" name="exp_month" />
+          </div>
+          <div class="grid__col is-2">
+            <label for="">Exp Year</label>
+            <input type="text" name="exp_year" />
+          </div>
+          <div class="grid__col is-1">
+            <label for="">CVV</label>
+            <input type="text" name="cvv" />
+          </div>
+        </div>
+        <button type="submit" class="button checkout-button__complete">Complete order</button>
+      </form>
+    </div>
+  {{end}}
+
+  <div class="grid__col is-4 cart-summary">
+    <h2>Order Summary</h2>
+    <ul>
+      <li>
+        <label>Subtotal:</label> <span>${{format_price .Order.Amount}}</span>
+      </li>
+      <li>
+        <label>Delivery:</label> <span>${{format_price .Order.DeliveryFee}}</span>
+      </li>
+      <li>
+        <label>Discount:</label> <span>${{format_price .Order.DiscountValue}}</span>
+      </li>
+      <li class="total">
+        <label>Total:</label> <span>${{format_price .Order.Total}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+</main>
