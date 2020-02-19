@@ -24,6 +24,7 @@ import (
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/utils/funcmapmaker"
+	"github.com/fatih/color"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -108,9 +109,11 @@ func main() {
 	}))
 
 	if *compileTemplate {
-		bindatafs.AssetFS.Compile()
+		if err := bindatafs.AssetFS.Compile(); err != nil {
+			color.Red(fmt.Sprintf("bindatafs error %v", err))
+		}
 	} else {
-		fmt.Printf("Listening on: %v\n", config.Config.Port)
+		color.Yellow(fmt.Sprintf("Listening on: %v\n", config.Config.Port))
 		app := iris.Default()
 		if config.Config.HTTPS {
 			ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux(), TLSConfig: &tls.Config{}}
@@ -123,6 +126,8 @@ func main() {
 				panic(err)
 			}
 		}
+
+		// 使用 net/http 原生包
 		//if config.Config.HTTPS {
 		//	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
 		//		panic(err)
