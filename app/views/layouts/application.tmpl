@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    {{render_seo_tag}}
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0"/>
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i|Playfair+Display|Raleway" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/dist/home_products.css" />
+    <link type="text/css" rel="stylesheet" href="/vendors/flexslider.css" />
+    <link rel="stylesheet" media="all" href="/dist/qor.css">
+    <script src="/vendors/jquery.js"></script>
+    <link href="//use.fontawesome.com/6a90f27203.css" media="all" rel="stylesheet">
+  </head>
+
+  <body>
+    {{ if current_user }}
+      {{render_action_bar}}
+    {{end}}
+
+    <div class="header">
+      <header class="container">
+        <div class="grid">
+          <input type="checkbox" id="header-menustate" class="header__menustate" style="display: none" />
+          <label class="header__mobileicon" for="header-menustate">
+            <i class="material-icons">&#xE3C7;</i>
+          </label>
+
+          <div class="grid__col is-2 header__logo">
+            <a href="/" class="logo"><img src="/images/logo.png" /></a>
+          </div>
+
+          <a href="#" class="header__mobilemenu-cart">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          </a>
+
+          <div class="header__mobilemenu grid__col is-10">
+            <div class="header__menu">
+              <a href="/">Home</a>
+              <a href="/men">men</a>
+              <a href="/women">women</a>
+              <a href="/kids">kids</a>
+            </div>
+
+            <div class="header__func {{ if current_user }}header__func-login{{end}}">
+              {{ if current_user }}
+                <a href="/account">{{ t "layout.header_link.my_account" "account"}}</a>
+              {{ else }}
+                <a href="/auth/login">{{ t "layout.header_link.sign_in" }}</a>
+                <a href="/auth/register">{{ t "layout.header_link.register" "REGISTER" }}</a>
+              {{ end }}
+
+              <a href="/cart" class="header__menu-cart">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        {{range $message := flashes}}
+          {{if eq $message.Type "error"}}
+            <div class="alert alert-danger">{{$message.Message}}</div>
+          {{else}}
+            <div class="alert alert-success">{{$message.Message}}</div>
+          {{end}}
+        {{end}}
+      </div>
+    </div>
+
+    {{ yield }}
+
+    <footer class="footer">
+      <div class="container">
+
+        <div class="grid">
+          <div class="grid__col is-8">
+            <h4>{{ t "layout.connect" }}</h4>
+            <div class="society">
+              <a href="#"><img src="/images/twitter.png" /></a>
+              <a href="#"><img src="/images/facebook.png" /></a>
+              <a href="#"><img src="/images/gplus.png" /></a>
+              <a href="#"><img src="/images/youtube.png" /></a>
+            </div>
+
+            {{ t "layout.about_qor" }}
+
+            <!-- Switch language -->
+            <div class="footer__change-language">
+              <select>
+                <option {{ if (eq current_locale "en-US") }}selected{{end}} value="/switch_locale?locale=en-US">English</option>
+                <option {{ if (eq current_locale "zh-CN") }}selected{{end}} value="/switch_locale?locale=zh-CN">简体中文</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid__col is-4">
+            <h4>{{ t "layout.support_and_info" }}</h4>
+
+            <ul>
+              <li><a href="#">{{ t "layout.footer_link.faq" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.size_guide" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.shipping" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.privacy_policy" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.terms_of_use" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.press" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.about_us" }}</a></li>
+              <li><a href="#">{{ t "layout.footer_link.blog" }}</a></li>
+            </ul>
+          </div>
+        </div>
+    </footer>
+
+    <script src="/dist/app.js"></script>
+    {{render "shared/amazon_pay"}}
+  </body>
+</html>

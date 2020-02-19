@@ -1,94 +1,136 @@
 package main
 
 import (
+	"context"
+	"crypto/tls"
+	"flag"
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 
-	"github.com/fatih/color"
-	"github.com/jinzhu/gorm"
+	"GoTenancy/app/account"
+	adminapp "GoTenancy/app/admin"
+	"GoTenancy/app/api"
+	"GoTenancy/app/enterprise"
+	"GoTenancy/app/home"
+	"GoTenancy/app/orders"
+	"GoTenancy/app/pages"
+	"GoTenancy/app/products"
+	"GoTenancy/app/static"
+	"GoTenancy/config"
+	"GoTenancy/config/application"
+	"GoTenancy/config/auth"
+	"GoTenancy/config/bindatafs"
+	"GoTenancy/config/db"
+	"GoTenancy/utils/funcmapmaker"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/kataras/iris/v12"
 	"github.com/qor/admin"
-	"github.com/qor/auth"
-	"github.com/qor/auth/auth_identity"
-	"github.com/qor/auth/providers/facebook"
-	"github.com/qor/auth/providers/github"
-	"github.com/qor/auth/providers/google"
-	"github.com/qor/auth/providers/password"
-	"github.com/qor/auth/providers/twitter"
-	_ "github.com/qor/qor"
-	"github.com/qor/session/manager"
+	"github.com/qor/publish2"
+	"github.com/qor/qor"
+	"github.com/qor/qor/utils"
 )
 
-// Define a GORM-backend model
-type User struct {
-	gorm.Model
-	Name string
-}
-
-// Define another GORM-backend model
-type Product struct {
-	gorm.Model
-	Name        string
-	Description string
-}
-
-func init() {
-	// Migrate AuthIdentity model, AuthIdentity will be used to save auth info, like username/password, oauth token, you could change that.
-	DB.AutoMigrate(&auth_identity.AuthIdentity{})
-
-	// Register Auth providers
-	// Allow use username/password
-	Auth.RegisterProvider(password.New(&password.Config{}))
-
-	// Allow use Github
-	Auth.RegisterProvider(github.New(&github.Config{
-		ClientID:     "github client id",
-		ClientSecret: "github client secret",
-	}))
-
-	// Allow use Google
-	Auth.RegisterProvider(google.New(&google.Config{
-		ClientID:     "google client id",
-		ClientSecret: "google client secret",
-	}))
-
-	// Allow use Facebook
-	Auth.RegisterProvider(facebook.New(&facebook.Config{
-		ClientID:     "facebook client id",
-		ClientSecret: "facebook client secret",
-	}))
-
-	// Allow use Twitter
-	Auth.RegisterProvider(twitter.New(&twitter.Config{
-		ClientID:     "twitter client id",
-		ClientSecret: "twitter client secret",
-	}))
-}
-
 func main() {
-	DB, err := gorm.Open("sqlite3", "demo.db")
-	if err != nil {
-		color.Red(fmt.Sprintf("数据库连接出错 ： %v", err))
-	}
-	DB.AutoMigrate(&User{}, &Product{})
 
-	// Initialize Auth with configuration
-	Auth = auth.New(&auth.Config{
-		DB: gormDB,
+	cmdLine := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+	compileTemplate := cmdLine.Bool("compile-templates", false, "Compile Templates")
+	cmdLine.Parse(os.Args[1:])
+
+	var (
+		Router = chi.NewRouter()
+		Admin  = admin.New(&admin.AdminConfig{
+			SiteName: "QOR DEMO",
+			Auth:     auth.AdminAuth{},
+			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
+		})
+		Application = application.New(&application.Config{
+			Router: Router,
+			Admin:  Admin,
+			DB:     db.DB,
+		})
+	)
+
+	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
+
+	Router.Use(func(handler http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			// for demo, don't use this for your production site
+			w.Header().Add("Access-Control-Allow-Origin", "*")
+			handler.ServeHTTP(w, req)
+		})
 	})
 
-	// Initalize
-	Admin := admin.New(&admin.AdminConfig{DB: DB})
+	Router.Use(func(handler http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			req.Header.Del("Authorization")
+			handler.ServeHTTP(w, req)
+		})
+	})
 
-	// Create resources from GORM-backend model
-	Admin.AddResource(&User{})
-	Admin.AddResource(&Product{})
+	Router.Use(middleware.RealIP)
+	Router.Use(middleware.Logger)
+	Router.Use(middleware.Recoverer)
+	Router.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			var (
+				tx         = db.DB
+				qorContext = &qor.Context{Request: req, Writer: w}
+			)
 
-	mux := http.NewServeMux()
-	Admin.MountTo("/admin", mux)
-	http.ListenAndServe(":8080", mux)
+			if locale := utils.GetLocale(qorContext); locale != "" {
+				tx = tx.Set("l10n:locale", locale)
+			}
 
-	//app := iris.Default()
-	//ser := &http.Server{Addr: ":8080", Handler: mux}
-	//_ = app.Run(iris.Raw(ser.ListenAndServe))
+			ctx := context.WithValue(req.Context(), utils.ContextDBName, publish2.PreviewByDB(tx, qorContext))
+			next.ServeHTTP(w, req.WithContext(ctx))
+		})
+	})
+
+	Application.Use(api.New(&api.Config{}))
+	Application.Use(adminapp.New(&adminapp.Config{}))
+	Application.Use(home.New(&home.Config{}))
+	Application.Use(products.New(&products.Config{}))
+	Application.Use(account.New(&account.Config{}))
+	Application.Use(orders.New(&orders.Config{}))
+	Application.Use(pages.New(&pages.Config{}))
+	Application.Use(enterprise.New(&enterprise.Config{}))
+	Application.Use(static.New(&static.Config{
+		Prefixs: []string{"/system"},
+		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
+	}))
+	Application.Use(static.New(&static.Config{
+		Prefixs: []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"},
+		Handler: bindatafs.AssetFS.FileServer(http.Dir("public"), "javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"),
+	}))
+
+	if *compileTemplate {
+		bindatafs.AssetFS.Compile()
+	} else {
+		fmt.Printf("Listening on: %v\n", config.Config.Port)
+		app := iris.Default()
+		if config.Config.HTTPS {
+			ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux(), TLSConfig: &tls.Config{}}
+			if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
+				panic(err)
+			}
+		} else {
+			ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux()}
+			if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
+				panic(err)
+			}
+		}
+		//if config.Config.HTTPS {
+		//	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
+		//		panic(err)
+		//	}
+		//} else {
+		//	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
+		//		panic(err)
+		//	}
+		//}
+	}
 }
