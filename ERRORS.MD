@@ -9,7 +9,7 @@
 
 
 > 启动报错如下内容：
- ```
+ ```shell script
    GetPermissionByNameError:record not found创建账号权限
    CreatePermissionError:Error 1366: Incorrect string value: '\xE5\x88\x9B\xE5\xBB\xBA...' for column 'display_name' at row 1GetRoleByNameErr:record not found创建角色
    
@@ -19,16 +19,5 @@
    (/home/coding/go/src/GoTenancy/backend/database/models/permission.go:99) 
    [2019-09-27 12:02:22]  Error 1366: Incorrect string value: '\xE5\x88\x9B\xE5\xBB\xBA...' for column 'display_name' at row 1 
 ```
-- 数据库字符格式不对，无法识别中文
-- 将数据库字符设置 utf8 字符集
-
-> 登录显示前端报错 405 Not Allowed：
- ```
-默认端口为 8081，如果修改了端口。需要下载 [IrisApiVueAdmin](https://github.com/snowlyg/IrisApiVueAdmin) 项目修改端口后覆盖前端代码
- ```
-
-> 启动报错 panic: reflect: call of reflect.Value.Bool on interface Value
-> 更新 github.com/snowlyg/gotransformer 包到最新版本
- ```
-go get  github.com/snowlyg/gotransformer@latest 
- ```
+> 数据库字符格式不对，无法识别中文
+> 将数据库字符设置 utf8 字符集
