@@ -1,4 +1,4 @@
-# Usage:
+# 使用方法:
 #   ./deploy.sh production
 #   ./deploy.sh dev
 
@@ -8,25 +8,25 @@ else
   env=dev
 fi
 
-echo "Deploying \033[1;31m$env\033[0m from branch \033[1;33m$(git branch | sed -n '/\* /s///p')\033[0m..."
+echo "部署中 \033[1;31m$env\033[0m 从封装 \033[1;33m$(git branch | sed -n '/\* /s///p')\033[0m..."
 
-# build enterprise.go
-echo "Building enterprise seeds..."
+# 构建 enterprise.go
+echo "构建企业数据填充..."
 GOOS=linux GOARCH=amd64 go build -o db/seeds/enterprise -tags enterprise db/seeds/enterprise.go db/seeds/seeds.go
 
 # build seeds.go
-echo "Building main seeds..."
+echo "构建主体数据填充..."
 GOOS=linux GOARCH=amd64 go build -o db/seeds/main db/seeds/main.go db/seeds/seeds.go
 
 go run -tags enterprise main.go -compile-templates=true
 
-echo "Deploying..."
+echo "部署中..."
 harp -s $env deploy
 
-# please make sure you can run `ssh deployer@influxdb.theplant-dev.com`, or contact sa@theplant.jp
+# 请确定你会运行 `ssh deployer@influxdb.theplant-dev.com`，或者联系 sa@theplant.jp
 influxdb_table=$(git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p')
 user=$(git config user.name || whoami)
 checksum=$(git rev-parse --short HEAD | tr -d '\n')
-ssh deployer@influxdb.theplant-dev.com -- /home/deployer/deployment_record "$influxdb_table" "$user" "$env" "$checksum" || echo "failed to post data to influxdb"
+ssh deployer@influxdb.theplant-dev.com -- /home/deployer/deployment_record "$influxdb_table" "$user" "$env" "$checksum" || echo "发送数据到 influxdb 失败"
 
 harp -s $env log
