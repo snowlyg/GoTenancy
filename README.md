@@ -38,6 +38,7 @@
 >拉取项目
 
 ```shell script
+
 git clone https://github.com/snowlyg/GoTenancy.git
 
 // github 克隆太慢可以用 gitee 地址:
@@ -46,18 +47,29 @@ git clone https://gitee.com/dtouyu/GoTenancy.git
 
 ```
 
->加载依赖管理包 (解决国内下载依赖太慢问题)
->golang 1.13 可以直接执行：
+> 加载依赖管理包 (解决国内下载依赖太慢问题)
+> golang 1.13 可以直接执行：
+
 ```shell script
+
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
 
 ```
 
->运行项目 
+> 加载数据 
+```shell script
+
+go run config/db/seeds/main.go config/db/seeds/seeds.go
+
+```
+
+
+> 运行项目 
 
 [gowatch](https://gitee.com/silenceper/gowatch)
 ```shell script
+
 go get github.com/silenceper/gowatch
 
 gowatch //安装 gowatch 后才可以使用
@@ -68,7 +80,8 @@ gowatch //安装 gowatch 后才可以使用
 
 ```shell script
 
-go run -tags enterprise main.go -compile-templates=true
+#go run -tags enterprise main.go -compile-templates=true
+go run  main.go -compile-templates=true
 
 ```
 
