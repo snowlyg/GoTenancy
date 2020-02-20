@@ -16,6 +16,7 @@
 > Qor-Admin 可以单独使用，也可以和其他框架结合使用。本项目采用 Iris + Qor-Admin 形式开发。
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
+> Qor-Admin 相关组件太久未更新，看来只能自己操刀了。
 >
 > 
 ---
@@ -47,7 +48,6 @@ func main() {
 }
 
 ```
-
 
 #### 项目目录结构
 - 项目重构中....
@@ -115,6 +115,9 @@ gowatch //安装 gowatch 后才可以使用
 go run  main.go -compile-templates=true
 
 ```
+
+#### 账号密码
+> dev@getqor.com / testing
 
 ---
 ##### 单元测试 

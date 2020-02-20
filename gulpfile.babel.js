@@ -47,5 +47,5 @@ function adminTasks() {
 // Init
 // -----------------------------------------------------------------------------
 
-console.log('Running "qor-example" module task...');
+console.log('Running "GoTenancy" module task...');
 adminTasks();

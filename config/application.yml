@@ -1,4 +1,4 @@
-https: true
+https: false
 port: 8080
 
 github:

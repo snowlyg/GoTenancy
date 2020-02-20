@@ -25,6 +25,7 @@ var (
 		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
+		//ViewPaths : []string{"github.com/qor/auth_themes/clean/views"},
 	})
 
 	// Authority initialize Authority for Authorization

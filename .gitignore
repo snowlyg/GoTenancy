@@ -1,4 +1,4 @@
-# Compiled Object files, Static and Dynamic libs (Shared Objects)
+# 编译对象文件， 动静态库(共享对像)
 .env
 Dockerfile
 *.sh
@@ -6,12 +6,12 @@ Dockerfile
 *.a
 *.so
 
-# Folders
+# 目录
 _obj
 _test
 .idea
 
-# Architecture specific extensions/prefixes
+# 特定体系结构的扩展/前缀
 *.[568vq]
 [568vq].out
 
@@ -28,12 +28,12 @@ _testmain.go
 *.test
 *.prof
 runner-build
-qor-example
+GoTenancy
 
-#config/database*yml
+
 #public/system
 public/downloads
-#config/admin/bindatafs/templates_bindatafs.go
+config/bindatafs/templates_bindatafs.go
 
 .editorconfig
 deploy.sh

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"flag"
 	"fmt"
 	"net/http"
@@ -28,7 +27,6 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/kataras/iris/v12"
 	"github.com/qor/admin"
 	"github.com/qor/publish2"
 	"github.com/qor/qor"
@@ -123,28 +121,28 @@ func main() {
 		}
 	} else {
 		color.Yellow(fmt.Sprintf("Listening on: %v\n", config.Config.Port))
-		app := iris.Default()
-		if config.Config.HTTPS {
-			ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux(), TLSConfig: &tls.Config{}}
-			if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
-				panic(err)
-			}
-		} else {
-			ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux()}
-			if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
-				panic(err)
-			}
-		}
-
-		// 使用 net/http 原生包
+		//app := iris.Default()
 		//if config.Config.HTTPS {
-		//	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
+		//	ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux(), TLSConfig: &tls.Config{}}
+		//	if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
 		//		panic(err)
 		//	}
 		//} else {
-		//	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
+		//	ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux()}
+		//	if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
 		//		panic(err)
 		//	}
 		//}
+
+		// 使用 net/http 原生包
+		if config.Config.HTTPS {
+			if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
+				panic(err)
+			}
+		} else {
+			if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
+				panic(err)
+			}
+		}
 	}
 }

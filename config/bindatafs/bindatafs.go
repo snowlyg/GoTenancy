@@ -97,7 +97,7 @@ func (assetFS *bindataFS) Glob(pattern string) (matches []string, err error) {
 }
 
 func (assetFS *bindataFS) Compile() error {
-	fmt.Println("Compiling templates...")
+	fmt.Println("编译模板...")
 	_ = os.RemoveAll(filepath.Join(assetFS.Path, "templates"))
 	copyFiles(filepath.Join(assetFS.Path, "templates"), assetFS.viewPaths)
 	for _, fs := range assetFS.nameSpacedFS {
