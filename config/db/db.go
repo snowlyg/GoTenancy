@@ -17,7 +17,7 @@ import (
 	"github.com/qor/validations"
 )
 
-// DB Global DB connection
+// DB 全局 DB 链接
 var DB *gorm.DB
 
 func init() {
@@ -40,6 +40,7 @@ func init() {
 			DB.LogMode(true)
 		}
 
+		// 注册回调到 gorm DB
 		l10n.RegisterCallbacks(DB)
 		sorting.RegisterCallbacks(DB)
 		validations.RegisterCallbacks(DB)

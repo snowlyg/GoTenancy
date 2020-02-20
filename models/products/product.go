@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/media"
@@ -104,11 +104,15 @@ func (product Product) MainImageURL(styles ...string) string {
 
 func (product Product) Validate(db *gorm.DB) {
 	if strings.TrimSpace(product.Name) == "" {
-		db.AddError(validations.NewError(product, "Name", "Name can not be empty"))
+		if err := db.AddError(validations.NewError(product, "Name", "Name can not be empty")); err != nil {
+			color.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 
 	if strings.TrimSpace(product.Code) == "" {
-		db.AddError(validations.NewError(product, "Code", "Code can not be empty"))
+		if err := db.AddError(validations.NewError(product, "Code", "Code can not be empty")); err != nil {
+			color.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 }
 
@@ -125,7 +129,9 @@ type ProductImage struct {
 
 func (productImage ProductImage) Validate(db *gorm.DB) {
 	if strings.TrimSpace(productImage.Title) == "" {
-		db.AddError(validations.NewError(productImage, "Title", "Title can not be empty"))
+		if err := db.AddError(validations.NewError(productImage, "Title", "Title can not be empty")); err != nil {
+			color.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 }
 
@@ -196,7 +202,7 @@ type ColorVariation struct {
 	publish2.SharedVersion
 }
 
-// ViewPath view path of color variation
+// ViewPath 查看颜色变化路径
 func (colorVariation ColorVariation) ViewPath() string {
 	defaultPath := ""
 	var product Product
@@ -240,9 +246,9 @@ type SizeVariation struct {
 }
 
 func SizeVariations() []SizeVariation {
-	sizeVariations := []SizeVariation{}
+	var sizeVariations []SizeVariation
 	if err := db.DB.Preload("ColorVariation.Color").Preload("ColorVariation.Product").Preload("Size").Find(&sizeVariations).Error; err != nil {
-		log.Fatalf("query sizeVariations (%v) failure, got err %v", sizeVariations, err)
+		color.Red(fmt.Sprintf("query sizeVariations (%v) failure, got err %v", sizeVariations, err))
 		return sizeVariations
 	}
 	return sizeVariations

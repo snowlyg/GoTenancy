@@ -1,8 +1,10 @@
 package products
 
 import (
+	"fmt"
 	"strings"
 
+	color2 "github.com/fatih/color"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/publish2"
@@ -24,10 +26,14 @@ type Color struct {
 
 func (color Color) Validate(db *gorm.DB) {
 	if strings.TrimSpace(color.Name) == "" {
-		db.AddError(validations.NewError(color, "Name", "Name can not be empty"))
+		if err := db.AddError(validations.NewError(color, "Name", "Name can not be empty")); err != nil {
+			color2.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 
 	if strings.TrimSpace(color.Code) == "" {
-		db.AddError(validations.NewError(color, "Code", "Code can not be empty"))
+		if err := db.AddError(validations.NewError(color, "Code", "Code can not be empty")); err != nil {
+			color2.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 }

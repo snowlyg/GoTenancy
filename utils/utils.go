@@ -17,7 +17,7 @@ import (
 	"github.com/qor/session/manager"
 )
 
-// GetCurrentUser get current user from request
+// GetCurrentUser 从请求中获取当前用户
 func GetCurrentUser(req *http.Request) *users.User {
 	if currentUser, ok := auth.Auth.GetCurrentUser(req).(*users.User); ok {
 		return currentUser
@@ -25,7 +25,7 @@ func GetCurrentUser(req *http.Request) *users.User {
 	return nil
 }
 
-// GetCurrentLocale get current locale from request
+// GetCurrentLocale 从请求中获取本地设置
 func GetCurrentLocale(req *http.Request) string {
 	locale := l10n.Global
 	if cookie, err := req.Cookie("locale"); err == nil {
@@ -34,7 +34,7 @@ func GetCurrentLocale(req *http.Request) string {
 	return locale
 }
 
-// GetDB get DB from request
+// GetDB 从请求中获取 DB
 func GetDB(req *http.Request) *gorm.DB {
 	if db := utils.GetDBFromRequest(req); db != nil {
 		return db
@@ -42,19 +42,20 @@ func GetDB(req *http.Request) *gorm.DB {
 	return db.DB
 }
 
-// URLParam get url params from request
+// URLParam 从请求中获取 url 参数
 func URLParam(name string, req *http.Request) string {
 	return chi.URLParam(req, name)
 }
 
-// AddFlashMessage helper
+// AddFlashMessage 辅助方法
 func AddFlashMessage(w http.ResponseWriter, req *http.Request, message string, mtype string) error {
 	return manager.SessionManager.Flash(w, req, session.Message{Message: template.HTML(message), Type: mtype})
 }
 
-// HTMLSanitizer HTML sanitizer
+// HTMLSanitizer HTML 消毒器
 var HTMLSanitizer = bluemonday.UGCPolicy()
 
+// FormatPrice 价格格式化
 func FormatPrice(price interface{}) string {
 	switch price.(type) {
 	case float32, float64:

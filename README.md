@@ -16,8 +16,39 @@
 > Qor-Admin 可以单独使用，也可以和其他框架结合使用。本项目采用 Iris + Qor-Admin 形式开发。
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
-    
+>
+> 
 ---
+
+
+#### iris + qor-admin 使用案例
+```go
+package main
+
+import (
+    "github.com/kataras/iris/v12"
+    "github.com/qor/admin"
+)
+
+func main() {
+    app := iris.New()
+
+    qorPrefix := "/admin"
+    // create a new qor admin instance.
+    q := admin.New(&admin.AdminConfig{DB: yourDB})
+    // create a qor handler and convert it to an iris one with `iris.FromStd`.
+    handler := iris.FromStd(q.NewServeMux(qorPrefix))
+    // register routes for "/admin" and "/admin/:xxx/..."
+    app.Any(qorPrefix, handler)
+    app.Any(qorPrefix+"/{p:path}", handler)
+
+    // start the server.
+    app.Listen(":8080")
+}
+
+```
+
+
 #### 项目目录结构
 - 项目重构中....
 

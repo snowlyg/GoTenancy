@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/sorting"
@@ -23,7 +24,9 @@ type Category struct {
 
 func (category Category) Validate(db *gorm.DB) {
 	if strings.TrimSpace(category.Name) == "" {
-		db.AddError(validations.NewError(category, "Name", "Name can not be empty"))
+		if err := db.AddError(validations.NewError(category, "Name", "Name can not be empty")); err != nil {
+			color.Red(fmt.Sprintf("db.AddError error: %v", err))
+		}
 	}
 }
 

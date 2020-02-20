@@ -1,14 +1,14 @@
 {
-  "name": "QOR",
-  "version": "0.0.2",
-  "description": "QOR example",
+  "name": "GoTenancy",
+  "version": "0.0.1",
+  "description": "GoTenancy",
   "main": "index.js",
   "scripts": {
     "dev": "webpack -d --watch --progress --colors",
     "dist": "rimraf public/dist/* && NODE_ENV=production webpack -p"
   },
-  "author": "Jason weng",
-  "repository": "https://github.com/qor/qor-example",
+  "author": "snowlyg",
+  "repository": "https://github.com/snowlyg/GoTenancy",
   "license": "ISC",
   "devDependencies": {
     "gulp": "^3.9.1",

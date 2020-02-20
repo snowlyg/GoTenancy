@@ -261,7 +261,7 @@ func init() {
 		tx.Model(order).Association("OrderItems").Find(&order.OrderItems)
 
 		for _, item := range order.OrderItems {
-			ItemState.Trigger("ship", &item, tx)
+			_ = ItemState.Trigger("ship", &item, tx)
 		}
 		return nil
 	})
@@ -271,7 +271,7 @@ func init() {
 		tx.Model(order).Association("OrderItems").Find(&order.OrderItems)
 
 		for _, item := range order.OrderItems {
-			ItemState.Trigger("return", &item, tx)
+			_ = ItemState.Trigger("return", &item, tx)
 		}
 		return nil
 	})

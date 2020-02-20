@@ -4,15 +4,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"time"
 
+	"GoTenancy/app/enterprise"
 	"enterprise.getqor.com/microsite"
 	"enterprise.getqor.com/promotion"
 	"github.com/fatih/color"
-	"GoTenancy/app/enterprise"
 )
 
 /* How to run this script
@@ -47,7 +46,7 @@ func createPromotion() {
 		enterprise.Unique = enterpriseData.Unique
 
 		if err := DraftDB.Create(&enterprise).Error; err != nil {
-			log.Fatalf("create enterprise (%v) failure, got err %v", enterprise, err)
+			color.Red(fmt.Sprintf("create enterprise (%v) failure, got err %v", enterprise, err))
 		}
 
 		for _, couponData := range enterpriseData.Coupons {
@@ -55,7 +54,7 @@ func createPromotion() {
 			coupon.DiscountID = enterprise.ID
 			coupon.Code = couponData.Code
 			if err := DraftDB.Create(&coupon).Error; err != nil {
-				log.Fatalf("create coupon (%v) failure, got err %v", coupon, err)
+				color.Red(fmt.Sprintf("create coupon (%v) failure, got err %v", coupon, err))
 			}
 		}
 
@@ -65,7 +64,7 @@ func createPromotion() {
 			rule.Kind = ruleData.Kind
 			rule.Value.Scan(ruleData.Value)
 			if err := DraftDB.Create(&rule).Error; err != nil {
-				log.Fatalf("create rule (%v) failure, got err %v", rule, err)
+				color.Red(fmt.Sprintf("create rule (%v) failure, got err %v", rule, err))
 			}
 		}
 
@@ -75,7 +74,7 @@ func createPromotion() {
 			benefit.Kind = benefitData.Kind
 			benefit.Value.Scan(benefitData.Value)
 			if err := DraftDB.Create(&benefit).Error; err != nil {
-				log.Fatalf("create benefit (%v) failure, got err %v", benefit, err)
+				color.Red(fmt.Sprintf("create benefit (%v) failure, got err %v", benefit, err))
 			}
 		}
 	}
@@ -95,6 +94,6 @@ func createMicroSite() {
 	site.Package.Scan(file)
 
 	if err := DraftDB.Create(&site).Error; err != nil {
-		log.Fatalf("create microsite (%v) failure, got err %v", site, err)
+		color.Red(fmt.Sprintf("create microsite (%v) failure, got err %v", site, err))
 	}
 }

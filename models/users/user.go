@@ -22,15 +22,15 @@ type User struct {
 	Addresses              []Address
 	Avatar                 AvatarImageStorage
 
-	// Confirm
+	// 确认
 	ConfirmToken string
 	Confirmed    bool
 
-	// Recover
+	// 恢复
 	RecoverToken       string
 	RecoverTokenExpiry *time.Time
 
-	// Accepts
+	// 接受
 	AcceptPrivate bool `form:"accept-private"`
 	AcceptLicense bool `form:"accept-license"`
 	AcceptNews    bool `form:"accept-news"`
@@ -41,7 +41,7 @@ func (user User) DisplayName() string {
 }
 
 func (user User) AvailableLocales() []string {
-	return []string{"en-US", "zh-CN"}
+	return []string{"zh-CN", "en-US"}
 }
 
 type AvatarImageStorage struct{ oss.OSS }

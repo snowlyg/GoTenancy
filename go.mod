@@ -28,7 +28,7 @@ require (
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/jinzhu/now v1.0.1
-	github.com/jteeuwen/go-bindata v3.0.7+incompatible
+	github.com/jteeuwen/go-bindata v3.0.8-0.20180305030458-6025e8de665b+incompatible
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect

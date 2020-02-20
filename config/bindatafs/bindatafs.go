@@ -98,7 +98,7 @@ func (assetFS *bindataFS) Glob(pattern string) (matches []string, err error) {
 
 func (assetFS *bindataFS) Compile() error {
 	fmt.Println("Compiling templates...")
-	os.RemoveAll(filepath.Join(assetFS.Path, "templates"))
+	_ = os.RemoveAll(filepath.Join(assetFS.Path, "templates"))
 	copyFiles(filepath.Join(assetFS.Path, "templates"), assetFS.viewPaths)
 	for _, fs := range assetFS.nameSpacedFS {
 		copyFiles(filepath.Join(assetFS.Path, "templates", fs.nameSpace), fs.viewPaths)
@@ -115,7 +115,7 @@ func (assetFS *bindataFS) Compile() error {
 	config.Tags = "bindatafs"
 	config.Output = filepath.Join(assetFS.Path, "templates_bindatafs.go")
 	config.Prefix = filepath.Join(assetFS.Path, "templates")
-	//config.NoMetadata = true
+	config.NoMetadata = true
 
 	defer os.Exit(0)
 	return bindata.Translate(config)
@@ -126,9 +126,9 @@ var cacheSince = time.Now().Format(http.TimeFormat)
 func (assetFS *bindataFS) FileServer(dir http.Dir, assetPaths ...string) http.Handler {
 	fileServer := assetFS.NameSpace("file_server")
 	if fs, ok := fileServer.(*nameSpacedBindataFS); ok {
-		fs.registerPath(viewPath{Dir: string(dir), AssetPaths: assetPaths}, false)
+		_ = fs.registerPath(viewPath{Dir: string(dir), AssetPaths: assetPaths}, false)
 	} else {
-		fileServer.RegisterPath(string(dir))
+		_ = fileServer.RegisterPath(string(dir))
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -152,7 +152,7 @@ func (assetFS *bindataFS) FileServer(dir http.Dir, assetPaths ...string) http.Ha
 
 			w.Header().Set("Cache-control", "private, must-revalidate, max-age=300")
 			w.Header().Set("ETag", etag)
-			w.Write(content)
+			_, _ = w.Write(content)
 			return
 		}
 
@@ -163,7 +163,7 @@ func (assetFS *bindataFS) FileServer(dir http.Dir, assetPaths ...string) http.Ha
 func copyFiles(templatesPath string, viewPaths []viewPath) {
 	for i := len(viewPaths) - 1; i >= 0; i-- {
 		pth := viewPaths[i]
-		filepath.Walk(pth.Dir, func(path string, info os.FileInfo, err error) error {
+		_ = filepath.Walk(pth.Dir, func(path string, info os.FileInfo, err error) error {
 			if err == nil {
 				var relativePath = strings.TrimPrefix(strings.TrimPrefix(path, pth.Dir), "/")
 

@@ -35,7 +35,7 @@ var Config = struct {
 		Adapter  string `env:"DBAdapter" default:"mysql"`
 		Host     string `env:"DBHost" default:"localhost"`
 		Port     string `env:"DBPort" default:"3306"`
-		User     string `env:"DBUser"`
+		User     string `env:"DBUser" default:"root"`
 		Password string `env:"DBPassword"`
 	}
 	S3 struct {

@@ -37,17 +37,22 @@ import (
 
 func main() {
 
+	// 命令参数处理
 	cmdLine := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 	compileTemplate := cmdLine.Bool("compile-templates", false, "Compile Templates")
-	cmdLine.Parse(os.Args[1:])
+	if err := cmdLine.Parse(os.Args[1:]); err != nil {
+		color.Red(fmt.Sprintf(" cmdLine.Parse error :%v", err))
+	}
 
 	var (
-		Router = chi.NewRouter()
-		Admin  = admin.New(&admin.AdminConfig{
-			SiteName: "QOR DEMO",
+		Router = chi.NewRouter() // 定义路由
+		//定义 admin 对象
+		Admin = admin.New(&admin.AdminConfig{
+			SiteName: "GoTenancy", // 站点名称
 			Auth:     auth.AdminAuth{},
 			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 		})
+		//定义应用
 		Application = application.New(&application.Config{
 			Router: Router,
 			Admin:  Admin,
@@ -55,11 +60,13 @@ func main() {
 		})
 	)
 
+	// 认证相关视图渲染
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
+	// 全局中间件
 	Router.Use(func(handler http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			// for demo, don't use this for your production site
+			// 演示设置，请勿在生产环境使用
 			w.Header().Add("Access-Control-Allow-Origin", "*")
 			handler.ServeHTTP(w, req)
 		})
@@ -75,6 +82,7 @@ func main() {
 	Router.Use(middleware.RealIP)
 	Router.Use(middleware.Logger)
 	Router.Use(middleware.Recoverer)
+	// 本地化
 	Router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			var (
@@ -91,6 +99,7 @@ func main() {
 		})
 	})
 
+	// 加载应用
 	Application.Use(api.New(&api.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(home.New(&home.Config{}))
@@ -108,7 +117,7 @@ func main() {
 		Handler: bindatafs.AssetFS.FileServer(http.Dir("public"), "javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"),
 	}))
 
-	if *compileTemplate {
+	if *compileTemplate { //处理前端静态文件
 		if err := bindatafs.AssetFS.Compile(); err != nil {
 			color.Red(fmt.Sprintf("bindatafs error %v", err))
 		}
