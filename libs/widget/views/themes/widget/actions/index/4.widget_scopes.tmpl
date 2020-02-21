@@ -1,0 +1,14 @@
+{{$result := .Result}}
+{{$resource := .Resource}}
+{{$availableScopes := widget_available_scopes}}
+
+{{if $availableScopes}}
+  {{$widget_scope := .Context.Request.URL.Query.Get "widget_scope"}}
+  <div class="mdl-layout__tab-bar mdl-layout__tab-bar-container  qor-page-subnav__header">
+    {{range $availableScope := $availableScopes}}
+      <a class="mdl-layout__tab{{if (or (eq $widget_scope $availableScope.ToParam) (and (eq $widget_scope "") (eq $availableScope.ToParam "default")))}} is-active{{end}}" href={{patch_current_url "widget_scope" $availableScope.ToParam}}>
+        {{$availableScope.Name}}
+      </a>
+    {{end}}
+  </div>
+{{end}}

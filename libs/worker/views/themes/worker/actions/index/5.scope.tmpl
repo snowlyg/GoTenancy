@@ -1,0 +1,20 @@
+<div class="qor-actions mdl-layout__header qor-page__header qor-page-subnav__header">
+  <div class="mdl-layout__tab-bar mdl-layout__tab-bar-container">
+    {{$order_by := .Context.Request.URL.Query.Get "scopes"}}
+    <a class="mdl-layout__tab{{if (eq $order_by "")}} is-active{{end}}" href={{patch_current_url "scopes" ""}}>
+      {{t "qor_worker.filter.all" "All Jobs"}}
+    </a>
+    <a class="mdl-layout__tab{{if (eq $order_by "running")}} is-active{{end}}" href={{patch_current_url "scopes" "running"}}>
+      {{t "qor_worker.filter.running" "Running"}}
+    </a>
+    <a class="mdl-layout__tab{{if (eq $order_by "scheduled")}} is-active{{end}}" href={{patch_current_url "scopes" "scheduled"}}>
+      {{t "qor_worker.filter.scheduled" "Scheduled"}}
+    </a>
+    <a class="mdl-layout__tab{{if (eq $order_by "done")}} is-active{{end}}" href={{patch_current_url "scopes" "done"}}>
+      {{t "qor_worker.filter.done" "Done"}}
+    </a>
+    <a class="mdl-layout__tab{{if (eq $order_by "exception")}} is-active{{end}}" href={{patch_current_url "scopes" "exception"}}>
+      {{t "qor_worker.filter.errors" "Errors"}}
+    </a>
+  </div>
+</div>

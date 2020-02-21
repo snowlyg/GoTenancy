@@ -1,0 +1,29 @@
+{{$inputName := .Meta.Name}}
+{{$labelName := .Meta.Label}}
+{{$rawValue := raw_value_of .ResourceValue .Meta}}
+{{$seo := .ResourceValue.GetSEO }}
+{{$seoName := $seo.Name}}
+{{$value := seo_append_default_value .Context $seo $rawValue}}
+
+<div class="qor-seo qor-field" data-toggle="qor.seo">
+
+  <h4 class="qor-section-title qor-seo-title" style="display: none;">{{t (printf "qor_seo.%v.title" $seoName) $seoName}}</h4>
+
+  <div class="qor-seo__defaults">
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="{{$seoName}}.EnabledCustomize">
+      <input type="checkbox" name="{{.InputName}}.EnabledCustomize" id="{{$seoName}}.EnabledCustomize" class="mdl-checkbox__input qor-seo__defaults-input" value="false" {{if not ($value.EnabledCustomize)}}checked{{end}} />
+      <span class="mdl-checkbox__label">{{ t "qor_seo.use_default" "Use Defaults" }}</span>
+    </label>
+    <input type="hidden" name="{{.InputName}}.EnabledCustomize" value="true" />
+  </div>
+
+  <div class="qor-seo__settings" {{if not ($value.EnabledCustomize)}}style="display: none;"{{end}}>
+    <ul class="qor-seo-tags clearfix" data-input-id={{.InputId}}>
+      {{range seo_tags_by_type $seo }}
+        <li class="qor-seo-tag" data-tag-value="{{.}}"><i class="material-icons">add_box</i><span>{{.}}</span></li>
+      {{end}}
+    </ul>
+
+    {{render_nested_form $value (edit_sections .Meta.Resource) -1}}
+  </div>
+</div>

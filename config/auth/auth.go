@@ -6,15 +6,15 @@ import (
 	"GoTenancy/config"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
+	"GoTenancy/libs/auth"
+	"GoTenancy/libs/auth/authority"
+	"GoTenancy/libs/auth/providers/facebook"
+	"GoTenancy/libs/auth/providers/github"
+	"GoTenancy/libs/auth/providers/google"
+	"GoTenancy/libs/auth/providers/twitter"
+	"GoTenancy/libs/auth_themes/clean"
+	"GoTenancy/libs/render"
 	"GoTenancy/models/users"
-	"github.com/qor/auth"
-	"github.com/qor/auth/authority"
-	"github.com/qor/auth/providers/facebook"
-	"github.com/qor/auth/providers/github"
-	"github.com/qor/auth/providers/google"
-	"github.com/qor/auth/providers/twitter"
-	"github.com/qor/auth_themes/clean"
-	"github.com/qor/render"
 )
 
 var (
@@ -25,7 +25,6 @@ var (
 		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
-		//ViewPaths : []string{"github.com/qor/auth_themes/clean/views"},
 	})
 
 	// Authority initialize Authority for Authorization

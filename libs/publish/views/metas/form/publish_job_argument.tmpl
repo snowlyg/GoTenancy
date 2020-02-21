@@ -1,0 +1,17 @@
+<div class="qor-field">
+  <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+    <label class="qor-field__label mdl-textfield__label" for="{{.InputId}}">
+      {{t "qor_publish.meta.selected_record" "Selected Records"}}
+    </label>
+
+    <div>
+      {{range $res, $primaryValues := .Value}}
+        <label>{{$res.Name}} :</label>
+        {{range $primaryValue := $primaryValues}}
+          {{$primaryValue}} ;
+        {{end}}
+        <br>
+      {{end}}
+    </div>
+  </div>
+</div>

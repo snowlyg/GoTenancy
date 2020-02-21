@@ -1,0 +1,107 @@
+{{$job := .Result}}
+{{$actions := load_actions "show"}}
+
+{{if $actions}}
+  <div class="qor-page__header">
+    {{$actions}}
+  </div>
+{{end}}
+
+<div class="qor-page__body">
+  {{render "shared/flashes"}}
+  {{render "shared/errors"}}
+
+  {{if $job}}
+    <div class="qor-form-container qor-workers--details clearfix">
+      {{if eq $job.GetStatus "scheduled"}}
+        <h5 class="workers-label">{{$job.GetJobName}}</h5>
+
+        <div class="qor-workers-abort">
+          <form action={{url_for $job .Resource}} method="POST">
+            <input type="hidden" name="_method" value="PUT"/>
+
+            {{render_form $job (new_sections $job.GetJob.Worker.JobResource)}}
+
+            <div class="qor-form__actions">
+              <button type="submit" class="mdl-button mdl-button--colored mdl-button--raised">
+                {{t "qor_worker.jobs.update_scheduled_job" "Update Scheduled Job"}}
+              </button>
+
+              <button type="button" class="mdl-button mdl-button--colored mdl-button--raised qor-button--accent" data-ajax-form="true" data-url="{{url_for $job .Resource}}" data-confirm="{{t "qor_worker.confirm.are_you_sure" "Are You Sure?"}}" data-confirm-ok="{{t "qor_worker.jobs.cancel_scheduled_job" "Cancel Scheduled Job"}}" data-confirm-cancel="{{t "qor_worker.confirm.cancel" "cancel"}}" data-method="DELETE">
+                {{t "qor_worker.jobs.cancel_scheduled_job" "Cancel Scheduled Job"}}
+              </button>
+            </div>
+          </form>
+        </div>
+      {{else}}
+        <div data-toggle="qor.workers">
+          <h5 class="workers-label">{{$job.GetJobName}}</h5>
+
+          <div class="qor-worker--progress clearfix" data-status-name={{t "qor_worker.jobs.Status" "Status"}} data-progress={{$job.GetProgress}} data-status={{$job.GetStatus}}>
+            <p class="workers-label-title">{{t "qor_worker.jobs.Status" "Status"}}</p>
+            <p class="workers-label-content">
+              <span class="qor-worker--progress-status {{if eq $job.GetStatus "killed"}}highlight{{end}}">{{$job.GetStatus}}</span> (<span class="qor-worker--progress-value">{{$job.GetProgress}}</span>%)
+            </p>
+
+            <div id="qor-worker--progress" data-progress={{$job.GetProgress}} class="mdl-progress mdl-js-progress{{if $job.GetResultsTable.TableCells}} has-errors-texts{{end}}"></div>
+          </div>
+
+          <div>
+            <p class="workers-label-title">{{t "qor_worker.jobs.job_log" "Job Log"}}</p>
+            <div class="workers-log-output">
+              {{if gt (len $job.GetLogs) 1 -}}
+                {{range $log := $job.GetLogs -}}
+                  <p>{{$log}}</p>
+                {{- end}}
+              {{- end}}
+            </div>
+          </div>
+
+          <div class="qor-worker--progress-result">
+            {{if $job.GetProgressText}}
+              <p class="workers-label-content">{{raw $job.GetProgressText}}</p>
+            {{end}}
+          </div>
+
+          {{if $job.GetResultsTable.TableCells}}
+            <div>
+              <p class="workers-label-title">{{t "qor_worker.jobs.job_reports" "Job Reports"}}</p>
+              <div class="qor-table-container workers-error-output">
+                <table class="mdl-data-table mdl-js-data-table qor-table is-sortable is-upgraded">
+                  {{range $cells := $job.GetResultsTable.TableCells}}
+                    <tr>
+                      {{range $cell := $cells}}
+                        <td class="mdl-data-table__cell--non-numeric{{if $cell.Error}} worker-process-error{{end}}">
+                          {{$cell.Value}}
+                          {{if $cell.Error}}
+                            <p>{{$cell.Error}}</p>
+                          {{end}}
+                        </td>
+                      {{end}}
+                    </tr>
+                  {{end}}
+                </table>
+              </div>
+            </div>
+          {{end}}
+
+          {{if has_update_permission .Resource}}
+            <div class="qor-workers-buttons">
+              <div class="qor-workers-abort{{if (or (eq $job.GetStatus "new") (eq $job.GetStatus "running"))}} show{{else}} hidden{{end}}">
+                <button type="button" class="mdl-button mdl-button--colored mdl-button--raised qor-button--accent" data-ajax-form="true" data-url="{{url_for $job .Resource}}" data-confirm="{{t "qor_worker.confirm.are_you_sure" "Are You Sure?"}}" data-confirm-ok="{{t "qor_worker.jobs.abort_job" "Abort Job"}}" data-confirm-cancel="{{t "qor_worker.confirm.cancel" "cancel"}}" data-method="DELETE">
+                  {{t "qor_worker.jobs.abort_job" "Abort Job"}}
+                </button>
+              </div>
+
+              <div class="qor-workers-rerun{{if (eq $job.GetStatus "done")}} show{{else}} hidden{{end}}">
+                <button type="button" class="mdl-button mdl-button--colored mdl-button--raised" data-ajax-form="true" data-url="{{join_url (url_for $job .Resource) "/run"}}" data-confirm="{{t "qor_worker.confirm.are_you_sure" "Are You Sure?"}}" data-confirm-ok="{{t "qor_worker.jobs.rerun_job" "Rerun Job"}}" data-confirm-cancel="{{t "qor_worker.confirm.cancel" "cancel"}}" data-method="POST">
+                  {{t "qor_worker.jobs.rerun_job" "Rerun Job"}}
+                </button>
+              </div>
+            </div>
+          {{end}}
+        </div>
+      {{end}}
+    </div>
+  {{end}}
+</div>

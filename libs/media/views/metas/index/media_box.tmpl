@@ -1,0 +1,8 @@
+{{$metaConfig := .Meta.Config}}
+{{$value := (raw_value_of .ResourceValue .Meta)}}
+
+{{if $value.Files}}
+  {{range $file := $value.Files}}
+    <img src="{{$file.URL}}" data-primary-key="{{$file.ID}}"/>
+  {{end}}
+{{end}}

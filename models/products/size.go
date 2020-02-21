@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/sorting"
+	"GoTenancy/libs/validations"
 	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
-	"github.com/qor/l10n"
-	"github.com/qor/sorting"
-	"github.com/qor/validations"
 )
 
 type Size struct {

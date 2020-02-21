@@ -1,0 +1,106 @@
+<div class="qor-field">
+  {{$current_values := (raw_value_of .ResourceValue .Meta)}}
+  {{$collectionValue := (.Meta.Config.GetCollection .ResourceValue .Context)}}
+
+  {{if .Meta.Config.Select2ResultTemplate}}
+    <script name="select2-result-template" type="x-tmpl-mustache">
+      {{.Meta.Config.Select2ResultTemplate}}
+    </script>
+  {{end}}
+
+  {{if .Meta.Config.Select2SelectionTemplate}}
+    <script name="select2-selection-template" type="x-tmpl-mustache">
+      {{.Meta.Config.Select2SelectionTemplate}}
+    </script>
+  {{end}}
+
+  <label class="qor-field__label" for="{{.InputId}}">
+    {{meta_label .Meta}}
+  </label>
+
+  <div class="qor-field__show">
+    {{range $value := $current_values}}
+      {{stringify $value}}
+    {{end}}
+  </div>
+
+  <div class="qor-field__edit qor-field__block qor-dragable">
+    <ul class="qor-dragable__list">
+      {{if .Meta.Config.RemoteDataResource}}
+        {{$listurl := url_for .Meta.Config.RemoteDataResource}}
+        {{range $value := $current_values}}
+          {{$name := index $value 0}}
+          <li data-index="{{primary_key_of $name}}" data-value="{{stringify $name}}">
+            <img class="qor-preview-icon" src="{{index $value 1}}">
+            <span><a href="{{$listurl}}/{{stringify $name}}" data-ajax-mute="true" data-bottomsheet-classname="qor_pagebuilder--edit_widget" data-url="{{$listurl}}/{{stringify $name}}">{{stringify $name}}</a></span>
+            <div>
+              <i class="material-icons qor-dragable__list-delete">clear</i>
+              <i class="material-icons qor-dragable__list-handle">drag_handle</i>
+            </div>
+          </li>
+        {{end}}
+      {{else}}
+        {{range $value := $current_values}}
+          {{range $values := $collectionValue}}
+            {{if (is_equal $value (index $values 0))}}
+              <li data-index="{{index $values 0}}" data-value="{{index $values 1}}">
+                <span>{{index $values 1}}</span>
+                <div>
+                  <i class="material-icons qor-dragable__list-delete">clear</i>
+                  <i class="material-icons qor-dragable__list-handle">drag_handle</i>
+                </div>
+              </li>
+            {{end}}
+          {{end}}
+        {{end}}
+      {{end}}
+    </ul>
+
+    <select class="hidden qor-dragable__list-data" id="{{.InputName}}" name="{{.InputName}}" multiple>
+      {{range $value := $current_values}}
+        {{$name := index $value 0}}
+        <option value="{{primary_key_of $name}}" data-index="{{primary_key_of $name}}" data-value="{{stringify $name}}" selected>{{stringify $name}}</option>
+        }
+      {{end}}
+    </select>
+
+    {{if (eq .Meta.Config.SelectMode "bottom_sheet")}}
+      <script name="select-many-selected-icon" type="x-tmpl-mustache">
+        <span class="qor-select__select-icon"><i class="material-icons">check_circle</i></span>
+      </script>
+
+      <button class="mdl-button mdl-button--primary" type="button"
+        data-toggle="qor.pagebuilder"
+        data-select-nohint="true"
+        data-select-hastab="true"
+        data-select-title="{{t "qor_admin.page_builder.containers" "containers"}}"
+        data-select-modal="pagebuilder_many_sortable"
+        {{if .InputId}}data-select-id="#{{.InputId}}"{{end}}
+        data-select-listing-url="{{url_for .Meta.Config.RemoteDataResource}}"
+        data-select-listing-title="{{t "qor_admin.page_builder.library" "library"}}"
+        data-select-creating-url="{{new_resource_path .Meta.Config.RemoteDataResource}}"
+        data-select-creating-title="{{t "qor_admin.page_builder.templates" "templates"}}"
+        {{if .Meta.Config.PrimaryField}}data-remote-data-primary-key="{{.Meta.Config.PrimaryField}}"{{end}}>
+          {{t (printf "qor_admin.form.add_%v" (singular (meta_label .Meta))) (printf "Add %v" (singular (meta_label .Meta)))}}
+      </button>
+    {{else}}
+      <button class="mdl-button mdl-button--primary qor-dragable__button-add" type="button">
+        {{t (printf "qor_admin.form.add_%v" (singular (meta_label .Meta))) (printf "Add %v" (singular (meta_label .Meta)))}}
+      </button>
+
+      <select class="qor-field__input" data-toggle="qor.chooser.sortable" data-placeholder="{{t "qor_admin.form.enter_search_term" "Enter Search Term"}}" {{if not (has_update_permission .Meta)}}disabled{{end}} multiple {{if .Meta.Config.RemoteDataResource}}data-remote-url="{{url_for .Meta.Config.RemoteDataResource}}" data-remote-data="true" {{if .Meta.Config.PrimaryField}}data-remote-data-primary-key="{{.Meta.Config.PrimaryField}}"{{end}}{{end}}>
+        {{if .Meta.Config.RemoteDataResource}}
+          {{range $value := $current_values}}
+            <option value="{{primary_key_of $value}}" data-index="{{primary_key_of $value}}" data-value="{{stringify $value}}" selected>{{stringify $value}}</option>
+          {{end}}
+        {{else}}
+          {{range $values := $collectionValue}}
+            <option value="{{index $values 0}}" data-index="{{index $values 0}}" data-value="{{index $values 1}}" {{if (is_included $current_values (index $values 0))}}selected{{end}}>{{index $values 1}}</option>
+          {{end}}
+        {{end}}
+      </select>
+    {{end}}
+
+    <input type="hidden" name="{{.InputName}}" value="">
+  </div>
+</div>

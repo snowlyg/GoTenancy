@@ -7,14 +7,14 @@ import (
 
 	"GoTenancy/config/auth"
 	"GoTenancy/config/db"
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/qor/utils"
+	"GoTenancy/libs/session"
+	"GoTenancy/libs/session/manager"
 	"GoTenancy/models/users"
 	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/qor/l10n"
-	"github.com/qor/qor/utils"
-	"github.com/qor/session"
-	"github.com/qor/session/manager"
 )
 
 // GetCurrentUser 从请求中获取当前用户

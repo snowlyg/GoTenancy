@@ -6,14 +6,14 @@ import (
 	"strconv"
 
 	"GoTenancy/config"
+	amazonpay "GoTenancy/libs/amazon-pay-sdk-go"
+	"GoTenancy/libs/gomerchant"
+	qorrender "GoTenancy/libs/render"
+	"GoTenancy/libs/responder"
+	"GoTenancy/libs/session/manager"
 	"GoTenancy/models/orders"
 	"GoTenancy/utils"
 	"github.com/gorilla/schema"
-	amazonpay "github.com/qor/amazon-pay-sdk-go"
-	"github.com/qor/gomerchant"
-	qorrender "github.com/qor/render"
-	"github.com/qor/responder"
-	"github.com/qor/session/manager"
 )
 
 // Controller products controller
@@ -77,7 +77,7 @@ func (ctrl Controller) CompleteCreditCard(w http.ResponseWriter, req *http.Reque
 	}
 
 	if creditCard.ValidNumber() {
-		// TODO integrate with https://github.com/qor/gomerchant to handle those information
+		// TODO integrate with https://GoTenancy/libs/gomerchant to handle those information
 		tx := utils.GetDB(req)
 		err := orders.OrderState.Trigger("checkout", order, tx, "")
 

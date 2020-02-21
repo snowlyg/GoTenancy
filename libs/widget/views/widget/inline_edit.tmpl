@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <!--
+    ,-----.    ,-----.  ,------.
+    '  .-.  '  '  .-.  ' |  .--. '
+    |  | |  |  |  | |  | |  '--'.'
+    '  '-'  '-.'  '-'  ' |  |\  \
+    `-----'--' `-----'  `--' '--'
+    ENTERPRISE CONTENT MANAGEMENT SYSTEM
+  -->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Stylesheets -->
+    {{stylesheet_tag "qor_admin_default"}}
+    {{load_admin_stylesheets}}
+    {{load_theme_stylesheets}}
+    {{javascript_tag "vendors"}}
+  </head>
+
+  <body class="qor-theme-slideout" style="background-color: rgba(0, 0, 0, 0.5);border:none;">
+    <a style="display:none;" data-url="" class="js-widget-edit-link">{{t "qor_widget.form.edit" "Edit Widget"}}</a>
+
+    <!-- JavaScripts -->
+    <script>
+      QOR_Translations = window.QOR_Translations || {};
+      QOR_Translations.okButton = '{{t "qor_admin.form.ok" "OK"}}'
+      QOR_Translations.cancelButton = '{{t "qor_admin.form.cancel" "Cancel"}}'
+      QOR_Translations.serverError = '{{t "qor_admin.form.serverError" "Server error, please try again later!"}}'
+      QOR_Translations.slideoutCloseWarning = '{{t "qor_admin.slideout.close_warning" "You have unsaved changes on this slideout. If you close this slideout, you will lose all unsaved changes. Are you sure you want to close the slideout?"}}'
+    </script>
+    {{javascript_tag "qor_admin_default"}}
+    {{load_admin_javascripts}}
+    {{load_theme_javascripts}}
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+          function closeWidgetEditBox() {
+            setTimeout(function() {
+              window.parent.document.getElementById('qor-widget-iframe').classList.remove("show");
+              window.parent.document.querySelector('body').classList.remove("open-widget-editor");
+            }, 350);
+          }
+
+          $(document).on('bottomsheetSubmitComplete.qor.bottomsheets', function(){
+            closeWidgetEditBox();
+          })
+          // Reload parent window when click form submitted
+          $('.qor-slideout').on('slideoutSubmitComplete.qor.slideout' , function() {
+            setTimeout(function() {
+              parent.window.location.reload();
+            }, 300);
+          }).on('slideoutClosed.qor.slideout', function(){
+            closeWidgetEditBox();
+          });
+
+      });
+    </script>
+  </body>
+</html>

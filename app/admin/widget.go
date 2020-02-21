@@ -7,15 +7,15 @@ import (
 	"net/http"
 
 	"GoTenancy/config/db"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/banner_editor"
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/media/oss"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/qor/resource"
+	"GoTenancy/libs/sorting"
+	"GoTenancy/libs/widget"
 	"GoTenancy/models/products"
-	"github.com/qor/admin"
-	"github.com/qor/banner_editor"
-	"github.com/qor/l10n"
-	"github.com/qor/media/oss"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/sorting"
-	"github.com/qor/widget"
 )
 
 var Widgets *widget.Widgets

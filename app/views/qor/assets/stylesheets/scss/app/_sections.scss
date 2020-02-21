@@ -1,0 +1,33 @@
+.qor-section {
+    margin: 24px;
+    &.qor-section__table {
+        margin: 24px 0;
+        .qor-section__header {
+            margin-left: 24px;
+        }
+    }
+    >.qor-table-container {
+        margin: 0;
+    }
+}
+
+.qor-section__header {
+    margin-bottom: 8px;
+}
+
+.qor-section-title {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 8px;
+    margin-top: 32px;
+    color: unquote("rgba(#{$color-black}, 0.68)");
+}
+
+.qor-section__col {
+    margin-bottom: 32px;
+    .qor-section-title {
+        font-size: 16px;
+        margin-top: 16px;
+        padding-left: 24px;
+    }
+}

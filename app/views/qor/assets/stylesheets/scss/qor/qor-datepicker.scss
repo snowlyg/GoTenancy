@@ -1,0 +1,107 @@
+.qor-datepicker {
+    .mdl-card {
+        width: 312px !important;
+    }
+    .mdl-card__title {
+        display: none;
+    }
+    .mdl-card__supporting-text {
+        padding: 0;
+    }
+}
+
+.qor-datepicker__picked {
+    padding: 16px 24px;
+    color: #fff;
+    background-color: unquote('rgb(#{$color-primary})');
+}
+
+.qor-datepicker__picked-year {
+    margin-bottom: 8px;
+}
+
+.qor-datepicker__picked-date {
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.qor-datepicker__embedded {
+    padding: 16px;
+    // Reset Datepicker CSS
+    .datepicker-container {
+        float: none;
+        position: static;
+        width: auto;
+    }
+    .datepicker-panel > ul > li[data-view='month current'],
+    .datepicker-panel > ul > li[data-view='years current'],
+    .datepicker-panel > ul > li[data-view='year current'] {
+        width: 200px;
+    }
+    .datepicker-panel {
+        width: 280px;
+        border: none;
+        box-shadow: none;
+    }
+    .datepicker-panel li {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        line-height: 40px;
+    }
+    .datepicker-panel .col-1 {
+        width: 40px;
+    }
+    .datepicker-panel .col-2 {
+        width: 80px;
+    }
+    .datepicker-panel .col-3 {
+        width: 120px;
+    }
+    .datepicker-panel .col-4 {
+        width: 160px;
+    }
+    .datepicker-panel .col-5 {
+        width: 200px;
+    }
+    .datepicker-panel .col-6 {
+        width: 240px;
+    }
+    .datepicker-panel .col-7 {
+        width: 280px;
+    }
+    .datepicker-panel .picked,
+    .datepicker-panel .picked:hover {
+        background-color: unquote('rgb(#{$color-primary})');
+        color: #fff;
+    }
+}
+
+.qor-field__datetimepicker,
+.qor-field__datepicker {
+    position: relative;
+    .qor-datetimepicker__input:disabled,
+    .qor-datepicker__input:disabled {
+        & + div {
+            display: none;
+        }
+    }
+    .qor-action__timepicker,
+    .qor-action__datepicker {
+        bottom: 0;
+        position: absolute;
+        margin: 0;
+    }
+    .qor-action__timepicker {
+        right: 0;
+    }
+    .qor-action__datepicker {
+        right: 40px;
+    }
+    &[data-picker-type='date'] {
+        .qor-action__datepicker {
+            right: 0;
+        }
+    }
+}

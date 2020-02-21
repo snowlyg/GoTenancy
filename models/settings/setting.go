@@ -1,9 +1,9 @@
 package settings
 
 import (
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/location"
 	"github.com/jinzhu/gorm"
-	"github.com/qor/l10n"
-	"github.com/qor/location"
 )
 
 type FeeSetting struct {

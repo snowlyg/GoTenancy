@@ -1,0 +1,14 @@
+<div class="qor-actions exchange-actions">
+  {{$worker := get_resource "Worker"}}
+  {{$prefix := .Admin.GetRouter.Prefix}}
+
+  {{$importTranslationURL := (printf "%v/%v/new?job=Import Translations" $prefix $worker.ToParam)}}
+  <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" data-url="{{$importTranslationURL}}" type="button" title="{{t "qor_i18n.actions.import_translations" "Import Translations"}}">
+    <i class="material-icons">file_upload</i>
+  </button>
+
+  {{$exportTranslationURL := (printf "%v/%v/new?job=Export Translations" $prefix $worker.ToParam)}}
+  <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" data-url="{{$exportTranslationURL}}" type="button" title="{{t "qor_i18n.actions.export_translations" "Export Translations"}}">
+    <i class="material-icons">file_download</i>
+  </button>
+</div>

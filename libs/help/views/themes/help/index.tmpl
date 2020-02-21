@@ -1,0 +1,76 @@
+{{$current_category := (get_current_help_category nil .)}}
+{{$resource := .Resource}}
+{{$actions := load_actions "index" }}
+{{$keyword := .Context.Request.URL.Query.Get "keyword"}}
+{{$context := .}}
+
+{{if $actions}}
+  <div class="qor-page__header">
+    {{$actions}}
+  </div>
+{{end}}
+
+<div class="qor-page__body">
+  <div data-toggle="qor.help">
+    <div class="qor-help__header clearfix">
+      <div class="qor-field">
+        <div class="mdl-textfield mdl-js-textfield">
+          <select name="category" class="qor-help__search-category" data-toggle="qor.chooser" placeholder="category filter">
+            <option value="">{{t "qor_helo.category.all" "All"}}</option>
+            {{range $category := (get_help_categories .)}}
+              <option value="{{index $category 0}}" {{if (eq $current_category (index $category 0))}}SELECTED{{end}}>{{index $category 1}}</option>
+            {{end}}
+          </select>
+        </div>
+      </div>
+
+      <div class="qor-field">
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input qor-help__search" type="text" id="inputSearch" name="keyword" data-help-filter-url="{{url_for $resource}}" value="{{$keyword}}" placeholder="{{t "qor_admin.actions.search_bar_search" "Search"}}">
+          <label class="mdl-textfield__label" for="inputSearch"></label>
+        </div>
+      </div>
+      <div class="qor-field">
+        <button class="mdl-button mdl-button--colored qor-help__search-button" type="button">{{t "qor_admin.actions.search_bar_search" "Search"}}</button>
+      </div>
+    </div>
+
+    <div class="qor-help__body">
+      <div class="qor-help__index">
+        {{render "shared/flashes"}}
+        {{render "shared/errors"}}
+
+        {{if len .Result}}
+          <ul class="qor-help__lists">
+            {{range $result := .Result}}
+              <li>
+                <a href="{{url_for $result $resource}}" data-inline-url="{{url_for $result $resource}}">{{$result.Title}}</a>
+                <span class="qor-help__lists-tags">
+                  {{range $category := $result.Categories.Categories}}
+                    <span data-url="{{patch_url (url_for $resource) "category" $category}}" data-open-type="slideout">{{get_help_category_name $category $context}}</span>
+                  {{end}}
+                </span>
+              </li>
+            {{end}}
+          </ul>
+
+          {{render "index/pagination"}}
+        {{else}}
+          <h2 class="qor-page__tips">
+            {{if $current_category}}
+              {{t "qor_help.no_document_for" "No document for {{$1}}" (get_help_category_name $current_category $context)}}<br>
+              <a href="#" data-url="{{url_for $resource}}" data-open-type="slideout">{{t "qor_help.check_all_documents" "Check All Documents"}}</a>
+            {{else}}
+              {{t "qor_help.no_document" "No document"}}<br>
+            {{end}}
+          </h2>
+        {{end}}
+      </div>
+
+      {{if has_create_permission .Resource}}
+        <a class="mdl-button mdl-button--fab mdl-button--primary mdl-js-button mdl-js-ripple-effect qor-button--new" href="{{patch_url (new_resource_path .Resource) "category" $current_category}}" data-url="{{patch_url (new_resource_path .Resource) "category" $current_category}}" data-open-type="slideout">
+          <i class="material-icons">add</i>
+        </a>
+      {{end}}
+    </div>
+  </div>

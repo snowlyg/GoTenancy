@@ -1,0 +1,32 @@
+{{if (or (eq .Action "edit") (eq .Action "show")) }} {{$resource := .Resource}} {{$result := .Result}} {{$action := print "!" activity_resource.ToParam }}
+
+<div data-toggle="qor.activity" class="qor-activities__container">
+  <div class="qor-activities__header">
+    <button data-id="#activity-form" class="is-active">{{t (printf "%v.name" $resource.ToParam) $resource.Name}}</button>
+    <button data-id="#activity-lists" class="qor-tab__activity" data-resource-url={{join_url (url_for $result $resource) $action}}>
+      {{t "qor_activity.form.tab_title" "Activity"}} {{$activities_count := get_activities_count . }} {{if $activities_count}}
+      <span class="qor-activities__count">{{$activities_count}}</span>
+      {{end}}
+    </button>
+  </div>
+
+  <div id="activity-lists" class="qor-activities__content" data-note-title="{{t " qor_activity.form.note " "Note: "}}" style="display: none;">
+    <div class="qor-activities__new">
+      <h4 class="qor-section-title">{{t "qor_activity.form.new_activity" "New Activity"}}</h4>
+      <form class="qor-activity__new-note_form" action="{{join_url (url_for $result $resource) $action}}" method="POST">
+        {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
+        <div class="qor-form__actions">
+          <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "qor_activity.form.add_activity" "Add Activity"}}</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="qor-activity__lists">
+      <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+    </div>
+
+  </div>
+  <div id="activity-form" class="qor-activities__content"></div>
+</div>
+
+{{end}}

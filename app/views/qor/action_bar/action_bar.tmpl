@@ -1,0 +1,13 @@
+{{with .Result}}
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="{{ .RouterPrefix }}/assets/stylesheets/action_bar.css?theme=action_bar">
+
+  <div class="qor-actionbar">
+    <div class="qor-actionbar--container">
+      {{$actions := load_actions "action_bar" }}
+      {{if $actions}}
+        {{$actions}}
+      {{end}}
+    </div>
+  </div>
+{{end}}

@@ -1,0 +1,42 @@
+{{$context := .}}
+{{$actions := load_actions "index" }}
+{{if $actions}}
+  <div class="qor-page__header">
+    {{$actions}}
+  </div>
+{{end}}
+
+<div class="qor-page__body">
+  {{range $result := .Result}}
+    <div class="qor-section">
+      <div class="qor-section__header">
+        {{$res := $result.Resource}}
+        {{if $res.Config.Singleton}}
+          <h4 class="qor-section-title">{{t (printf "%v.name" $res.ToParam) $res.Name}}</h4>
+        {{else}}
+          <h4 class="qor-section-title">{{t (printf "%v.name" $res.ToParam) (plural $res.Name)}}</h4>
+        {{end}}
+      </div>
+
+      {{if $result.ComingOnlineResults}}
+        <div class="qor-section__col">
+          <div class="qor-section__header">
+            <h4 class="qor-section-title">{{t "qor_publish.Coming Online" "Coming Online"}}</h4>
+          </div>
+
+          {{(new_resource_context $res).Render "index/table" $result.ComingOnlineResults}}
+        </div>
+      {{end}}
+
+      {{if $result.GoingOfflineResults}}
+        <div class="qor-section__col">
+          <div class="qor-section__header">
+            <h4 class="qor-section-title">{{t "qor_publish.Going Online" "Going Offline"}}</h4>
+          </div>
+
+          {{(new_resource_context $res).Render "index/table" $result.GoingOfflineResults}}
+        </div>
+      {{end}}
+    </div>
+  {{end}}
+</div>

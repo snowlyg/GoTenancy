@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/publish2"
+	"GoTenancy/libs/sorting"
+	"GoTenancy/libs/validations"
 	color2 "github.com/fatih/color"
 	"github.com/jinzhu/gorm"
-	"github.com/qor/l10n"
-	"github.com/qor/publish2"
-	"github.com/qor/sorting"
-	"github.com/qor/validations"
 )
 
 type Color struct {

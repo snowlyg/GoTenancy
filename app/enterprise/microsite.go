@@ -4,13 +4,13 @@ package enterprise
 
 import (
 	adminapp "GoTenancy/app/admin"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/publish2"
+	"GoTenancy/libs/roles"
 	"enterprise.getqor.com/microsite"
 	"enterprise.getqor.com/microsite/develop/aws_manager"
 	"github.com/jinzhu/configor"
-	"github.com/qor/admin"
-	"github.com/qor/l10n"
-	"github.com/qor/publish2"
-	"github.com/qor/roles"
 )
 
 var MicroSite *microsite.MicroSite

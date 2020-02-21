@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <style>
+      body {
+        background-color: rgb(250, 250, 250);
+        padding-top: 30px;
+      }
+      .qor-widget-preview {
+        width: 1280px;
+        max-width: 1280px;
+        margin: 40px auto;
+        font-size: 14px;
+      }
+      h1.qor-widget-preview-title  {
+        font-size: 24px;
+        color: rgba(0,0,0,.75);
+        margin-bottom: 20px;
+      }
+      .qor-widget-preview-container {
+        border: 1px solid #eee;
+        padding: 10px 20px;
+        background-color: #fff;
+      }
+    </style>
+    {{ load_preview_assets }}
+  </head>
+
+  <body>
+    <div class="qor-widget-preview">
+      <h1 class="qor-widget-preview-title">{{ t "qor_admin.widget.preview_by_name" "Preview Widget: {{.WidgetName}}" .Result}}</h1>
+
+      <div class="qor-widget-preview-container">
+        {{render_widget .Result.WidgetName}}
+      </div>
+    </div>
+  </body>
+</html>

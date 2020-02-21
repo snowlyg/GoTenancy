@@ -1,0 +1,59 @@
+{{$metaConfig := .Meta.Config}}
+{{$current_values := (raw_value_of .ResourceValue .Meta)}}
+<div class="qor-field collection-edit qor-fieldset-container qor-sortable qor-fieldset-sortable" data-toggle="qor.collection.sortable" {{if $metaConfig.Max}}data-max-item="{{$metaConfig.Max}}" data-max-item-hint="Up to {{$metaConfig.Max}} {{meta_label .Meta}}"{{end}}>
+  <label class="qor-field__label" for="{{.InputId}}">
+    {{meta_label .Meta}}
+  </label>
+  <div class="qor-sortable__button">
+    <button class="mdl-button mdl-button--primary mdl-js-button qor-sortable__button-change" type="button">{{t "qor_admin.form.button.change_position" "Change Position"}}</button>
+    <button class="mdl-button mdl-button--primary mdl-js-button qor-sortable__button-done" type="button" style="display: none">{{t "qor_admin.form.button.done" "Done"}}</button>
+  </div>
+  <div class="qor-field__block qor-sortable__block">
+    {{$meta := .Meta}}
+    {{if $current_values}}
+      {{range $index, $value := $current_values }}
+        <fieldset class="qor-fieldset qor-sortable__item" style="order: {{$index}}" order-index="{{$index}}" order-item="item_{{$index}}">
+
+          <div class="qor-sortable__change">
+            <div class="qor-sortable__action" style="display: none;">
+              <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button qor-sortable__button-move" type="button">
+                {{t "qor_admin.form.button.move" "Move"}}
+              </button>
+            </div>
+          </div>
+
+          {{if has_delete_permission $meta}}
+            <button class="mdl-button qor-button--muted mdl-button--icon mdl-js-button qor-fieldset__delete qor-sortable__button-delete" type="button">
+              <i class="material-icons md-18">delete</i>
+            </button>
+          {{end}}
+          {{render_nested_form $value (edit_sections $meta.Resource) $index}}
+        </fieldset>
+      {{end}}
+    {{end}}
+
+    {{if has_create_permission .Meta}}
+      <fieldset class="qor-fieldset qor-sortable__item qor-fieldset--new" style="display: none">
+        <div class="qor-sortable__change">
+          <div class="qor-sortable__action" style="display: none;">
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button qor-sortable__button-move" type="button">
+              {{t "qor_admin.form.button.move" "Move"}}
+            </button>
+          </div>
+        </div>
+
+        <button class="mdl-button qor-button--muted mdl-button--icon mdl-js-button qor-fieldset__delete qor-sortable__button-delete" type="button">
+          <i class="material-icons md-18">delete</i>
+        </button>
+        {{render_nested_form $meta.Resource.GetResource.Value (new_sections $meta.Resource) (len $current_values)}}
+      </fieldset>
+
+      <button class="mdl-button mdl-button--primary mdl-js-button qor-fieldset__add qor-sortable__button-add" type="button">
+        {{t (printf "%v.attributes.add_%v" .BaseResource.ToParam (singular (meta_label .Meta))) (printf "Add %v" (singular (meta_label .Meta)))}}
+      </button>
+    {{end}}
+  </div>
+</div>
+
+{{javascript_tag "sorting-sortable-collection-edit"}}
+{{stylesheet_tag "sorting-sortable-collection-edit"}}

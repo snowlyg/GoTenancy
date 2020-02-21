@@ -1,0 +1,14 @@
+{{$value := (raw_value_of .ResourceValue .Meta)}}
+{{if $value}}
+  {{if $value.IsImage}}
+    {{if (index $value.GetSizes "@qor_preview")}}
+      <img src="{{$value.URL "@qor_preview"}}" alt="{{$value.GetFileName}}">
+    {{else}}
+      <img src="{{$value.URL}}" alt="{{$value.GetFileName}}">
+    {{end}}
+  {{else if (eq $value.Ext ".svg")}}
+    <img src="{{$value.URL}}" alt="{{$value.GetFileName}}">
+  {{else}}
+    <span class="qor-table--medialibrary-file"><a href="{{$value.URL}}">{{$value.GetFileName}}</a></span>
+  {{end}}
+{{end}}

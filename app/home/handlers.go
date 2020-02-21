@@ -3,9 +3,9 @@ package home
 import (
 	"net/http"
 
-	"github.com/qor/qor"
-	"github.com/qor/qor/utils"
-	"github.com/qor/render"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/qor/utils"
+	"GoTenancy/libs/render"
 )
 
 // Controller home controller

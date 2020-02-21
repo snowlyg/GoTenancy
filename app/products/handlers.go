@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
+	"GoTenancy/libs/render"
 	"GoTenancy/models/products"
 	"GoTenancy/utils"
-	"github.com/qor/render"
 )
 
 // Controller products controller

@@ -1,0 +1,57 @@
+{{$result := .Result}}
+{{$resource := .Resource}}
+{{$context := .}}
+
+{{$actions := load_actions "new"}}
+{{if $actions}}
+  <div class="qor-page__header">{{$actions}}</div>
+{{end}}
+
+<div class="qor-page__body qor-page__edit">
+  {{render "shared/flashes"}}
+  {{render "shared/errors"}}
+
+  <div class="qor-form-container">
+    <form class="qor-form" action="{{url_for $result $resource}}" method="POST" enctype="multipart/form-data" data-action-url="{{join_url (url_for $result $resource) "!setting"}}">
+
+      <div class="qor-layout__widget qor-layout__widget-new" data-toggle="qor.widget">
+        <ul class="qor-slideout__lists">
+          {{$groupWidgets := widget_grouped_widgets $context}}
+          {{range $groupWidget := $groupWidgets}}
+            <li>
+              {{if $groupWidget.Group}}
+                <h5 class="qor-slideout__lists-groupname">{{t (printf "qor_widgets.group.%v" $groupWidget.Group) $groupWidget.Group}}</h5>
+              {{else if (gt (len $groupWidgets) 1)}}
+                <h5 class="qor-slideout__lists-groupname">{{t "qor_widgets.group.other" "Other"}}</h5>
+              {{end}}
+
+              <div class="qor-slideout__lists-item">
+                {{range $widget := $groupWidget.Widgets}}
+                  <a href="{{patch_url (join_url (url_for $resource) "!setting") "widget_type" $widget.Name}}" data-widget-type="{{$widget.Name}}" data-widget-name="{{$widget.Name}}" class="qor-widget__new">
+                    {{if $widget.PreviewIcon}}
+                      <img src="{{$widget.PreviewIcon}}">
+                    {{end}}
+                    <span>{{$widget.Name}}</span>
+                  </a>
+                {{end}}
+              </div>
+            </li>
+          {{end}}
+        </ul>
+
+        <div class="qor-layout__widget-selector" style="display: none;">
+          <h5 class="qor-layout__widget-name"></h5>
+          {{render_form $result new_sections}}
+        </div>
+        <div class="qor-layout__widget-setting"></div>
+
+        {{if has_update_permission $resource}}
+          <div class="qor-form__actions qor-layout__widget-actions" style="display: none;">
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button qor-button--save" type="submit">{{t "qor_admin.form.save" "Save"}}</button>
+            <a class="mdl-button mdl-button--primary mdl-js-button qor-widget__cancel" href="javascript://">{{t "qor_admin.form.cancel" "Cancel"}}</a>
+          </div>
+        {{end}}
+      </div>
+    </form>
+  </div>
+</div>

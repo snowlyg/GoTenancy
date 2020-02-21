@@ -3,7 +3,7 @@ package pages
 import (
 	"net/http"
 
-	"github.com/qor/render"
+	"GoTenancy/libs/render"
 )
 
 // Controller home controller

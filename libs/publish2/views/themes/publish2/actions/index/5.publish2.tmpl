@@ -1,0 +1,73 @@
+{{$resource := .Resource}}
+{{$context := .}}
+{{$scheduledStartAtMeta := $resource.GetMeta "ScheduledStartAt"}}
+
+{{if $scheduledStartAtMeta}}
+  <div class="qor-actions qor-actions__filter-time " data-toggle="qor.filter.time">
+    <div class="qor-selector left-aligned">
+      <a href="javascript://" class="qor-selector-toggle qor-filter-toggle">
+        <span class="qor-selector-label" data-label="{{t "qor_publish.schedule.schedule_time" "Schedule Time"}}">{{t "qor_publish.schedule.scheduled_publishing" "All Scheduled Publishing"}}</span>
+        <i class="material-icons qor-selector-arrow">arrow_drop_down</i>
+      </a>
+    </div>
+
+    <div class="qor-filter__block qor-filter__dropdown clearfix" style="display: none;">
+
+      <div class="qor-filter__block-buttons">
+        <div class="qor-filter__block-normal">
+          <button type="button" class="mdl-button mdl-js-button" data-filter-range="today">{{t "qor_publish.schedule.today" "Today"}}</button>
+          <button type="button" class="mdl-button mdl-js-button" data-filter-range="week">{{t "qor_publish.schedule.this_week" "This Week"}}</button>
+          <button type="button" class="mdl-button mdl-js-button" data-filter-range="month">{{t "qor_publish.schedule.this_month" "This Month"}}</button>
+        </div>
+
+        {{$eventResource := (get_scheduled_event_resource .)}}
+        {{$eventResults := (get_scheduled_events .)}}
+        {{$scheduleStartAtMeta := $eventResource.GetMeta "ScheduledStartAt"}}
+        {{$scheduleEndAtMeta := $eventResource.GetMeta "ScheduledEndAt"}}
+        {{if len $eventResults}}
+          <div class="qor-filter__block-events">
+            <label class="qor-field__label">{{t "qor_publish.schedule.events" "Events"}}</label>
+            {{range $event := $eventResults}}
+              <button type="button" class="mdl-button mdl-js-button" data-filter-range="events" data-schedule-start-at="{{render_meta $event $scheduleStartAtMeta}}" data-schedule-end-at="{{render_meta $event $scheduleEndAtMeta}}">{{$event.Name}}</button>
+            {{end}}
+          </div>
+        {{end}}
+      </div>
+
+      <label class="qor-field__label">{{t "qor_publish.schedule.custom" "Custom"}}</label>
+      <div class="qor-field__edit qor-field__datetimepicker" data-picker-type="datetime">
+        <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+          <label class="qor-field__label mdl-textfield__label"></label>
+          <input class="mdl-textfield__input qor-datetimepicker__input qor-filter__start" data-search-param="schedule_start_at" placeholder="{{meta_placeholder $scheduleStartAtMeta $context $scheduleStartAtMeta.Label}}" type="text" value="" />
+        </div>
+        <div>
+          <button data-toggle="qor.datepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__datepicker" type="button">
+            <i class="material-icons">date_range</i>
+          </button>
+
+          <button data-toggle="qor.timepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__timepicker" type="button">
+            <i class="material-icons">access_time</i>
+          </button>
+        </div>
+      </div>
+
+      <div class="qor-field__edit qor-field__datetimepicker" data-picker-type="datetime">
+        <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+          <label class="qor-field__label mdl-textfield__label"></label>
+          <input class="mdl-textfield__input qor-datetimepicker__input qor-filter__end" data-search-param="schedule_end_at" placeholder="{{meta_placeholder $scheduleEndAtMeta $context $scheduleEndAtMeta.Label}}" type="text" value="" />
+        </div>
+        <div>
+          <button data-toggle="qor.datepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__datepicker" type="button">
+            <i class="material-icons">date_range</i>
+          </button>
+
+          <button data-toggle="qor.timepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__timepicker" type="button">
+            <i class="material-icons">access_time</i>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button qor-filter__button-search">{{t "qor_admin.form.done" "Done"}}</button>
+    </div>
+  </div>
+{{end}}

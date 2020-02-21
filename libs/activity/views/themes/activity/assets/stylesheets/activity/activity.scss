@@ -1,0 +1,162 @@
+.qor-theme-activity {
+    .qor-activity__list-title,
+    .qor-activity__list-date {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.54);
+    }
+    .qor-activity__list-title {
+        float: left;
+    }
+    .qor-activity__list-date {
+        float: right;
+    }
+
+    .qor-activities__header {
+        min-height: 48px;
+        height: 48px;
+        background-color: #03a9f4;
+        margin: 0 -24px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.12);
+        > button {
+            width: 49.7%;
+            background: none;
+            outline: none;
+            font-weight: 500;
+            min-height: 48px;
+            height: 48px;
+            color: rgba(255, 255, 255, 0.6);
+            border: 0;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            &.is-active {
+                color: #fff;
+                border-bottom: 2px solid #fff;
+            }
+        }
+        .qor-activities__count {
+            position: relative;
+            top: -2px;
+            left: 0;
+            border-radius: 50%;
+            text-align: center;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            font-size: 10px;
+            z-index: 9999;
+            background-color: #ff4081;
+            color: #fff;
+            display: inline-block;
+        }
+    }
+    .qor-activity__list {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        position: relative;
+        .qor-activity__list-date {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.54);
+        }
+        img {
+            max-width: 100%;
+        }
+        .qor-activity__edit-button,
+        .qor-activity__edit-save-button {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+        }
+        .qor-activity__edit-save-button {
+            display: none;
+        }
+        .qor-activity__list-content {
+            padding-top: 16px;
+            font-size: 14px;
+            margin-bottom: 14px;
+            clear: both;
+        }
+        .qor-activity__edit-feilds {
+            width: calc(100% - 77px);
+            display: none;
+            input {
+                font-size: 14px;
+                font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            }
+        }
+        .qor-activity__list-note {
+            padding-top: 2px;
+            padding-bottom: 3px;
+            display: inline-block;
+        }
+        .show {
+            display: inline-block;
+        }
+        .hide {
+            display: none;
+        }
+        .mdl-textfield {
+            padding: 0;
+        }
+        .mdl-textfield__label::after {
+            bottom: 0;
+        }
+    }
+
+    .qor-activities__new {
+        .qor-field__show {
+            display: none;
+        }
+
+        .qor-field__edit {
+            display: block;
+        }
+
+        .qor-form__actions {
+            margin: 0 0 24px;
+        }
+    }
+
+    .qor-page__header {
+        & + .qor-page__edit,
+        & + .qor-page__show {
+            padding-top: 0 !important;
+            .mdl-layout__container {
+                margin-top: -8px;
+            }
+        }
+    }
+
+    .mdl-layout__content.qor-page {
+        #activity-lists {
+            padding: 0 24px;
+        }
+        .qor-activities__container {
+            margin-top: -8px;
+            .qor-activities__header {
+                margin: 0;
+                background-color: #0277bd;
+            }
+        }
+        .qor-activities__content {
+            .qor-page__header {
+                box-shadow: none;
+                position: static;
+                background-color: transparent;
+                width: auto;
+                margin-top: 24px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .qor-theme-activity {
+        .qor-tab-bar--activity-header {
+            display: block;
+        }
+    }
+}

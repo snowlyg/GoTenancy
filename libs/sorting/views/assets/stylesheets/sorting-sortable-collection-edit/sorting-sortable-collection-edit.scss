@@ -1,0 +1,57 @@
+.qor-sortable {
+    position: relative;
+    .qor-sortable__action-position {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 60px;
+        height: 24px;
+        line-height: 20px;
+        border: 2px solid #03a9f4;
+        border-radius: 2px;
+        background: #fff url('../images/icon_trangle.svg') no-repeat 90% center;
+        background-size: 9px;
+        display: inline-block;
+        text-indent: 5px;
+    }
+
+    .qor-sortable__block {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .qor-sortable__button-add {
+        order: 9999;
+        margin-top: 16px;
+    }
+
+    .qor-fieldset {
+        padding-top: 24px;
+        margin-bottom: 0;
+    }
+    .qor-sortable__button {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .qor-sortable__change {
+        position: absolute;
+        top: 12px;
+        right: 24px;
+        z-index: 100;
+    }
+    .qor-sortable__button button {
+        padding: 0;
+        &:hover {
+            background: none;
+        }
+    }
+    .qor-sortable__button-add {
+        flex-direction: column;
+    }
+    .qor-sortable__button button,
+    .qor-sortable__button-move {
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+    }
+}

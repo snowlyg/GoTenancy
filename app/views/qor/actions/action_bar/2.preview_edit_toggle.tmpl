@@ -1,0 +1,30 @@
+{{with .Result}}
+  <script type='text/javascript'>
+    $(function (){
+      $('.qor-actionbar__module-edit').on('click', function (){
+        $('.qor-actionbar__module-checkbox').prop('checked',true).trigger('change');
+      });
+
+      $('.qor-actionbar__module-preview').on('click', function (){
+        $('.qor-actionbar__module-checkbox').prop('checked',false).trigger('change');
+      });
+
+      $('.qor-actionbar__module-checkbox').on('change', function (){
+        setTimeout(function (){
+          window.location.href = {{ .RouterPrefix }} + "/action_bar/switch_mode?checked=" + $('.qor-actionbar__module-checkbox').prop('checked');
+        },800)
+      });
+    })
+  </script>
+
+  {{ if .CurrentUser }}
+    <div class="qor-actionbar__left">
+      <div class="qor-actionbar__module">
+        <a class="qor-actionbar__module-preview">{{t "qor_action_bar.action.preview" "PREVIEW"}}</a>
+        <input class='qor-actionbar__module-checkbox' id='cb2' type='checkbox' {{if .EditMode}}checked{{end}}>
+        <label class='qor-actionbar__module-button' for='cb2' ></label>
+        <a class="qor-actionbar__module-edit">{{t "qor_action_bar.action.edit" "EDIT"}}</a>
+      </div>
+    </div>
+  {{end}}
+{{end}}

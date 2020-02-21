@@ -3,9 +3,9 @@ package users
 import (
 	"time"
 
+	"GoTenancy/libs/media"
+	"GoTenancy/libs/media/oss"
 	"github.com/jinzhu/gorm"
-	"github.com/qor/media"
-	"github.com/qor/media/oss"
 )
 
 type User struct {

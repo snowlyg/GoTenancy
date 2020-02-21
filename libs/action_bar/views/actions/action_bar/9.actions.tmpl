@@ -1,0 +1,26 @@
+{{$context := .}}
+{{with .Result}}
+  {{ if .CurrentUser }}
+    <div class="qor-actionbar__right">
+      <div class="qor-actionbar__info">
+        <span>{{t "qor_action_bar.action.logged_as" "Logged in as {{.DisplayName}}" .CurrentUser}}</span>
+        <a href="{{.Auth.LogoutURL $context}}">{{t "qor_action_bar.action.logout" "LOGOUT"}}</a>
+      </div>
+
+      {{if .Actions}}
+        <div class="qor-actionbar__menu">
+          <label for="qor-actionbar__menu-checkbox">
+            <i class="material-icons">more_vert</i>
+            <ul style="display:none;">
+              {{ range $action := .Actions }}
+                <li>{{$action.ToHTML $context}}</li>
+              {{ end }}
+            </ul>
+          </label>
+        </div>
+      {{ end }}
+    </div>
+  {{ else }}
+    <a class="qor-actionbar__login" href="{{.Auth.LoginURL $context}}">{{t "qor_action_bar.action.login" "LOGIN"}}</a>
+  {{ end }}
+{{end}}

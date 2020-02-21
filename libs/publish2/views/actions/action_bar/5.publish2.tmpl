@@ -1,0 +1,56 @@
+{{with .Result}}
+  <script src="{{ .RouterPrefix }}/assets/javascripts/datetimepicker.js"></script>
+  <script src="{{ .RouterPrefix }}/assets/javascripts/publish2_inline_edit.js?theme=publish2"></script>
+  <link type="text/css" rel="stylesheet" href="{{ .RouterPrefix }}/assets/stylesheets/datetimepicker.css" />
+  <link type="text/css" rel="stylesheet" href="{{ .RouterPrefix }}/assets/stylesheets/publish2_inline_edit.css?theme=publish2" />
+{{end}}
+
+{{$requestingDraftContent := (get_requesting_publish_draft_content .)}}
+{{$publish_schedule_time := get_publish_schedule_time .}}
+<div class="qor-actions qor-actions__filter-time" data-toggle="qor.filter.time">
+  <div class="qor-selector left-aligned">
+    <a href="javascript://" class="qor-selector-toggle qor-filter-toggle">
+      <span {{if (or $requestingDraftContent $publish_schedule_time)}}style="display:none"{{end}}>{{t "qor_publish.action_bar.title.filter_by" "TIME TRAVEL/PUBLISH STATE…"}}</span>
+
+      <span class=" qor-actions__filter-item" {{if not $requestingDraftContent}}style="display: none;"{{end}}>
+        <i class="material-icons qor-selector-clear" data-type="publishready">clear</i>
+        <span class="qor-publishready-label">
+          {{if $requestingDraftContent}}
+            {{t "qor_publish.action_bar.include_content_that_not_publish_ready" "Include content that is not Publish-ready"}}
+          {{end}}
+        </span>
+      </span>
+
+      <span class="qor-actions__filter-item" {{if not $publish_schedule_time}}style="display: none;"{{end}}>
+        <i class="material-icons qor-selector-clear">clear</i>
+        <span class="qor-selector-label">{{$publish_schedule_time}}</span>
+      </span>
+    </a>
+  </div>
+
+  <div class="qor-filter__block qor-filter__dropdown clearfix" style="display: none;">
+
+    <div class="qor-field__edit qor-field__publishready" data-search-param="publish_draft_content">
+      <label>
+        <input type="checkbox" name="QorResource.PublishReady" id="qor-publishready__off" {{if $requestingDraftContent}}checked{{end}} data-label="{{t "qor_publish.action_bar.include_content_that_not_publish_ready" "Include content that is not Publish-ready"}}" /> 
+        {{t "qor_publish.action_bar.include_content_that_not_publish_ready" "Include content that is not Publish-ready"}}
+      </label>
+    </div>
+
+    <div class="qor-field__edit qor-field__datetimepicker" data-picker-type="datetime">
+      <label class="qor-field__label">{{t "qor_publish.action_bar.time_travel" "Time Travel"}}</label>
+      <input class="qor-datetimepicker__input qor-filter__scheduled-time" placeholder="YYYY-MM-DD" data-search-param="publish_scheduled_time" type="text" value="{{get_publish_schedule_time .}}" />
+      <div class="qor-field__datetimepicker-button">
+        <button data-toggle="qor.datepicker" class="qor-action__datepicker" type="button">
+          <i class="material-icons">date_range</i>
+        </button>
+
+        <button data-toggle="qor.timepicker" class="qor-action__timepicker" type="button">
+          <i class="material-icons">access_time</i>
+        </button>
+      </div>
+    </div>
+
+    <button type="button" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button qor-filter__button-search">{{t "qor_admin.form.done" "Done"}}</button>
+  </div>
+</div>

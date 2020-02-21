@@ -1,0 +1,9 @@
+{{stylesheet_tag "notifications"}}
+{{javascript_tag "notifications"}}
+
+{{$unresolved_notifications_count := (unresolved_notifications_count .)}}
+{{$notification_url := (join_url .Admin.GetRouter.Prefix "!notifications")}}
+<label class="mdl-button mdl-js-button mdl-button--icon qor-notifications__badges" data-url="{{$notification_url}}" data-open-type="slideout">
+  {{if $unresolved_notifications_count}}<span class="qor-notifications__unread">{{$unresolved_notifications_count}}</span>{{end}}
+  <i class="material-icons">notifications</i>
+</label>

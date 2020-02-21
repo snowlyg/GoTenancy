@@ -6,15 +6,15 @@ import (
 	adminapp "GoTenancy/app/admin"
 	"GoTenancy/config/application"
 	"GoTenancy/config/db"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/page_builder"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/qor/resource"
+	"GoTenancy/libs/qor/utils"
+	"GoTenancy/libs/render"
+	"GoTenancy/libs/widget"
 	"GoTenancy/models/blogs"
 	"GoTenancy/utils/funcmapmaker"
-	"github.com/qor/admin"
-	"github.com/qor/page_builder"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/qor/utils"
-	"github.com/qor/render"
-	"github.com/qor/widget"
 )
 
 // New new home app

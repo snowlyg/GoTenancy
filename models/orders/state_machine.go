@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"GoTenancy/config"
+	amazonpay "GoTenancy/libs/amazon-pay-sdk-go"
+	"GoTenancy/libs/transition"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
 	"github.com/jinzhu/gorm"
-	amazonpay "github.com/qor/amazon-pay-sdk-go"
-	"github.com/qor/transition"
 )
 
 var (

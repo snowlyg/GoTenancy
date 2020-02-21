@@ -1,0 +1,17 @@
+{{$messages := .Result.Messages}}
+
+<div class="qor-form-container qor-notifications" data-slideout-type="mini" data-toggle="qor.action.bulk">
+  {{range $message := $messages.Notifications}}
+    {{render "notifications/notification" $message}}
+  {{end}}
+
+  {{if $messages.Resolved}}
+    <h6 class="qor-notifications--archived">{{t "qor_notification.hints.archived_notifications" "Archived Notifications"}}</h6>
+    {{range $message := $messages.Resolved}}
+      {{render "notifications/notification" $message}}
+    {{end}}
+  {{end}}
+
+  {{$notification_url := printf "%v/%v" .Admin.GetRouter.Prefix "!notifications"}}
+  <a class="qor-notification__load-more" data-loading="{{t "qor_notification.hints.loading" "LOADING..."}}" href="{{patch_url $notification_url "page" .Result.LoadMoreNextPage}}">{{t "qor_notification.hints.load_more" "LOAD MORE..."}}</a>
+</div>

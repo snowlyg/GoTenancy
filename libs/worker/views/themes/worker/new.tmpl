@@ -1,0 +1,43 @@
+{{$resource := .Resource}}
+{{$worker := .Result}}
+{{$grouped_jobs := (get_grouped_jobs $worker .)}}
+
+<div class="qor-page__body">
+  {{render "shared/flashes"}}
+  {{render "shared/errors"}}
+
+  <div class="qor-form-container">
+    <div data-toggle="qor.workers">
+      <a class="qor-button--back hidden" href="#">
+        <i class="material-icons">arrow_back</i><span>{{t "qor_worker.actions.back_to_lists" "Back To Lists"}}</span>
+      </a>
+      <ul class="qor-worker-form">
+      {{range $title, $jobs := $grouped_jobs}}
+        {{$show_form := (and (eq (len $grouped_jobs) 1) (eq (len $jobs) 1))}}
+        <li {{if $show_form}}class="qor-worker-form--show"{{end}}>
+          {{if $title}}
+            <h5>{{t (print "qor_worker.job_groups." $title) $title}}</h5>
+          {{else}}
+            <h5>{{t "qor_worker.new_worker.worker_jobs" "Worker Jobs"}}</h5>
+          {{end}}
+
+          {{range $job := $jobs}}
+            <div class="qor-worker-form-list {{if not $title}}{{if gt (len $jobs) 1}}no-title{{end}}{{end}}">
+              <a href="#" class="qor-worker--new">{{t (print "qor_worker.jobs." $job.Name) $job.Name}}</a>
+              <form action="{{url_for $resource}}" data-refresh-url="{{url_for $resource}}" method="POST" {{if not $show_form}}class="hidden"{{end}}>
+                <input name="job_name" value={{$job.Name}} type="hidden">
+                {{render_form $job.NewStruct (new_sections $worker.JobResource)}}
+
+                <div class="qor-form__actions">
+                  <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t (print "qor_worker.jobs." $job.Name) $job.Name}}</button>
+                  {{if not $show_form}}<a class="mdl-button mdl-button--primary qor-button--back fr">{{t "qor_admin.form.cancel" "Cancel"}}</a>{{end}}
+                </div>
+              </form>
+            </div>
+          {{end}}
+        </li>
+      {{end}}
+      </ul>
+    </div>
+  </div>
+</div>

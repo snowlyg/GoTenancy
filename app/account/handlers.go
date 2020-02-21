@@ -3,10 +3,10 @@ package account
 import (
 	"net/http"
 
+	"GoTenancy/libs/render"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
-	"github.com/qor/render"
 )
 
 // Controller products controller

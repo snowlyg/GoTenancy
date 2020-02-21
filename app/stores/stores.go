@@ -4,12 +4,12 @@ import (
 	"strings"
 
 	"GoTenancy/config/application"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/qor/resource"
+	"GoTenancy/libs/qor/utils"
+	"GoTenancy/libs/validations"
 	"GoTenancy/models/stores"
-	"github.com/qor/admin"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/qor/utils"
-	"github.com/qor/validations"
 )
 
 // New new home app

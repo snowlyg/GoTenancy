@@ -6,10 +6,10 @@ import (
 	"fmt"
 
 	"GoTenancy/config/db"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/qor"
 	"GoTenancy/models/products"
 	"enterprise.getqor.com/promotion"
-	"github.com/qor/admin"
-	"github.com/qor/qor"
 )
 
 // SetupPromotion setup promotion

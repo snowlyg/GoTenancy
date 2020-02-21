@@ -1,0 +1,196 @@
+{{$metaConfig := .Meta.Config}}
+
+<div class="qor-field qor-field__mediabox" data-toggle="qor.mediabox">
+  <label class="qor-field__label" for="{{.InputId}}">
+    {{meta_label .Meta}}
+  </label>
+
+  <div class="qor-field__block">
+    {{$value := (raw_value_of .ResourceValue .Meta)}}
+
+    <div class="qor-field__edit">
+      <div class="qor-field__mediabox-list">
+        {{if $value}}
+          <textarea class="hidden qor-field__mediabox-data" name="{{.InputName}}" aria-hidden="true">{{marshal $value.Files}}</textarea>
+
+          {{if $value.Files}}
+            {{range $file := $value.Files}}
+              <div class="qor-file qor-field__mediabox-item {{if not $file.IsImage}}qor-field__file-item{{end}} {{if $file.IsSVG}}is-svg{{end}}" data-media-library-url="{{printf "%s/%v" (url_for $metaConfig.RemoteDataResource) $file.ID}}" data-primary-key={{$file.ID}} data-original-url="{{$file.URL "original"}}">
+                <div class="qor-file__list">
+                  {{if $file.IsImage}}
+                    <textarea class="qor-file__options hidden" data-cropper-title="{{t "qor_media_library.form.crop_image" "Crop the image"}}" data-cropper-cancel="{{t "qor_media_library.form.cancel" "Cancel"}}" data-cropper-ok="{{t "qor_media_library.form.save" "SAVE"}}" data-fetch-sizedata="{{printf "%s/%v" (url_for $metaConfig.RemoteDataResource) $file.ID}}" aria-hidden="true"></textarea>
+                  {{end}}
+
+                  <ul class="clearfix">
+                    {{if $file.IsImage}}
+                      {{if $metaConfig.Sizes}}
+                        {{range $key, $size := $metaConfig.Sizes}}
+                          {{if not (is_included $key "@")}}
+                            <li>
+                              <img src="{{$file.URL $key}}" data-original-url="{{$file.URL "original"}}" data-size-name="{{$key}}" data-size-resolution="{{marshal $size}}" />
+                              <span>{{$key}} ({{$size.Width}}&times;{{$size.Height}} px)</span>
+                            </li>
+                          {{end}}
+                        {{end}}
+                      {{else}}
+                        <li>
+                          <img src="{{$file.URL}}" data-original-url="{{$file.URL "original"}}" data-size-name="original">
+                        </li>
+                      {{end}}
+                    {{else if $file.VideoLink}}
+                      <li>
+                        <span class="qor-linkify-object" data-video-link="{{$file.Url}}">{{$file.Url}}</span>
+                        <div class="qor-cropper__toggle">
+                          <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+                        </div>
+                      </li>
+                    {{else if $file.IsSVG}}
+                      <li>
+                        <img src="{{$file.URL}}" class="is-svg" />
+                        <div class="qor-cropper__toggle">
+                          <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+                        </div>
+                      </li>
+                    {{else if $file.IsVideo}}
+                      <li>
+                        <video width=100% height=100% controls><source src="{{$file.Url}}"></video>
+                        <div class="qor-cropper__toggle">
+                          <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+                        </div>
+                      </li>
+                    {{else}}
+                      <li class="qor-file__list-item">
+                        <span><span>{{$file.FileName}}</span></span>
+                        <div class="qor-cropper__toggle">
+                          <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+                          <div class="qor-cropper__toggle--download">
+                            <a href="{{$file.URL}}" class="qor-file__action-download" download="{{$file.FileName}}" title="{{t "qor_media_library.form.download" "Download"}}"><i class="material-icons">file_download</i></a>
+                          </div>
+                        </div>
+                      </li>
+                    {{end}}
+                  </ul>
+
+                  <input type="file" class="qor-file__input visuallyhidden" />
+
+                </div>
+              </div>
+            {{end}}
+          {{end}}
+        {{end}}
+      </div>
+
+      <label class="mdl-button qor-button__icon-add mdl-button--primary"
+             data-mediabox-url="{{url_for $metaConfig.RemoteDataResource}}"
+             data-select-modal="mediabox"
+             data-select-id={{.InputId}}
+             title="{{t "qor_media_library.form.choose_file" "Choose File"}}"
+             {{if $metaConfig.Sizes}}data-crop-sizes="{{range $key, $size := $metaConfig.Sizes}}{{$key}},{{end}}"{{end}}
+             {{if not (has_update_permission .Meta)}}disabled data-is-disabled="true"{{end}}
+             {{if $metaConfig.Max}}
+             data-max-item="{{$metaConfig.Max}}"
+             data-max-item-hint="{{t "qor_media_library.form.choose_file.max_hint" "Choose up to {{$1}} item(s)" $metaConfig.Max}}"
+             {{end}}>
+          {{t (printf "%v.attributes.add_%v" .BaseResource.ToParam (singular (meta_label .Meta))) (printf "Add %v" (singular (meta_label .Meta)))}}
+      </label>
+
+    </div>
+  </div>
+
+  <script name="media-box-template" type="x-tmpl-mustache">
+    [[#MediaOption]]
+      <div class="qor-file qor-field__mediabox-item" data-primary-key="[[primaryKey]]" data-file-name="[[MediaOption.FileName]]" data-media-library-url="[[mediaLibraryUrl]]" data-original-url="[[MediaOption.OriginalURL]]">
+        <div class="qor-file__list">
+          <textarea class="qor-file__options hidden" data-cropper-title="{{t "qor_media_library.form.crop_image" "Crop the image"}}" data-cropper-cancel="{{t "qor_media_library.form.cancel" "Cancel"}}" data-cropper-ok="{{t "qor_media_library.form.save" "SAVE"}}" data-fetch-sizedata=[[mediaLibraryUrl]] aria-hidden="true"></textarea>
+          <ul class="clearfix">
+            {{if $metaConfig.Sizes}}
+              {{range $key, $size := $metaConfig.Sizes}}
+                <li {{if (is_included $key "@")}}style="display:none"{{end}}>
+                  <img src="[[MediaOption.URL]]" data-original-url="[[MediaOption.OriginalURL]]" data-size-name="{{$key}}" data-size-resolution="true" data-size-resolution-width="{{$size.Width}}" data-size-resolution-height="{{$size.Height}}">
+                  <span>{{$key}} ({{$size.Width}}&times;{{$size.Height}} px)</span>
+                </li>
+              {{end}}
+            {{else}}
+            <li>
+              <img src="[[MediaOption.URL]]" alt="[[MediaOption.FileName]]" data-original-url="[[MediaOption.OriginalURL]]" data-size-name="original" />
+            </li>
+            {{end}}
+          </ul>
+          <span class="qor-file__input visuallyhidden"></span>
+        </div>
+      </div>
+    [[/MediaOption]]
+  </script>
+
+  <script name="media-box-file-template" type="x-tmpl-mustache">
+    [[#MediaOption]]
+      <div class="qor-file qor-field__mediabox-item qor-field__file-item" data-primary-key="[[primaryKey]]" data-file-name="[[MediaOption.FileName]]" data-original-url="[[MediaOption.URL]]">
+        <div class="qor-file__list">
+          <ul class="clearfix">
+            <li class="qor-file__list-item">
+              <span><span>"[[MediaOption.FileName]]"</span></span>
+              <div class="qor-cropper__toggle">
+                  <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+              </div>
+            </li>
+          </ul>
+          <span class="qor-file__input visuallyhidden"></span>
+        </div>
+      </div>
+    [[/MediaOption]]
+  </script>
+
+  <script name="media-box-uploadedvideo-template" type="x-tmpl-mustache">
+    [[#MediaOption]]
+      <div class="qor-file qor-field__mediabox-item qor-field__file-item" data-primary-key="[[primaryKey]]" data-file-name="[[MediaOption.FileName]]" data-original-url="[[MediaOption.URL]]">
+        <div class="qor-file__list">
+          <ul class="clearfix">
+            <li>
+              <video width=100% height=100% controls><source src="[[MediaOption.URL]]"></video>
+              <div class="qor-cropper__toggle">
+                  <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+              </div>
+            </li>
+          </ul>
+          <span class="qor-file__input visuallyhidden"></span>
+        </div>
+      </div>
+    [[/MediaOption]]
+  </script>
+
+  <script name="media-box-videolink-template" type="x-tmpl-mustache">
+    [[#MediaOption]]
+      <div class="qor-file qor-field__mediabox-item qor-field__file-item" data-primary-key="[[primaryKey]]" data-file-name="[[MediaOption.FileName]]" data-original-url="[[MediaOption.Video]]">
+        <div class="qor-file__list">
+          <ul class="clearfix">
+            <li>
+              <iframe width="100%" height="100%" src="[[VideoLink]]" frameborder="0" allowfullscreen></iframe>
+              <div class="qor-cropper__toggle">
+                  <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+              </div>
+            </li>
+          </ul>
+          <span class="qor-file__input visuallyhidden"></span>
+        </div>
+      </div>
+    [[/MediaOption]]
+  </script>
+
+  <script name="media-box-undo-delete" type="x-tmpl-mustache">
+    <div class="qor-fieldset__alert">
+      <button class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect qor-cropper__toggle--undo" type="button">{{marshal (t "qor_media_library.form.crop_image.undo_delete" "Undo delete")}}</button>
+    </div>
+  </script>
+  <script name="media-box-select-many-selected-icon" type="x-tmpl-mustache">
+    <span class="qor-select__select-icon"><i class="material-icons">check_circle</i></span>
+  </script>
+  <script name="media-box-select-many-hint" type="x-tmpl-mustache">
+    <div class="qor-selectmany__hint clearfix">
+      <span>[[ selectedNum ]] {{marshal (t "qor_admin.form.select_many_hint" "item(s) selected")}}</span>
+      <a href="#" data-dismiss="bottomsheets">{{t "qor_admin.form.select_many_hint_button" "DONE"}}</a>
+    </div>
+  </script>
+
+</div>
+{{javascript_tag "media_box"}}
+{{stylesheet_tag "media_box"}}

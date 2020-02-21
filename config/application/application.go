@@ -3,12 +3,12 @@ package application
 import (
 	"net/http"
 
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/assetfs"
+	"GoTenancy/libs/middlewares"
+	"GoTenancy/libs/wildcard_router"
 	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
-	"github.com/qor/admin"
-	"github.com/qor/assetfs"
-	"github.com/qor/middlewares"
-	"github.com/qor/wildcard_router"
 )
 
 // MicroAppInterface micro app interface

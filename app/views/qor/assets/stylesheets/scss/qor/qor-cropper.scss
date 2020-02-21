@@ -1,0 +1,101 @@
+.qor-cropper__canvas {
+    position: relative;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0 !important;
+    overflow: hidden;
+    line-height: 150px;
+    text-align: center;
+    img {
+        display: inline-block !important;
+    }
+}
+
+.qor-cropper__toggle {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #888;
+    background-color: unquote('rgba(#{$color-black}, 0.75)');
+    opacity: 0;
+    text-align: center;
+    line-height: 1;
+    .qor-cropper__toggle--delete {
+        z-index: 3;
+        width: 32px;
+        padding-top: 10px;
+    }
+    .qor-cropper__toggle--crop,
+    .qor-cropper__toggle--download {
+        left: 0;
+        top: 50%;
+        margin-top: -12px;
+        z-index: 2;
+    }
+    > div {
+        position: absolute;
+        top: 0;
+        right: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        &:hover {
+            i {
+                color: unquote('rgb(#{$color-primary})');
+            }
+        }
+        i {
+            color: #fff;
+        }
+    }
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.qor-cropper__wrapper {
+    margin: -16px;
+    > img {
+        max-width: 100%;
+    }
+}
+
+.qor-cropper__options {
+    display: none;
+    margin-top: 32px;
+    @include clearfix();
+    > p {
+        margin-right: 16px;
+        margin-bottom: 0;
+    }
+    > ul {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+        overflow: hidden;
+        > li {
+            float: left;
+            margin-right: 16px;
+            > label {
+                > input {
+                    margin-right: 2px;
+                }
+                > span {
+                    display: inline-block;
+                    &:first-letter {
+                        text-transform: uppercase;
+                    }
+                    > small {
+                        margin-left: 4px;
+                        color: unquote('rgba(#{$color-black}, 0.26)');
+                    }
+                }
+            }
+        }
+    }
+}

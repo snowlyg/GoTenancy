@@ -1,0 +1,4 @@
+{{$help_url := (patch_url (join_url .Admin.GetRouter.Prefix "!help") "category" (get_current_help_category .Resource .))}}
+<label class="mdl-button mdl-js-button mdl-button--icon qor-notifications__badges" data-url="{{$help_url}}" data-open-type="slideout">
+  <i class="material-icons" {{if not (has_help_documents .Resource .)}}style="color:#67ADD7"{{end}}>help</i>
+</label>

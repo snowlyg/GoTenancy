@@ -1,0 +1,110 @@
+{{$value := (raw_value_of .ResourceValue .Meta)}}
+
+<div class="qor-field" data-toggle="qor.tab.radio">
+  <div class="qor-tab__radio">
+    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="qor-swtichtab-file">
+      <input type="radio" id="qor-swtichtab-file" class="mdl-radio__button ignore-dirtyform" name="options" data-tab-target="file" value="1" {{if not (eq $value.SelectedType "video_link")}} checked {{end}}>
+      <span class="mdl-radio__label">{{t "qor_media_library.media_switcher.image_or_file" "Image or File"}}</span>
+    </label>
+    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="qor-swtichtab-video">
+      <input type="radio" id="qor-swtichtab-video" class="mdl-radio__button ignore-dirtyform" data-tab-target="video_link" name="options" value="2" {{if (eq $value.SelectedType "video_link")}} checked {{end}}>
+      <span class="mdl-radio__label">{{t "qor_media_library.media_switcher.video_link" "Video Link"}}</span>
+    </label>
+  </div>
+
+  <div class="qor-field__block qor-file {{if $value.IsImage}}qor-file__image{{end}}">
+
+    <!-- Start: video link form -->
+    <div class="qor-fieldset" data-tab-source="video_link" data-videourl="{{$value.Video}}" {{if not (eq $value.SelectedType "video_link")}} style="display: none;" {{end}}>
+      <div class="qor-field">
+        <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+          <label class="qor-field__label mdl-textfield__label" for="ProductVideo_desc">
+            {{t "qor_media_library.media_library.video_url" "Video URL"}}
+          </label>
+          <input type="text" class="mdl-textfield__input qor-video__link" value="{{$value.Video}}" id="ProductVideo_desc" />
+        </div>
+      </div>
+      <!-- If is image or videos, show description input -->
+      <div class="qor-field qor-medialibrary__video-desc">
+        <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+          <label class="qor-field__label mdl-textfield__label">
+            {{t "qor_media_library.form.video_description_for_accessibility" "Video Description for Accessibility"}}
+          </label>
+          <div class="qor-field__edit">
+            <input class="mdl-textfield__input qor-medialibrary__desc" type="text" value="" data-image-info="{{$value.Value}}" />
+          </div>
+        </div>
+      </div>
+      <!-- end -->
+
+    </div>
+    <!-- End: video link form -->
+
+    <!-- Start: other files form -->
+    <div class="qor-fieldset" data-tab-source="file" {{if (eq $value.SelectedType "video_link")}} style="display: none;" {{end}}>
+      <textarea class="qor-file__options hidden" data-cropper-title="{{t "qor_media_library.form.crop_image" "Crop image"}}" data-cropper-cancel="{{t "qor_media_library.form.cancel" "Cancel"}}" data-cropper-ok="{{t "qor_media_library.form.ok" "OK"}}" name="{{.InputName}}" aria-hidden="true">{{if $value}}{{$value.Value}}{{end}}</textarea>
+
+      <!-- If is image or videos, show description input -->
+      <div class="qor-field qor-medialibrary__image-desc">
+        <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield">
+          <label class="qor-field__label mdl-textfield__label" for="ProductImage_desc">
+            {{t "qor_media_library.form.description_for_accessibility" "Description for Accessibility"}}
+          </label>
+          <div class="qor-field__edit">
+            <input class="mdl-textfield__input qor-medialibrary__desc" id="ProductImage_desc" type="text" value="" data-image-info="{{$value.Value}}" />
+          </div>
+        </div>
+      </div>
+      <!-- end -->
+
+      <div class="qor-file__list">
+      {{if $value.IsVideo}}
+        <video width=100% height=400px controls><source src="{{$value.URL}}"></video>
+      {{else}}
+
+        {{if $value.GetSizes}}
+          <ul>
+            {{range $key, $v := $value.GetSizes}}
+              {{if not (is_included $key "@")}}
+                <li>
+                  <img src="{{$value.URL $key}}" data-original-url="{{$value.URL "original"}}" data-size-name="{{$key}}" data-size-resolution="{{marshal $v}}">
+                  <span>{{$key}} ({{$v.Width}}&times;{{$v.Height}} px)</span>
+                </li>
+              {{end}}
+            {{end}}
+          </ul>
+        {{else if $value.IsImage}}
+          <ul>
+            <li><img src="{{$value.URL}}" data-original-url="{{$value.URL "original"}}" data-size-name="original" alt="{{$value.GetFileName}}"></li>
+          </ul>
+        {{else if $value.URL}}
+          <ul>
+            <li class="qor-file__list-item">
+              <span>
+                {{if (eq $value.Ext ".svg")}}
+                  <img src="{{$value.URL}}" class="is-svg" alt="{{$value.GetFileName}}">
+                {{else}}
+                  <span>{{$value.GetFileName}}</span>
+                {{end}}
+              </span>
+              <div class="qor-cropper__toggle">
+                <div class="qor-cropper__toggle--delete"><i class="material-icons">delete</i></div>
+                <div class="qor-cropper__toggle--download">
+                  <a href="{{$value.URL}}" class="qor-file__action-download" download="{{$value.GetFileName}}" title="{{t "qor_media_library.form.download" "Download"}}"><i class="material-icons">file_download</i></a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        {{end}}
+
+      {{end}}
+      </div>
+
+      <label class="mdl-button mdl-button--primary qor-button__icon-add" title="{{t "qor_media_library.form.choose_file" "Choose File"}}" {{if not (has_update_permission .Meta)}}disabled{{end}}>
+        <input class="visuallyhidden qor-file__input" id="{{.InputId}}" name="{{.InputName}}" type="file">
+        {{t (printf "%v.attributes.add_%v" .BaseResource.ToParam (singular (meta_label .Meta))) (printf "Add %v" (singular (meta_label .Meta)))}}
+      </label>
+    </div>
+    <!-- End: other files form -->
+  </div>
+</div>

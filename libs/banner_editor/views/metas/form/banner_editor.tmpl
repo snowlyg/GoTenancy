@@ -1,0 +1,62 @@
+{{$prefix := .Context.Admin.GetRouter.Prefix}} {{$asset_manager := .Meta.Config.MediaLibrary}}
+
+<link rel="stylesheet" href="{{$prefix}}/assets/stylesheets/banner_editor.css?theme=banner_editor" />
+
+<div class="qor-field qor-bannereditor__container" data-prefix="{{$prefix}}">
+  <div class="qor-bannereditor__platform">
+    {{range $index, $plateform := .Meta.Config.Platforms }}
+    <button name="#qor-bannereditor-{{.Name}}" class="qor-bannereditor__platform-trigger {{if eq $index 0}}is-active{{end}}">{{.Name}}</button>
+    {{end}}
+  </div>
+
+  {{range $index, $plateform := .Meta.Config.Platforms }}
+  <section class="qor-bannereditor__platform-panel" {{if gt $index 0}}style="display: none" {{end}} id="qor-bannereditor-{{.Name}}">  
+    <div class="qor-field__edit qor-bannereditor" data-cropper-title="{{t "qor_bannereditor.crop_image.title" "Crop the image"}}" data-cropper-cancel="{{t "qor_bannereditor.crop_image.cancel" "Cancel"}}" data-cropper-ok="{{t "qor_bannereditor.crop_image.save" "SAVE"}}" data-platform-name="{{.Name}}" data-toggle="qor.bannereditor">
+      <ul class="qor-bannereditor__toolbar clearfix">
+        <li class="qor-bannereditor__toolbar-btns"></li>
+        {{if $asset_manager}}
+        <li class="qor-bannereditor__toolbar--ml">
+          {{$asset_router := printf "%v/%v" $asset_manager.GetAdmin.GetRouter.Prefix $asset_manager.ToParam}}
+          <button class="mdl-button mdl-button--colored qor-bannereditor__toolbar-image" data-select-Modal="selectone" data-banner-media-url="{{$asset_router}}" type="button">
+            <i class="material-icons">photo_library</i>
+          </button>
+          <span class="mdl-tooltip">
+            {{t "qor_admin.banner_editor.add_image_from_media_libraries" "Add Image From Media Libraries"}}
+          </span>
+        </li>
+        {{end}}
+
+        <li class="qor-bannereditor__toolbar--size" style="display: none;">
+          {{t "qor_admin.banner_editor.size" "Banner Size:"}}
+          <span></span>
+        </li>
+
+        <li class="qor-bannereditor__toolbar--clear">
+          <button class="mdl-button mdl-button--colored qor-bannereditor__toolbar-clear" type="button" data-hint-message={{t "qor_admin.banner_editor.delete_all_element_confirmation" "Are you sure you want to delete all elements?"}}>
+            {{t "qor_admin.banner_editor.delete_all_elements" "Delete All Elements"}}
+          </button>
+        </li>
+      </ul>
+
+      {{if eq .Name "Mobile"}}
+      <div class="qor-bannereditor__device-toolbar">
+        <select data-toggle="qor.chooser" class="ignore-dirtyform qor-bannereditor__device">
+          <option value="320x528">iPhone 5 (320 x 528)</option>
+          <option value="375x667">iPhone 6 (375 x 667)</option>
+          <option value="414x736" selected>iPhone 6 Plus (414 x 736)</option>
+          <option value="360x640">Google Nexus 5 (360 x 640)</option>
+          <option value="412x732">Google Nexus 6 (412 x 732)</option>
+          <option value="360x640">Samsung Galaxy S5 (360 x 640)</option>
+        </select>
+      </div>
+      {{end}}
+
+      <div class="qor-bannereditor__canvas qor-bannereditor__contents"></div>
+    </div>
+  </section>
+  {{end}}
+
+  <textarea class="banner-editor qor-bannereditor__value" name="{{.InputName}}" data-configure="{{banner_editor_configure .Meta.Config}}" style="display: none;">{{unsafe_raw (formatted_banner_edit_value .Value)}}</textarea>
+</div>
+
+<script type="text/javascript" src="{{$prefix}}/assets/javascripts/banner_editor.js?theme=banner_editor"></script>

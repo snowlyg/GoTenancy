@@ -1,0 +1,15 @@
+{{$viewable_locales := viewable_locales .}}
+{{if (gt (len $viewable_locales) 1)}}
+<div class="qor-actions qor-actions__locale qor-bottomsheet__filter">
+  <select class="qor-action--select qor-locales" data-toggle="qor.selector" name="locale">
+    {{$current_locale := current_locale .}}
+    {{range $locale := $viewable_locales}}
+      {{if (eq global_locale $locale)}}
+        <option value="{{patch_current_url "locale" $locale "locale_mode" ""}}" {{if (eq $current_locale $locale)}}selected{{end}}>{{t $locale}}</option>
+      {{else}}
+        <option value="{{patch_current_url "locale" $locale}}" {{if (eq $current_locale $locale)}}selected{{end}}>{{t $locale}}</option>
+      {{end}}
+    {{end}}
+  </select>
+</div>
+{{end}}

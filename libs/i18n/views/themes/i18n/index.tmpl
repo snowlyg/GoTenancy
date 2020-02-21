@@ -1,0 +1,80 @@
+{{$primary_locale := (i18n_primary_locale .)}}
+{{$editing_locale := (i18n_editing_locale .)}}
+
+<div class="qor-i18n">
+  <div class="qor-page__header">
+    <div class="qor-actions">
+      <label class="qor-action--text" for="sourceLanguages">{{t "qor_i18n.form.source" "Source"}}:</label>
+      <select class="qor-action--select qor-js-language" id="sourceLanguages" data-toggle="qor.selector" name="primary_locale">
+        {{range $locale := (i18n_viewable_locales .)}}
+          <option value="{{$locale}}"{{if (eq $locale $primary_locale)}} selected{{end}}>{{t $locale}}</option>
+        {{end}}
+      </select>
+      <label class="qor-action--text" for="targetLanguages">{{t "qor_i18n.form.target" "Target"}}:</label>
+      <select class="qor-action--select qor-js-language" id="targetLanguages" data-toggle="qor.selector" name="to_locale">
+        {{range $locale := (i18n_editable_locales .)}}
+          <option value="{{$locale}}"{{if (eq $locale $editing_locale)}} selected{{end}}>{{t $locale}}</option>
+        {{end}}
+      </select>
+    </div>
+
+    <div class="qor-actions">
+      <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect qor-action--button qor-js-bulk" data-toggle="bulk.qor.i18n" type="button">{{t "qor_admin.actions.bulk_edit" "Bulk Edit"}}</button>
+      <button class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect qor-action--button hidden" data-toggle="exit.qor.i18n" type="button">{{t "qor_admin.actions.exit_bulk_edit" "Exit Bulk Edit"}}</button>
+      <!-- <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect qor-action--button hidden" data-toggle="copyall.qor.i18n" type="button">Copy All</button> -->
+    </div>
+
+    {{load_actions "index"}}
+  </div>
+
+  <div class="qor-page__body i18n-body">
+    {{render "shared/flashes"}}
+    {{render "shared/errors"}}
+
+    <ul class="i18n-list">
+      {{range $translation := i18n_available_translations .}}
+      <li data-toggle="edit.qor.i18n" class="i18n-list-item">
+        <header>
+          <button class="mdl-button mdl-js-button mdl-button--icon qor-button--muted i18n-btn-edit" data-toggle="edit.qor.i18n" type="button">
+            <i class="material-icons md-18">edit</i>
+          </button>
+        </header>
+
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet">
+            <p class="i18n-label-source">{{ $translation.Key }}</p>
+            <p class="i18n-translation-source qor-js-translation-source">{{ $translation.PrimaryValue }}</p>
+          </div>
+
+          <div class="mdl-cell mdl-cell--1-col mdl-cell--12-col-tablet">
+            <button class="i18n-btn-copy qor-js-copy" data-toggle="copy.qor.i18n" type="button">{{t "qor_i18n.form.copy" "Copy"}}</button>
+          </div>
+
+          <div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet">
+            <p class="i18n-label-target">{{t "qor_i18n.form.translation_title" "Translation"}}</p>
+            <p class="i18n-translation-target qor-js-translation-target">{{$translation.EditingValue}}</p>
+            <form class="qor-form i18n-translation-editor">
+              <input type="hidden" name="Locale" value="{{$editing_locale}}">
+              <textarea class="hidden" name="Key">{{ $translation.Key }}</textarea>
+              <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--condensed">
+                <textarea class="mdl-textfield__input qor-js-autoheight qor-js-translator" id="targetTranslation"name="Value" rows="1">{{$translation.EditingValue}}</textarea>
+                <label for="targetTranslation" class="mdl-textfield__label"></label>
+              </div>
+              <p class="i18n-help-block qor-js-help"><i class="material-icons md-14">check_circle</i> {{t "qor_i18n.form.saved" "Saved"}}</p>
+            </form>
+          </div>
+        </div>
+
+        <footer>
+          <div class="i18n-btn-group">
+            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect qor-button--small" data-toggle="cancel.qor.i18n" type="button">{{t "qor_i18n.form.cancel_edit" "Cancel Edit"}}</button>
+            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect qor-button--small" data-toggle="save.qor.i18n" type="button">{{t "qor_i18n.form.save" "Save"}}</button>
+          </div>
+        </footer>
+      </li>
+      {{end}}
+    </ul>
+
+    {{render "index/pagination"}}
+  </div>
+</div>

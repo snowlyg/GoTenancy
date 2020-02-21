@@ -3,7 +3,7 @@ package admin
 import (
 	"html/template"
 
-	"github.com/qor/admin"
+	"GoTenancy/libs/admin"
 )
 
 func initFuncMap(Admin *admin.Admin) {

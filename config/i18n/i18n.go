@@ -3,9 +3,9 @@ package i18n
 import (
 	"path/filepath"
 
-	"github.com/qor/i18n"
-	"github.com/qor/i18n/backends/database"
-	"github.com/qor/i18n/backends/yaml"
+	"GoTenancy/libs/i18n"
+	"GoTenancy/libs/i18n/backends/database"
+	"GoTenancy/libs/i18n/backends/yaml"
 
 	"GoTenancy/config"
 	"GoTenancy/config/db"

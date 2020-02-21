@@ -1,0 +1,80 @@
+{{$inputName := .Meta.Name}}
+{{$labelName := .Meta.Label}}
+{{$attributesScoped := printf "%v.attributes.%v" .BaseResource.ToParam $labelName}}
+
+{{$countryName := (replace_suffix .InputName $inputName "Country") }}
+{{$cityName := (replace_suffix .InputName $inputName "City") }}
+{{$regionName := (replace_suffix .InputName $inputName "Region") }}
+{{$addressName := (replace_suffix .InputName $inputName "Address") }}
+{{$zipName := (replace_suffix .InputName $inputName "Zip") }}
+{{$latitudeName := (replace_suffix .InputName $inputName "Latitude") }}
+{{$longitudeName := (replace_suffix .InputName $inputName "Longitude") }}
+
+{{$hasNotUpdatePermission := not (has_update_permission .Meta)}}
+
+<div class="qor-location qor-field qor-location__src" data-location-mapsource="{{.Meta.Config.Backend}}" data-baidu-apikey="{{.Meta.Config.BaiduAPIKey}}" data-google-apikey="{{.Meta.Config.GoogleAPIKey}}" data-toggle="qor.location">
+  <label class="qor-field__label" for="{{.InputId}}">{{t $attributesScoped $labelName}}</label>
+
+  <div class="qor-field__block qor-fieldset" id="{{.InputId}}">
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+        <input id="{{.InputId}}_Latitude" type="hidden" data-location-role="latitude" name="{{$latitudeName}}" value="{{.Value.Latitude}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+        <input id="{{.InputId}}_Longitude" type="hidden" data-location-role="longitude" name="{{$longitudeName}}" value="{{.Value.Longitude}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+
+        <div class="qor-field">
+          <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--static-label">
+            <input class="mdl-textfield__input" id="{{.InputId}}_Address" type="text" data-location-role="address" name="{{$addressName}}" value="{{.Value.Address}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+            <label class="mdl-textfield__label" for="{{.InputId}}_Address">{{t (printf "%v.%v" $attributesScoped "Address") "Address"}}</label>
+          </div>
+        </div>
+
+        <div class="qor-field">
+          <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--static-label">
+            <input class="mdl-textfield__input" id="{{.InputId}}_City" type="text" data-location-role="city" name="{{$cityName}}" value="{{.Value.City}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+            <label class="mdl-textfield__label" for="{{.InputId}}_City">{{t (printf "%v.%v" $attributesScoped "City") "City"}}</label>
+          </div>
+        </div>
+
+        <div class="qor-field">
+          <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--static-label">
+            <input class="mdl-textfield__input" id="{{.InputId}}_Region" type="text" data-location-role="region" name="{{$regionName}}" value="{{.Value.Region}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+            <label class="mdl-textfield__label" for="{{.InputId}}_Region">{{t (printf "%v.%v" $attributesScoped "Region") "Region"}}</label>
+          </div>
+        </div>
+
+        <div class="qor-field">
+          <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--static-label">
+            <input class="mdl-textfield__input" id="{{.InputId}}_Country" type="text" data-location-role="country" name="{{$countryName}}" value="{{.Value.Country}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+            <label class="mdl-textfield__label" for="{{.InputId}}_Country">{{t (printf "%v.%v" $attributesScoped "Country") "Country"}}</label>
+          </div>
+        </div>
+
+        <div class="qor-field">
+          <div class="mdl-textfield mdl-textfield--full-width mdl-js-textfield qor-textfield--static-label">
+            <input class="mdl-textfield__input" id="{{.InputId}}_Zip" type="text" data-location-role="zip" name="{{$zipName}}" value="{{.Value.Zip}}" {{if $hasNotUpdatePermission}}disabled{{end}}>
+            <label class="mdl-textfield__label" for="{{.InputId}}_Zip">{{t (printf "%v.%v" $attributesScoped "Zip") "Zip"}}</label>
+          </div>
+        </div>
+
+        <span class="mdl-button mdl-js-button mdl-button--raised" data-location-role="geocode">
+          {{t (printf "%v.%v" $attributesScoped "Search on Map") "Search on Map"}}
+        </span>
+      </div>
+
+      <div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+        <div class="qor__location-map-wrapper mdl-card mdl-shadow--2dp">
+          <div class="mdl-card__title mdl-card--expand qor__location-map">
+            <div class="qor__location-loading"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>
+          </div>
+          <div class="mdl-card__supporting-text qor__location-address"></div>
+          <div class="mdl-card__actions mdl-card--border">
+            <button class="mdl-button mdl-js-button" data-location-role="reverseGeocode" type="button">
+              {{t (printf "%v.%v" $attributesScoped "Set Address from Marker") "Set Address from Marker"}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -7,14 +7,14 @@ import (
 
 	"GoTenancy/config/db"
 	"GoTenancy/config/i18n"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/exchange"
+	"GoTenancy/libs/exchange/backends/csv"
+	"GoTenancy/libs/i18n/exchange_actions"
+	"GoTenancy/libs/media/oss"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/worker"
 	"GoTenancy/models/products"
-	"github.com/qor/admin"
-	"github.com/qor/exchange"
-	"github.com/qor/exchange/backends/csv"
-	"github.com/qor/i18n/exchange_actions"
-	"github.com/qor/media/oss"
-	"github.com/qor/qor"
-	"github.com/qor/worker"
 )
 
 // SetupWorker setup worker

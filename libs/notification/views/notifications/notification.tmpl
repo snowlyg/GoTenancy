@@ -1,0 +1,43 @@
+{{$message := .Result}}
+{{$context := .}}
+
+<div class="qor-fieldset qor-notifications__item{{if $message.IsResolved}} resolved{{end}} {{$message.MessageType}} clearfix" data-notification-id="{{$message.ID}}">
+  <h4 class="qor-notifications__title">
+    {{$message.Title}}
+  </h4>
+
+  <div class="qor-notifications__body">
+    {{raw $message.Body}}
+  </div>
+
+  <div class="qor-notifications__actions">
+    {{range $action := $message.Actions $context}}
+      {{if (and $action.URL (eq $action.Method "GET"))}}
+        <a class="mdl-button mdl-button--colored" href="{{call $action.URL $message $context}}" target="_blank">
+          {{t (printf "qor_notification.actions.%v" $action.Label) $action.Label}}
+        </a>
+      {{else}}
+
+      <!-- Notification archived   Restore -->
+        <button  class="mdl-button mdl-button--colored mdl-js-button qor-action-button"
+                 type="button"
+                 data-label="{{t (printf "qor_notification.actions.%v" $action.Label) $action.Label}}"
+                 data-url="{{if $action.URL}}{{call $action.URL $message $context}}{{else}}{{$context.Admin.GetRouter.Prefix}}/!notifications/{{primary_key_of $message}}/{{$action.ToParam}}{{end}}"
+                 {{if not $action.Resource}}
+                   data-ajax-form="true"
+                   data-dataType="json"
+                   {{if $action.Undo}}
+                     data-undo-url="{{if $action.URL}}{{call $action.URL $message $context}}{{else}}{{$context.Admin.GetRouter.Prefix}}/!notifications/{{primary_key_of $message}}/{{$action.ToParam}}{{end}}/undo"
+                     data-undo-label="{{t "qor_notification.hints.undo" "undo"}}"
+                     data-undo-type="notification"
+                   {{else}}
+                     data-confirm="{{t "qor_notification.confirm.are_you_sure" "Are You Sure?"}}"
+                   {{end}}
+                   data-method="{{$action.Method}}"
+                 {{end}}>
+          {{t (printf "qor_notification.actions.%v" $action.Label) $action.Label}}
+        </button>
+      {{end}}
+    {{end}}
+  </div>
+</div>

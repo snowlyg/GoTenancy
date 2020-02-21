@@ -1,0 +1,11 @@
+<div class="mdl-layout__tab-bar mdl-layout__tab-bar-container  qor-page-subnav__header">
+  {{$current_locale := .Context.Request.URL.Query.Get "locale"}}
+  <a class="mdl-layout__tab{{if (eq $current_locale "")}} is-active{{end}}" href={{patch_current_url "locale" ""}}>
+    {{t "qor_l10n.publish.all" "All"}}
+  </a>
+  {{range $locale := publishable_locales .}}
+    <a class="mdl-layout__tab{{if (eq $current_locale $locale)}} is-active{{end}}" href={{patch_current_url "locale" $locale}}>
+      {{t $locale}}
+    </a>
+  {{end}}
+</div>

@@ -1,0 +1,4 @@
+{{$current_locale := .ResourceValue.LanguageCode}}
+{{range $locale := .Value}}
+  <span class="qor-label {{if eq $current_locale $locale}}is-active{{end}}">{{$locale}}</span>
+{{end}}

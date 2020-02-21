@@ -22,15 +22,15 @@ import (
 	"GoTenancy/config/auth"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/publish2"
+	"GoTenancy/libs/qor"
+	"GoTenancy/libs/qor/utils"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/fatih/color"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/qor/admin"
-	"github.com/qor/publish2"
-	"github.com/qor/qor"
-	"github.com/qor/qor/utils"
 )
 
 func main() {
@@ -50,6 +50,7 @@ func main() {
 			Auth:     auth.AdminAuth{},
 			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 		})
+
 		//定义应用
 		Application = application.New(&application.Config{
 			Router: Router,
@@ -110,9 +111,11 @@ func main() {
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
+	//静态打包文件加载
+	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
 	Application.Use(static.New(&static.Config{
-		Prefixs: []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"},
-		Handler: bindatafs.AssetFS.FileServer(http.Dir("public"), "javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"),
+		Prefixs: prefixs, // 设置静态文件相关目录
+		Handler: bindatafs.AssetFS.FileServer(http.Dir("public"), prefixs...),
 	}))
 
 	if *compileTemplate { //处理前端静态文件

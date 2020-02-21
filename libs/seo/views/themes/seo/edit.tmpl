@@ -1,0 +1,24 @@
+<style>
+  .qor-form-container {
+    margin-top: 0px !important;
+  }
+  .qor-seo__defaults {
+    display: none;
+  }
+  .qor-seo__settings {
+    display: block !important;
+  }
+</style>
+<div class="qor-seo" data-toggle="qor.seo">
+  <form class="qor-form" action="{{.Result.EditURL}}" method="POST" enctype="multipart/form-data">
+    <input name="_method" value="PUT" type="hidden">
+    <div class="qor-form-container">
+      {{render_form .Result.Setting .Result.Metas }}
+
+      <div class="qor-form__actions">
+        <button class="mdl-button mdl-button--colored mdl-button--raised qor-button--save" type="submit">{{t "qor_admin.form.save_changes" "Save Changes"}}</button>
+        <a class="mdl-button mdl-button--primary qor-button--cancel" href="javascript:history.back();">{{t "qor_admin.form.cancel_edit" "Cancel Edit"}}</a>
+      </div>
+    </div>
+  </form>
+</div>

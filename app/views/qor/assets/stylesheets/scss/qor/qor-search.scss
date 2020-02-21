@@ -1,0 +1,184 @@
+.qor-global-search--container {
+  .qor-table {
+    margin: 0;
+  }
+
+  .mdl-spinner {
+    margin: 48px auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 901;
+  }
+
+  .qor-page__header-tabbar {
+    .mdl-layout__tab-bar {
+      width: calc(100% - 260px);
+      float: left;
+      li {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .qor-global-search {
+    float: right;
+    z-index: 1;
+    margin-right: 32px;
+    color: unquote("rgb(#{$color-white})");
+  }
+  .mdl-button.mdl-button--colored {
+    color: unquote("rgb(#{$color-white})");
+  }
+}
+
+[qor-icon-name] .qor-global-search--show {
+  padding: 16px 40px;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 1px solid unquote("rgba(#{$color-black}, 0.12)");
+  &:hover,
+  &:focus {
+    background-color: unquote("rgba(#{$color-black}, 0.12)");
+    text-decoration: none;
+  }
+
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    color: unquote("rgb(#{$color-primary})");
+    cursor: pointer;
+  }
+}
+
+// advanced search
+.qor-bottomsheets {
+  .qor-advanced-filter {
+    .qor-advanced-filter__save,
+    .qor-advanced-filter__savedfilter {
+      display: none;
+    }
+  }
+}
+.qor-advanced-filter {
+  position: relative;
+  float: right !important;
+  margin-right: 16px !important;
+  h3 {
+    margin-top: 0;
+    display: inline-block;
+  }
+  button[type="submit"] {
+    margin-top: 32px;
+    float: right;
+    margin-left: 24px;
+  }
+  .qor-advanced-filter__dropdown {
+    position: absolute;
+    right: 0;
+    width: 420px;
+    background-color: #fff;
+    padding: 24px;
+    height: 550px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    @include shadow-2dp();
+  }
+  .qor-advanced-filter__btns {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .qor-advanced-filter__close {
+    float: right;
+    margin-top: -4px;
+  }
+  advanced-filter-group {
+    margin: 12px 0;
+    clear: both;
+  }
+  [type="filter-datetime"] {
+    advanced-filter-group {
+      width: 45%;
+      float: left;
+      clear: none;
+      margin: 0;
+      .qor-field__datetimepicker .qor-action__datepicker {
+        right: 32px;
+      }
+      .qor-field__datetimepicker .qor-action__datepicker,
+      .qor-field__datetimepicker .qor-action__timepicker {
+        bottom: auto;
+        top: 12px;
+      }
+      & + span {
+        width: 10%;
+        float: left;
+        text-align: center;
+        font-size: 30px;
+        padding-top: 19px;
+      }
+    }
+  }
+  .qor-advanced-filter__save {
+    float: left;
+    margin-top: 32px;
+  }
+  .qor-field__flexbox {
+    display: flex;
+  }
+  [type="filter-string"],
+  [type="filter-number"] {
+    .qor-field__edit {
+      flex: 1;
+      .mdl-textfield {
+        width: 100%;
+      }
+    }
+    .qor-selector {
+      margin-right: 1%;
+      margin-top: 15px;
+      min-width: 100px;
+    }
+  }
+  .qor-advanced-filter__savedfilter {
+    > button {
+      float: right;
+      margin-top: -48px;
+      margin-right: 40px;
+      font-size: 11px;
+    }
+    ul {
+      background-color: rgba(0, 0, 0, 0.03);
+      margin: 0;
+      list-style: none;
+      padding: 12px 24px;
+      li {
+        margin: 8px 0;
+        .qor-advanced-filter__delete {
+          height: 24px;
+          width: 24px;
+          min-width: 24px;
+          line-height: 24px;
+          .material-icons {
+            font-size: 20px;
+          }
+        }
+        &:hover {
+          .qor-advanced-filter__delete {
+            display: inline-block !important;
+          }
+        }
+        > a,
+        > button {
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 12px;
+        }
+      }
+    }
+  }
+}

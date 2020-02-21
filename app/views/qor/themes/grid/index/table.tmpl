@@ -1,0 +1,64 @@
+{{$context := .}}
+{{$resource := .Resource}}
+{{$has_update_permission := has_update_permission $resource}}
+{{$has_delete_permission := has_delete_permission $resource}}
+
+    
+      <table class="mdl-js-data-table qor-js-table qor-table--medialibrary">
+        <thead>
+          <tr>
+            <th>&nbsp;</td>
+          </tr>
+        </thead>
+        <tbody>
+
+          {{if len .Result}}
+            {{$metas := convert_sections_to_metas $resource index_sections}}
+
+              {{range $result := .Result}}
+                {{$primaryKey := primary_key_of $result}}
+                {{$uniqueKey := unique_key_of $result}}
+
+                <tr data-primary-key="{{$primaryKey}}" data-media-library-url="{{url_for $result $resource}}">
+                  <td>
+                    <div class="mdl-card mdl-shadow--2dp qor-table--medialibrary-item">
+                      <div class="mdl-card__supporting-text qor-table--ml-slideout" data-url="{{url_for $result $resource}}">
+                        {{range $meta := $metas}}
+                          <p data-heading="{{$meta.Name}}">{{render_meta $result $meta}}</p>
+                        {{end}}
+                      </div>
+
+                      {{$allowed_actions := allowed_actions $resource.GetActions "menu_item" $result}}
+                      {{if $allowed_actions}}
+                        <div class="mdl-card__menu qor-table__actions">
+                          <button id="actions-for-{{$uniqueKey}}" class="mdl-button mdl-js-button mdl-button--icon qor-button--actions">
+                            <i class="material-icons">more_vert</i>
+                          </button>
+
+                          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu" for="actions-for-{{$uniqueKey}}">
+                            {{range $action := $allowed_actions}}
+                              <li class="mdl-menu__item" qor-icon-name="{{$action.Name}}">
+                                {{render_with "shared/action_item" (to_map "Action" $action "Result" $result "Context" $context "Resource" $resource "Mode" "menu_item")}}
+                              </li>
+                            {{end}}
+                          </ul>
+                        </div>
+                      {{end}}
+
+                    </div>
+                  </td>
+                </tr>
+              {{end}}
+              
+
+              {{else}}
+                <tr>
+                  <td>
+                    <h2 class="qor-page__tips">{{t (printf "%v.tables.no_items" $resource.ToParam) (printf "No %v to show." (lower (plural $resource.Name)))}}</h2>
+                  </td>
+                </tr>
+              {{end}}
+
+        </tbody>
+      </table>
+

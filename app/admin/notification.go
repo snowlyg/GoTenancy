@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"GoTenancy/config/db"
+	"GoTenancy/libs/admin"
+	"GoTenancy/libs/notification"
+	"GoTenancy/libs/notification/channels/database"
 	"GoTenancy/models/orders"
-	"github.com/qor/admin"
-	"github.com/qor/notification"
-	"github.com/qor/notification/channels/database"
 )
 
 // SetupNotification add notification

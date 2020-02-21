@@ -2,8 +2,8 @@ package home
 
 import (
 	"GoTenancy/config/application"
+	"GoTenancy/libs/render"
 	"GoTenancy/utils/funcmapmaker"
-	"github.com/qor/render"
 )
 
 // New new home app

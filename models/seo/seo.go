@@ -1,8 +1,8 @@
 package seo
 
 import (
-	"github.com/qor/l10n"
-	"github.com/qor/seo"
+	"GoTenancy/libs/l10n"
+	"GoTenancy/libs/seo"
 )
 
 type MySEOSetting struct {

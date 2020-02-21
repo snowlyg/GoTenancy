@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"GoTenancy/libs/assetfs"
 	"github.com/jteeuwen/go-bindata"
-	"github.com/qor/assetfs"
 )
 
 type AssetFSInterface interface {
@@ -97,7 +97,7 @@ func (assetFS *bindataFS) Glob(pattern string) (matches []string, err error) {
 }
 
 func (assetFS *bindataFS) Compile() error {
-	fmt.Println("编译模板...")
+	fmt.Println("编译模板中...")
 	_ = os.RemoveAll(filepath.Join(assetFS.Path, "templates"))
 	copyFiles(filepath.Join(assetFS.Path, "templates"), assetFS.viewPaths)
 	for _, fs := range assetFS.nameSpacedFS {

@@ -1,0 +1,21 @@
+{{$resource := .Resource}}
+{{$result := .Result}}
+{{$availableScopes := widget_available_scopes}}
+{{$scopes := get_widget_scopes}}
+
+{{if $availableScopes}}
+  {{$widget_scope := .Context.Request.URL.Query.Get "widget_scope"}}
+  <div data-scope-name="widget_scope" data-scope-active="{{$widget_scope}}" data-toggle="qor.tab">
+      <div class="mdl-layout__tab-bar mdl-layout__tab-bar-container  qor-page-subnav__header">
+        {{range $availableScope := $availableScopes}}
+          <a  href="{{patch_url (url_for $result $resource) "widget_scope"  $availableScope.ToParam}}"
+              class="qor-layout__tab-button{{if eq $widget_scope $availableScope.ToParam}} is-active{{end}}{{if (is_included $scopes $availableScope.ToParam)}} available{{end}}"
+              data-tab-url="{{patch_url (url_for $result $resource) "widget_scope"  $availableScope.ToParam}}"
+              data-name="{{$availableScope.ToParam}}">
+            {{$availableScope.Name}}
+          </a>
+        {{end}}
+      </div>
+  </div>
+{{end}}
+

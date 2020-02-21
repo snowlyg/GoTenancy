@@ -1,0 +1,40 @@
+{{$resource := .Resource}}
+{{$version_metas := version_metas}}
+
+<table class="mdl-data-table mdl-js-data-table qor-table__version">
+  <thead>
+    {{range $meta := $version_metas}}
+      <th class="mdl-data-table__cell--non-numeric">{{meta_label $meta}}</th>
+    {{end}}
+    <th class="mdl-data-table__cell--non-numeric qor-table__actions"></th>
+  </thead>
+  <tbody>
+    {{range $result := .Result}}
+      {{$primaryKey := primary_key_of $result}}
+      {{$recordURL := (url_for $result $resource)}}
+      <tr data-primary-key="{{$primaryKey}}" data-url="{{$recordURL}}">
+        {{range $meta := $version_metas}}
+          <td class="mdl-data-table__cell--non-numeric">{{render_meta $result $meta}}</td>
+        {{end}}
+        <td class="mdl-data-table__cell--non-numeric qor-table__actions">
+          <button id="actions-for-{{$result.GetVersionName}}" class="mdl-button mdl-js-button mdl-button--icon qor-button--actions">
+            <i class="material-icons">more_vert</i>
+          </button>
+
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu" for="actions-for-{{$result.GetVersionName}}">
+            <li class="mdl-menu__item" qor-icon-name="Delete">
+              <a class="qor-action--button" data-url="{{$recordURL}}" data-ajax-form="true" data-from-menu="true" data-confirm="{{t "qor_publish2.confirm.are_you_sure" "Are You Sure?"}}" data-confirm-ok="{{t "qor_publish2.confirm.delete" "delete"}}" data-confirm-cancel="{{t "qor_publish2.confirm.cancel" "cancel"}}" data-method="DELETE">
+                {{t (printf "qor_publish.actions.%v" $resource.ToParam "delete") "Delete"}}
+              </a>
+            </li>
+            <li class="mdl-menu__item" qor-icon-name="Create New Version">
+              <a class="qor-action--button" data-url="{{patch_url $recordURL "new_version" "true"}}" data-open-type="slideout">
+                {{t (printf "%v.actions.%v" $resource.ToParam "Create New Version") "Create New Version"}}
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    {{end}}
+  </tbody>
+</table>

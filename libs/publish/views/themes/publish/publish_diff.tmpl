@@ -1,0 +1,25 @@
+{{$context := .}}
+{{$production := .Result.Production}}
+{{$draft := .Result.Draft}}
+{{$has_production := not (is_new_record $production)}}
+{{$res := .Result.Resource}}
+
+<div class="qor-grid-container qor-preview-popup">
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--2-col">{{t "Column"}}</div>
+    <div class="mdl-cell mdl-cell--5-col{{if $draft.DeletedAt}} is-deleted{{end}}">{{t "Draft"}}</div>
+    <div class="mdl-cell mdl-cell--5-col">{{t "Live"}}</div>
+  </div>
+
+  {{range $meta := convert_sections_to_metas .Result.Resource (show_sections .Result.Resource)}}
+    {{$draft_value := render_meta $draft $meta}}
+    {{$production_value := render_meta $production $meta}}
+    {{$diff := or (not $has_production) (not (equal $production_value $draft_value))}}
+
+    <div class="mdl-grid{{if $diff}} is-changed{{end}}">
+      <div class="mdl-cell mdl-cell--2-col">{{t (printf "%v.attributes.%v" $res.ToParam $meta.Label) $meta.Label}}</div>
+      <div class="mdl-cell mdl-cell--5-col{{if $draft.DeletedAt}} is-deleted{{end}}">{{$draft_value}}</div>
+      <div class="mdl-cell mdl-cell--5-col">{{if $has_production}}{{$production_value}}{{end}}</div>
+    </div>
+  {{end}}
+</div>
