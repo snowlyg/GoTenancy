@@ -45,7 +45,7 @@ type SortingDESC struct {
 func (SortingDESC) SortingDesc() {}
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/sorting/views")
+	admin.RegisterViewPath("libs/sorting/views")
 }
 
 func newModel(value interface{}) interface{} {

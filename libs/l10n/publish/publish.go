@@ -58,7 +58,7 @@ func RegisterL10nForPublish(Publish *publish.Publish, Admin *admin.Admin) {
 		return searchHandler(db, context).Set("l10n:mode", "unscoped")
 	}
 
-	Admin.RegisterViewPath("GoTenancy/libs/l10n/publish/views")
+	admin.RegisterViewPath("libs/l10n/publish/views")
 
 	Admin.RegisterFuncMap("publishable_locales", func(context admin.Context) []string {
 		return getPublishableLocales(context.Request, context.CurrentUser)

@@ -84,7 +84,7 @@ type configurePlatform struct {
 }
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/banner_editor/views")
+	admin.RegisterViewPath("libs/banner_editor/views")
 }
 
 // RegisterElement register a element

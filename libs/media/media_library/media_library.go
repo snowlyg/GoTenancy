@@ -20,7 +20,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/media/media_library/views")
+	admin.RegisterViewPath("libs/media/media_library/views")
 }
 
 type MediaLibraryInterface interface {

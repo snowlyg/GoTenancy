@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/location/views")
+	admin.RegisterViewPath("libs/location/views")
 }
 
 var (

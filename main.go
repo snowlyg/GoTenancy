@@ -31,6 +31,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/kataras/iris/v12"
 )
 
 func main() {
@@ -111,7 +112,7 @@ func main() {
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
-	//静态打包文件加载
+	// 静态打包文件加载
 	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
 	Application.Use(static.New(&static.Config{
 		Prefixs: prefixs, // 设置静态文件相关目录
@@ -123,29 +124,39 @@ func main() {
 			color.Red(fmt.Sprintf("bindatafs error %v", err))
 		}
 	} else {
-		color.Yellow(fmt.Sprintf("Listening on: %v\n", config.Config.Port))
-		//app := iris.Default()
-		//if config.Config.HTTPS {
-		//	ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux(), TLSConfig: &tls.Config{}}
-		//	if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
-		//		panic(err)
-		//	}
-		//} else {
-		//	ser := &http.Server{Addr: fmt.Sprintf(":%d", config.Config.Port), Handler: Application.NewServeMux()}
-		//	if err := app.Run(iris.Raw(ser.ListenAndServe)); err != nil {
-		//		panic(err)
-		//	}
-		//}
 
-		// 使用 net/http 原生包
+		app := iris.New()
+		// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
+		handler := iris.FromStd(Application.NewServeMux())
+		// 注册路由
+		app.Any("/", handler)
+		app.Any("/{p:path}", handler)
+		app.Any("/admin", handler)
+		app.Any("/admin/{p:path}", handler)
+
 		if config.Config.HTTPS {
-			if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
-				panic(err)
-			}
+			// 启动服务
+			//if err := app.Listen(fmt.Sprintf(":%d", config.Config.Port)); err != nil {
+			//	panic(err)
+			//}
 		} else {
-			if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
+			// 启动服务
+			if err := app.Listen(fmt.Sprintf(":%d", config.Config.Port)); err != nil {
+				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}
 		}
+
+		// 使用 net/http 原生包
+		//color.Yellow(fmt.Sprintf("Listening on: %v\n", config.Config.Port))
+		//if config.Config.HTTPS {
+		//	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
+		//		panic(err)
+		//	}
+		//} else {
+		//	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
+		//		panic(err)
+		//	}
+		//}
 	}
 }

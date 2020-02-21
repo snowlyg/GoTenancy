@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/i18n/inline_edit/views")
+	admin.RegisterViewPath("libs/i18n/inline_edit/views")
 }
 
 // FuncMap generate func map for inline edit

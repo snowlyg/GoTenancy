@@ -33,7 +33,7 @@ func RegisterExchangeJobs(I18n *i18n.I18n, Worker *worker.Worker) {
 	}
 
 	Admin := I18n.Resource.GetAdmin()
-	Admin.RegisterViewPath("GoTenancy/libs/i18n/exchange_actions/views")
+	admin.RegisterViewPath("libs/i18n/exchange_actions/views")
 
 	// Export Translations
 	exportTranslationResource := Admin.NewResource(&ExportTranslationArgument{})

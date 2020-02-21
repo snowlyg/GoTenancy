@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/seo/views")
+	admin.RegisterViewPath("libs/seo/views")
 }
 
 // New initialize a SeoCollection instance

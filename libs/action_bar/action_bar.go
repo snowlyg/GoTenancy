@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("GoTenancy/libs/action_bar/views")
+	admin.RegisterViewPath("libs/action_bar/views")
 }
 
 // ActionBar stores configuration about a action bar.

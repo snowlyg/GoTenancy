@@ -190,7 +190,7 @@ func (l *Locale) ConfigureQorResource(res resource.Resourcer) {
 		}
 
 		// Inject for l10n
-		Admin.RegisterViewPath("GoTenancy/libs/l10n/views")
+		admin.RegisterViewPath("libs/l10n/views")
 
 		// Middleware
 		Admin.GetRouter().Use(&admin.Middleware{

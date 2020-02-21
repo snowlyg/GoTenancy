@@ -120,6 +120,6 @@ func New(config *Config) *admin.Resource {
 			RemoteDataResource: config.Containers.WidgetSettingResource,
 		}})
 
-	admin.RegisterViewPath("GoTenancy/libs/page_builder/views")
+	admin.RegisterViewPath("libs/page_builder/views")
 	return resource
 }

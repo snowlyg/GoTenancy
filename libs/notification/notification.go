@@ -68,7 +68,7 @@ func (notification *Notification) GetNotification(user interface{}, messageID st
 func (notification *Notification) ConfigureQorResource(res resource.Resourcer) {
 	if res, ok := res.(*admin.Resource); ok {
 		Admin := res.GetAdmin()
-		Admin.RegisterViewPath("GoTenancy/libs/notification/views")
+		admin.RegisterViewPath("libs/notification/views")
 
 		if len(notification.Channels) == 0 {
 			utils.ExitWithMsg("No channel defined for notification")
