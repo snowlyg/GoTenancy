@@ -6,6 +6,7 @@ import (
 	"GoTenancy/libs/qor"
 	"GoTenancy/libs/qor/utils"
 	"GoTenancy/libs/render"
+	"github.com/kataras/iris/v12"
 )
 
 // Controller home controller
@@ -14,12 +15,12 @@ type Controller struct {
 }
 
 // Index home index page
-func (ctrl Controller) Index(w http.ResponseWriter, req *http.Request) {
-	ctrl.View.Execute("index", map[string]interface{}{}, req, w)
+func (ctrl Controller) Index(ctx iris.Context) {
+	ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // SwitchLocale switch locale
-func (ctrl Controller) SwitchLocale(w http.ResponseWriter, req *http.Request) {
-	utils.SetCookie(http.Cookie{Name: "locale", Value: req.URL.Query().Get("locale")}, &qor.Context{Request: req, Writer: w})
-	http.Redirect(w, req, req.Referer(), http.StatusSeeOther)
+func (ctrl Controller) SwitchLocale(ctx iris.Context) {
+	utils.SetCookie(http.Cookie{Name: "locale", Value: ctx.Request().URL.Query().Get("locale")}, &qor.Context{Request: ctx.Request(), Writer: ctx.ResponseWriter()})
+	http.Redirect(ctx.ResponseWriter(), ctx.Request(), ctx.Request().Referer(), http.StatusSeeOther)
 }

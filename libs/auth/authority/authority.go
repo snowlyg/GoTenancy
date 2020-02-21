@@ -64,22 +64,22 @@ func New(config *Config) *Authority {
 }
 
 // Authorize authorize specfied roles or authenticated user to access wrapped handler
-func (authority *Authority) Authorize(roles ...string) func(http.Handler) http.Handler {
-	return func(handler http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			var currentUser interface{}
+func (authority *Authority) Authorize(roles ...string) http.Handler {
+	var handler http.Handler
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		var currentUser interface{}
 
-			// Get current user from request
-			currentUser = authority.Auth.GetCurrentUser(req)
+		// Get current user from request
+		currentUser = authority.Auth.GetCurrentUser(req)
 
-			if (len(roles) == 0 && currentUser != nil) || authority.Role.HasRole(req, currentUser, roles...) {
-				handler.ServeHTTP(w, req)
-				return
-			}
+		if (len(roles) == 0 && currentUser != nil) || authority.Role.HasRole(req, currentUser, roles...) {
+			handler.ServeHTTP(w, req)
+			return
+		}
 
-			authority.AccessDeniedHandler(w, req)
-		})
-	}
+		authority.AccessDeniedHandler(w, req)
+	})
+
 }
 
 // NewAccessDeniedHandler new access denied handler

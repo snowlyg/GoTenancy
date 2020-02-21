@@ -9,6 +9,7 @@ import (
 	"GoTenancy/libs/media/asset_manager"
 	"GoTenancy/libs/media/media_library"
 	"GoTenancy/models/settings"
+	"github.com/kataras/iris/v12"
 )
 
 // ActionBar admin action bar
@@ -64,5 +65,5 @@ func (app App) ConfigureApplication(application *application.Application) {
 	SetupWidget(Admin)
 	SetupDashboard(Admin)
 
-	application.Router.Mount(app.Config.Prefix, Admin.NewServeMux(app.Config.Prefix))
+	application.IrisApp.Any(app.Config.Prefix, iris.FromStd(Admin.NewServeMux(app.Config.Prefix)))
 }

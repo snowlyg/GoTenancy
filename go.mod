@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
-	github.com/Depado/articles v0.0.0-20190909162443-fe1938512f78 // indirect
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/Shaked/gomobiledetect v0.0.0-20171211181707-25f014f66568
 	github.com/ajg/form v1.5.1 // indirect
@@ -16,7 +15,6 @@ require (
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
-	github.com/containous/go-bindata v1.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
@@ -55,15 +53,10 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/qiniu/api.v7 v7.2.5+incompatible
 	github.com/qiniu/x v7.0.8+incompatible // indirect
-	github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14 // indirect
-	github.com/qor/bindatafs v0.0.0-20180208124510-71f37a9bdd10 // indirect
-	github.com/qor/qor v0.0.0-20191022064424-b3deff729f68 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/snowlyg/auth v0.0.0-20200220152551-8071551aad02 // indirect
 	github.com/stripe/stripe-go v69.0.0+incompatible
 	github.com/tealeg/xlsx v1.0.5
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8

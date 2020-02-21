@@ -8,6 +8,7 @@ import (
 	"GoTenancy/models/orders"
 	"GoTenancy/models/products"
 	"GoTenancy/models/users"
+	"github.com/kataras/iris/v12"
 )
 
 // New new home app
@@ -53,5 +54,5 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	API.AddResource(&products.Category{})
 
-	application.Router.Mount(app.Config.Prefix, API.NewServeMux(app.Config.Prefix))
+	application.IrisApp.Any(app.Config.Prefix, iris.FromStd(API.NewServeMux(app.Config.Prefix)))
 }

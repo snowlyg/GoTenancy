@@ -14,6 +14,7 @@ import (
 	"GoTenancy/models/orders"
 	"GoTenancy/utils"
 	"github.com/gorilla/schema"
+	"github.com/kataras/iris/v12"
 )
 
 // Controller products controller
@@ -24,77 +25,77 @@ type Controller struct {
 var decoder = schema.NewDecoder()
 
 // Cart shopping cart
-func (ctrl Controller) Cart(w http.ResponseWriter, req *http.Request) {
-	order := getCurrentOrderWithItems(w, req)
-	ctrl.View.Execute("cart", map[string]interface{}{"Order": order}, req, w)
+func (ctrl Controller) Cart(ctx iris.Context) {
+	order := getCurrentOrderWithItems(ctx)
+	ctrl.View.Execute("cart", map[string]interface{}{"Order": order}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Checkout checkout shopping cart
-func (ctrl Controller) Checkout(w http.ResponseWriter, req *http.Request) {
-	hasAmazon := req.URL.Query().Get("access_token")
-	order := getCurrentOrderWithItems(w, req)
-	ctrl.View.Execute("checkout", map[string]interface{}{"Order": order, "HasAmazon": hasAmazon}, req, w)
+func (ctrl Controller) Checkout(ctx iris.Context) {
+	hasAmazon := ctx.Request().URL.Query().Get("access_token")
+	order := getCurrentOrderWithItems(ctx)
+	ctrl.View.Execute("checkout", map[string]interface{}{"Order": order, "HasAmazon": hasAmazon}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Complete complete shopping cart
-func (ctrl Controller) Complete(w http.ResponseWriter, req *http.Request) {
-	req.ParseForm()
+func (ctrl Controller) Complete(ctx iris.Context) {
+	ctx.Request().ParseForm()
 
-	order := getCurrentOrder(w, req)
-	if order.AmazonOrderReferenceID = req.Form.Get("amazon_order_reference_id"); order.AmazonOrderReferenceID != "" {
-		order.AmazonAddressAccessToken = req.Form.Get("amazon_address_access_token")
-		tx := utils.GetDB(req)
+	order := getCurrentOrder(ctx)
+	if order.AmazonOrderReferenceID = ctx.Request().Form.Get("amazon_order_reference_id"); order.AmazonOrderReferenceID != "" {
+		order.AmazonAddressAccessToken = ctx.Request().Form.Get("amazon_address_access_token")
+		tx := utils.GetDB(ctx.Request())
 		err := orders.OrderState.Trigger("checkout", order, tx, "")
 
 		if err == nil {
 			tx.Save(order)
-			http.Redirect(w, req, "/cart/success", http.StatusFound)
+			http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/cart/success", http.StatusFound)
 			return
 		}
-		utils.AddFlashMessage(w, req, err.Error(), "error")
+		utils.AddFlashMessage(ctx.ResponseWriter(), ctx.Request(), err.Error(), "error")
 	} else {
-		utils.AddFlashMessage(w, req, "Order Reference ID not Found", "error")
+		utils.AddFlashMessage(ctx.ResponseWriter(), ctx.Request(), "Order Reference ID not Found", "error")
 	}
 
-	http.Redirect(w, req, "/cart", http.StatusFound)
+	http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/cart", http.StatusFound)
 }
 
 // CompleteCreditCard complete shopping cart with credit card
-func (ctrl Controller) CompleteCreditCard(w http.ResponseWriter, req *http.Request) {
-	req.ParseForm()
+func (ctrl Controller) CompleteCreditCard(ctx iris.Context) {
+	ctx.Request().ParseForm()
 
-	order := getCurrentOrder(w, req)
+	order := getCurrentOrder(ctx)
 
-	expMonth, _ := strconv.Atoi(req.Form.Get("exp_month"))
-	expYear, _ := strconv.Atoi(req.Form.Get("exp_year"))
+	expMonth, _ := strconv.Atoi(ctx.Request().Form.Get("exp_month"))
+	expYear, _ := strconv.Atoi(ctx.Request().Form.Get("exp_year"))
 
 	creditCard := gomerchant.CreditCard{
-		Name:     req.Form.Get("name"),
-		Number:   req.Form.Get("creditcard"),
-		CVC:      req.Form.Get("cvv"),
+		Name:     ctx.Request().Form.Get("name"),
+		Number:   ctx.Request().Form.Get("creditcard"),
+		CVC:      ctx.Request().Form.Get("cvv"),
 		ExpYear:  uint(expYear),
 		ExpMonth: uint(expMonth),
 	}
 
 	if creditCard.ValidNumber() {
 		// TODO integrate with https://GoTenancy/libs/gomerchant to handle those information
-		tx := utils.GetDB(req)
+		tx := utils.GetDB(ctx.Request())
 		err := orders.OrderState.Trigger("checkout", order, tx, "")
 
 		if err == nil {
 			tx.Save(order)
-			http.Redirect(w, req, "/cart/success", http.StatusFound)
+			http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/cart/success", http.StatusFound)
 			return
 		}
 	}
 
-	utils.AddFlashMessage(w, req, "Invalid Credit Card", "error")
-	http.Redirect(w, req, "/cart", http.StatusFound)
+	utils.AddFlashMessage(ctx.ResponseWriter(), ctx.Request(), "Invalid Credit Card", "error")
+	http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/cart", http.StatusFound)
 }
 
 // CheckoutSuccess checkout success page
-func (ctrl Controller) CheckoutSuccess(w http.ResponseWriter, req *http.Request) {
-	ctrl.View.Execute("success", map[string]interface{}{}, req, w)
+func (ctrl Controller) CheckoutSuccess(ctx iris.Context) {
+	ctrl.View.Execute("success", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
 }
 
 type updateCartInput struct {
@@ -105,16 +106,16 @@ type updateCartInput struct {
 }
 
 // UpdateCart update shopping cart
-func (ctrl Controller) UpdateCart(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) UpdateCart(ctx iris.Context) {
 	var (
 		input updateCartInput
-		tx    = utils.GetDB(req)
+		tx    = utils.GetDB(ctx.Request())
 	)
 
-	req.ParseForm()
-	decoder.Decode(&input, req.PostForm)
+	ctx.Request().ParseForm()
+	decoder.Decode(&input, ctx.Request().PostForm)
 
-	order := getCurrentOrder(w, req)
+	order := getCurrentOrder(ctx)
 
 	if input.Quantity > 0 {
 		tx.Where(&orders.OrderItem{OrderID: order.ID, SizeVariationID: input.SizeVariationID}).
@@ -126,25 +127,25 @@ func (ctrl Controller) UpdateCart(w http.ResponseWriter, req *http.Request) {
 	}
 
 	responder.With("html", func() {
-		http.Redirect(w, req, "/cart", http.StatusFound)
+		http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/cart", http.StatusFound)
 	}).With([]string{"json", "xml"}, func() {
-		config.Render.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
-	}).Respond(req)
+		config.Render.JSON(ctx.ResponseWriter(), http.StatusOK, map[string]string{"status": "ok"})
+	}).Respond(ctx.Request())
 }
 
 // AmazonCallback amazon callback
-func (ctrl Controller) AmazonCallback(w http.ResponseWriter, req *http.Request) {
-	ipn, ok := amazonpay.VerifyIPNRequest(req)
+func (ctrl Controller) AmazonCallback(ctx iris.Context) {
+	ipn, ok := amazonpay.VerifyIPNRequest(ctx.Request())
 	fmt.Printf("%#v\n", ipn)
 	fmt.Printf("%#v\n", ok)
 }
 
-func getCurrentOrder(w http.ResponseWriter, req *http.Request) *orders.Order {
+func getCurrentOrder(ctx iris.Context) *orders.Order {
 	var (
 		order       = orders.Order{}
-		cartID      = manager.SessionManager.Get(req, "cart_id")
-		currentUser = utils.GetCurrentUser(req)
-		tx          = utils.GetDB(req)
+		cartID      = manager.SessionManager.Get(ctx.Request(), "cart_id")
+		currentUser = utils.GetCurrentUser(ctx.Request())
+		tx          = utils.GetDB(ctx.Request())
 	)
 
 	if cartID != "" {
@@ -160,7 +161,7 @@ func getCurrentOrder(w http.ResponseWriter, req *http.Request) *orders.Order {
 	// only create new shopping cart if updating
 	if tx.NewRecord(order) || !order.IsCart() {
 		order = orders.Order{}
-		if req.Method != "GET" {
+		if ctx.Request().Method != "GET" {
 			if currentUser != nil && !tx.NewRecord(currentUser) {
 				order.UserID = &currentUser.ID
 			}
@@ -169,14 +170,14 @@ func getCurrentOrder(w http.ResponseWriter, req *http.Request) *orders.Order {
 		}
 	}
 
-	manager.SessionManager.Add(w, req, "cart_id", order.ID)
+	manager.SessionManager.Add(ctx.ResponseWriter(), ctx.Request(), "cart_id", order.ID)
 
 	return &order
 }
 
-func getCurrentOrderWithItems(w http.ResponseWriter, req *http.Request) *orders.Order {
-	order := getCurrentOrder(w, req)
-	if tx := utils.GetDB(req); !tx.NewRecord(order) {
+func getCurrentOrderWithItems(ctx iris.Context) *orders.Order {
+	order := getCurrentOrder(ctx)
+	if tx := utils.GetDB(ctx.Request()); !tx.NewRecord(order) {
 		tx.Model(order).Association("OrderItems").Find(&order.OrderItems)
 	}
 	return order

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"net/http"
@@ -11,7 +10,6 @@ import (
 	"GoTenancy/app/account"
 	adminapp "GoTenancy/app/admin"
 	"GoTenancy/app/api"
-	"GoTenancy/app/enterprise"
 	"GoTenancy/app/home"
 	"GoTenancy/app/orders"
 	"GoTenancy/app/pages"
@@ -24,14 +22,13 @@ import (
 	"GoTenancy/config/db"
 	"GoTenancy/libs/admin"
 	"GoTenancy/libs/publish2"
-	"GoTenancy/libs/qor"
 	"GoTenancy/libs/qor/utils"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/fatih/color"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/logger"
+	recover2 "github.com/kataras/iris/v12/middleware/recover"
 )
 
 func main() {
@@ -44,7 +41,8 @@ func main() {
 	}
 
 	var (
-		Router = chi.NewRouter() // 定义路由
+		//Router = chi.NewRouter() // 定义路由
+		IrisApp = iris.New()
 		//定义 admin 对象
 		Admin = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancy", // 站点名称
@@ -54,9 +52,9 @@ func main() {
 
 		//定义应用
 		Application = application.New(&application.Config{
-			Router: Router,
-			Admin:  Admin,
-			DB:     db.DB,
+			IrisApp: IrisApp,
+			Admin:   Admin,
+			DB:      db.DB,
 		})
 	)
 
@@ -64,40 +62,37 @@ func main() {
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
 	// 全局中间件
-	Router.Use(func(handler http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			// 演示设置，请勿在生产环境使用
-			w.Header().Add("Access-Control-Allow-Origin", "*")
-			handler.ServeHTTP(w, req)
-		})
+	IrisApp.Use(func(ctx iris.Context) {
+		// 演示设置，请勿在生产环境使用
+		ctx.Header("Access-Control-Allow-Origin", "*")
+		ctx.Next()
 	})
 
-	Router.Use(func(handler http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			req.Header.Del("Authorization")
-			handler.ServeHTTP(w, req)
-		})
+	IrisApp.Use(func(ctx iris.Context) {
+		ctx.Request().Header.Del("Authorization")
+		ctx.Next()
 	})
 
-	Router.Use(middleware.RealIP)
-	Router.Use(middleware.Logger)
-	Router.Use(middleware.Recoverer)
+	IrisApp.Logger().SetLevel("debug")
+	IrisApp.Use(logger.New())
+	IrisApp.Use(recover2.New())
+
 	// 本地化
-	Router.Use(func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			var (
-				tx         = db.DB
-				qorContext = &qor.Context{Request: req, Writer: w}
-			)
-
-			if locale := utils.GetLocale(qorContext); locale != "" {
-				tx = tx.Set("l10n:locale", locale)
-			}
-
-			ctx := context.WithValue(req.Context(), utils.ContextDBName, publish2.PreviewByDB(tx, qorContext))
-			next.ServeHTTP(w, req.WithContext(ctx))
-		})
-	})
+	//IrisApp.Use(iris.FromStd(func(next http.Handler)  http.Handler {
+	//	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+	//		var (
+	//			tx         = db.DB
+	//			qorContext = &qor.Context{Request: req, Writer: w}
+	//		)
+	//
+	//		if locale := utils.GetLocale(qorContext); locale != "" {
+	//			tx = tx.Set("l10n:locale", locale)
+	//		}
+	//
+	//		ctx := context2.WithValue(req.Context(), utils.ContextDBName, publish2.PreviewByDB(tx, qorContext))
+	//		next.ServeHTTP(w, req.WithContext(ctx))
+	//	})
+	//}))
 
 	// 加载应用
 	Application.Use(api.New(&api.Config{}))
@@ -107,7 +102,6 @@ func main() {
 	Application.Use(account.New(&account.Config{}))
 	Application.Use(orders.New(&orders.Config{}))
 	Application.Use(pages.New(&pages.Config{}))
-	Application.Use(enterprise.New(&enterprise.Config{}))
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
@@ -125,14 +119,13 @@ func main() {
 		}
 	} else {
 
-		app := iris.New()
-		// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
-		handler := iris.FromStd(Application.NewServeMux())
-		// 注册路由
-		app.Any("/", handler)
-		app.Any("/{p:path}", handler)
-		app.Any("/admin", handler)
-		app.Any("/admin/{p:path}", handler)
+		//// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
+		//handler := iris.FromStd(Application.NewServeMux())
+		//// 注册路由
+		//IrisApp.Any("/", handler)
+		//IrisApp.Any("/{p:path}", handler)
+		//IrisApp.Any("/admin", handler)
+		//IrisApp.Any("/admin/{p:path}", handler)
 
 		if config.Config.HTTPS {
 			// 启动服务
@@ -141,7 +134,15 @@ func main() {
 			//}
 		} else {
 			// 启动服务
-			if err := app.Listen(fmt.Sprintf(":%d", config.Config.Port)); err != nil {
+			if err := IrisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), iris.WithConfiguration(
+				iris.Configuration{
+					DisableStartupLog:                 true,
+					FireMethodNotAllowed:              true,
+					DisableBodyConsumptionOnUnmarshal: true,
+					TimeFormat:                        "Mon, 01 Jan 2006 15:04:05 GMT",
+					Charset:                           "UTF-8",
+				}),
+			); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}

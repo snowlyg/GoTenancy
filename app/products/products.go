@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"regexp"
 
 	"GoTenancy/config/application"
 	"GoTenancy/libs/admin"
@@ -39,10 +40,16 @@ func (app App) ConfigureApplication(application *application.Application) {
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
 
-	application.Router.Get("/products", controller.Index)
-	application.Router.Get("/products/{code}", controller.Show)
-	application.Router.Get("/{gender:^(men|women|kids)$}", controller.Gender)
-	application.Router.Get("/category/{code}", controller.Category)
+	application.IrisApp.Get("/products", controller.Index)
+	application.IrisApp.Get("/products/{code}", controller.Show)
+	latLonExpr := "^(men|women|kids)$"
+	latLonRegex, err := regexp.Compile(latLonExpr)
+	if err != nil {
+		panic(err)
+	}
+	application.IrisApp.Macros().Get("string").RegisterFunc("preix", latLonRegex.MatchString)
+	application.IrisApp.Get("/{gender:string preix()", controller.Gender)
+	application.IrisApp.Get("/category/{code}", controller.Category)
 }
 
 // ConfigureAdmin configure admin interface

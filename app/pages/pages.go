@@ -37,7 +37,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
-	application.Router.Get("/blog", controller.Index)
+	application.IrisApp.Get("/blog", controller.Index)
 }
 
 // ConfigureAdmin configure admin interface

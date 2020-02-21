@@ -25,6 +25,6 @@ func (App) ConfigureApplication(application *application.Application) {
 	controller := &Controller{View: render.New(&render.Config{AssetFileSystem: application.AssetFS.NameSpace("home")}, "app/home/views")}
 
 	funcmapmaker.AddFuncMapMaker(controller.View)
-	application.Router.Get("/", controller.Index)
-	application.Router.Get("/switch_locale", controller.SwitchLocale)
+	application.IrisApp.Get("/", controller.Index)
+	application.IrisApp.Get("/switch_locale", controller.SwitchLocale)
 }

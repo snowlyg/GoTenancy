@@ -1,9 +1,8 @@
 package pages
 
 import (
-	"net/http"
-
 	"GoTenancy/libs/render"
+	"github.com/kataras/iris/v12"
 )
 
 // Controller home controller
@@ -12,6 +11,6 @@ type Controller struct {
 }
 
 // Index home index page
-func (ctrl Controller) Index(w http.ResponseWriter, req *http.Request) {
-	ctrl.View.Execute("index", map[string]interface{}{}, req, w)
+func (ctrl Controller) Index(ctx iris.Context) {
+	ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
 }

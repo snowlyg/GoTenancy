@@ -13,7 +13,7 @@ import (
 	"GoTenancy/libs/validations"
 	"GoTenancy/models/users"
 	"GoTenancy/utils/funcmapmaker"
-	"github.com/go-chi/chi"
+	"github.com/kataras/iris/v12"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,13 +38,14 @@ func (app App) ConfigureApplication(application *application.Application) {
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
 
-	application.Router.Mount("/auth/", auth.Auth.NewServeMux())
-
-	application.Router.With(auth.Authority.Authorize()).Route("/account", func(r chi.Router) {
-		r.Get("/", controller.Orders)
-		r.With(auth.Authority.Authorize("logged_in_half_hour")).Post("/add_user_credit", controller.AddCredit)
-		r.Get("/profile", controller.Profile)
-		r.Post("/profile", controller.Update)
+	application.IrisApp.Any("/auth/", iris.FromStd(auth.Auth.NewServeMux()))
+	application.IrisApp.PartyFunc("/account", func(account iris.Party) {
+		account.Use(iris.FromStd(auth.Authority.Authorize()))
+		account.Get("/", controller.Orders)
+		AddUserCredit := account.Post("/add_user_credit", controller.AddCredit)
+		AddUserCredit.Use(iris.FromStd(auth.Authority.Authorize("logged_in_half_hour")))
+		account.Get("/profile", controller.Profile)
+		account.Post("/profile", controller.Update)
 	})
 }
 

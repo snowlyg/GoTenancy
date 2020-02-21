@@ -40,15 +40,15 @@ func (app App) ConfigureApplication(application *application.Application) {
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
 
-	application.Router.Get("/cart", controller.Cart)
-	application.Router.Put("/cart", controller.UpdateCart)
-	application.Router.Post("/cart", controller.UpdateCart)
-	application.Router.Get("/cart/checkout", controller.Checkout)
-	application.Router.Put("/cart/checkout", controller.Checkout)
-	application.Router.Post("/cart/complete", controller.Complete)
-	application.Router.Post("/cart/complete/creditcard", controller.CompleteCreditCard)
-	application.Router.Get("/cart/success", controller.CheckoutSuccess)
-	application.Router.Post("/order/callback/amazon", controller.AmazonCallback)
+	application.IrisApp.Get("/cart", controller.Cart)
+	application.IrisApp.Put("/cart", controller.UpdateCart)
+	application.IrisApp.Post("/cart", controller.UpdateCart)
+	application.IrisApp.Get("/cart/checkout", controller.Checkout)
+	application.IrisApp.Put("/cart/checkout", controller.Checkout)
+	application.IrisApp.Post("/cart/complete", controller.Complete)
+	application.IrisApp.Post("/cart/complete/creditcard", controller.CompleteCreditCard)
+	application.IrisApp.Get("/cart/success", controller.CheckoutSuccess)
+	application.IrisApp.Post("/order/callback/amazon", controller.AmazonCallback)
 }
 
 // ConfigureAdmin configure admin interface

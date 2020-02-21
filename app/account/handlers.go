@@ -1,12 +1,11 @@
 package account
 
 import (
-	"net/http"
-
 	"GoTenancy/libs/render"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
+	"github.com/kataras/iris/v12"
 )
 
 // Controller products controller
@@ -15,10 +14,10 @@ type Controller struct {
 }
 
 // Profile profile show page
-func (ctrl Controller) Profile(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Profile(ctx iris.Context) {
 	var (
-		currentUser                     = utils.GetCurrentUser(req)
-		tx                              = utils.GetDB(req)
+		currentUser                     = utils.GetCurrentUser(ctx.Request())
+		tx                              = utils.GetDB(ctx.Request())
 		billingAddress, shippingAddress users.Address
 	)
 
@@ -29,28 +28,28 @@ func (ctrl Controller) Profile(w http.ResponseWriter, req *http.Request) {
 
 	ctrl.View.Execute("profile", map[string]interface{}{
 		"CurrentUser": currentUser, "DefaultBillingAddress": billingAddress, "DefaultShippingAddress": shippingAddress,
-	}, req, w)
+	}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Orders orders page
-func (ctrl Controller) Orders(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Orders(ctx iris.Context) {
 	var (
 		Orders      []orders.Order
-		currentUser = utils.GetCurrentUser(req)
-		tx          = utils.GetDB(req)
+		currentUser = utils.GetCurrentUser(ctx.Request())
+		tx          = utils.GetDB(ctx.Request())
 	)
 
 	tx.Preload("OrderItems").Where("state <> ? AND state != ?", orders.DraftState, "").Where(&orders.Order{UserID: &currentUser.ID}).Find(&Orders)
 
-	ctrl.View.Execute("orders", map[string]interface{}{"Orders": Orders}, req, w)
+	ctrl.View.Execute("orders", map[string]interface{}{"Orders": Orders}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Update update profile page
-func (ctrl Controller) Update(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Update(ctx iris.Context) {
 	// FIXME
 }
 
 // AddCredit add credit
-func (ctrl Controller) AddCredit(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) AddCredit(ctx iris.Context) {
 	// FIXME
 }

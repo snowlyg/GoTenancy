@@ -7,6 +7,7 @@ import (
 	"GoTenancy/libs/render"
 	"GoTenancy/models/products"
 	"GoTenancy/utils"
+	"github.com/kataras/iris/v12"
 )
 
 // Controller products controller
@@ -15,38 +16,38 @@ type Controller struct {
 }
 
 // Index products index page
-func (ctrl Controller) Index(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Index(ctx iris.Context) {
 	var (
 		Products []products.Product
-		tx       = utils.GetDB(req)
+		tx       = utils.GetDB(ctx.Request())
 	)
 
 	tx.Preload("Category").Find(&Products)
 
-	ctrl.View.Execute("index", map[string]interface{}{}, req, w)
+	ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Gender products gender page
-func (ctrl Controller) Gender(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Gender(ctx iris.Context) {
 	var (
 		Products []products.Product
-		tx       = utils.GetDB(req)
+		tx       = utils.GetDB(ctx.Request())
 	)
 
-	tx.Where(&products.Product{Gender: utils.URLParam("gender", req)}).Preload("Category").Find(&Products)
+	tx.Where(&products.Product{Gender: utils.URLParam("gender", ctx.Request())}).Preload("Category").Find(&Products)
 
-	ctrl.View.Execute("gender", map[string]interface{}{"Products": Products}, req, w)
+	ctrl.View.Execute("gender", map[string]interface{}{"Products": Products}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Show product show page
-func (ctrl Controller) Show(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Show(ctx iris.Context) {
 	var (
 		product        products.Product
 		colorVariation products.ColorVariation
-		codes          = strings.Split(utils.URLParam("code", req), "_")
+		codes          = strings.Split(utils.URLParam("code", ctx.Request()), "_")
 		productCode    = codes[0]
 		colorCode      string
-		tx             = utils.GetDB(req)
+		tx             = utils.GetDB(ctx.Request())
 	)
 
 	if len(codes) > 1 {
@@ -54,27 +55,27 @@ func (ctrl Controller) Show(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if tx.Preload("Category").Where(&products.Product{Code: productCode}).First(&product).RecordNotFound() {
-		http.Redirect(w, req, "/", http.StatusFound)
+		http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/", http.StatusFound)
 	}
 
 	tx.Preload("Product").Preload("Color").Preload("SizeVariations.Size").Where(&products.ColorVariation{ProductID: product.ID, ColorCode: colorCode}).First(&colorVariation)
 
-	ctrl.View.Execute("show", map[string]interface{}{"CurrentColorVariation": colorVariation}, req, w)
+	ctrl.View.Execute("show", map[string]interface{}{"CurrentColorVariation": colorVariation}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Category category show page
-func (ctrl Controller) Category(w http.ResponseWriter, req *http.Request) {
+func (ctrl Controller) Category(ctx iris.Context) {
 	var (
 		category products.Category
 		Products []products.Product
-		tx       = utils.GetDB(req)
+		tx       = utils.GetDB(ctx.Request())
 	)
 
-	if tx.Where("code = ?", utils.URLParam("code", req)).First(&category).RecordNotFound() {
-		http.Redirect(w, req, "/", http.StatusFound)
+	if tx.Where("code = ?", utils.URLParam("code", ctx.Request())).First(&category).RecordNotFound() {
+		http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/", http.StatusFound)
 	}
 
 	tx.Where(&products.Product{CategoryID: category.ID}).Preload("ColorVariations").Find(&Products)
 
-	ctrl.View.Execute("category", map[string]interface{}{"CategoryName": category.Name, "Products": Products}, req, w)
+	ctrl.View.Execute("category", map[string]interface{}{"CategoryName": category.Name, "Products": Products}, ctx.Request(), ctx.ResponseWriter())
 }

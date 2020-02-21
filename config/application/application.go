@@ -7,8 +7,8 @@ import (
 	"GoTenancy/libs/assetfs"
 	"GoTenancy/libs/middlewares"
 	"GoTenancy/libs/wildcard_router"
-	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
+	"github.com/kataras/iris/v12"
 )
 
 // MicroAppInterface micro app interface
@@ -23,7 +23,7 @@ type Application struct {
 
 // Config application config
 type Config struct {
-	Router   *chi.Mux
+	IrisApp  *iris.Application
 	Handlers []http.Handler
 	AssetFS  assetfs.Interface
 	Admin    *admin.Admin
@@ -36,8 +36,8 @@ func New(cfg *Config) *Application {
 		cfg = &Config{}
 	}
 
-	if cfg.Router == nil {
-		cfg.Router = chi.NewRouter()
+	if cfg.IrisApp == nil {
+		cfg.IrisApp = iris.New()
 	}
 
 	if cfg.AssetFS == nil {
@@ -57,14 +57,14 @@ func (application *Application) Use(app MicroAppInterface) {
 // NewServeMux allocates and returns a new ServeMux.
 func (application *Application) NewServeMux() http.Handler {
 	if len(application.Config.Handlers) == 0 {
-		return middlewares.Apply(application.Config.Router)
+		return middlewares.Apply(application.Config.IrisApp)
 	}
 
 	wildcardRouter := wildcard_router.New()
 	for _, handler := range application.Config.Handlers {
 		wildcardRouter.AddHandler(handler)
 	}
-	wildcardRouter.AddHandler(application.Config.Router)
+	wildcardRouter.AddHandler(application.Config.IrisApp)
 
 	return middlewares.Apply(wildcardRouter)
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"GoTenancy/config/application"
+	"github.com/kataras/iris/v12"
 )
 
 // New new home app
@@ -26,6 +27,6 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	for _, prefix := range app.Config.Prefixs {
-		application.Router.Mount("/"+strings.TrimPrefix(prefix, "/"), app.Config.Handler)
+		application.IrisApp.Get("/"+strings.TrimPrefix(prefix, "/"), iris.FromStd(app.Config.Handler))
 	}
 }
