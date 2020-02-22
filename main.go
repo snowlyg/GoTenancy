@@ -110,7 +110,7 @@ func main() {
 	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
 	Application.Use(static.New(&static.Config{
 		Prefixs: prefixs, // 设置静态文件相关目录
-		Handler: bindatafs.AssetFS.FileServer(http.Dir("public"), prefixs...),
+		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
 	}))
 
 	if *compileTemplate { //处理前端静态文件
@@ -118,14 +118,6 @@ func main() {
 			color.Red(fmt.Sprintf("bindatafs error %v", err))
 		}
 	} else {
-
-		//// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
-		//handler := iris.FromStd(Application.NewServeMux())
-		//// 注册路由
-		//IrisApp.Any("/", handler)
-		//IrisApp.Any("/{p:path}", handler)
-		//IrisApp.Any("/admin", handler)
-		//IrisApp.Any("/admin/{p:path}", handler)
 
 		if config.Config.HTTPS {
 			// 启动服务

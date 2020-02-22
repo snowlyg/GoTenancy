@@ -40,6 +40,7 @@ type Config struct {
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
 
+	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 
 	// Add Media Library
@@ -65,5 +66,16 @@ func (app App) ConfigureApplication(application *application.Application) {
 	SetupWidget(Admin)
 	SetupDashboard(Admin)
 
-	application.IrisApp.Any(app.Config.Prefix, iris.FromStd(Admin.NewServeMux(app.Config.Prefix)))
+	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
+	// 注册 admin 路由和静态文件到 iris
+	// 静态文件路由,可以使用 IrisApp.HandleDir() 替换
+	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
+	application.IrisApp.Any(app.Config.Prefix, handler)
+	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", handler)
+	//application.IrisApp.HandleDir("/static", "./assets", iris.DirOptions {
+	//	Asset: Asset,
+	//	AssetInfo: AssetInfo,
+	//	AssetNames: AssetNames,
+	//	Gzip: false,
+	//})
 }

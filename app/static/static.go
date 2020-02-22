@@ -27,6 +27,8 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	for _, prefix := range app.Config.Prefixs {
-		application.IrisApp.Get("/"+strings.TrimPrefix(prefix, "/"), iris.FromStd(app.Config.Handler))
+		if app.Config.Handler != nil {
+			application.IrisApp.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
+		}
 	}
 }
