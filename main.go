@@ -125,31 +125,20 @@ func main() {
 			//	panic(err)
 			//}
 		} else {
-			// 启动服务
-			if err := IrisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), iris.WithConfiguration(
+			// iris 配置设置
+			irisConfig := iris.WithConfiguration(
 				iris.Configuration{
 					DisableStartupLog:                 true,
 					FireMethodNotAllowed:              true,
 					DisableBodyConsumptionOnUnmarshal: true,
 					TimeFormat:                        "Mon, 01 Jan 2006 15:04:05 GMT",
 					Charset:                           "UTF-8",
-				}),
-			); err != nil {
+				})
+			// 启动服务
+			if err := IrisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), irisConfig); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}
 		}
-
-		// 使用 net/http 原生包
-		//color.Yellow(fmt.Sprintf("Listening on: %v\n", config.Config.Port))
-		//if config.Config.HTTPS {
-		//	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Config.Port), "config/local_certs/server.crt", "config/local_certs/server.key", Application.NewServeMux()); err != nil {
-		//		panic(err)
-		//	}
-		//} else {
-		//	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), Application.NewServeMux()); err != nil {
-		//		panic(err)
-		//	}
-		//}
 	}
 }

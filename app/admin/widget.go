@@ -185,8 +185,8 @@ func SetupWidget(Admin *admin.Admin) {
 	})
 
 	banner_editor.RegisterExternalStylePath("//fonts.googleapis.com/css?family=Lato|Playfair+Display|Raleway")
-	banner_editor.RegisterExternalStylePath("/dist/qor.css")
-	banner_editor.RegisterExternalStylePath("/dist/home_banner.css")
+	banner_editor.RegisterExternalStylePath("/dist/main.css")
+	banner_editor.RegisterExternalStylePath("/dist/main.css")
 
 	bannerEditorResource := Admin.NewResource(&bannerEditorArgument{})
 	bannerEditorResource.Meta(&admin.Meta{Name: "Value", Config: &banner_editor.BannerEditorConfig{

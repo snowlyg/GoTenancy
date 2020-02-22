@@ -16,7 +16,7 @@
 > `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris + Qor-Admin` 形式开发。
 > 参考项目：[qor-example](https://GoTenancy/libs/qor-example)
 > 
-> `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下
+> `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下。
 >
 > 
 ---
@@ -51,7 +51,6 @@ func main() {
 
 #### 项目目录结构
 - 项目重构中....
-
 
 ---
 
@@ -88,10 +87,34 @@ go env -w GOPROXY=https://goproxy.cn,direct
 
 ```
 
+> 修改 `GoTenancy/config` 下的配置文件 :
+> application.yml - 应用配置 
+> database.yml - 数据配置 
+> smtp.yml - 邮箱配置 
+
+
+
 > 加载数据 
+
 ```shell script
 
 go run config/db/seeds/main.go config/db/seeds/seeds.go
+
+```
+
+> 打包模版文件和静态文件 
+
+```shell script
+
+go run main.go -compile-templates=true  //模版文件
+
+
+# windows 环境如果安装失败,请尝试运行：
+# npm install -g node-gyp
+# npm install --global --production windows-build-tools
+
+npm install  //安装 npm 依赖
+npm run build  //打包静态文件
 
 ```
 
@@ -107,12 +130,11 @@ gowatch //安装 gowatch 后才可以使用
 
 ```
 
-当然你也可以直接使用
+当然你也可以直接使用，此方法无法热加载
 
 ```shell script
 
-#go run -tags enterprise main.go -compile-templates=true
-go run  main.go -compile-templates=true
+go run main.go
 
 ```
 

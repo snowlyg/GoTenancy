@@ -31,8 +31,7 @@ runner-build
 GoTenancy
 
 
-#public/system
-public/downloads
+
 config/bindatafs/templates_bindatafs.go
 
 .editorconfig
@@ -46,6 +45,9 @@ tmp/*
 node_modules/
 public/assets/
 public/webpack/
+public/downloads
+public/dist
+#public/system
 *.js.map
 *.css.map
 npm-debug.log

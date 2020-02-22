@@ -10,15 +10,11 @@ fi
 
 echo "部署中 \033[1;31m$env\033[0m 从封装 \033[1;33m$(git branch | sed -n '/\* /s///p')\033[0m..."
 
-# 构建 enterprise.go
-echo "构建企业数据填充..."
-GOOS=linux GOARCH=amd64 go build -o db/seeds/enterprise -tags enterprise db/seeds/enterprise.go db/seeds/seeds.go
-
 # build seeds.go
 echo "构建主体数据填充..."
 GOOS=linux GOARCH=amd64 go build -o db/seeds/main db/seeds/main.go db/seeds/seeds.go
 
-go run -tags enterprise main.go -compile-templates=true
+go run  main.go -compile-templates=true
 
 echo "部署中..."
 harp -s $env deploy
