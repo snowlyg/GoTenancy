@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"regexp"
 
 	"GoTenancy/config/application"
 	"GoTenancy/libs/admin"
@@ -42,13 +41,19 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	application.IrisApp.Get("/products", controller.Index)
 	application.IrisApp.Get("/products/{code}", controller.Show)
-	latLonExpr := "^(men|women|kids)$"
-	latLonRegex, err := regexp.Compile(latLonExpr)
-	if err != nil {
-		panic(err)
-	}
-	application.IrisApp.Macros().Get("string").RegisterFunc("preix", latLonRegex.MatchString)
-	application.IrisApp.Get("/{gender:string preix()", controller.Gender)
+	application.IrisApp.Macros().Get("string").RegisterFunc("has",
+		func(validNames []string) func(string) bool {
+			return func(paramValue string) bool {
+				for _, validName := range validNames {
+					if validName == paramValue {
+						return true
+					}
+				}
+
+				return false
+			}
+		})
+	application.IrisApp.Get("/{gender:string has([men,women,kids])}", controller.Gender)
 	application.IrisApp.Get("/category/{code}", controller.Category)
 }
 
@@ -117,7 +122,7 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 	product.Meta(&admin.Meta{Name: "MainImageURL", Valuer: func(record interface{}, context *qor.Context) interface{} {
 		if p, ok := record.(*products.Product); ok {
 			result := bytes.NewBufferString("")
-			tmpl, _ := template.New("").Parse("<img src='{{.image}}'></img>")
+			tmpl, _ := template.New("").Parse(`<img src="{{.image}}"></img>`)
 			tmpl.Execute(result, map[string]string{"image": p.MainImageURL()})
 			return template.HTML(result.String())
 		}

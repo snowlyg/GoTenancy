@@ -271,7 +271,7 @@
                     this.load(URL.createObjectURL(file));
                     this.$parent.find('.qor-medialibrary__image-desc').show();
                 } else {
-                    $list.empty().html(QorCropper.FILE_LIST.replace('{{filename}}', file.name));
+                    $list.empty().html(QorCropper.FILE_LIST.replace("{{filename}}", file.name));
                 }
             }
         },

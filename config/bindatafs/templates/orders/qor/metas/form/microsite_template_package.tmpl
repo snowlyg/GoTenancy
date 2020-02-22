@@ -42,9 +42,9 @@
 
                 {{$previewPath := $action.PreviewURL $microSite $context}}
                 {{if $previewPath}}
-                  <td class='mdl-data-table__cell--non-numeric qor-microsite-preview'>
-                    <a target='_blank' href='{{$previewPath}}'>{{t "qor_microsite.template.preview" "PREVIEW"}}</a>
-                  </td>
+                    <td class='mdl-data-table__cell--non-numeric qor-microsite-preview'>
+                        <a target='_blank' href="{{$previewPath}}">{{t "qor_microsite.template.preview" "PREVIEW"}}</a>
+                    </td>
                 {{else}}
                   <td class='mdl-data-table__cell--non-numeric qor-microsite-preview--disable'><span>{{t (printf "%v.packages.preview" $baseResource.ToParam) "Preview"}}</span></td>
                 {{end}}

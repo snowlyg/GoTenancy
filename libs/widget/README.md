@@ -108,7 +108,7 @@ Once the template is found, QOR Widget will use the widget's generated context a
 
 ```go
 // app/views/widgets/banner1.tmpl
-<div class="banner" style="background:url('{{.Setting.BackgroundImage}}') no-repeat center center">
+<div class="banner" style="background:url("{{.Setting.BackgroundImage}}") no-repeat center center">
   <div class="container">
     <div class="row">
       <div class="column column-12">

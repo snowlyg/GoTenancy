@@ -42,18 +42,18 @@
         {{render "shared/sidebar"}}
       </div>
 
-      <main class="mdl-layout__content qor-page" id="content">
-        {{.Content}}
-      </main>
+        <main class="mdl-layout__content qor-page" id="content">
+            {{.Content}}
+        </main>
     </div>
 
     <!-- JavaScripts -->
     <script>
-      QOR_Translations = window.QOR_Translations || {};
-      QOR_Translations.okButton = '{{t "qor_admin.form.ok" "OK"}}'
-      QOR_Translations.cancelButton = '{{t "qor_admin.form.cancel" "Cancel"}}'
-      QOR_Translations.serverError = '{{t "qor_admin.form.serverError" "Server error, please try again later!"}}'
-      QOR_Translations.slideoutCloseWarning = '{{t "qor_admin.slideout.close_warning" "You have unsaved changes on this slideout. If you close this slideout, you will lose all unsaved changes. Are you sure you want to close the slideout?"}}'
+        QOR_Translations = window.QOR_Translations || {};
+        QOR_Translations.okButton = "{{t "qor_admin.form.ok" "OK"}}"
+        QOR_Translations.cancelButton = "{{t "qor_admin.form.cancel" "Cancel"}}"
+        QOR_Translations.serverError = "{{t "qor_admin.form.serverError" "Server error, please try again later!"}}"
+        QOR_Translations.slideoutCloseWarning = "{{t "qor_admin.slideout.close_warning" "You have unsaved changes on this slideout. If you close this slideout, you will lose all unsaved changes. Are you sure you want to close the slideout?"}}"
     </script>
     {{javascript_tag "qor_admin_default"}}
     {{load_admin_javascripts}}

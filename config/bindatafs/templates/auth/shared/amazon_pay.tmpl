@@ -1,19 +1,19 @@
 <script type="text/javascript">
-  var amazonMerchantId = "{{amazon_payment_gateway.MerchantID}}";
-  var amazonOrderReferenceId = null;
-  var amazonOrderReference = null;
+    var amazonMerchantId = "{{amazon_payment_gateway.MerchantID}}";
+    var amazonOrderReferenceId = null;
+    var amazonOrderReference = null;
 
-  window.onAmazonLoginReady = function() {
-    amazon.Login.setClientId('{{amazon_payment_gateway.ClientID}}');
-  };
+    window.onAmazonLoginReady = function () {
+        amazon.Login.setClientId("{{amazon_payment_gateway.ClientID}}");
+    };
 
-  window.onAmazonPaymentsReady = function() {
-    $(function() {
-      if (location.pathname == "/cart") {
-        if ($("#amazon_login_widget").length > 0) {
-          showAmazonButton();
-        }
-      }
+    window.onAmazonPaymentsReady = function () {
+        $(function () {
+            if (location.pathname == "/cart") {
+                if ($("#amazon_login_widget").length > 0) {
+                    showAmazonButton();
+                }
+            }
 
       if (location.pathname == "/cart/checkout") {
         showAmazonAddress();

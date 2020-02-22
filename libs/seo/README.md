@@ -32,7 +32,7 @@ SeoCollection.RegisterSeo(&seo.SEO{
     Name:     "Category Page",
     // Defined what Varibles could be using in title, description and keywords
     Varibles: []string{"CategoryName"},
-    // Generated a mapping to replace the Variable, e.g. title: 'Qor - {{CategoryName}}', will be dislayed as 'Qor - Clothing'
+    // Generated a mapping to replace the Variable, e.g. title: 'Qor - {{CategoryName}}", will be dislayed as 'Qor - Clothing'
     Context: func(objects ...interface{}) map[string]string {
         values := make(map[string]string)
         if len(objects) > 0 {

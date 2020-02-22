@@ -1,12 +1,14 @@
 package products
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"GoTenancy/libs/render"
 	"GoTenancy/models/products"
 	"GoTenancy/utils"
+	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 )
 
@@ -34,9 +36,11 @@ func (ctrl Controller) Gender(ctx iris.Context) {
 		tx       = utils.GetDB(ctx.Request())
 	)
 
-	tx.Where(&products.Product{Gender: utils.URLParam("gender", ctx.Request())}).Preload("Category").Find(&Products)
+	tx.Where(&products.Product{Gender: ctx.Params().Get("gender")}).Preload("Category").Find(&Products)
 
-	ctrl.View.Execute("gender", map[string]interface{}{"Products": Products}, ctx.Request(), ctx.ResponseWriter())
+	if err := ctrl.View.Execute("gender", map[string]interface{}{"Products": Products}, ctx.Request(), ctx.ResponseWriter()); err != nil {
+		color.Red(fmt.Sprintf(" ctrl.View.Execute %v", err))
+	}
 }
 
 // Show product show page
@@ -44,7 +48,7 @@ func (ctrl Controller) Show(ctx iris.Context) {
 	var (
 		product        products.Product
 		colorVariation products.ColorVariation
-		codes          = strings.Split(utils.URLParam("code", ctx.Request()), "_")
+		codes          = strings.Split(ctx.Params().Get("code"), "_")
 		productCode    = codes[0]
 		colorCode      string
 		tx             = utils.GetDB(ctx.Request())
@@ -71,7 +75,7 @@ func (ctrl Controller) Category(ctx iris.Context) {
 		tx       = utils.GetDB(ctx.Request())
 	)
 
-	if tx.Where("code = ?", utils.URLParam("code", ctx.Request())).First(&category).RecordNotFound() {
+	if tx.Where("code = ?", ctx.Params().Get("code")).First(&category).RecordNotFound() {
 		http.Redirect(ctx.ResponseWriter(), ctx.Request(), "/", http.StatusFound)
 	}
 

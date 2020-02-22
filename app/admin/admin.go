@@ -72,10 +72,5 @@ func (app App) ConfigureApplication(application *application.Application) {
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
 	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", handler)
-	//application.IrisApp.HandleDir("/static", "./assets", iris.DirOptions {
-	//	Asset: Asset,
-	//	AssetInfo: AssetInfo,
-	//	AssetNames: AssetNames,
-	//	Gzip: false,
-	//})
+
 }

@@ -83,7 +83,7 @@
             var newVal = '';
             var startString = this.focusedInputVal.substring(0, this.focusedInputStart);
             var endString = this.focusedInputVal.substring(this.focusedInputEnd, this.focusedInputVal.length);
-            var tagVal = '{{' + $(e.currentTarget).data('tagValue') + '}}';
+            var tagVal = "{{' + $(e.currentTarget).data('tagValue') + '}}";
 
             newVal = startString + tagVal + endString;
 

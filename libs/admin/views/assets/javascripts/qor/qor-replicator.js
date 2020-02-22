@@ -319,7 +319,7 @@
                 .children(':visible')
                 .addClass('hidden')
                 .hide();
-            $alert = $(options.alertTemplate.replace('{{name}}', this.parseName($item)));
+            $alert = $(options.alertTemplate.replace("{{name}}", this.parseName($item)));
             $alert.find(options.undoClass).one(
                 EVENT_CLICK,
                 function () {

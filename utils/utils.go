@@ -12,7 +12,6 @@ import (
 	"GoTenancy/libs/session"
 	"GoTenancy/libs/session/manager"
 	"GoTenancy/models/users"
-	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
 	"github.com/microcosm-cc/bluemonday"
 )
@@ -40,11 +39,6 @@ func GetDB(req *http.Request) *gorm.DB {
 		return db
 	}
 	return db.DB
-}
-
-// URLParam 从请求中获取 url 参数
-func URLParam(name string, req *http.Request) string {
-	return chi.URLParam(req, name)
 }
 
 // AddFlashMessage 辅助方法
