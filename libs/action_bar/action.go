@@ -85,7 +85,7 @@ func (action HTMLAction) ToHTML(context *admin.Context) template.HTML {
 }
 
 func toLink(name, link string, admin *admin.Admin) template.HTML {
-	prefix := admin.GetRouter().Prefix + "/"
+	prefix := admin.GetRouter().Prefix
 
 	if strings.HasPrefix(link, prefix) {
 		jsURL := fmt.Sprintf("<script data-prefix=\"%v\" src=\"%v/assets/javascripts/action_bar_check.js?theme=action_bar\"></script>", prefix, prefix)

@@ -24,8 +24,8 @@ type ActionBar struct {
 func New(admin *admin.Admin) *ActionBar {
 	bar := &ActionBar{Admin: admin}
 	ctr := &controller{ActionBar: bar}
-	admin.GetRouter().Get("/action_bar/switch_mode", ctr.SwitchMode)
-	admin.GetRouter().Get("/action_bar/inline_edit", ctr.InlineEdit)
+	admin.GetRouter().Get("action_bar/switch_mode", ctr.SwitchMode)
+	admin.GetRouter().Get("action_bar/inline_edit", ctr.InlineEdit)
 	return bar
 }
 
