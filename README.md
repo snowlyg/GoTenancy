@@ -158,11 +158,13 @@ go run main.go
 
 #### 演示
 > http://localhost:8080
-![](localhost_8080_.png)
+
+![](pic/localhost_8080_.png)
 
 
 > http://localhost:8080/admin
-![](localhost_8080_admin.png)
+
+![](pic/localhost_8080_admin.png)
 
 ---
 ###### Iris-go 学习交流QQ群 ：676717248
