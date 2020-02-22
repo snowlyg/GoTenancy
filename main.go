@@ -77,7 +77,7 @@ func main() {
 	IrisApp.Use(logger.New())
 	IrisApp.Use(recover2.New())
 
-	// 本地化
+	// 本地化 && publish2.PreviewByDB
 	//IrisApp.Use(iris.FromStd(func(next http.Handler)  http.Handler {
 	//	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 	//		var (
