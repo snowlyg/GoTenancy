@@ -156,6 +156,14 @@ go run main.go
  
 ```
 
+#### 演示
+> http://localhost:8080
+[[localhost_8080_.png]]
+
+
+> http://localhost:8080/admin
+[[localhost_8080_admin.png]]
+
 ---
 ###### Iris-go 学习交流QQ群 ：676717248
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=cc99ccf86be594e790eacc91193789746af7df4a88e84fe949e61e5c6d63537c"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Iris-go" title="Iris-go"></a>
