@@ -12,6 +12,7 @@ zh-CN:
       cart: '购物车'
       logout: "登出"
       my_account: "我的账户"
+      register: "注册"
     footer_link:
       faq: '常见问题解答'
       size_guide: '尺寸指南'

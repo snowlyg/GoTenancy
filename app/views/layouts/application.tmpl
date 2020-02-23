@@ -43,9 +43,9 @@
 
             <div class="header__func {{ if current_user }}header__func-login{{end}}">
               {{ if current_user }}
-                <a href="/account">{{ t "layout.header_link.my_account" "account"}}</a>
+                <a href="/account">{{ t "layout.header_link.my_account" "ACCOUNT"}}</a>
               {{ else }}
-                <a href="/auth/login">{{ t "layout.header_link.sign_in" }}</a>
+                <a href="/auth/login">{{ t "layout.header_link.sign_in" "SIGN IN" }}</a>
                 <a href="/auth/register">{{ t "layout.header_link.register" "REGISTER" }}</a>
               {{ end }}
 
