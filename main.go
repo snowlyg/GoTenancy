@@ -23,6 +23,7 @@ import (
 	"GoTenancy/libs/admin"
 	"GoTenancy/libs/publish2"
 	"GoTenancy/libs/qor/utils"
+	"GoTenancy/middleware"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/fatih/color"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -62,37 +63,13 @@ func main() {
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
 	// 全局中间件
-	IrisApp.Use(func(ctx iris.Context) {
-		// 演示设置，请勿在生产环境使用
-		ctx.Header("Access-Control-Allow-Origin", "*")
-		ctx.Next()
-	})
-
-	IrisApp.Use(func(ctx iris.Context) {
-		ctx.Request().Header.Del("Authorization")
-		ctx.Next()
-	})
-
+	IrisApp.Use(middleware.AddHeader)
 	IrisApp.Logger().SetLevel("debug")
 	IrisApp.Use(logger.New())
 	IrisApp.Use(recover2.New())
 
 	// 本地化 && publish2.PreviewByDB
-	//IrisApp.Use(iris.FromStd(func(next http.Handler)  http.Handler {
-	//	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-	//		var (
-	//			tx         = db.DB
-	//			qorContext = &qor.Context{Request: req, Writer: w}
-	//		)
-	//
-	//		if locale := utils.GetLocale(qorContext); locale != "" {
-	//			tx = tx.Set("l10n:locale", locale)
-	//		}
-	//
-	//		ctx := context2.WithValue(req.Context(), utils.ContextDBName, publish2.PreviewByDB(tx, qorContext))
-	//		next.ServeHTTP(w, req.WithContext(ctx))
-	//	})
-	//}))
+	IrisApp.Use(middleware.Locale)
 
 	// 加载应用
 	Application.Use(api.New(&api.Config{}))
