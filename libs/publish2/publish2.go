@@ -16,7 +16,7 @@ import (
 )
 
 func init() {
-	admin.RegisterViewPath("libs/publish2/views")
+	admin.RegisterViewPath("GoTenancy/libs/publish2/views")
 }
 
 func (SharedVersion) ConfigureQorResource(res resource.Resourcer) {

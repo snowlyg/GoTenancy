@@ -42,10 +42,11 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 // ConfigureAdmin configure admin interface
 func (App) ConfigureAdmin(Admin *admin.Admin) {
-	Admin.AddMenu(&admin.Menu{Name: "Pages Management", Priority: 4})
+	pageMenuName := "Pages Management"
+	Admin.AddMenu(&admin.Menu{Name: pageMenuName, Priority: 4})
 
 	// Blog Management
-	article := Admin.AddResource(&blogs.Article{}, &admin.Config{Menu: []string{"Pages Management"}})
+	article := Admin.AddResource(&blogs.Article{}, &admin.Config{Menu: []string{pageMenuName}, IconName: "Publish"})
 	article.IndexAttrs("ID", "VersionName", "ScheduledStartAt", "ScheduledEndAt", "Author", "Title")
 
 	// Setup pages
@@ -68,13 +69,13 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 			return nil
 		},
 	})
-	Admin.AddResource(PageBuilderWidgets, &admin.Config{Menu: []string{"Pages Management"}})
+	Admin.AddResource(PageBuilderWidgets, &admin.Config{Menu: []string{pageMenuName}, IconName: "Publish"})
 
 	page := page_builder.New(&page_builder.Config{
 		Admin:       Admin,
 		PageModel:   &blogs.Page{},
 		Containers:  PageBuilderWidgets,
-		AdminConfig: &admin.Config{Name: "Pages", Menu: []string{"Pages Management"}, Priority: 1},
+		AdminConfig: &admin.Config{Name: "Pages", Menu: []string{pageMenuName}, IconName: "Publish", Priority: 1},
 	})
 	page.IndexAttrs("ID", "Title", "PublishLiveNow")
 }

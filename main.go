@@ -71,7 +71,7 @@ func main() {
 	IrisApp.Use(recover2.New())
 
 	// 本地化 && publish2.PreviewByDB
-	IrisApp.Use(middleware.Locale)
+	//IrisApp.Use(middleware.Locale)
 
 	// 加载应用
 	Application.Use(api.New(&api.Config{}))
@@ -100,9 +100,10 @@ func main() {
 
 		if config.Config.HTTPS {
 			// 启动服务
-			//if err := app.Listen(fmt.Sprintf(":%d", config.Config.Port)); err != nil {
-			//	panic(err)
-			//}
+			if err := IrisApp.Run(iris.TLS(":443", "./config/local_certs/server.crt", "./config/local_certs/server.key")); err != nil {
+				color.Red(fmt.Sprintf("app.Listen %v", err))
+				panic(err)
+			}
 		} else {
 			// iris 配置设置
 			irisConfig := iris.WithConfiguration(

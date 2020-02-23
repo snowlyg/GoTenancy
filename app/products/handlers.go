@@ -26,7 +26,9 @@ func (ctrl Controller) Index(ctx iris.Context) {
 
 	tx.Preload("Category").Find(&Products)
 
-	ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
+	if err := ctrl.View.Execute("index", map[string]interface{}{"Products": Products}, ctx.Request(), ctx.ResponseWriter()); err != nil {
+		color.Red(fmt.Sprintf(" ctrl.View.Execute %v", err))
+	}
 }
 
 // Gender products gender page

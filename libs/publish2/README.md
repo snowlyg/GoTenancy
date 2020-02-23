@@ -1,6 +1,6 @@
 # Publish2
 
-The Publish2 Plugin is the successor to [Publish](https://GoTenancy/libs/publish). It generalizes publishing using 3 important modules:
+The Publish2 Plugin is the successor to [Publish](https://github.com/qor/publish). It generalizes publishing using 3 important modules:
 
 * Visible: to flag an object be online/offline
 * Schedule: to schedule objects to be online/offline automatically
@@ -31,11 +31,11 @@ publish2.RegisterCallbacks(db)
 
 See [here](#disable-callbacks) for callback details.
 
-Last, Setup [QOR Admin](http://GoTenancy/libs/admin)
+Last, Setup [QOR Admin](http://github.com/qor/admin)
 
 ```go
 import (
-  "GoTenancy/libs/admin"
+  "github.com/qor/admin"
 )
 
 func init() {
@@ -43,11 +43,11 @@ func init() {
 }
 ```
 
-Now, start your application, you should see the [Publish2](https://GoTenancy/libs/publish2) UI has been displayed in QOR Admin UI.
+Now, start your application, you should see the [Publish2](https://github.com/qor/publish2) UI has been displayed in QOR Admin UI.
 
 ## Publish2 UI intro
 
-The [Publish2](https://GoTenancy/libs/publish2) section will be added to the index and new/edit page.
+The [Publish2](https://github.com/qor/publish2) section will be added to the index and new/edit page.
 
 [Demo Site](http://demo.getqor.com/admin/products)
 
@@ -57,7 +57,7 @@ Tick the `Publish ready` option and leave `Schedule Start At` and `Schedule End 
 #### How to schedule to publish a product
 Fill the `Schedule Start At` and `Schedule End At` fields.
 
-The [Publish2](https://GoTenancy/libs/publish2) section in index page
+The [Publish2](https://github.com/qor/publish2) section in index page
 
 #### How to make a new version of a product
 Click the `...` icon(C), you can see a "Create new version" button in the popup.
@@ -72,7 +72,7 @@ In all versions panel, the one with green circle(A) icon is the live version.
 
 ### <a name="disable-callbacks"></a> Disable callbacks
 
-Depend on the modules you used, [Publish2](https://GoTenancy/libs/publish2) callback attaches different SQL conditions to your object queries.
+Depend on the modules you used, [Publish2](https://github.com/qor/publish2) callback attaches different SQL conditions to your object queries.
 
 This is a SQL sample of select product with language_id is 6. All 3 modules are integrated with `Product`.
 
@@ -84,7 +84,7 @@ SELECT * FROM `products`  WHERE (language_id = '6') AND ((products.id, `products
 - Version: `(products.id, `products`.version_priority) IN (SELECT products.id, MAX(`products`.version_priority))`
 - Schedule: `(scheduled_start_at IS NULL OR scheduled_start_at <= 'CURRENT_TIME') AND (scheduled_end_at IS NULL OR scheduled_end_at >= 'CURRENT_TIME')`
 
-Sometimes you may need do a pure query without [Publish2](https://GoTenancy/libs/publish2) conditions. You disable callbacks by
+Sometimes you may need do a pure query without [Publish2](https://github.com/qor/publish2) conditions. You disable callbacks by
 
 ```go
 db.DB.Set(publish2.VersionMode, publish2.VersionMultipleMode).Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff)
