@@ -19,7 +19,7 @@ func renderLatestOrder(context *admin.Context) template.HTML {
 	if orders, err := orderContext.FindMany(); err == nil {
 		return orderContext.Render("index/table", orders)
 	}
-	return template.HTML("")
+	return ""
 }
 
 func renderLatestProduct(context *admin.Context) template.HTML {
@@ -30,5 +30,5 @@ func renderLatestProduct(context *admin.Context) template.HTML {
 	if products, err := productContext.FindMany(); err == nil {
 		return productContext.Render("index/table", products)
 	}
-	return template.HTML("")
+	return ""
 }

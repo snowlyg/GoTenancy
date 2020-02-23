@@ -12,26 +12,26 @@ import (
 	"GoTenancy/models/stores"
 )
 
-// New new home app
+// New 新建 stores app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App stores app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config stores 配置结构
 type Config struct {
 }
 
-// ConfigureApplication configure application
+// ConfigureApplication 配置 application
 func (app App) ConfigureApplication(application *application.Application) {
 	app.ConfigureAdmin(application.Admin)
 }
 
-// ConfigureAdmin configure admin interface
+// ConfigureAdmin 配置 admin 接口
 func (App) ConfigureAdmin(Admin *admin.Admin) {
 	// Add Store
 	store := Admin.AddResource(&stores.Store{}, &admin.Config{Menu: []string{"Store Management"}})

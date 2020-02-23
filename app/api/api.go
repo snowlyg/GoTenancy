@@ -11,7 +11,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// New new home app
+// New new api app
 func New(config *Config) *App {
 	if config.Prefix == "" {
 		config.Prefix = "/api"
@@ -19,12 +19,12 @@ func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App api app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config api config struct
 type Config struct {
 	Prefix string
 }

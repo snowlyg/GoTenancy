@@ -17,17 +17,17 @@ import (
 	"GoTenancy/utils/funcmapmaker"
 )
 
-// New new home app
+// New new page app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App page app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config page config struct
 type Config struct {
 }
 

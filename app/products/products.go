@@ -18,17 +18,17 @@ import (
 
 var Genders = []string{"Men", "Women", "Kids"}
 
-// New new home app
+// New 新建 product app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App product app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config product 配置结构
 type Config struct {
 }
 

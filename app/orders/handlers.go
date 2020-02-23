@@ -17,7 +17,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// Controller products controller
+// Controller order controller
 type Controller struct {
 	View *qorrender.Render
 }

@@ -19,17 +19,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// New new home app
+// New new order app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App order app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config order config struct
 type Config struct {
 }
 

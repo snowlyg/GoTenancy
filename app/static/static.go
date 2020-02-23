@@ -8,17 +8,17 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// New new home app
+// New 新建 static app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App static app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config static 配置结构
 type Config struct {
 	Prefixs []string
 	Handler http.Handler

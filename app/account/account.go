@@ -17,17 +17,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// New new home app
+// New new account app
 func New(config *Config) *App {
 	return &App{Config: config}
 }
 
-// App home app
+// App account app
 type App struct {
 	Config *Config
 }
 
-// Config home config struct
+// Config account config struct
 type Config struct {
 }
 
