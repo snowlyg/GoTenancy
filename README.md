@@ -24,10 +24,13 @@
 
 #### iris + qor-admin 使用案例 【 代码由 iris 的作者 @kataras 提供】
 > 提供一个我翻译的 iris'wiki 中文文档，方便大家学习 iris : 
-> [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
-> [github 地址](https://github.com/snowlyg/iris/wiki)
+
+- [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
+- [github 地址](https://github.com/snowlyg/iris/wiki)
+
 ---
 也欢迎加入 Iris-go 学习交流QQ群，一起交流学习心得 ：676717248 
+
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=cc99ccf86be594e790eacc91193789746af7df4a88e84fe949e61e5c6d63537c"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Iris-go" title="Iris-go"></a>
 
 ```go
