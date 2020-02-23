@@ -39,7 +39,7 @@ func (Slug) ConfigureQorMeta(meta resource.Metaor) {
 	if meta, ok := meta.(*admin.Meta); ok {
 		res := meta.GetBaseResource().(*admin.Resource)
 
-		res.GetAdmin().RegisterViewPath("GoTenancy/libs/slug/views")
+		res.GetAdmin().RegisterViewPath("libs/slug/views")
 		res.UseTheme("slug")
 
 		slugMetaName := meta.Name

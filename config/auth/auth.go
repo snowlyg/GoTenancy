@@ -18,6 +18,7 @@ import (
 )
 
 var (
+
 	// Auth initialize Auth for Authentication
 	Auth = clean.New(&auth.Config{
 		DB:         db.DB,
@@ -25,6 +26,7 @@ var (
 		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
+		ViewPaths:  append([]string{}, "GoTenancy/libs/auth_themes/clean/views"),
 	})
 
 	// Authority initialize Authority for Authorization
@@ -34,10 +36,12 @@ var (
 )
 
 func init() {
+	//Auth.RegisterProvider(password.New(&password.Config{}))
 	Auth.RegisterProvider(github.New(&config.Config.Github))
 	Auth.RegisterProvider(google.New(&config.Config.Google))
 	Auth.RegisterProvider(facebook.New(&config.Config.Facebook))
 	Auth.RegisterProvider(twitter.New(&config.Config.Twitter))
 
 	Authority.Register("logged_in_half_hour", authority.Rule{TimeoutSinceLastLogin: time.Minute * 30})
+
 }

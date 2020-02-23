@@ -75,7 +75,7 @@ func Register(res *admin.Resource) {
 		})
 	}
 
-	res.GetAdmin().RegisterViewPath("GoTenancy/libs/activity/views")
+	res.GetAdmin().RegisterViewPath("libs/activity/views")
 	res.UseTheme("activity")
 
 	qorAdmin.RegisterFuncMap("activity_resource", func() *admin.Resource {

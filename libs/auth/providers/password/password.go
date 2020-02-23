@@ -83,10 +83,10 @@ func (Provider) GetName() string {
 
 // ConfigAuth config auth
 func (provider Provider) ConfigAuth(auth *auth.Auth) {
-	auth.Render.RegisterViewPath("GoTenancy/libs/auth/providers/password/views")
+	auth.Render.RegisterViewPath("libs/auth/providers/password/views")
 
 	if auth.Mailer != nil {
-		auth.Mailer.RegisterViewPath("GoTenancy/libs/auth/providers/password/views/mailers")
+		auth.Mailer.RegisterViewPath("libs/auth/providers/password/views/mailers")
 	}
 }
 

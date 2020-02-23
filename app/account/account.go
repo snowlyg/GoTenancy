@@ -11,6 +11,7 @@ import (
 	qorutils "GoTenancy/libs/qor/utils"
 	"GoTenancy/libs/render"
 	"GoTenancy/libs/validations"
+	"GoTenancy/middleware"
 	"GoTenancy/models/users"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
@@ -40,10 +41,10 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	application.IrisApp.Any("/auth/", iris.FromStd(auth.Auth.NewServeMux()))
 	application.IrisApp.PartyFunc("/account", func(account iris.Party) {
-		account.Use(iris.FromStd(auth.Authority.Authorize()))
+		account.Use(middleware.Authorize)
 		account.Get("/", controller.Orders)
-		AddUserCredit := account.Post("/add_user_credit", controller.AddCredit)
-		AddUserCredit.Use(iris.FromStd(auth.Authority.Authorize("logged_in_half_hour")))
+		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
+
 		account.Get("/profile", controller.Profile)
 		account.Post("/profile", controller.Update)
 	})

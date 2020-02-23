@@ -135,7 +135,7 @@ func (Provider) GetName() string {
 // ConfigAuth config auth
 func (provider *Provider) ConfigAuth(auth *auth.Auth) {
 	provider.Auth = auth
-	provider.Auth.Render.RegisterViewPath("GoTenancy/libs/auth/providers/twitter/views")
+	provider.Auth.Render.RegisterViewPath("libs/auth/providers/twitter/views")
 }
 
 // NewConsumer new twitter consumer

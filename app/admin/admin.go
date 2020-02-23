@@ -77,5 +77,4 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 注册 auth 路由和静态文件到 iris
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
 	application.IrisApp.Any("/auth/{p:path}", authHandler)
-
 }

@@ -138,7 +138,7 @@ func (FacebookProvider) GetName() string {
 
 // ConfigAuth config auth
 func (provider FacebookProvider) ConfigAuth(auth *auth.Auth) {
-	auth.Render.RegisterViewPath("GoTenancy/libs/auth/providers/facebook/views")
+	auth.Render.RegisterViewPath("libs/auth/providers/facebook/views")
 }
 
 // OAuthConfig return oauth config based on configuration

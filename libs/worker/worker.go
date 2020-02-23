@@ -67,7 +67,7 @@ type Worker struct {
 // ConfigureQorResourceBeforeInitialize a method used to config Worker for qor admin
 func (worker *Worker) ConfigureQorResourceBeforeInitialize(res resource.Resourcer) {
 	if res, ok := res.(*admin.Resource); ok {
-		res.GetAdmin().RegisterViewPath("GoTenancy/libs/worker/views")
+		res.GetAdmin().RegisterViewPath("libs/worker/views")
 		res.UseTheme("worker")
 
 		worker.Admin = res.GetAdmin()

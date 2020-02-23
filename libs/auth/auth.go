@@ -116,7 +116,7 @@ func New(config *Config) *Auth {
 		config.Render.RegisterViewPath(viewPath)
 	}
 
-	config.Render.RegisterViewPath("GoTenancy/libs/auth/views")
+	config.Render.RegisterViewPath("libs/auth/views")
 
 	auth := &Auth{Config: config}
 

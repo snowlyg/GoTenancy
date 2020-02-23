@@ -33,6 +33,7 @@ GoTenancy
 
 
 config/bindatafs/templates_bindatafs.go
+config/bindatafs/templates/*
 
 .editorconfig
 deploy.sh

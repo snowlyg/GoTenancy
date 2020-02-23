@@ -115,7 +115,7 @@ func (pc *publishController) PublishOrDiscard(context *admin.Context) {
 // ConfigureQorResourceBeforeInitialize configure qor resource when initialize qor admin
 func (publish *Publish) ConfigureQorResourceBeforeInitialize(res resource.Resourcer) {
 	if res, ok := res.(*admin.Resource); ok {
-		res.GetAdmin().RegisterViewPath("GoTenancy/libs/publish/views")
+		res.GetAdmin().RegisterViewPath("libs/publish/views")
 		res.UseTheme("publish")
 
 		if event := res.GetAdmin().GetResource("PublishEvent"); event == nil {

@@ -85,7 +85,7 @@ func (serialize *SerializableMeta) SetSerializableArgumentValue(value interface{
 // ConfigureQorResourceBeforeInitialize configure qor resource for qor admin
 func (serialize *SerializableMeta) ConfigureQorResourceBeforeInitialize(res resource.Resourcer) {
 	if res, ok := res.(*admin.Resource); ok {
-		res.GetAdmin().RegisterViewPath("GoTenancy/libs/serializable_meta/views")
+		res.GetAdmin().RegisterViewPath("libs/serializable_meta/views")
 
 		if _, ok := res.Value.(SerializableMetaInterface); ok {
 			res.Meta(&admin.Meta{

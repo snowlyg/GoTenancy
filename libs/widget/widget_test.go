@@ -44,7 +44,7 @@ func setup() {
 	Widgets = widget.New(&widget.Config{
 		DB: db,
 	})
-	Widgets.RegisterViewPath("GoTenancy/libs/widget/test")
+	Widgets.RegisterViewPath("libs/widget/test")
 
 	Admin = admin.New(&qor.Config{DB: db})
 	Admin.AddResource(Widgets)

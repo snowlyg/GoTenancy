@@ -30,5 +30,6 @@ func (app App) ConfigureApplication(application *application.Application) {
 		if app.Config.Handler != nil {
 			application.IrisApp.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
 		}
+		application.IrisApp.HandleDir("/"+strings.TrimPrefix(prefix, "/"), "./public/"+strings.TrimPrefix(prefix, "/"))
 	}
 }
