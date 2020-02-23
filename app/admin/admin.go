@@ -2,6 +2,7 @@ package admin
 
 import (
 	"GoTenancy/config/application"
+	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
 	"GoTenancy/libs/action_bar"
 	"GoTenancy/libs/admin"
@@ -72,5 +73,9 @@ func (app App) ConfigureApplication(application *application.Application) {
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
 	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", handler)
+
+	// 注册 auth 路由和静态文件到 iris
+	authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	application.IrisApp.Any("/auth/{p:path}", authHandler)
 
 }

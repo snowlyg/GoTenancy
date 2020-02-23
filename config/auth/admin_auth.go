@@ -16,15 +16,21 @@ func init() {
 	})
 }
 
+type PathConfig struct {
+	Login  string
+	Logout string
+}
+
 type AdminAuth struct {
+	Paths PathConfig
 }
 
-func (AdminAuth) LoginURL(c *admin.Context) string {
-	return "/auth/login"
+func (a *AdminAuth) LoginURL(c *admin.Context) string {
+	return a.Paths.Login
 }
 
-func (AdminAuth) LogoutURL(c *admin.Context) string {
-	return "/auth/logout"
+func (a *AdminAuth) LogoutURL(c *admin.Context) string {
+	return a.Paths.Logout
 }
 
 func (AdminAuth) GetCurrentUser(c *admin.Context) qor.CurrentUser {

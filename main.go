@@ -47,8 +47,11 @@ func main() {
 		//定义 admin 对象
 		Admin = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancy", // 站点名称
-			Auth:     auth.AdminAuth{},
-			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
+			Auth: &auth.AdminAuth{Paths: auth.PathConfig{
+				Login:  "/auth/login",
+				Logout: "/auth/logout",
+			}},
+			DB: db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 		})
 
 		//定义应用
