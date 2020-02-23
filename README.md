@@ -9,20 +9,27 @@
     <h5 align="center">多商户管理平台</h5>
 </div>
 
-#### 项目介绍 
+#### 项目介绍  【项目目前仍在开发中】
 > 本来采用此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
 > 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://GoTenancy/libs/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了。我相信你也会爱上它的。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
 > `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris + Qor-Admin` 形式开发。
 > 参考项目：[qor-example](https://GoTenancy/libs/qor-example)
 > 
-> `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下。
->
+> `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下（目前方便开发才集成到本项目，后期会分离成一个独立的库）。
+>  [qor-example](https://GoTenancy/libs/qor-example) 是一个购物商城实例，目前已经使用 iris 重构完成 ，详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
 > 
 ---
 
 
-#### iris + qor-admin 使用案例
+#### iris + qor-admin 使用案例 【 代码由 iris 的作者 @kataras 提供】
+> 提供一个我翻译的 iris'wiki 中文文档，方便大家学习 iris : 
+> [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
+> [github 论坛地址](https://github.com/snowlyg/iris/wiki)
+---
+也欢迎加入 Iris-go 学习交流QQ群，一起交流学习心得 ：676717248 
+<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=cc99ccf86be594e790eacc91193789746af7df4a88e84fe949e61e5c6d63537c"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Iris-go" title="Iris-go"></a>
+
 ```go
 package main
 
@@ -165,8 +172,4 @@ go run main.go
 > http://localhost:8080/admin
 
 ![](pic/localhost_8080_admin.png)
-
----
-###### Iris-go 学习交流QQ群 ：676717248
-<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=cc99ccf86be594e790eacc91193789746af7df4a88e84fe949e61e5c6d63537c"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Iris-go" title="Iris-go"></a>
 

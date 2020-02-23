@@ -42,7 +42,6 @@ func main() {
 	}
 
 	var (
-		//Router = chi.NewRouter() // 定义路由
 		IrisApp = iris.New()
 		//定义 admin 对象
 		Admin = admin.New(&admin.AdminConfig{
