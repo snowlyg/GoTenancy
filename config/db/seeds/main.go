@@ -396,8 +396,11 @@ func createProducts() {
 
 					Admin := qoradmin.New(&qoradmin.AdminConfig{
 						SiteName: "QOR DEMO",
-						Auth:     auth.AdminAuth{},
-						DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
+						Auth: &auth.AdminAuth{Paths: auth.PathConfig{
+							Login:  "/auth/login",
+							Logout: "/auth/logout",
+						}},
+						DB: db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 					})
 
 					colorVariation.Images.Crop(Admin.NewResource(&products.ProductImage{}), DraftDB, media_library.MediaOption{

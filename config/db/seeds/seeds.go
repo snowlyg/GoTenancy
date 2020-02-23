@@ -109,25 +109,7 @@ var Seeds = struct {
 			Keywords    string
 		}
 	}
-	Enterprises []struct {
-		Name           string
-		Begins         string
-		Expires        string
-		RequiresCoupon bool
-		Unique         bool
 
-		Coupons []struct {
-			Code string
-		}
-		Rules []struct {
-			Kind  string
-			Value string
-		}
-		Benefits []struct {
-			Kind  string
-			Value string
-		}
-	}
 	Slides []struct {
 		Title    string
 		SubTitle string
