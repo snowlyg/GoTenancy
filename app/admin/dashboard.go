@@ -53,14 +53,14 @@ func ReportsDataHandler(context *admin.Context) {
 	charts.Users = GetChartData("users", startDate, endDate)
 
 	b, _ := json.Marshal(charts)
-	context.Writer.Write(b)
+	_, _ = context.Writer.Write(b)
 	return
 }
 
 // SetupDashboard setup dashboard
 func SetupDashboard(Admin *admin.Admin) {
 	// Add Dashboard
-	Admin.AddMenu(&admin.Menu{Name: "Dashboard", Link: "/admin", Priority: 1})
+	Admin.AddMenu(&admin.Menu{Name: "工作面板", Link: "/admin", Priority: 1})
 
 	Admin.GetRouter().Get("/reports", ReportsDataHandler)
 	initFuncMap(Admin)

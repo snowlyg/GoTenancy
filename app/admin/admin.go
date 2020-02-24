@@ -4,7 +4,6 @@ import (
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
-	"GoTenancy/libs/action_bar"
 	"GoTenancy/libs/admin"
 	"GoTenancy/libs/help"
 	"GoTenancy/libs/media/asset_manager"
@@ -14,7 +13,7 @@ import (
 )
 
 // ActionBar admin action bar
-var ActionBar *action_bar.ActionBar
+//var ActionBar *action_bar.ActionBar
 
 // AssetManager asset manager
 var AssetManager *admin.Resource
@@ -45,21 +44,21 @@ func (app App) ConfigureApplication(application *application.Application) {
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 
 	// Add Media Library
-	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
+	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"站点管理"}})
 
 	// Add Help
 	Help := Admin.NewResource(&help.QorHelpEntry{})
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// Add action bar
-	ActionBar = action_bar.New(Admin)
-	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
+	//ActionBar = action_bar.New(Admin)
+	//ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// Add Translations
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: -1})
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"站点管理"}, Priority: -1})
 
 	// Add Setting
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "商店设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
