@@ -71,7 +71,7 @@ func main() {
 	IrisApp.Use(recover2.New())
 
 	// 本地化 && publish2.PreviewByDB
-	//IrisApp.Use(middleware.Locale)
+	IrisApp.Use(middleware.Locale)
 
 	// 加载应用
 	Application.Use(api.New(&api.Config{}))
