@@ -28,17 +28,17 @@ func SetupWorker(Admin *admin.Admin) {
 		worker.Schedule
 	}
 
-	Worker.RegisterJob(&worker.Job{
+	_ = Worker.RegisterJob(&worker.Job{
 		Name: "Send Newsletter",
 		Handler: func(argument interface{}, qorJob worker.QorJobInterface) error {
-			qorJob.AddLog("Started sending newsletters...")
-			qorJob.AddLog(fmt.Sprintf("Argument: %+v", argument.(*sendNewsletterArgument)))
+			_ = qorJob.AddLog("Started sending newsletters...")
+			_ = qorJob.AddLog(fmt.Sprintf("Argument: %+v", argument.(*sendNewsletterArgument)))
 			for i := 1; i <= 100; i++ {
 				time.Sleep(100 * time.Millisecond)
-				qorJob.AddLog(fmt.Sprintf("Sending newsletter %v...", i))
-				qorJob.SetProgress(uint(i))
+				_ = qorJob.AddLog(fmt.Sprintf("Sending newsletter %v...", i))
+				_ = qorJob.SetProgress(uint(i))
 			}
-			qorJob.AddLog("Finished send newsletters")
+			_ = qorJob.AddLog("Finished send newsletters")
 			return nil
 		},
 		Resource: Admin.NewResource(&sendNewsletterArgument{}),
@@ -48,7 +48,7 @@ func SetupWorker(Admin *admin.Admin) {
 		File oss.OSS
 	}
 
-	Worker.RegisterJob(&worker.Job{
+	_ = Worker.RegisterJob(&worker.Job{
 		Name:  "Import Products",
 		Group: "Products Management",
 		Handler: func(arg interface{}, qorJob worker.QorJobInterface) error {
@@ -91,18 +91,18 @@ func SetupWorker(Admin *admin.Admin) {
 									Value: cell.Header,
 								})
 							}
-							qorJob.AddResultsRow(headerCells...)
+							_ = qorJob.AddResultsRow(headerCells...)
 						}
 
-						qorJob.AddResultsRow(cells...)
+						_ = qorJob.AddResultsRow(cells...)
 					}
 
-					qorJob.SetProgress(uint(float32(progress.Current) / float32(progress.Total) * 100))
-					qorJob.AddLog(fmt.Sprintf("%d/%d Importing product %v", progress.Current, progress.Total, progress.Value.(*products.Product).Code))
+					_ = qorJob.SetProgress(uint(float32(progress.Current) / float32(progress.Total) * 100))
+					_ = qorJob.AddLog(fmt.Sprintf("%d/%d Importing product %v", progress.Current, progress.Total, progress.Value.(*products.Product).Code))
 					return nil
 				},
 			); err != nil {
-				qorJob.AddLog(err.Error())
+				_ = qorJob.AddLog(err.Error())
 			}
 
 			return nil
@@ -110,11 +110,11 @@ func SetupWorker(Admin *admin.Admin) {
 		Resource: Admin.NewResource(&importProductArgument{}),
 	})
 
-	Worker.RegisterJob(&worker.Job{
+	_ = Worker.RegisterJob(&worker.Job{
 		Name:  "Export Products",
 		Group: "Products Management",
 		Handler: func(arg interface{}, qorJob worker.QorJobInterface) error {
-			qorJob.AddLog("Exporting products...")
+			_ = qorJob.AddLog("Exporting products...")
 
 			context := &qor.Context{DB: db.DB}
 			fileName := fmt.Sprintf("/downloads/products.%v.csv", time.Now().UnixNano())
@@ -122,14 +122,14 @@ func SetupWorker(Admin *admin.Admin) {
 				csv.New(filepath.Join("public", fileName)),
 				context,
 				func(progress exchange.Progress) error {
-					qorJob.AddLog(fmt.Sprintf("%v/%v Exporting product %v", progress.Current, progress.Total, progress.Value.(*products.Product).Code))
+					_ = qorJob.AddLog(fmt.Sprintf("%v/%v Exporting product %v", progress.Current, progress.Total, progress.Value.(*products.Product).Code))
 					return nil
 				},
 			); err != nil {
 				qorJob.AddLog(err.Error())
 			}
 
-			qorJob.SetProgressText(fmt.Sprintf("<a href='%v'>Download exported products</a>", fileName))
+			_ = qorJob.SetProgressText(fmt.Sprintf("<a href='%v'>Download exported products</a>", fileName))
 			return nil
 		},
 	})

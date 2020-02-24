@@ -9,7 +9,6 @@ import (
 
 	"GoTenancy/app/account"
 	adminapp "GoTenancy/app/admin"
-	"GoTenancy/app/home"
 	"GoTenancy/app/static"
 	"GoTenancy/config"
 	"GoTenancy/config/application"
@@ -65,17 +64,11 @@ func main() {
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())
 
-	// 本地化 && publish2.PreviewByDB
-	irisApp.Use(middleware.Locale)
-
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
-	Application.Use(home.New(&home.Config{}))
-	//Application.Use(products.New(&products.Config{}))
+	//Application.Use(home.New(&home.Config{}))
 	Application.Use(account.New(&account.Config{}))
-	//Application.Use(orders.New(&orders.Config{}))
-	//Application.Use(pages.New(&pages.Config{}))
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),

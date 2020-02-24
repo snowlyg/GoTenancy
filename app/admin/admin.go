@@ -12,9 +12,6 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// ActionBar admin action bar
-//var ActionBar *action_bar.ActionBar
-
 // AssetManager asset manager
 var AssetManager *admin.Resource
 
@@ -43,27 +40,22 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 
-	// Add Media Library
+	// 增加媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"站点管理"}})
 
 	// Add Help
 	Help := Admin.NewResource(&help.QorHelpEntry{})
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
-	// Add action bar
-	//ActionBar = action_bar.New(Admin)
-	//ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
-
-	// Add Translations
+	// 增加翻译
 	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"站点管理"}, Priority: -1})
 
-	// Add Setting
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "商店设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 1})
+	// 增加设置
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
 	SetupSEO(Admin)
-	SetupWidget(Admin)
 	SetupDashboard(Admin)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris

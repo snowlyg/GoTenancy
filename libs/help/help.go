@@ -38,7 +38,7 @@ func (categories *Categories) Scan(data interface{}) (err error) {
 					return r == "" || r == "[" || r == "]"
 				}))
 			}
-			categories.Scan(strs)
+			_ = categories.Scan(strs)
 		}
 	case string:
 		return categories.Scan([]byte(values))

@@ -16,7 +16,7 @@ import (
 func SetupNotification(Admin *admin.Admin) {
 	Notification := notification.New(&notification.Config{})
 	Notification.RegisterChannel(database.New(&database.Config{DB: db.DB}))
-	Notification.Action(&notification.Action{
+	_ = Notification.Action(&notification.Action{
 		Name: "Confirm",
 		Visible: func(data *notification.QorNotification, context *admin.Context) bool {
 			return data.ResolvedAt == nil
@@ -39,14 +39,14 @@ func SetupNotification(Admin *admin.Admin) {
 			return err
 		},
 	})
-	Notification.Action(&notification.Action{
+	_ = Notification.Action(&notification.Action{
 		Name:         "Check it out",
 		MessageTypes: []string{"order_paid_cancelled", "order_processed", "order_returned"},
 		URL: func(data *notification.QorNotification, context *admin.Context) string {
 			return path.Join("/admin/orders/", regexp.MustCompile(`#(\d+)`).FindStringSubmatch(data.Body)[1])
 		},
 	})
-	Notification.Action(&notification.Action{
+	_ = Notification.Action(&notification.Action{
 		Name:         "Dismiss",
 		MessageTypes: []string{"order_paid_cancelled", "info", "order_processed", "order_returned"},
 		Visible: func(data *notification.QorNotification, context *admin.Context) bool {
