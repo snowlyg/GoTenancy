@@ -36,7 +36,7 @@ require (
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
-	github.com/jinzhu/gorm v1.9.12
+	github.com/jinzhu/gorm v1.9.13-0.20200126152832-7180bd0f27d1
 	github.com/jinzhu/inflection v1.0.0
 	github.com/jinzhu/now v1.0.1
 	github.com/jteeuwen/go-bindata v3.0.8-0.20180305030458-6025e8de665b+incompatible

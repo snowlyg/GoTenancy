@@ -127,7 +127,7 @@ func SetupWidget(Admin *admin.Admin) {
 	imageRes := Admin.NewResource(&imageSetting{})
 	imageRes.Meta(&admin.Meta{Name: "Image"})
 
-	banner_editor.RegisterViewPath("GoTenancy/app/views/banner_editor")
+	banner_editor.RegisterViewPath("app/views/banner_editor")
 	banner_editor.RegisterElement(&banner_editor.Element{
 		Icon:     "<i class=material-icons>short_text</i>",
 		Name:     "Add Header",

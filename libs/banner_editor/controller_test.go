@@ -60,7 +60,7 @@ func init() {
 	buttonRes := Admin.NewResource(&buttonSetting{})
 	buttonRes.Meta(&admin.Meta{Name: "Text"})
 	buttonRes.Meta(&admin.Meta{Name: "Link"})
-	RegisterViewPath("GoTenancy/libs/banner_editor/test/views")
+	RegisterViewPath("libs/banner_editor/test/views")
 
 	RegisterElement(&Element{
 		Name:     "Sub Header",

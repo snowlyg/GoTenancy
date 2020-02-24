@@ -1,8 +1,6 @@
 package database
 
 import (
-	"fmt"
-
 	"GoTenancy/libs/i18n"
 	"github.com/jinzhu/gorm"
 )
@@ -10,16 +8,16 @@ import (
 // Translation is a struct used to save translations into databae
 type Translation struct {
 	Locale string `sql:"size:12;"`
-	Key    string `sql:"size:4294967295"`
-	Value  string `sql:"size:4294967295"`
+	Key    string `sql:"size:4294967295;"`
+	Value  string `sql:"size:4294967295;"`
 }
 
 // New new DB backend for I18n
 func New(db *gorm.DB) i18n.Backend {
 	db.AutoMigrate(&Translation{})
-	if err := db.Model(&Translation{}).AddUniqueIndex("idx_translations_key_with_locale", "locale").Error; err != nil {
-		fmt.Printf("Failed to create unique index for translations key & locale, got: %v\n", err.Error())
-	}
+	//if err := db.Model(&Translation{}).AddUniqueIndex("idx_translations_key_with_locale", "locale").Error; err != nil {
+	//	fmt.Printf("Failed to create unique index for translations key & locale, got: %v\n", err.Error())
+	//}
 	return &Backend{DB: db}
 }
 
