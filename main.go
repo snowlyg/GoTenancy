@@ -63,11 +63,13 @@ func main() {
 	irisApp.Logger().SetLevel("debug")
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())
+	irisApp.HandleDir("assets", "public/architectui-html-free/assets")
+	irisApp.HandleDir("/", "public/architectui-html-free/style")
 
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))
-	Application.Use(adminapp.New(&adminapp.Config{}))
 	//Application.Use(home.New(&home.Config{}))
+	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},

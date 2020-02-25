@@ -170,7 +170,7 @@ func getCurrentOrder(ctx iris.Context) *orders.Order {
 		}
 	}
 
-	manager.SessionManager.Add(ctx.ResponseWriter(), ctx.Request(), "cart_id", order.ID)
+	_ = manager.SessionManager.Add(ctx.ResponseWriter(), ctx.Request(), "cart_id", order.ID)
 
 	return &order
 }

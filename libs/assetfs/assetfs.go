@@ -2,7 +2,6 @@ package assetfs
 
 import (
 	"fmt"
-	"runtime/debug"
 )
 
 // Interface assetfs interface
@@ -30,7 +29,7 @@ func AssetFS() Interface {
 func SetAssetFS(fs Interface) {
 	if used {
 		fmt.Println("WARNING: AssetFS is used before overwrite it!")
-		debug.PrintStack()
+		//debug.PrintStack() // 查看调用链
 	}
 
 	assetFS = fs
