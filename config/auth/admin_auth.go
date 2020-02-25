@@ -68,8 +68,6 @@ func (a *AdminAuth) GetLogin(c iris.Context) {
 	if _, err := Auth.SessionStorer.Get(c.Request()); err == nil {
 		c.Redirect(a.Paths.Admin)
 		return
-	} else {
-		color.Red(fmt.Sprintf("GetLogin: %v\n", err))
 	}
 
 	if err := c.View("login.tmpl"); err != nil {
