@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"github.com/jinzhu/gorm"
-	"github.com/qorlocation"
-	"github.com/qorsorting"
+	"github.com/qor/location"
+	"github.com/qor/sorting"
 )
 
 type Store struct {

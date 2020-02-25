@@ -1,10 +1,14 @@
 package admin
 
 import (
+	"fmt"
+
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/settings"
+	"GoTenancy/utils"
+	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/admin"
 	"github.com/qor/help"
@@ -36,7 +40,9 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
-
+	if err := Admin.AssetFS.RegisterPath(utils.DetectViewsDir("github.com/qor", "admin")); err != nil {
+		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+	}
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 

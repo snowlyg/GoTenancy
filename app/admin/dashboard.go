@@ -60,7 +60,7 @@ func ReportsDataHandler(context *admin.Context) {
 // SetupDashboard setup dashboard
 func SetupDashboard(Admin *admin.Admin) {
 	// Add Dashboard
-	Admin.AddMenu(&admin.Menu{Name: "工作面板", Link: "/admin", Priority: 1})
+	Admin.AddMenu(&admin.Menu{Name: "工作面板", IconName: "pe-7s-rocket", Link: "/admin", Priority: 1})
 
 	Admin.GetRouter().Get("/reports", ReportsDataHandler)
 }

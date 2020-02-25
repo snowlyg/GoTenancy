@@ -2,12 +2,17 @@ package utils
 
 import (
 	"fmt"
+	"go/build"
 	"html/template"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"GoTenancy/config/auth"
 	"GoTenancy/config/db"
 	"GoTenancy/models/users"
+	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/qor/l10n"
@@ -58,4 +63,42 @@ func FormatPrice(price interface{}) string {
 		return fmt.Sprintf("%d.00", price)
 	}
 	return ""
+}
+
+// DetectViewsDir 解决 go mod 模式无法注册 qor-admin 等包的 views
+func DetectViewsDir(pkgorg, pkgname string) string {
+	var foundp string
+	var found bool
+
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		gopath = build.Default.GOPATH
+	}
+
+	path := filepath.Join(gopath, "/pkg/mod/")
+	ppath := filepath.Join(path, pkgorg)
+	if _, err := os.Stat(ppath); err == nil {
+		if err = filepath.Walk(ppath, func(p string, f os.FileInfo, err error) error { // nolint: errcheck, gosec, unparam
+			if found {
+				return nil
+			}
+			if strings.HasPrefix(filepath.Base(p), pkgname) {
+				vp := filepath.Join(p, "views")
+				if _, err := os.Stat(vp); err == nil {
+					foundp = vp
+					found = true
+				} else {
+					return err
+				}
+			}
+			return nil
+		}); err != nil {
+			color.Red(fmt.Sprintf("os.Stat error %v\n", err))
+		}
+
+	} else {
+		color.Red(fmt.Sprintf("os.Stat error %v\n", err))
+	}
+
+	return foundp
 }
