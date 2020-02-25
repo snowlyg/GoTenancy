@@ -17,8 +17,6 @@
             <label for="email">E-Mail</label>
             <input type="email" name="email" value="{{.Email}}">
           </div>
-
-
           {{$currUser := .  }}
           {{if len .Addresses}}
           <div class="form-group">

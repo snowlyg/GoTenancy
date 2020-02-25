@@ -1,7 +1,6 @@
 package migrations
 
 import (
-	"GoTenancy/app/admin"
 	"GoTenancy/config/db"
 	"GoTenancy/models/blogs"
 	"GoTenancy/models/orders"
@@ -38,7 +37,7 @@ func init() {
 
 	AutoMigrate(&activity.QorActivity{})
 
-	AutoMigrate(&admin.QorWidgetSetting{})
+	//AutoMigrate(&admin.QorWidgetSetting{})
 
 	AutoMigrate(&blogs.Page{}, &blogs.Article{})
 

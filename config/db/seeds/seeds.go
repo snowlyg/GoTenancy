@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/qor/publish2"
 	"github.com/azumads/faker"
 	"github.com/jinzhu/configor"
+	"github.com/qor/publish2"
 
 	"GoTenancy/config/db"
 )

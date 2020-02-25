@@ -10,11 +10,15 @@ import (
 	"GoTenancy/utils"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/action_bar"
 	"github.com/qor/admin"
 	"github.com/qor/help"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
 )
+
+// ActionBar admin action bar
+var ActionBar *action_bar.ActionBar
 
 // AssetManager asset manager
 var AssetManager *admin.Resource
@@ -45,6 +49,10 @@ func (app App) ConfigureApplication(application *application.Application) {
 	}
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
+
+	// Add action bar
+	ActionBar = action_bar.New(Admin)
+	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// 增加媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"站点管理"}})

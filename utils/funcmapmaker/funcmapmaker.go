@@ -4,26 +4,25 @@ import (
 	"html/template"
 	"net/http"
 
-	//"GoTenancy/app/admin"
+	"GoTenancy/app/admin"
 	"GoTenancy/config"
-	//"GoTenancy/config/i18n"
-	//"github.com/qoraction_bar"
-	//"github.com/qori18n/inline_edit"
-	"github.com/qor/qor"
-	"github.com/qor/render"
-	"github.com/qor/session"
-	"github.com/qor/session/manager"
-	//"github.com/qorwidget"
+
+	"GoTenancy/config/i18n"
 	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
+	"github.com/qor/i18n/inline_edit"
+	"github.com/qor/qor"
+	"github.com/qor/render"
+	"github.com/qor/session"
+	"github.com/qor/session/manager"
 )
 
-// GetEditMode get edit mode
-//func GetEditMode(w http.ResponseWriter, req *http.Request) bool {
-//return admin.ActionBar.EditMode(w, req)
-//}
+//GetEditMode get edit mode
+func GetEditMode(w http.ResponseWriter, req *http.Request) bool {
+	return admin.ActionBar.EditMode(w, req)
+}
 
 // AddFuncMapMaker add FuncMapMaker to view
 func AddFuncMapMaker(view *render.Render) *render.Render {
@@ -34,10 +33,10 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			funcMap = oldFuncMapMaker(render, req, w)
 		}
 
-		// Add `t` method
-		//for key, fc := range inline_edit.FuncMap(i18n.I18n, utils.GetCurrentLocale(req), GetEditMode(w, req)) {
-		//	funcMap[key] = fc
-		//}
+		//Add `t` method
+		for key, fc := range inline_edit.FuncMap(i18n.I18n, utils.GetCurrentLocale(req), GetEditMode(w, req)) {
+			funcMap[key] = fc
+		}
 
 		//for key, value := range admin.ActionBar.FuncMap(w, req) {
 		//	funcMap[key] = value

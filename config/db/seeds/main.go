@@ -13,31 +13,12 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
-	"GoTenancy/app/admin"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/db"
 	_ "GoTenancy/config/db/migrations"
-	qoradmin "github.com/qor/admin"
-	"github.com/qorauth/auth_identity"
-	"github.com/qorauth/providers/password"
-	"github.com/qorbanner_editor"
-	"github.com/qor/help"
-	i18n_database "github.com/qor/i18n/backends/database"
-	"github.com/qor/media"
-	"github.com/qor/media/asset_manager"
-	"github.com/qor/media/media_library"
-	"github.com/qor/media/oss"
-	"github.com/qor/notification"
-	"github.com/qor/notification/channels/database"
-	"github.com/qor/publish2"
-	"github.com/qor/qor"
-	"github.com/qor/seo"
-	"github.com/qor/slug"
-	"github.com/qor/sorting"
 	"GoTenancy/models/blogs"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/products"
@@ -46,6 +27,21 @@ import (
 	"GoTenancy/models/stores"
 	"GoTenancy/models/users"
 	"github.com/jinzhu/now"
+	qoradmin "github.com/qor/admin"
+	"github.com/qor/auth/auth_identity"
+	"github.com/qor/auth/providers/password"
+	"github.com/qor/banner_editor"
+	"github.com/qor/help"
+	i18n_database "github.com/qor/i18n/backends/database"
+	"github.com/qor/media"
+	"github.com/qor/media/asset_manager"
+	"github.com/qor/media/media_library"
+	"github.com/qor/notification"
+	"github.com/qor/notification/channels/database"
+	"github.com/qor/publish2"
+	"github.com/qor/qor"
+	"github.com/qor/seo"
+	"github.com/qor/slug"
 )
 
 /* How to run this script
@@ -77,7 +73,7 @@ var (
 		&asset_manager.AssetManager{},
 		&i18n_database.Translation{},
 		&notification.QorNotification{},
-		&admin.QorWidgetSetting{},
+		//&admin.QorWidgetSetting{},
 		&help.QorHelpEntry{},
 	}
 )
@@ -89,56 +85,56 @@ func main() {
 }
 
 func createRecords() {
-	fmt.Println("Start create sample data...")
+	fmt.Println("开始填充数据...")
 
 	createSetting()
-	fmt.Println("--> Created setting.")
+	fmt.Println("--> 填充 setting.")
 
 	createSeo()
-	fmt.Println("--> Created seo.")
+	fmt.Println("--> 填充 seo.")
 
 	createAdminUsers()
-	fmt.Println("--> Created admin users.")
+	fmt.Println("--> 填充 admin users.")
 
 	createUsers()
-	fmt.Println("--> Created users.")
+	fmt.Println("--> 填充 users.")
 	createAddresses()
-	fmt.Println("--> Created addresses.")
+	fmt.Println("--> 填充 addresses.")
 
 	createCategories()
-	fmt.Println("--> Created categories.")
+	fmt.Println("--> 填充 categories.")
 	createCollections()
-	fmt.Println("--> Created collections.")
+	fmt.Println("--> 填充 collections.")
 
 	createColors()
-	fmt.Println("--> Created colors.")
+	fmt.Println("--> 填充 colors.")
 	createSizes()
-	fmt.Println("--> Created sizes.")
+	fmt.Println("--> 填充 sizes.")
 	createMaterial()
-	fmt.Println("--> Created material.")
+	fmt.Println("--> 填充 material.")
 
 	createMediaLibraries()
-	fmt.Println("--> Created medialibraries.")
+	fmt.Println("--> 填充 medialibraries.")
 
 	createProducts()
-	fmt.Println("--> Created products.")
+	fmt.Println("--> 填充 products.")
 
 	createStores()
-	fmt.Println("--> Created stores.")
+	fmt.Println("--> 填充 stores.")
 
 	createOrders()
-	fmt.Println("--> Created orders.")
+	fmt.Println("--> 填充 orders.")
 
-	createWidgets()
-	fmt.Println("--> Created widgets.")
+	//createWidgets()
+	fmt.Println("--> 填充 widgets.")
 
 	createArticles()
-	fmt.Println("--> Created articles.")
+	fmt.Println("--> 填充 articles.")
 
 	createHelps()
-	fmt.Println("--> Created helps.")
+	fmt.Println("--> 填充 helps.")
 
-	fmt.Println("--> Done!")
+	fmt.Println("--> 完成!")
 }
 
 func createSetting() {
@@ -207,6 +203,12 @@ func createAdminUsers() {
 	AdminUser.Confirmed = true
 	AdminUser.Name = "QOR Admin"
 	AdminUser.Role = "Admin"
+	if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
+		panic(fmt.Sprintf("file doesn't exist %v\n", err))
+	} else {
+		AdminUser.Avatar.Scan(avatar)
+	}
+
 	DraftDB.Create(AdminUser)
 
 	provider := auth.Auth.GetProvider("password").(*password.Provider)
@@ -617,146 +619,146 @@ func createMediaLibraries() {
 	}
 }
 
-func createWidgets() {
-	// home page banner
-	type ImageStorage struct{ oss.OSS }
-	topBannerSetting := admin.QorWidgetSetting{}
-	topBannerSetting.Name = "home page banner"
-	topBannerSetting.Description = "This is a top banner"
-	topBannerSetting.WidgetType = "NormalBanner"
-	topBannerSetting.GroupName = "Banner"
-	topBannerSetting.Scope = "from_google"
-	topBannerSetting.Shared = true
-	topBannerValue := &struct {
-		Title           string
-		ButtonTitle     string
-		Link            string
-		BackgroundImage ImageStorage `sql:"type:varchar(4096)"`
-		Logo            ImageStorage `sql:"type:varchar(4096)"`
-	}{
-		Title:       "Welcome Googlistas!",
-		ButtonTitle: "LEARN MORE",
-		Link:        "http://getqor.com",
-	}
-	if file, err := openFileByURL("http://qor3.s3.amazonaws.com/slide01.jpg"); err == nil {
-		defer file.Close()
-		topBannerValue.BackgroundImage.Scan(file)
-	} else {
-		fmt.Printf("open file (%q) failure, got err %v", "banner", err)
-	}
-
-	if file, err := openFileByURL("http://qor3.s3.amazonaws.com/qor_logo.png"); err == nil {
-		defer file.Close()
-		topBannerValue.Logo.Scan(file)
-	} else {
-		fmt.Printf("open file (%q) failure, got err %v", "qor_logo", err)
-	}
-
-	topBannerSetting.SetSerializableArgumentValue(topBannerValue)
-	if err := DraftDB.Create(&topBannerSetting).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", topBannerSetting, err))
-	}
-
-	// SlideShow banner
-	type slideImage struct {
-		Title    string
-		SubTitle string
-		Button   string
-		Link     string
-		Image    oss.OSS
-	}
-	slideshowSetting := admin.QorWidgetSetting{}
-	slideshowSetting.Name = "home page banner"
-	slideshowSetting.GroupName = "Banner"
-	slideshowSetting.WidgetType = "SlideShow"
-	slideshowSetting.Scope = "default"
-	slideshowValue := &struct {
-		SlideImages []slideImage
-	}{}
-
-	for _, s := range Seeds.Slides {
-		slide := slideImage{Title: s.Title, SubTitle: s.SubTitle, Button: s.Button, Link: s.Link}
-		if file, err := openFileByURL(s.Image); err == nil {
-			defer file.Close()
-			slide.Image.Scan(file)
-		} else {
-			fmt.Printf("open file (%q) failure, got err %v", "banner", err)
-		}
-		slideshowValue.SlideImages = append(slideshowValue.SlideImages, slide)
-	}
-	slideshowSetting.SetSerializableArgumentValue(slideshowValue)
-	if err := DraftDB.Create(&slideshowSetting).Error; err != nil {
-		fmt.Printf("Save widget (%v) failure, got err %v", slideshowSetting, err)
-	}
-
-	// Featured Products
-	featureProducts := admin.QorWidgetSetting{}
-	featureProducts.Name = "featured products"
-	featureProducts.Description = "featured product list"
-	featureProducts.WidgetType = "Products"
-	featureProducts.SetSerializableArgumentValue(&struct {
-		Products       []string
-		ProductsSorter sorting.SortableCollection
-	}{
-		Products:       []string{"1", "2", "3", "4", "5", "6", "7", "8"},
-		ProductsSorter: sorting.SortableCollection{PrimaryKeys: []string{"1", "2", "3", "4", "5", "6", "7", "8"}},
-	})
-	if err := DraftDB.Create(&featureProducts).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", featureProducts, err))
-	}
-
-	// Banner edit items
-	for _, s := range Seeds.BannerEditorSettings {
-		setting := banner_editor.QorBannerEditorSetting{}
-		id, _ := strconv.Atoi(s.ID)
-		setting.ID = uint(id)
-		setting.Kind = s.Kind
-		setting.Value.SerializedValue = s.Value
-		if err := DraftDB.Create(&setting).Error; err != nil {
-			fmt.Println(fmt.Sprintf("Save QorBannerEditorSetting (%v) failure, got err %v", setting, err))
-		}
-	}
-
-	// Men collection
-	menCollectionWidget := admin.QorWidgetSetting{}
-	menCollectionWidget.Name = "men collection"
-	menCollectionWidget.Description = "Men collection baner"
-	menCollectionWidget.WidgetType = "FullWidthBannerEditor"
-	menCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221280%22%20data-image-height%3D%22480%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F1%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2212%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2010.0781%25%3B%20top%3A%2018.125%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22129%22%20data-position-top%3D%2287%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EMEN%20COLLECTION%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2210%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2029.7917%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22143%22%3E%3Ch2%20class%3D%22banner-sub-title%22%20style%3D%22color%3A%20%3B%22%3ECheck%20the%20newcomming%20collection%3C%2Fh2%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2211%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2047.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22226%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3Eview%20more%3C%2Fa%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
-	if err := DraftDB.Create(&menCollectionWidget).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", menCollectionWidget, err))
-	}
-
-	// Women collection
-	womenCollectionWidget := admin.QorWidgetSetting{}
-	womenCollectionWidget.Name = "women collection"
-	womenCollectionWidget.Description = "Women collection banner"
-	womenCollectionWidget.WidgetType = "FullWidthBannerEditor"
-	womenCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221280%22%20data-image-height%3D%22480%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F2%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2223%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2010.0781%25%3B%20top%3A%2018.125%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22129%22%20data-position-top%3D%2287%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EWOMEN%20COLLECTION%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2221%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2029.7917%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22143%22%3E%3Ch2%20class%3D%22banner-sub-title%22%20style%3D%22color%3A%20%3B%22%3ECheck%20the%20newcomming%20collection%3C%2Fh2%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2222%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2047.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22226%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3Eview%20more%3C%2Fa%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
-	if err := DraftDB.Create(&womenCollectionWidget).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", womenCollectionWidget, err))
-	}
-
-	// New arrivals promotio
-	newArrivalsCollectionWidget := admin.QorWidgetSetting{}
-	newArrivalsCollectionWidget.Name = "new arrivals promotion"
-	newArrivalsCollectionWidget.Description = "New arrivals promotion banner"
-	newArrivalsCollectionWidget.WidgetType = "FullWidthBannerEditor"
-	newArrivalsCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221172%22%20data-image-height%3D%22300%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F3%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2233%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.47099%25%3B%20top%3A%2030%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22111%22%20data-position-top%3D%2290%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3ENew%20Arrivals%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2231%22%20style%3D%22position%3A%20absolute%3B%20left%3A%208.61775%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2030.6667%25%3B%22%20data-position-left%3D%22101%22%20data-position-top%3D%22173%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3ESHOP%20COLLECTION%3C%2Fa%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2232%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.55631%25%3B%20top%3A%2016%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22112%22%20data-position-top%3D%2248%22%3E%3Cp%20class%3D%22banner-text%22%20style%3D%22color%3A%20%3B%22%3ETHE%20STYLE%20THAT%20FITS%20EVERYTHING%3C%2Fp%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
-	if err := DraftDB.Create(&newArrivalsCollectionWidget).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", newArrivalsCollectionWidget, err))
-	}
-
-	// Model products
-	modelCollectionWidget := admin.QorWidgetSetting{}
-	modelCollectionWidget.Name = "model products"
-	modelCollectionWidget.Description = "Model products banner"
-	modelCollectionWidget.WidgetType = "FullWidthBannerEditor"
-	modelCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221100%22%20data-image-height%3D%221200%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F4%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2249%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2026.4545%25%3B%20top%3A%204.41667%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22291%22%20data-position-top%3D%2253%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EENJOY%20THE%20NEW%20FASHION%20EXPERIENCE%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2242%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2043.2727%25%3B%20top%3A%208.41667%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22476%22%20data-position-top%3D%22101%22%3E%3Cp%20class%3D%22banner-text%22%20style%3D%22color%3A%20%3B%22%3ENew%20look%20of%202017%3C%2Fp%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2243%22%20style%3D%22position%3A%20absolute%3B%20left%3A%205.45455%25%3B%20top%3A%2044.25%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%2260%22%20data-position-top%3D%22531%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3ETOP%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2429.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2244%22%20style%3D%22position%3A%20absolute%3B%20left%3A%20auto%3B%20top%3A%2050.8333%25%3B%20right%3A%209.58527%25%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22841%22%20data-position-top%3D%22610%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3EPINK%20JACKET%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2469.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2247%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2012.3636%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2014.2032%25%3B%22%20data-position-left%3D%22136%22%20data-position-top%3D%22903%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3EBOTTOM%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2432.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2245%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2053.2727%25%3B%20top%3A%2048.5%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22586%22%20data-position-top%3D%22582%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-left.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2246%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2015.5455%25%3B%20top%3A%2043.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22171%22%20data-position-top%3D%22517%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-right.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2248%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2019.2727%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2024.8333%25%3B%22%20data-position-left%3D%22212%22%20data-position-top%3D%22879%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-right.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
-	if err := DraftDB.Create(&modelCollectionWidget).Error; err != nil {
-		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", modelCollectionWidget, err))
-	}
-}
+//func createWidgets() {
+//	// home page banner
+//	type ImageStorage struct{ oss.OSS }
+//	topBannerSetting := admin.QorWidgetSetting{}
+//	topBannerSetting.Name = "home page banner"
+//	topBannerSetting.Description = "This is a top banner"
+//	topBannerSetting.WidgetType = "NormalBanner"
+//	topBannerSetting.GroupName = "Banner"
+//	topBannerSetting.Scope = "from_google"
+//	topBannerSetting.Shared = true
+//	topBannerValue := &struct {
+//		Title           string
+//		ButtonTitle     string
+//		Link            string
+//		BackgroundImage ImageStorage `sql:"type:varchar(4096)"`
+//		Logo            ImageStorage `sql:"type:varchar(4096)"`
+//	}{
+//		Title:       "Welcome Googlistas!",
+//		ButtonTitle: "LEARN MORE",
+//		Link:        "http://getqor.com",
+//	}
+//	if file, err := openFileByURL("http://qor3.s3.amazonaws.com/slide01.jpg"); err == nil {
+//		defer file.Close()
+//		topBannerValue.BackgroundImage.Scan(file)
+//	} else {
+//		fmt.Printf("open file (%q) failure, got err %v", "banner", err)
+//	}
+//
+//	if file, err := openFileByURL("http://qor3.s3.amazonaws.com/qor_logo.png"); err == nil {
+//		defer file.Close()
+//		topBannerValue.Logo.Scan(file)
+//	} else {
+//		fmt.Printf("open file (%q) failure, got err %v", "qor_logo", err)
+//	}
+//
+//	topBannerSetting.SetSerializableArgumentValue(topBannerValue)
+//	if err := DraftDB.Create(&topBannerSetting).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", topBannerSetting, err))
+//	}
+//
+//	// SlideShow banner
+//	type slideImage struct {
+//		Title    string
+//		SubTitle string
+//		Button   string
+//		Link     string
+//		Image    oss.OSS
+//	}
+//	slideshowSetting := admin.QorWidgetSetting{}
+//	slideshowSetting.Name = "home page banner"
+//	slideshowSetting.GroupName = "Banner"
+//	slideshowSetting.WidgetType = "SlideShow"
+//	slideshowSetting.Scope = "default"
+//	slideshowValue := &struct {
+//		SlideImages []slideImage
+//	}{}
+//
+//	for _, s := range Seeds.Slides {
+//		slide := slideImage{Title: s.Title, SubTitle: s.SubTitle, Button: s.Button, Link: s.Link}
+//		if file, err := openFileByURL(s.Image); err == nil {
+//			defer file.Close()
+//			slide.Image.Scan(file)
+//		} else {
+//			fmt.Printf("open file (%q) failure, got err %v", "banner", err)
+//		}
+//		slideshowValue.SlideImages = append(slideshowValue.SlideImages, slide)
+//	}
+//	slideshowSetting.SetSerializableArgumentValue(slideshowValue)
+//	if err := DraftDB.Create(&slideshowSetting).Error; err != nil {
+//		fmt.Printf("Save widget (%v) failure, got err %v", slideshowSetting, err)
+//	}
+//
+//	// Featured Products
+//	featureProducts := admin.QorWidgetSetting{}
+//	featureProducts.Name = "featured products"
+//	featureProducts.Description = "featured product list"
+//	featureProducts.WidgetType = "Products"
+//	featureProducts.SetSerializableArgumentValue(&struct {
+//		Products       []string
+//		ProductsSorter sorting.SortableCollection
+//	}{
+//		Products:       []string{"1", "2", "3", "4", "5", "6", "7", "8"},
+//		ProductsSorter: sorting.SortableCollection{PrimaryKeys: []string{"1", "2", "3", "4", "5", "6", "7", "8"}},
+//	})
+//	if err := DraftDB.Create(&featureProducts).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", featureProducts, err))
+//	}
+//
+//	// Banner edit items
+//	for _, s := range Seeds.BannerEditorSettings {
+//		setting := banner_editor.QorBannerEditorSetting{}
+//		id, _ := strconv.Atoi(s.ID)
+//		setting.ID = uint(id)
+//		setting.Kind = s.Kind
+//		setting.Value.SerializedValue = s.Value
+//		if err := DraftDB.Create(&setting).Error; err != nil {
+//			fmt.Println(fmt.Sprintf("Save QorBannerEditorSetting (%v) failure, got err %v", setting, err))
+//		}
+//	}
+//
+//	// Men collection
+//	menCollectionWidget := admin.QorWidgetSetting{}
+//	menCollectionWidget.Name = "men collection"
+//	menCollectionWidget.Description = "Men collection baner"
+//	menCollectionWidget.WidgetType = "FullWidthBannerEditor"
+//	menCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221280%22%20data-image-height%3D%22480%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F1%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2212%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2010.0781%25%3B%20top%3A%2018.125%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22129%22%20data-position-top%3D%2287%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EMEN%20COLLECTION%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2210%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2029.7917%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22143%22%3E%3Ch2%20class%3D%22banner-sub-title%22%20style%3D%22color%3A%20%3B%22%3ECheck%20the%20newcomming%20collection%3C%2Fh2%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2211%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2047.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22226%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3Eview%20more%3C%2Fa%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
+//	if err := DraftDB.Create(&menCollectionWidget).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", menCollectionWidget, err))
+//	}
+//
+//	// Women collection
+//	womenCollectionWidget := admin.QorWidgetSetting{}
+//	womenCollectionWidget.Name = "women collection"
+//	womenCollectionWidget.Description = "Women collection banner"
+//	womenCollectionWidget.WidgetType = "FullWidthBannerEditor"
+//	womenCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221280%22%20data-image-height%3D%22480%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F2%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2223%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2010.0781%25%3B%20top%3A%2018.125%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22129%22%20data-position-top%3D%2287%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EWOMEN%20COLLECTION%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2221%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2029.7917%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22143%22%3E%3Ch2%20class%3D%22banner-sub-title%22%20style%3D%22color%3A%20%3B%22%3ECheck%20the%20newcomming%20collection%3C%2Fh2%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2222%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.92188%25%3B%20top%3A%2047.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22127%22%20data-position-top%3D%22226%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3Eview%20more%3C%2Fa%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
+//	if err := DraftDB.Create(&womenCollectionWidget).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", womenCollectionWidget, err))
+//	}
+//
+//	// New arrivals promotio
+//	newArrivalsCollectionWidget := admin.QorWidgetSetting{}
+//	newArrivalsCollectionWidget.Name = "new arrivals promotion"
+//	newArrivalsCollectionWidget.Description = "New arrivals promotion banner"
+//	newArrivalsCollectionWidget.WidgetType = "FullWidthBannerEditor"
+//	newArrivalsCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221172%22%20data-image-height%3D%22300%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F3%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2233%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.47099%25%3B%20top%3A%2030%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22111%22%20data-position-top%3D%2290%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3ENew%20Arrivals%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2231%22%20style%3D%22position%3A%20absolute%3B%20left%3A%208.61775%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2030.6667%25%3B%22%20data-position-left%3D%22101%22%20data-position-top%3D%22173%22%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3ESHOP%20COLLECTION%3C%2Fa%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2232%22%20style%3D%22position%3A%20absolute%3B%20left%3A%209.55631%25%3B%20top%3A%2016%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22112%22%20data-position-top%3D%2248%22%3E%3Cp%20class%3D%22banner-text%22%20style%3D%22color%3A%20%3B%22%3ETHE%20STYLE%20THAT%20FITS%20EVERYTHING%3C%2Fp%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
+//	if err := DraftDB.Create(&newArrivalsCollectionWidget).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", newArrivalsCollectionWidget, err))
+//	}
+//
+//	// Model products
+//	modelCollectionWidget := admin.QorWidgetSetting{}
+//	modelCollectionWidget.Name = "model products"
+//	modelCollectionWidget.Description = "Model products banner"
+//	modelCollectionWidget.WidgetType = "FullWidthBannerEditor"
+//	modelCollectionWidget.Value.SerializedValue = `{"Value":"%3Cdiv%20class%3D%22qor-bannereditor__html%22%20style%3D%22position%3A%20relative%3B%20height%3A%20100%25%3B%22%20data-image-width%3D%221100%22%20data-image-height%3D%221200%22%3E%3Cspan%20class%3D%22qor-bannereditor-image%22%3E%3Cimg%20src%3D%22%2Fsystem%2Fmedia_libraries%2F4%2Ffile.jpg%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2249%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2026.4545%25%3B%20top%3A%204.41667%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22291%22%20data-position-top%3D%2253%22%3E%3Ch1%20class%3D%22banner-title%22%20style%3D%22color%3A%20%3B%22%3EENJOY%20THE%20NEW%20FASHION%20EXPERIENCE%3C%2Fh1%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2242%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2043.2727%25%3B%20top%3A%208.41667%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22476%22%20data-position-top%3D%22101%22%3E%3Cp%20class%3D%22banner-text%22%20style%3D%22color%3A%20%3B%22%3ENew%20look%20of%202017%3C%2Fp%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2243%22%20style%3D%22position%3A%20absolute%3B%20left%3A%205.45455%25%3B%20top%3A%2044.25%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%2260%22%20data-position-top%3D%22531%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3ETOP%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2429.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2244%22%20style%3D%22position%3A%20absolute%3B%20left%3A%20auto%3B%20top%3A%2050.8333%25%3B%20right%3A%209.58527%25%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22841%22%20data-position-top%3D%22610%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3EPINK%20JACKET%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2469.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%20qor-bannereditor__draggable-left%22%20data-edit-id%3D%2247%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2012.3636%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2014.2032%25%3B%22%20data-position-left%3D%22136%22%20data-position-top%3D%22903%22%3E%3Cdiv%20class%3D%22model-buy-block%22%3E%3Ch2%20class%3D%22banner-sub-title%22%3EBOTTOM%3C%2Fh2%3E%3Cp%20class%3D%22banner-text%22%3E%2432.99%3C%2Fp%3E%3Ca%20class%3D%22button%20button__primary%20banner-button%22%20href%3D%22%23%22%3EVIEW%20DETAILS%3C%2Fa%3E%3C%2Fdiv%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2245%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2053.2727%25%3B%20top%3A%2048.5%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22586%22%20data-position-top%3D%22582%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-left.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2246%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2015.5455%25%3B%20top%3A%2043.0833%25%3B%20right%3A%20auto%3B%20bottom%3A%20auto%3B%22%20data-position-left%3D%22171%22%20data-position-top%3D%22517%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-right.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3Cspan%20class%3D%22qor-bannereditor__draggable%22%20data-edit-id%3D%2248%22%20style%3D%22position%3A%20absolute%3B%20left%3A%2019.2727%25%3B%20top%3A%20auto%3B%20right%3A%20auto%3B%20bottom%3A%2024.8333%25%3B%22%20data-position-left%3D%22212%22%20data-position-top%3D%22879%22%3E%3Cimg%20src%3D%22%2F%2Fqor3.s3.amazonaws.com%2Fmedialibrary%2Farrow-right.png%22%20class%3D%22banner-image%22%3E%3C%2Fspan%3E%3C%2Fdiv%3E"}`
+//	if err := DraftDB.Create(&modelCollectionWidget).Error; err != nil {
+//		fmt.Println(fmt.Sprintf("Save widget (%v) failure, got err %v", modelCollectionWidget, err))
+//	}
+//}
 
 func createHelps() {
 	helps := map[string][]string{

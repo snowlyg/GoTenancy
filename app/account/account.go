@@ -40,7 +40,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	app.ConfigureAdmin(application.Admin)
 
 	application.IrisApp.Any("/auth/", iris.FromStd(auth.Auth.NewServeMux()))
-	application.IrisApp.PartyFunc("/account", func(account iris.Party) {
+	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
 		account.Get("/", controller.Orders)
 		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour

@@ -3,9 +3,9 @@ module GoTenancy
 go 1.13
 
 require (
+	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/Shaked/gomobiledetect v0.0.0-20171211181707-25f014f66568 // indirect
 	github.com/ajg/form v1.5.1 // indirect
-	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/aws/aws-sdk-go v1.29.4 // indirect
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
@@ -20,6 +20,8 @@ require (
 	github.com/gorilla/schema v1.1.0
 	github.com/gorilla/sessions v1.2.0 // indirect
 	github.com/gosimple/slug v1.9.0 // indirect
+	github.com/headzoo/surf v1.0.0 // indirect
+	github.com/headzoo/ut v0.0.0-20181013193318-a13b5a7a02ca // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a // indirect
@@ -37,6 +39,7 @@ require (
 	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
+	github.com/qor/action_bar v0.0.0-20190314070413-136e5e2c5b8c
 	github.com/qor/activity v0.0.0-20190717092745-b7d0527b3572
 	github.com/qor/admin v0.0.0-20200219141441-c773fc1f93a8
 	github.com/qor/amazon-pay-sdk-go v0.0.0-20190701100107-10aa1a55e598
