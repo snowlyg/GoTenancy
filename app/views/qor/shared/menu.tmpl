@@ -1,24 +1,23 @@
 <ul class="vertical-nav-menu">
     {{range $_, $value := .Result}}
+        <li class="app-sidebar__heading">{{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}</li>
+        <li>
+            <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
+                <i class="metismenu-icon {{if $value.IconName}} {{$value.IconName}}{{end}}"></i>
+                {{$value.Name}}
+            </a>
+            {{/*                {{link_to (t (printf "qor_admin.menus.%v" $value.Name) $value.Name) $value.URL}}*/}}
+        </li>
         {{if $value.SubMenus}}
-            <ul>
-                <li class="app-sidebar__heading {{if $value.Active}} mm-active{{end}}">
-                    <a href="{{if $value.URL}}{{$value.URL}}{{else}}javascript:void(0);{{end}}">
-                        {{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}
+            {{range $_, $valueSub := $value.SubMenus}}
+                <li>
+                    <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
+                        <i class="metismenu-icon {{if $value.IconName}} {{$value.IconName}}{{end}}"></i>
+                        {{$value.Name}}
                     </a>
-                    {{range $_, $valueSub := $value.SubMenus}}
-                        {{render "shared/menu" $value.SubMenus}}
-                    {{end}}
+                    {{/*                {{link_to (t (printf "qor_admin.menus.%v" $value.Name) $value.Name) $value.URL}}*/}}
                 </li>
-            </ul>
-        {{else}}
-            <li class="app-sidebar__heading">
-                <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
-                    <i class="metismenu-icon {{if $value.IconName}} {{$value.IconName}}{{end}}"></i>
-                    {{$value.Name}}
-                </a>
-                {{/*                {{link_to (t (printf "qor_admin.menus.%v" $value.Name) $value.Name) $value.URL}}*/}}
-            </li>
+            {{end}}
         {{end}}
     {{end}}
 </ul>
