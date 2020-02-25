@@ -1,12 +1,15 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"GoTenancy/config"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/models/users"
+	"GoTenancy/utils/registerviews"
+	"github.com/fatih/color"
 	"github.com/qor/auth"
 	"github.com/qor/auth/authority"
 	"github.com/qor/auth/providers/facebook"
@@ -18,25 +21,31 @@ import (
 )
 
 var (
-
-	// Auth initialize Auth for Authentication
+	// Auth 初始化用于认证的 Auth
 	Auth = clean.New(&auth.Config{
 		DB:         db.DB,
 		Mailer:     config.Mailer,
 		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
-		ViewPaths:  append([]string{}, "github.com/qorauth_themes/clean/views"),
 	})
 
-	// Authority initialize Authority for Authorization
+	// Authority 初始化用于认证的 Authority
 	Authority = authority.New(&authority.Config{
 		Auth: Auth,
 	})
 )
 
 func init() {
-	//Auth.RegisterProvider(password.New(&password.Config{}))
+
+	if err := Auth.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "auth")); err != nil {
+		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
+	}
+
+	if err := Auth.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "auth_themes")); err != nil {
+		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
+	}
+
 	Auth.RegisterProvider(github.New(&config.Config.Github))
 	Auth.RegisterProvider(google.New(&config.Config.Google))
 	Auth.RegisterProvider(facebook.New(&config.Config.Facebook))

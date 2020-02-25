@@ -39,7 +39,11 @@ func (app App) ConfigureApplication(application *application.Application) {
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
 
-	application.IrisApp.Any("/auth/", iris.FromStd(auth.Auth.NewServeMux()))
+	// 注册 auth 路由和静态文件到 iris
+	authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	application.IrisApp.Any("/auth/", authHandler)
+	application.IrisApp.Any("/auth/{p:path}", authHandler)
+
 	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
 		account.Get("/", controller.Orders)

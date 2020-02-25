@@ -4,10 +4,9 @@ import (
 	"fmt"
 
 	"GoTenancy/config/application"
-	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/settings"
-	"GoTenancy/utils"
+	"GoTenancy/utils/registerviews"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/action_bar"
@@ -44,9 +43,10 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
-	if err := Admin.AssetFS.RegisterPath(utils.DetectViewsDir("github.com/qor", "admin")); err != nil {
+	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "admin")); err != nil {
 		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
 	}
+
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 
@@ -79,7 +79,4 @@ func (app App) ConfigureApplication(application *application.Application) {
 	application.IrisApp.Any(app.Config.Prefix, handler)
 	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", handler)
 
-	// 注册 auth 路由和静态文件到 iris
-	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Any("/auth/{p:path}", authHandler)
 }
