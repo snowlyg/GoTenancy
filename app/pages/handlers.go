@@ -1,8 +1,8 @@
 package pages
 
 import (
-	"GoTenancy/libs/render"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/render"
 )
 
 // Controller page controller

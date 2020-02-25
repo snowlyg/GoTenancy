@@ -11,13 +11,13 @@
 
 #### 项目介绍  【项目目前仍在开发中】
 > 本来采用此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
-> 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://GoTenancy/libs/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
+> 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qoradmin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了。我相信你也会爱上它的。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
 > `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris + Qor-Admin` 形式开发。
-> 参考项目：[qor-example](https://GoTenancy/libs/qor-example)
+> 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
 > `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下（目前方便开发才集成到本项目，后期会分离成一个独立的库）。
->  [qor-example](https://GoTenancy/libs/qor-example) 是一个购物商城实例，目前已经使用 iris 重构完成 ，详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
+>  [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构完成 ，详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
 > 
 ---
 
@@ -38,7 +38,7 @@ package main
 
 import (
     "github.com/kataras/iris/v12"
-    "GoTenancy/libs/admin"
+    "github.com/qor/admin"
 )
 
 func main() {

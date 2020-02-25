@@ -3,12 +3,6 @@ package migrations
 import (
 	"GoTenancy/app/admin"
 	"GoTenancy/config/db"
-	"GoTenancy/libs/activity"
-	"GoTenancy/libs/auth/auth_identity"
-	"GoTenancy/libs/banner_editor"
-	"GoTenancy/libs/help"
-	"GoTenancy/libs/media/asset_manager"
-	"GoTenancy/libs/transition"
 	"GoTenancy/models/blogs"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/products"
@@ -16,6 +10,12 @@ import (
 	"GoTenancy/models/settings"
 	"GoTenancy/models/stores"
 	"GoTenancy/models/users"
+	"github.com/qor/activity"
+	"github.com/qor/auth/auth_identity"
+	"github.com/qor/banner_editor"
+	"github.com/qor/help"
+	"github.com/qor/media/asset_manager"
+	"github.com/qor/transition"
 )
 
 func init() {

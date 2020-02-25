@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"GoTenancy/config/db"
-	"GoTenancy/libs/admin"
 	"github.com/jinzhu/now"
+	"github.com/qor/admin"
 )
 
 type Chart struct {

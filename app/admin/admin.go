@@ -4,12 +4,12 @@ import (
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/help"
-	"GoTenancy/libs/media/asset_manager"
-	"GoTenancy/libs/media/media_library"
 	"GoTenancy/models/settings"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/admin"
+	"github.com/qor/help"
+	"github.com/qor/media/asset_manager"
+	"github.com/qor/media/media_library"
 )
 
 // AssetManager asset manager

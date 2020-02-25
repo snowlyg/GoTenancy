@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 
-	"GoTenancy/libs/location"
-	"GoTenancy/libs/sorting"
 	"github.com/jinzhu/gorm"
+	"github.com/qorlocation"
+	"github.com/qorsorting"
 )
 
 type Store struct {

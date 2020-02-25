@@ -1,6 +1,6 @@
 package settings
 
-import "GoTenancy/libs/media/media_library"
+import "github.com/qor/media/media_library"
 
 type MediaLibrary struct {
 	Title string

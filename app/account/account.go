@@ -5,16 +5,16 @@ import (
 
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/qor/resource"
-	qorutils "GoTenancy/libs/qor/utils"
-	"GoTenancy/libs/render"
-	"GoTenancy/libs/validations"
 	"GoTenancy/middleware"
 	"GoTenancy/models/users"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
+	"github.com/qor/qor/resource"
+	qorutils "github.com/qor/qor/utils"
+	"github.com/qor/render"
+	"github.com/qor/validations"
 	"golang.org/x/crypto/bcrypt"
 )
 

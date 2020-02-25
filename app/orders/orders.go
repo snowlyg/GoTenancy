@@ -8,15 +8,15 @@ import (
 	"strings"
 
 	"GoTenancy/config/application"
-	"GoTenancy/libs/activity"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/render"
-	"GoTenancy/libs/transition"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/products"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/jinzhu/gorm"
+	"github.com/qor/activity"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
+	"github.com/qor/render"
+	"github.com/qor/transition"
 )
 
 // New new order app

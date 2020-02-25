@@ -15,8 +15,6 @@ import (
 	"GoTenancy/config/auth"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/qor/utils"
 	"GoTenancy/middleware"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/fatih/color"
@@ -24,6 +22,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	recover2 "github.com/kataras/iris/v12/middleware/recover"
+	"github.com/qor/admin"
+	"github.com/qor/qor/utils"
 )
 
 func main() {

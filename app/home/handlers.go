@@ -3,10 +3,10 @@ package home
 import (
 	"net/http"
 
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/qor/utils"
-	"GoTenancy/libs/render"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/qor"
+	"github.com/qor/qor/utils"
+	"github.com/qor/render"
 )
 
 // Controller home controller

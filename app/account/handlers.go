@@ -1,11 +1,11 @@
 package account
 
 import (
-	"GoTenancy/libs/render"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/render"
 )
 
 // Controller products controller
