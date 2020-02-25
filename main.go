@@ -9,6 +9,7 @@ import (
 
 	"GoTenancy/app/account"
 	adminapp "GoTenancy/app/admin"
+	"GoTenancy/app/home"
 	"GoTenancy/app/static"
 	"GoTenancy/config"
 	"GoTenancy/config/application"
@@ -63,12 +64,14 @@ func main() {
 	irisApp.Logger().SetLevel("debug")
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())
+
+	// 静态资源
 	irisApp.HandleDir("assets", "public/architectui-html-free/assets")
 	irisApp.HandleDir("/", "public/architectui-html-free/style")
 
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))
-	//Application.Use(home.New(&home.Config{}))
+	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
 	Application.Use(static.New(&static.Config{

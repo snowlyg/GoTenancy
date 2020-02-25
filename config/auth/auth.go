@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"GoTenancy/config"
+	"GoTenancy/config/auth/themes"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/models/users"
@@ -16,13 +17,12 @@ import (
 	"github.com/qor/auth/providers/github"
 	"github.com/qor/auth/providers/google"
 	"github.com/qor/auth/providers/twitter"
-	"github.com/qor/auth_themes/clean"
 	"github.com/qor/render"
 )
 
 var (
 	// Auth 初始化用于认证的 Auth
-	Auth = clean.New(&auth.Config{
+	Auth = themes.New(&auth.Config{
 		DB:         db.DB,
 		Mailer:     config.Mailer,
 		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
@@ -37,12 +37,7 @@ var (
 )
 
 func init() {
-
 	if err := Auth.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "auth")); err != nil {
-		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
-	}
-
-	if err := Auth.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "auth_themes")); err != nil {
 		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
 	}
 
@@ -52,5 +47,4 @@ func init() {
 	Auth.RegisterProvider(twitter.New(&config.Config.Twitter))
 
 	Authority.Register("logged_in_half_hour", authority.Rule{TimeoutSinceLastLogin: time.Minute * 30})
-
 }

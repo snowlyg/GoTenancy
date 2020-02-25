@@ -1,0 +1,29 @@
+ru-RU:
+  auth:
+    sign_in: "Войти"
+    or_sign_in_with: "или вход через"
+    sign_up: "Регистрация"
+    form:
+      email: "Адрес e-mail"
+      email_placeholder: "Введите адрес e-mail"
+      password: "Пароль"
+      password_placeholder: "Введите пароль"
+      new_password: "Новый пароль"
+      new_password_placeholder: "Введите новый пароль"
+      password_confirm: "Подтверждение пароля"
+      password_confirm_placeholder: "Введите повторно пароль"
+      sign_in: "Войти"
+      sign_up: "Зарегистрироваться"
+      reset_password: "Восстановить пароль"
+      forgot_password: "Продолжить"
+    confirmations:
+      resend_confirmation: "Повторно отправить подтверждение"
+    passwords:
+      reset_password: "Восстановить пароль"
+      forgot_password: "Забыли пароль?"
+      forgot_password_desc: "Введите ваш email адрес, и мы отправим вам ссылку для восстановления пароля."
+    links:
+      sign_in: "Уже зарегистрированы? Нажмите, чтобы войти."
+      sign_in_with: "Войти через {{$1}}"
+      sign_up: "Нет аккаунта? Нажмите, чтобы зарегистрироваться"
+      forgot_password: "Забыли пароль?"
