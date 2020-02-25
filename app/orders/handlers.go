@@ -6,15 +6,15 @@ import (
 	"strconv"
 
 	"GoTenancy/config"
-	amazonpay "GoTenancy/libs/amazon-pay-sdk-go"
-	"GoTenancy/libs/gomerchant"
-	qorrender "GoTenancy/libs/render"
-	"GoTenancy/libs/responder"
-	"GoTenancy/libs/session/manager"
 	"GoTenancy/models/orders"
 	"GoTenancy/utils"
 	"github.com/gorilla/schema"
 	"github.com/kataras/iris/v12"
+	amazonpay "github.com/qor/amazon-pay-sdk-go"
+	"github.com/qor/gomerchant"
+	qorrender "github.com/qor/render"
+	"github.com/qor/responder"
+	"github.com/qor/session/manager"
 )
 
 // Controller order controller
@@ -78,7 +78,7 @@ func (ctrl Controller) CompleteCreditCard(ctx iris.Context) {
 	}
 
 	if creditCard.ValidNumber() {
-		// TODO integrate with https://GoTenancy/libs/gomerchant to handle those information
+		// TODO integrate with https://github.com/qorgomerchant to handle those information
 		tx := utils.GetDB(ctx.Request())
 		err := orders.OrderState.Trigger("checkout", order, tx, "")
 
@@ -170,7 +170,7 @@ func getCurrentOrder(ctx iris.Context) *orders.Order {
 		}
 	}
 
-	manager.SessionManager.Add(ctx.ResponseWriter(), ctx.Request(), "cart_id", order.ID)
+	_ = manager.SessionManager.Add(ctx.ResponseWriter(), ctx.Request(), "cart_id", order.ID)
 
 	return &order
 }

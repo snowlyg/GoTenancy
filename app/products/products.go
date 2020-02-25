@@ -6,14 +6,14 @@ import (
 	"html/template"
 
 	"GoTenancy/config/application"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/media"
-	"GoTenancy/libs/media/media_library"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/render"
 	"GoTenancy/models/products"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/jinzhu/gorm"
+	"github.com/qor/admin"
+	"github.com/qor/media"
+	"github.com/qor/media/media_library"
+	"github.com/qor/qor"
+	"github.com/qor/render"
 )
 
 var Genders = []string{"Men", "Women", "Kids"}

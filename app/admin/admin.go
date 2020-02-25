@@ -1,16 +1,20 @@
 package admin
 
 import (
+	"fmt"
+
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
-	"GoTenancy/libs/action_bar"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/help"
-	"GoTenancy/libs/media/asset_manager"
-	"GoTenancy/libs/media/media_library"
 	"GoTenancy/models/settings"
+	"GoTenancy/utils"
+	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/action_bar"
+	"github.com/qor/admin"
+	"github.com/qor/help"
+	"github.com/qor/media/asset_manager"
+	"github.com/qor/media/media_library"
 )
 
 // ActionBar admin action bar
@@ -40,31 +44,32 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
-
+	if err := Admin.AssetFS.RegisterPath(utils.DetectViewsDir("github.com/qor", "admin")); err != nil {
+		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+	}
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
-
-	// Add Media Library
-	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
-
-	// Add Help
-	Help := Admin.NewResource(&help.QorHelpEntry{})
-	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// Add action bar
 	ActionBar = action_bar.New(Admin)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
-	// Add Translations
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: -1})
+	// 增加媒体库
+	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"站点管理"}})
 
-	// Add Setting
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
+	// Add Help
+	Help := Admin.NewResource(&help.QorHelpEntry{})
+	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
+
+	// 增加翻译
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"站点管理"}, Priority: -1})
+
+	// 增加设置
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
 	SetupSEO(Admin)
-	SetupWidget(Admin)
 	SetupDashboard(Admin)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris

@@ -1,0 +1,20 @@
+<ul class="vertical-nav-menu">
+    {{range $_, $value := .Result}}
+        <li class="app-sidebar__heading">{{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}</li>
+        <li>
+            <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
+                <i class="metismenu-icon {{if $value.IconName}} {{$value.IconName}}{{end}}"></i>
+                {{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}
+            </a>
+        </li>
+        {{if $value.SubMenus}}
+            {{range $_, $valueSub := $value.SubMenus}}
+                <li>
+                    <a href="{{$valueSub.URL}}" {{if $valueSub.Active}}class="mm-active"{{end}}>
+                        {{t (printf "qor_admin.menus.%v" $valueSub.Name) $valueSub.Name}}
+                    </a>
+                </li>
+            {{end}}
+        {{end}}
+    {{end}}
+</ul>

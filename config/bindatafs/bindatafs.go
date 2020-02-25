@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"GoTenancy/libs/assetfs"
 	"github.com/jteeuwen/go-bindata"
+	"github.com/qor/assetfs"
 )
 
 type AssetFSInterface interface {

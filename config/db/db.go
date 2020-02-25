@@ -10,11 +10,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	// _ "github.com/jinzhu/gorm/dialects/sqlite"
 	"GoTenancy/config"
-	"GoTenancy/libs/l10n"
-	"GoTenancy/libs/media"
-	"GoTenancy/libs/publish2"
-	"GoTenancy/libs/sorting"
-	"GoTenancy/libs/validations"
+	"github.com/qor/l10n"
+	"github.com/qor/media"
+	"github.com/qor/publish2"
+	"github.com/qor/sorting"
+	"github.com/qor/validations"
 )
 
 // DB 全局 DB 链接

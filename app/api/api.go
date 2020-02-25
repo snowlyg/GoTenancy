@@ -3,12 +3,12 @@ package api
 import (
 	"GoTenancy/config/application"
 	"GoTenancy/config/db"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/qor"
 	"GoTenancy/models/orders"
 	"GoTenancy/models/products"
 	"GoTenancy/models/users"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
 )
 
 // New new api app

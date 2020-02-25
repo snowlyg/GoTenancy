@@ -1,10 +1,10 @@
 package admin
 
 import (
-	"GoTenancy/libs/admin"
-	qor_seo "GoTenancy/libs/seo"
 	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
+	"github.com/qor/admin"
+	qor_seo "github.com/qor/seo"
 )
 
 // SetupSEO add seo
@@ -38,5 +38,5 @@ func SetupSEO(Admin *admin.Admin) {
 			return context
 		},
 	})
-	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 2})
+	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 2})
 }

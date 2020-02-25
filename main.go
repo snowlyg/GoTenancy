@@ -9,20 +9,12 @@ import (
 
 	"GoTenancy/app/account"
 	adminapp "GoTenancy/app/admin"
-	"GoTenancy/app/api"
-	"GoTenancy/app/home"
-	"GoTenancy/app/orders"
-	"GoTenancy/app/pages"
-	"GoTenancy/app/products"
 	"GoTenancy/app/static"
 	"GoTenancy/config"
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/publish2"
-	"GoTenancy/libs/qor/utils"
 	"GoTenancy/middleware"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/fatih/color"
@@ -30,6 +22,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
 	recover2 "github.com/kataras/iris/v12/middleware/recover"
+	"github.com/qor/admin"
+	"github.com/qor/qor/utils"
 )
 
 func main() {
@@ -42,7 +36,7 @@ func main() {
 	}
 
 	var (
-		IrisApp = iris.New()
+		irisApp = iris.New()
 		//定义 admin 对象
 		Admin = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancy", // 站点名称
@@ -50,12 +44,12 @@ func main() {
 				Login:  "/auth/login",
 				Logout: "/auth/logout",
 			}},
-			DB: db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
+			DB: db.DB,
 		})
 
 		//定义应用
 		Application = application.New(&application.Config{
-			IrisApp: IrisApp,
+			IrisApp: irisApp,
 			Admin:   Admin,
 			DB:      db.DB,
 		})
@@ -65,22 +59,18 @@ func main() {
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
 	// 全局中间件
-	IrisApp.Use(middleware.AddHeader)
-	IrisApp.Logger().SetLevel("debug")
-	IrisApp.Use(logger.New())
-	IrisApp.Use(recover2.New())
-
-	// 本地化 && publish2.PreviewByDB
-	IrisApp.Use(middleware.Locale)
+	irisApp.Use(middleware.AddHeader)
+	irisApp.Logger().SetLevel("debug")
+	irisApp.Use(logger.New())
+	irisApp.Use(recover2.New())
+	irisApp.HandleDir("assets", "public/architectui-html-free/assets")
+	irisApp.HandleDir("/", "public/architectui-html-free/style")
 
 	// 加载应用
-	Application.Use(api.New(&api.Config{}))
+	//Application.Use(api.New(&api.Config{}))
+	//Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
-	Application.Use(home.New(&home.Config{}))
-	Application.Use(products.New(&products.Config{}))
 	Application.Use(account.New(&account.Config{}))
-	Application.Use(orders.New(&orders.Config{}))
-	Application.Use(pages.New(&pages.Config{}))
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
@@ -100,7 +90,7 @@ func main() {
 
 		if config.Config.HTTPS {
 			// 启动服务
-			if err := IrisApp.Run(iris.TLS(":443", "./config/local_certs/server.crt", "./config/local_certs/server.key")); err != nil {
+			if err := irisApp.Run(iris.TLS(":443", "./config/local_certs/server.crt", "./config/local_certs/server.key")); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}
@@ -115,7 +105,7 @@ func main() {
 					Charset:                           "UTF-8",
 				})
 			// 启动服务
-			if err := IrisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), irisConfig); err != nil {
+			if err := irisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), irisConfig); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}

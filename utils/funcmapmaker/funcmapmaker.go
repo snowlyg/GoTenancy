@@ -6,21 +6,20 @@ import (
 
 	"GoTenancy/app/admin"
 	"GoTenancy/config"
+
 	"GoTenancy/config/i18n"
-	"GoTenancy/libs/action_bar"
-	"GoTenancy/libs/i18n/inline_edit"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/render"
-	"GoTenancy/libs/session"
-	"GoTenancy/libs/session/manager"
-	"GoTenancy/libs/widget"
 	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
+	"github.com/qor/i18n/inline_edit"
+	"github.com/qor/qor"
+	"github.com/qor/render"
+	"github.com/qor/session"
+	"github.com/qor/session/manager"
 )
 
-// GetEditMode get edit mode
+//GetEditMode get edit mode
 func GetEditMode(w http.ResponseWriter, req *http.Request) bool {
 	return admin.ActionBar.EditMode(w, req)
 }
@@ -34,23 +33,23 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			funcMap = oldFuncMapMaker(render, req, w)
 		}
 
-		// Add `t` method
+		//Add `t` method
 		for key, fc := range inline_edit.FuncMap(i18n.I18n, utils.GetCurrentLocale(req), GetEditMode(w, req)) {
 			funcMap[key] = fc
 		}
 
-		for key, value := range admin.ActionBar.FuncMap(w, req) {
-			funcMap[key] = value
-		}
+		//for key, value := range admin.ActionBar.FuncMap(w, req) {
+		//	funcMap[key] = value
+		//}
 
-		widgetContext := admin.Widgets.NewContext(&widget.Context{
-			DB:         utils.GetDB(req),
-			Options:    map[string]interface{}{"Request": req},
-			InlineEdit: GetEditMode(w, req),
-		})
-		for key, fc := range widgetContext.FuncMap() {
-			funcMap[key] = fc
-		}
+		//widgetContext := admin.Widgets.NewContext(&widget.Context{
+		//	DB:         utils.GetDB(req),
+		//	Options:    map[string]interface{}{"Request": req},
+		//	InlineEdit: GetEditMode(w, req),
+		//})
+		//for key, fc := range widgetContext.FuncMap() {
+		//	funcMap[key] = fc
+		//}
 
 		funcMap["raw"] = func(str string) template.HTML {
 			return template.HTML(utils.HTMLSanitizer.Sanitize(str))
@@ -61,9 +60,9 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 		}
 
 		// Add `action_bar` method
-		funcMap["render_action_bar"] = func() template.HTML {
-			return admin.ActionBar.Actions(action_bar.Action{Name: "Edit SEO", Link: seo.SEOCollection.SEOSettingURL("/help")}).Render(w, req)
-		}
+		//funcMap["render_action_bar"] = func() template.HTML {
+		//return admin.ActionBar.Actions(action_bar.Action{Name: "Edit SEO", Link: seo.SEOCollection.SEOSettingURL("/help")}).Render(w, req)
+		//}
 
 		funcMap["render_seo_tag"] = func() template.HTML {
 			return seo.SEOCollection.Render(&qor.Context{DB: utils.GetDB(req)}, "Default Page")

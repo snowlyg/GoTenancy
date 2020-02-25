@@ -1,8 +1,8 @@
 package blogs
 
 import (
-	"GoTenancy/libs/page_builder"
-	"GoTenancy/libs/publish2"
+	"github.com/qor/page_builder"
+	"github.com/qor/publish2"
 )
 
 type Page struct {

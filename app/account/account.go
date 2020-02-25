@@ -5,16 +5,16 @@ import (
 
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/qor/resource"
-	qorutils "GoTenancy/libs/qor/utils"
-	"GoTenancy/libs/render"
-	"GoTenancy/libs/validations"
 	"GoTenancy/middleware"
 	"GoTenancy/models/users"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
+	"github.com/qor/qor/resource"
+	qorutils "github.com/qor/qor/utils"
+	"github.com/qor/render"
+	"github.com/qor/validations"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,7 +40,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	app.ConfigureAdmin(application.Admin)
 
 	application.IrisApp.Any("/auth/", iris.FromStd(auth.Auth.NewServeMux()))
-	application.IrisApp.PartyFunc("/account", func(account iris.Party) {
+	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
 		account.Get("/", controller.Orders)
 		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
@@ -52,8 +52,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 // ConfigureAdmin configure admin interface
 func (App) ConfigureAdmin(Admin *admin.Admin) {
-	Admin.AddMenu(&admin.Menu{Name: "User Management", Priority: 3})
-	user := Admin.AddResource(&users.User{}, &admin.Config{Menu: []string{"User Management"}})
+	Admin.AddMenu(&admin.Menu{Name: "用户管理", Priority: 3})
+	user := Admin.AddResource(&users.User{}, &admin.Config{Menu: []string{"用户管理"}})
 	user.Meta(&admin.Meta{Name: "Gender", Config: &admin.SelectOneConfig{Collection: []string{"Male", "Female", "Unknown"}}})
 	user.Meta(&admin.Meta{Name: "Birthday", Type: "date"})
 	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})
@@ -64,7 +64,7 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 			if newPassword := qorutils.ToString(metaValue.Value); newPassword != "" {
 				bcryptPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 				if err != nil {
-					context.DB.AddError(validations.NewError(user, "Password", "Can't encrpt password"))
+					_ = context.DB.AddError(validations.NewError(user, "Password", "Can't encrpt password"))
 					return
 				}
 				u := resource.(*users.User)

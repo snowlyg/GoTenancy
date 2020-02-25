@@ -1,20 +1,14 @@
 package pages
 
 import (
-	"fmt"
-
-	adminapp "GoTenancy/app/admin"
 	"GoTenancy/config/application"
 	"GoTenancy/config/db"
-	"GoTenancy/libs/admin"
-	"GoTenancy/libs/page_builder"
-	"GoTenancy/libs/qor"
-	"GoTenancy/libs/qor/resource"
-	"GoTenancy/libs/qor/utils"
-	"GoTenancy/libs/render"
-	"GoTenancy/libs/widget"
 	"GoTenancy/models/blogs"
 	"GoTenancy/utils/funcmapmaker"
+	"github.com/qor/admin"
+	"github.com/qor/page_builder"
+	"github.com/qor/render"
+	"github.com/qor/widget"
 )
 
 // New new page app
@@ -51,24 +45,24 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 
 	// Setup pages
 	PageBuilderWidgets := widget.New(&widget.Config{DB: db.DB})
-	PageBuilderWidgets.WidgetSettingResource = Admin.NewResource(&adminapp.QorWidgetSetting{}, &admin.Config{Name: "PageBuilderWidgets"})
+	//PageBuilderWidgets.WidgetSettingResource = Admin.NewResource(&adminapp.QorWidgetSetting{}, &admin.Config{Name: "PageBuilderWidgets"})
 	PageBuilderWidgets.WidgetSettingResource.NewAttrs(
 		&admin.Section{
 			Rows: [][]string{{"Kind"}, {"SerializableMeta"}},
 		},
 	)
-	PageBuilderWidgets.WidgetSettingResource.AddProcessor(&resource.Processor{
-		Handler: func(value interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
-			if widgetSetting, ok := value.(*adminapp.QorWidgetSetting); ok {
-				if widgetSetting.Name == "" {
-					var count int
-					context.GetDB().Set(admin.DisableCompositePrimaryKeyMode, "off").Model(&adminapp.QorWidgetSetting{}).Count(&count)
-					widgetSetting.Name = fmt.Sprintf("%v %v", utils.ToString(metaValues.Get("Kind").Value), count)
-				}
-			}
-			return nil
-		},
-	})
+	//PageBuilderWidgets.WidgetSettingResource.AddProcessor(&resource.Processor{
+	//	Handler: func(value interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+	//		if widgetSetting, ok := value.(*adminapp.QorWidgetSetting); ok {
+	//			if widgetSetting.Name == "" {
+	//				var count int
+	//				context.GetDB().Set(admin.DisableCompositePrimaryKeyMode, "off").Model(&adminapp.QorWidgetSetting{}).Count(&count)
+	//				widgetSetting.Name = fmt.Sprintf("%v %v", utils.ToString(metaValues.Get("Kind").Value), count)
+	//			}
+	//		}
+	//		return nil
+	//	},
+	//})
 	Admin.AddResource(PageBuilderWidgets, &admin.Config{Menu: []string{pageMenuName}, IconName: "Publish"})
 
 	page := page_builder.New(&page_builder.Config{

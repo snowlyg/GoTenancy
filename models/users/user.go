@@ -1,11 +1,13 @@
 package users
 
 import (
+	"fmt"
 	"time"
 
-	"GoTenancy/libs/media"
-	"GoTenancy/libs/media/oss"
+	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
+	"github.com/qor/media"
+	"github.com/qor/media/oss"
 )
 
 type User struct {
@@ -52,4 +54,14 @@ func (AvatarImageStorage) GetSizes() map[string]*media.Size {
 		"middle": {Width: 120, Height: 120},
 		"big":    {Width: 320, Height: 320},
 	}
+}
+
+func (user User) AvatarImageURL() string {
+
+	if &user.Avatar != nil && len(user.Avatar.URL("original")) > 0 {
+		color.Red(fmt.Sprintf("avatar: %v\n", user.Avatar.URL("original")))
+		return user.Avatar.URL("original")
+	}
+
+	return "assets/images/avatars/3.jpg"
 }
