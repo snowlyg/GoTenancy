@@ -66,7 +66,7 @@ func main() {
 	// 静态资源
 	irisApp.HandleDir("assets", "public/architectui-html-free/assets")
 	irisApp.HandleDir("/", "public/architectui-html-free/style")
-	tml := iris.HTML("./app/auth/views", ".tmpl").
+	tml := iris.HTML("./app/views/auth", ".tmpl").
 		Reload(true)
 	irisApp.RegisterView(tml)
 	irisApp.Get("/admin/auth/login", adminAuth.GetLogin)
