@@ -36,16 +36,14 @@ func main() {
 		color.Red(fmt.Sprintf(" cmdLine.Parse error :%v", err))
 	}
 
+	adminAuth := auth.NewAdminAuth(&auth.PathConfig{})
 	var (
 		irisApp = iris.New()
 		//定义 admin 对象
 		Admin = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancy", // 站点名称
-			Auth: &auth.AdminAuth{Paths: auth.PathConfig{
-				Login:  "/auth/login",
-				Logout: "/auth/logout",
-			}},
-			DB: db.DB,
+			Auth:     adminAuth,
+			DB:       db.DB,
 		})
 
 		//定义应用
@@ -68,6 +66,12 @@ func main() {
 	// 静态资源
 	irisApp.HandleDir("assets", "public/architectui-html-free/assets")
 	irisApp.HandleDir("/", "public/architectui-html-free/style")
+	tml := iris.HTML("./app/auth/views", ".tmpl").
+		Reload(true)
+	irisApp.RegisterView(tml)
+	irisApp.Get("/admin/auth/login", adminAuth.GetLogin)
+	irisApp.Post("/admin/auth/login", adminAuth.PostLogin)
+	irisApp.Get("/admin/auth/logout", adminAuth.GetLogout)
 
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))

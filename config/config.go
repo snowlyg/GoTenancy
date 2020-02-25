@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/jinzhu/configor"
-	amazonpay "github.com/qor/amazon-pay-sdk-go"
 	"github.com/qor/auth/providers/facebook"
 	"github.com/qor/auth/providers/github"
 	"github.com/qor/auth/providers/google"
@@ -63,14 +62,21 @@ var Config = struct {
 }{}
 
 var (
-	Root           = os.Getenv("GOPATH") + "/src/github.com/snowlyg/GoTenancy"
-	Mailer         *mailer.Mailer
-	Render         = render.New()
-	AmazonPay      amazonpay.AmazonPayService
+	Root   = os.Getenv("GOPATH") + "/src/github.com/snowlyg/GoTenancy"
+	Mailer *mailer.Mailer
+	Render = render.New()
+	//AmazonPay      amazonpay.AmazonPayService
 	PaymentGateway gomerchant.PaymentGateway
 	RedirectBack   = redirect_back.New(&redirect_back.Config{
 		SessionManager:  manager.SessionManager,
-		IgnoredPrefixes: []string{"/auth"},
+		IgnoredPrefixes: []string{"/admin"},
+		//IgnoredPaths: []string{"/admin/auth/login"},
+		//IgnoreFunc: func(req *http.Request) bool { // Will ignore request if `IgnoreFunc` returns true
+		//if strings.Contains(req.RequestURI, "/admin/auth") {
+		//	return true
+		//}
+		//return true
+		//},
 	})
 )
 
@@ -91,13 +97,13 @@ func init() {
 		})
 	}
 
-	AmazonPay = amazonpay.New(&amazonpay.Config{
-		MerchantID: Config.AmazonPay.MerchantID,
-		AccessKey:  Config.AmazonPay.AccessKey,
-		SecretKey:  Config.AmazonPay.SecretKey,
-		Sandbox:    true,
-		Region:     "jp",
-	})
+	//AmazonPay = amazonpay.New(&amazonpay.Config{
+	//	MerchantID: Config.AmazonPay.MerchantID,
+	//	AccessKey:  Config.AmazonPay.AccessKey,
+	//	SecretKey:  Config.AmazonPay.SecretKey,
+	//	Sandbox:    true,
+	//	Region:     "jp",
+	//})
 
 	// dialer := gomail.NewDialer(Config.SMTP.Host, Config.SMTP.Port, Config.SMTP.User, Config.SMTP.Password)
 	// sender, err := dialer.Dial()

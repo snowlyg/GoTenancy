@@ -1,16 +1,11 @@
 package orders
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
 
-	"GoTenancy/config"
-	"GoTenancy/models/users"
-	"GoTenancy/utils"
 	"github.com/jinzhu/gorm"
-	amazonpay "github.com/qor/amazon-pay-sdk-go"
 	"github.com/qor/transition"
 )
 
@@ -34,38 +29,38 @@ func init() {
 	OrderState.State("pending").Enter(func(value interface{}, tx *gorm.DB) (err error) {
 		order := value.(*Order)
 		tx.Model(order).Association("OrderItems").Find(&order.OrderItems)
-		if order.AmazonOrderReferenceID != "" {
-			_, err = config.AmazonPay.SetOrderReferenceDetails(order.AmazonOrderReferenceID, amazonpay.OrderReferenceAttributes{
-				OrderTotal: amazonpay.OrderTotal{CurrencyCode: "JPY", Amount: utils.FormatPrice(order.Amount())},
-			})
-
-			if err == nil {
-				err = config.AmazonPay.ConfirmOrderReference(order.AmazonOrderReferenceID)
-			}
-
-			var orderDetail amazonpay.GetOrderReferenceDetailsResponse
-			if err == nil {
-				orderDetail, err = config.AmazonPay.GetOrderReferenceDetails(order.AmazonOrderReferenceID, order.AmazonAddressAccessToken)
-			}
-
-			if err == nil {
-				address := orderDetail.GetOrderReferenceDetailsResult.OrderReferenceDetails.Destination.PhysicalDestination
-				amazonAddress := users.Address{}
-				amazonAddress.ContactName = address.Name
-				amazonAddress.Phone = address.Phone
-				amazonAddress.Address1 = address.District + " " + address.AddressLine1
-				amazonAddress.Address2 = address.AddressLine2 + " " + address.AddressLine3
-				amazonAddress.City = address.City
-				order.ShippingAddress = amazonAddress
-				order.BillingAddress = amazonAddress
-
-				result, _ := json.Marshal(orderDetail)
-				order.PaymentLog += "\n\nSetOrderReferenceDetails\n" + string(result)
-				order.PaymentMethod = AmazonPay
-			}
-		} else {
-			order.PaymentMethod = COD
-		}
+		//if order.AmazonOrderReferenceID != "" {
+		//	_, err = config.AmazonPay.SetOrderReferenceDetails(order.AmazonOrderReferenceID, amazonpay.OrderReferenceAttributes{
+		//		OrderTotal: amazonpay.OrderTotal{CurrencyCode: "JPY", Amount: utils.FormatPrice(order.Amount())},
+		//	})
+		//
+		//	if err == nil {
+		//		err = config.AmazonPay.ConfirmOrderReference(order.AmazonOrderReferenceID)
+		//	}
+		//
+		//	var orderDetail amazonpay.GetOrderReferenceDetailsResponse
+		//	if err == nil {
+		//		orderDetail, err = config.AmazonPay.GetOrderReferenceDetails(order.AmazonOrderReferenceID, order.AmazonAddressAccessToken)
+		//	}
+		//
+		//	if err == nil {
+		//		address := orderDetail.GetOrderReferenceDetailsResult.OrderReferenceDetails.Destination.PhysicalDestination
+		//		amazonAddress := users.Address{}
+		//		amazonAddress.ContactName = address.Name
+		//		amazonAddress.Phone = address.Phone
+		//		amazonAddress.Address1 = address.District + " " + address.AddressLine1
+		//		amazonAddress.Address2 = address.AddressLine2 + " " + address.AddressLine3
+		//		amazonAddress.City = address.City
+		//		order.ShippingAddress = amazonAddress
+		//		order.BillingAddress = amazonAddress
+		//
+		//		result, _ := json.Marshal(orderDetail)
+		//		order.PaymentLog += "\n\nSetOrderReferenceDetails\n" + string(result)
+		//		order.PaymentMethod = AmazonPay
+		//	}
+		//} else {
+		order.PaymentMethod = COD
+		//}
 
 		if err != nil {
 			order.PaymentLog += "\n" + err.Error()
@@ -83,22 +78,22 @@ func init() {
 		order := value.(*Order)
 
 		switch order.PaymentMethod {
-		case AmazonPay:
-			var result amazonpay.AuthorizeResponse
-			result, err = config.AmazonPay.Authorize(order.AmazonOrderReferenceID, order.UniqueExternalID(),
-				amazonpay.Price{
-					Amount:       utils.FormatPrice(order.PaymentTotal),
-					CurrencyCode: config.Config.AmazonPay.CurrencyCode,
-				},
-				amazonpay.AuthorizeInput{},
-			)
-
-			if err == nil {
-				order.AmazonAuthorizationID = result.AuthorizeResult.AuthorizationDetails.AmazonAuthorizationID
-			}
-
-			log, _ := json.Marshal(result)
-			order.PaymentLog += "\n\nAuthorizeResponse\n" + string(log)
+		//case AmazonPay:
+		//	var result amazonpay.AuthorizeResponse
+		//	result, err = config.AmazonPay.Authorize(order.AmazonOrderReferenceID, order.UniqueExternalID(),
+		//		amazonpay.Price{
+		//			Amount:       utils.FormatPrice(order.PaymentTotal),
+		//			CurrencyCode: config.Config.AmazonPay.CurrencyCode,
+		//		},
+		//		amazonpay.AuthorizeInput{},
+		//	)
+		//
+		//	if err == nil {
+		//		order.AmazonAuthorizationID = result.AuthorizeResult.AuthorizationDetails.AmazonAuthorizationID
+		//	}
+		//
+		//	log, _ := json.Marshal(result)
+		//	order.PaymentLog += "\n\nAuthorizeResponse\n" + string(log)
 		case COD:
 		default:
 			err = errors.New("unsupported pay method")
@@ -116,14 +111,14 @@ func init() {
 		method := ""
 
 		switch order.PaymentMethod {
-		case AmazonPay:
-			if order.AmazonAuthorizationID != "" {
-				method = "CloseAuthorization"
-				err = config.AmazonPay.CloseAuthorization(order.AmazonAuthorizationID, "cancel order")
-			} else if order.AmazonOrderReferenceID != "" {
-				method = "CancelOrderReference"
-				err = config.AmazonPay.CancelOrderReference(order.AmazonOrderReferenceID, "cancel order")
-			}
+		//case AmazonPay:
+		//	if order.AmazonAuthorizationID != "" {
+		//		method = "CloseAuthorization"
+		//		err = config.AmazonPay.CloseAuthorization(order.AmazonAuthorizationID, "cancel order")
+		//	} else if order.AmazonOrderReferenceID != "" {
+		//		method = "CancelOrderReference"
+		//		err = config.AmazonPay.CancelOrderReference(order.AmazonOrderReferenceID, "cancel order")
+		//	}
 		case COD:
 		default:
 			err = errors.New("unsupported pay method")
@@ -144,23 +139,23 @@ func init() {
 		order := value.(*Order)
 
 		switch order.PaymentMethod {
-		case AmazonPay:
-			if order.AmazonAuthorizationID != "" {
-				var result amazonpay.CaptureResponse
-				result, err = config.AmazonPay.Capture(order.AmazonAuthorizationID, order.UniqueExternalID(),
-					amazonpay.Price{
-						Amount:       utils.FormatPrice(order.PaymentTotal),
-						CurrencyCode: config.Config.AmazonPay.CurrencyCode,
-					},
-					amazonpay.CaptureInput{},
-				)
-
-				if err == nil {
-					order.AmazonCaptureID = result.CaptureResult.CaptureDetails.AmazonCaptureID
-				}
-				log, _ := json.Marshal(result)
-				order.PaymentLog += "\n\nCapture\n" + string(log)
-			}
+		//case AmazonPay:
+		//	if order.AmazonAuthorizationID != "" {
+		//		var result amazonpay.CaptureResponse
+		//		result, err = config.AmazonPay.Capture(order.AmazonAuthorizationID, order.UniqueExternalID(),
+		//			amazonpay.Price{
+		//				Amount:       utils.FormatPrice(order.PaymentTotal),
+		//				CurrencyCode: config.Config.AmazonPay.CurrencyCode,
+		//			},
+		//			amazonpay.CaptureInput{},
+		//		)
+		//
+		//		if err == nil {
+		//			order.AmazonCaptureID = result.CaptureResult.CaptureDetails.AmazonCaptureID
+		//		}
+		//		log, _ := json.Marshal(result)
+		//		order.PaymentLog += "\n\nCapture\n" + string(log)
+		//	}
 		case COD:
 		default:
 			err = errors.New("unsupported pay method")
@@ -179,19 +174,19 @@ func init() {
 		order := value.(*Order)
 
 		switch order.PaymentMethod {
-		case AmazonPay:
-			var result amazonpay.RefundResponse
-			result, err = config.AmazonPay.Refund(order.AmazonCaptureID, order.UniqueExternalID(), amazonpay.Price{
-				Amount:       utils.FormatPrice(order.PaymentTotal),
-				CurrencyCode: config.Config.AmazonPay.CurrencyCode,
-			}, amazonpay.RefundInput{})
-
-			if err == nil {
-				order.AmazonRefundID = result.RefundResult.RefundDetails.AmazonRefundID
-			}
-
-			log, _ := json.Marshal(result)
-			order.PaymentLog += "\n\n" + string(log)
+		//case AmazonPay:
+		//	var result amazonpay.RefundResponse
+		//	result, err = config.AmazonPay.Refund(order.AmazonCaptureID, order.UniqueExternalID(), amazonpay.Price{
+		//		Amount:       utils.FormatPrice(order.PaymentTotal),
+		//		CurrencyCode: config.Config.AmazonPay.CurrencyCode,
+		//	}, amazonpay.RefundInput{})
+		//
+		//	if err == nil {
+		//		order.AmazonRefundID = result.RefundResult.RefundDetails.AmazonRefundID
+		//	}
+		//
+		//	log, _ := json.Marshal(result)
+		//	order.PaymentLog += "\n\n" + string(log)
 		case COD:
 		default:
 			err = errors.New("unsupported pay method")
