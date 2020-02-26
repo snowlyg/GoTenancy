@@ -77,6 +77,5 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 静态文件路由,可以使用 IrisApp.HandleDir() 替换
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
-	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", handler)
 
 }

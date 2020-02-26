@@ -25,10 +25,10 @@ func NewAdminAuth(config *PathConfig) *AdminAuth {
 		config.Admin = "/admin"
 	}
 	if config.Login == "" {
-		config.Login = "/admin/auth/login"
+		config.Login = "/admin/login"
 	}
 	if config.Logout == "" {
-		config.Logout = "/admin/auth/logout"
+		config.Logout = "/admin/logout"
 	}
 	return &AdminAuth{Paths: config}
 }

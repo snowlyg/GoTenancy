@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"GoTenancy/config/application"
-	"GoTenancy/config/auth"
 	"GoTenancy/middleware"
 	"GoTenancy/models/users"
 	"GoTenancy/utils/funcmapmaker"
@@ -40,9 +39,9 @@ func (app App) ConfigureApplication(application *application.Application) {
 	app.ConfigureAdmin(application.Admin)
 
 	// 注册 auth 路由和静态文件到 iris
-	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Any("/auth/", authHandler)
-	application.IrisApp.Any("/auth/{p:path}", authHandler)
+	//authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	//application.IrisApp.Any("/auth/", authHandler)
+	//application.IrisApp.Any("/auth/{p:path}", authHandler)
 
 	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
