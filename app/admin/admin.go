@@ -5,6 +5,8 @@ import (
 
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
+
+	//"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/settings"
 	"GoTenancy/utils/registerviews"
@@ -77,10 +79,36 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 注册 admin 路由和静态文件到 iris
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
+	application.IrisApp.Macros().Get("string").RegisterFunc("notAuth",
+		func(validNames []string) func(string) bool {
+			return func(paramValue string) bool {
+				for _, validName := range validNames {
+					if validName == paramValue {
+						return false
+					}
+				}
+				return true
+			}
+		})
+	//子资源 ，例如用户管理等等,但是不覆盖登录了相关路由
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}", handler)
 
 	// 注册 auth 路由和静态文件到 iris
 	application.IrisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
 	application.IrisApp.HandleDir("/admin/password/auth/assets", "public/auth_resource/assets")
+
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", authHandler)
+	application.IrisApp.Macros().Get("string").RegisterFunc("isAuth",
+		func(validNames []string) func(string) bool {
+			return func(paramValue string) bool {
+				for _, validName := range validNames {
+					if validName == paramValue {
+						return true
+					}
+				}
+				return false
+			}
+		})
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string isAuth([login,logout])}", authHandler)
+	application.IrisApp.Any(app.Config.Prefix+"/password/login", authHandler) // 提交登陆表单
 }
