@@ -1,29 +1,34 @@
-# 问题总结
+# 问题总结 (记录的问题在 [https://github.com/qor/qor-example/issues](https://github.com/qor/qor-example/issues) 上都可以找到)
 
-1. 运行测试 go test ,报错 exec: "gcc": executable file not found in %PATH%
- 系统没有安装 gcc ,或者 gcc 没有配置到系统环境变量
- 安装 gcc 并设置相应系统变量
-
- gcc 下载地址
-[http://mingw-w64.org/doku.php/download](http://mingw-w64.org/doku.php/download)
+- `Error 1054: Unknown column 'basics.provider' in 'where clause' - "invalid account" error message`
+    
+    这个问题是登陆报错，`qor-example` 中使用了 `auth_themes` 认证主题包, 其它组件更新后这个主题包没有及时更新，导致了这个错误。
+    解决方法很简单，我们只需要定义一个自己的认证主题包就可以了，实现方法可以参照 [https://github.com/snowlyg/GoTenancy/config/auth/themes](https://github.com/snowlyg/GoTenancy/config/auth/themes)。
 
 
-2.启动报错如下内容：
- ```shell script
-   GetPermissionByNameError:record not found创建账号权限
-   CreatePermissionError:Error 1366: Incorrect string value: '\xE5\x88\x9B\xE5\xBB\xBA...' for column 'display_name' at row 1GetRoleByNameErr:record not found创建角色
-   
-   (/home/coding/go/src/GoTenancy/backend/database/models/roles.go:108) 
-   [2019-09-27 12:02:22]  Error 1366: Incorrect string value: '\xE8\xB6\x85\xE7\xBA\xA7...' for column 'display_name' at row 1 
-   CreateRoleErr:Error 1366: Incorrect string value: '\xE8\xB6\x85\xE7\xBA\xA7...' for column 'display_name' at row 1
-   (/home/coding/go/src/GoTenancy/backend/database/models/permission.go:99) 
-   [2019-09-27 12:02:22]  Error 1366: Incorrect string value: '\xE5\x88\x9B\xE5\xBB\xBA...' for column 'display_name' at row 1 
+- `Error 1170: BLOB/TEXT column 'key' used in key specification without a key length`
+    
+    这个错误是字段定义的问题，`github.com/qor/i18n/backends/database/database.go` 文件中 `Translation` 结构 `Key` 字段定义有问题，
+    修改为 varchar(500) ，代码如下：
+    
+    
+```go
+type Translation struct {
+    Locale string `sql:"size:12;"`
+    Key    string `sql:"size:500;"`
+    Value  string `sql:"size:4294967295"`
+}
 ```
- 数据库字符格式不对，无法识别中文
- 将数据库字符设置 utf8 字符集
 
-3. `go run config/db/seeds/main.go config/db/seeds/seeds.go` 报错
-`panic: yaml: line 8: did not find expected key`
+- [Qor-Admin](https://github.com/qor/admin)  `runtime error: invalid memory address or nil pointer dereference` 
+    
+    这个错误出现的原因是 [Qor-Admin](https://github.com/qor/admin) 相关组件的开发要早于 go mod 模式，所以它们都没有支持 go mod 模式下的
+    前端模版文件打包。
+    简单的解决方案是：将相应的组件的视图直接复制到自己项目的, `app/views/qor` 目录下。
+    
+    另外的方法写一个方法重新注册组件视图文件，详情可以查看 [registerview.go](utils/registerviews/registerview.go)
 
-`config/db/seeds/data` 目录下的某个 yml 文件第8行的格式有错误
-
+    
+    
+    
+  

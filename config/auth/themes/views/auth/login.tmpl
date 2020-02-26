@@ -40,7 +40,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>GoTenancy</h1>
+                    <h1 class="site_name">GoTenancy</h1>
                     <div class="description">
                         <p>多商户管理平台</p>
                     </div>
@@ -76,16 +76,18 @@
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="password">{{t "auth.form.password" "密码"}}</label>
-                                <a href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password"  "忘记密码"}}</a>
+
                                 <input type="password" id="password" name="password"
                                        placeholder="{{t "auth.form.password_placeholder"}}"
                                        class="form-password form-control"/>
                             </div>
                             <button type="submit" class="btn">{{t "auth.form.sign_in" "登 陆"}}</button>
 
-                            <a class="signup-link" href="{{.AuthURL "register"}}">
-                                {{ t "auth.links.sign_up" "注册"}}
-                            </a>
+                            <div class="register-help">
+                                <a href="{{.AuthURL "register"}}">{{ t "auth.links.sign_up" "注册"}}</a>
+                                <span>&nbsp;&nbsp; or &nbsp;&nbsp;</span>
+                                <a href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password"  "忘记密码"}}</a>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -11,13 +11,14 @@
 
 #### 项目介绍  【项目目前仍在开发中】
 > 本来采用此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
-> 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qoradmin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
-> 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了。我相信你也会爱上它的。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
-> `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris + Qor-Admin` 形式开发。
+> 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qor/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
+> 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了,它有很多值得我去深入了解的地方。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
+> `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris 结合 Qor-Admin` 形式开发，其他框架大同小异。
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
-> `Qor-Admin` 相关组件太久未更新，看来只能自己操刀了。 复制 `Qor-Admin` 相关组件到 `GoTenancy/libs` 目录下（目前方便开发才集成到本项目，后期会分离成一个独立的库）。
->  [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构完成 ，详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
+> [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构了路由 （有部分问题未修复），详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
+> 
+> [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
 ---
 
@@ -65,7 +66,7 @@ func main() {
 ---
 
 #### 更新日志
-[更新日志](UPDATE.MD)
+[日志](UPDATE.MD)
 ---
 
 #### 问题总结
@@ -148,31 +149,19 @@ go run main.go
 
 ```
 
-#### 账号密码
+#### 账号密码 
 > dev@getqor.com / testing
 
 ---
-##### 单元测试 
->http test
 
-```shell script
- go test -v  //所有测试
- 
- go test -run TestUserCreate -v //单个方法
-
-// go get github.com/rakyll/gotest@latest 增加测试输出数据颜色
-
- gotest 
- 
-```
 
 #### 演示
-> http://localhost:8080
+> 登录页： http://localhost:8080/admin/login
 
-![](pic/localhost_8080_.png)
+![](localhost_8080_admin_login.png)
 
 
-> http://localhost:8080/admin
+> 控制面板： http://localhost:8080/admin
 
-![](pic/localhost_8080_admin.png)
+![](localhost_8080_admin.png)
 

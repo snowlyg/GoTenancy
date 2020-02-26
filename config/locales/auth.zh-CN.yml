@@ -2,7 +2,7 @@ zh-CN:
   auth:
     sign_in: "登陆"
     or_sign_in_with: "或者使用登陆"
-    sign_up: "登记"
+    sign_up: "注册"
     form:
       email: "邮箱"
       email_placeholder: "邮箱"
@@ -25,5 +25,5 @@ zh-CN:
     links:
       sign_in: "已经注册? 登陆"
       sign_in_with: "使用 {{$1}} 登陆"
-      sign_up: "没有账号? 点击这里去登记"
+      sign_up: "没有账号? 点击注册"
       forgot_password: "忘记密码?"

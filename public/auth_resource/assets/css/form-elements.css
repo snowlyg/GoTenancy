@@ -126,7 +126,7 @@ div.errors a {
     padding: 10px 200px;
     min-width: 19px;
     color: #fff;
-    background-color: #d92550;
+    background-color: #dd4b39;
     margin-bottom: .5rem !important;
     margin-right: .5rem !important;
     display: inline-block;
@@ -136,4 +136,19 @@ div.errors a {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem;
+}
+
+div.register-help {
+    margin-top: 5px;
+}
+
+div.register-help a {
+    text-transform: uppercase;
+    color: #dd4b39;
+    font-size: 14px;
+}
+
+h1.site_name {
+    font-size: 55px;
+    line-height: 85px;
 }
