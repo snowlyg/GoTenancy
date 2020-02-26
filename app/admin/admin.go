@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"GoTenancy/config/application"
+	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/settings"
 	"GoTenancy/utils/registerviews"
@@ -77,4 +78,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
 
+	// 注册 auth 路由和静态文件到 iris
+	application.IrisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
+	authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", authHandler)
 }

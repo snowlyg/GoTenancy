@@ -263,6 +263,8 @@ github.com/qor/qor v0.0.0-20200224122013-457d2e3f50e1 h1:oxV/UtQmFJiWvh18ngprVhn
 github.com/qor/qor v0.0.0-20200224122013-457d2e3f50e1/go.mod h1:oG+LgDEnsI9avcFFdczoZnBe3rw42s4cG433w6XpEig=
 github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848 h1:p8fFfW3hQzNMqXxr+LBrr82MIXoUi1HCXbeM8oCgfnw=
 github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848/go.mod h1:AVSTi6lUuohiM2HbnXuN07YucBDRSGHaKz8jAI2DYOU=
+github.com/qor/render v0.0.0-20190612082614-5b68a63157c3 h1:t/sQRyWyxEha/HB6MBvodJqPgLl2+bqt4KbfARoo4RQ=
+github.com/qor/render v0.0.0-20190612082614-5b68a63157c3/go.mod h1:0cGVpTjSVSjjyrhLiLTMgbMeblLQba7vcKkZHMLlYJw=
 github.com/qor/render v1.1.1 h1:DaGaKlf0OzpOB+hJUEiOTbZ40mg+n+LlSJx20/KUfes=
 github.com/qor/render v1.1.1/go.mod h1:0cGVpTjSVSjjyrhLiLTMgbMeblLQba7vcKkZHMLlYJw=
 github.com/qor/responder v0.0.0-20171031032654-b6def473574f h1:sKELSAyL+z5BRHFe97Bx71z197cBEobVJ6rASKTMSqU=

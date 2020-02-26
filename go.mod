@@ -66,7 +66,7 @@ require (
 	github.com/qor/publish2 v0.0.0-20200106024649-fcb930aa85ac
 	github.com/qor/qor v0.0.0-20200224122013-457d2e3f50e1
 	github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848
-	github.com/qor/render v1.1.1
+	github.com/qor/render v0.0.0-20190612082614-5b68a63157c3
 	github.com/qor/responder v0.0.0-20171031032654-b6def473574f
 	github.com/qor/roles v0.0.0-20171127035124-d6375609fe3e
 	github.com/qor/seo v0.0.0-20200116054232-0d23451676f2

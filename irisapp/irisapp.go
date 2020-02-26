@@ -54,17 +54,6 @@ func New() *iris.Application {
 	irisApp.HandleDir("/assets", "public/architectui-html-free/assets")
 	irisApp.HandleDir("/", "public/architectui-html-free/style")
 
-	irisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
-	// 加载认证前端模版
-	tml := iris.HTML("./app/views/auth", ".tmpl").
-		Reload(true)
-	irisApp.RegisterView(tml)
-
-	// 重写登陆路由
-	irisApp.Get("/admin/login", adminAuth.GetLogin)
-	irisApp.Post("/admin/login", adminAuth.PostLogin)
-	irisApp.Get("/admin/logout", adminAuth.GetLogout)
-
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))
 	Application.Use(home.New(&home.Config{}))
@@ -75,7 +64,7 @@ func New() *iris.Application {
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
 	// 静态打包文件加载
-	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
+	prefixs := []string{"dist", "favicon.ico"}
 	Application.Use(static.New(&static.Config{
 		Prefixs: prefixs, // 设置静态文件相关目录
 		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
