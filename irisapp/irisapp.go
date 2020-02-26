@@ -12,7 +12,6 @@ import (
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/db"
-	"GoTenancy/middleware"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
@@ -44,7 +43,7 @@ func New() *iris.Application {
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
 	// 全局中间件
-	irisApp.Use(middleware.AddHeader)
+	//irisApp.Use(middleware.AddHeader)
 	irisApp.Logger().SetLevel("debug")
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())

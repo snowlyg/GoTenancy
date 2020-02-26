@@ -69,7 +69,7 @@ var (
 	PaymentGateway gomerchant.PaymentGateway
 	RedirectBack   = redirect_back.New(&redirect_back.Config{
 		SessionManager: manager.SessionManager,
-		IgnoredPaths:   []string{"/admin/login"},
+		IgnoredPaths:   []string{"/admin/login", "/admin/password/login"},
 		FallbackPath:   "/admin", // 登陆后返回路径
 	})
 )

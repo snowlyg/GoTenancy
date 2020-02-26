@@ -51,11 +51,11 @@
 
                     {{$flashes := .Flashes}}
                     {{if $flashes}}
-                        <ul class="errors">
+                        <div class="errors">
                             {{range $flash := $flashes}}
-                                <li>{{$flash.Message}}</li>
+                                <a href="javascript:void(0);">{{$flash.Message}}</a>
                             {{end}}
-                        </ul>
+                        </div>
                     {{end}}
                     <div class="form-top">
                         <div class="form-top-left">

@@ -116,3 +116,24 @@ button.btn:active:focus, button.btn.active:focus {
     background: #4aaf51;
     color: #fff;
 }
+
+div.errors {
+    margin-bottom: 20px;
+}
+
+div.errors a {
+    text-transform: uppercase;
+    padding: 10px 200px;
+    min-width: 19px;
+    color: #fff;
+    background-color: #d92550;
+    margin-bottom: .5rem !important;
+    margin-right: .5rem !important;
+    display: inline-block;
+    font-size: 50%;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
