@@ -1,19 +1,24 @@
 <ul class="vertical-nav-menu">
     {{range $_, $value := .Result}}
         <li class="app-sidebar__heading">{{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}</li>
-        <li>
-            <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
-                <i class="metismenu-icon {{if $value.IconName}} {{$value.IconName}}{{end}}"></i>
-                {{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}
-            </a>
-        </li>
+        {{if $value.URL}}
+            <li>
+                <a href="{{$value.URL}}" {{if $value.Active}}class="mm-active"{{end}}>
+                    {{if $value.IconName}}<i class="metismenu-icon  {{$value.IconName}}"></i>{{end}}
+                    {{t (printf "qor_admin.menus.%v" $value.Name) $value.Name}}
+                </a>
+            </li>
+        {{end}}
         {{if $value.SubMenus}}
             {{range $_, $valueSub := $value.SubMenus}}
-                <li>
-                    <a href="{{$valueSub.URL}}" {{if $valueSub.Active}}class="mm-active"{{end}}>
-                        {{t (printf "qor_admin.menus.%v" $valueSub.Name) $valueSub.Name}}
-                    </a>
-                </li>
+                {{if $valueSub.URL}}
+                    <li>
+                        <a href="{{$valueSub.URL}}" {{if $valueSub.Active}}class="mm-active"{{end}}>
+                            {{if $valueSub.IconName}}<i class="metismenu-icon  {{$valueSub.IconName}}"></i>{{end}}
+                            {{t (printf "qor_admin.menus.%v" $valueSub.Name) $valueSub.Name}}
+                        </a>
+                    </li>
+                {{end}}
             {{end}}
         {{end}}
     {{end}}

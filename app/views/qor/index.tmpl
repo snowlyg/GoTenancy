@@ -1,0 +1,41 @@
+{{render "shared/flashes"}}
+{{render "shared/errors"}}
+<div class="app-main__inner">
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-drawer icon-gradient bg-happy-itmeo">
+                    </i>
+                </div>
+                <div>Regular Tables
+                    <div class="page-title-subheading">Tables are the backbone of almost all web
+                        applications.
+                    </div>
+                </div>
+            </div>
+            <div class="page-title-actions">
+                {{if has_create_permission .Resource}}
+                    <a href="{{new_resource_path .Resource}}" data-url="{{new_resource_path .Resource}}"
+                       class="mb-2 mr-2 btn btn-info font-size-lg">
+                        <i class="pe-7s-plus" style="font-size:15px"></i>
+                        新&nbsp;&nbsp;增
+                    </a>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">数据表格</h5>
+                    {{render "index/table"}}
+                </div>
+                <div class="card-footer">
+                    {{render "index/pagination"}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
