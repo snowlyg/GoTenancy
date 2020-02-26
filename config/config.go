@@ -70,12 +70,7 @@ var (
 	RedirectBack   = redirect_back.New(&redirect_back.Config{
 		SessionManager: manager.SessionManager,
 		IgnoredPaths:   []string{"/admin/login"},
-		//IgnoreFunc: func(req *http.Request) bool { // Will ignore request if `IgnoreFunc` returns true
-		//if strings.Contains(req.RequestURI, "/admin/auth") {
-		//	return true
-		//}
-		//return true
-		//},
+		FallbackPath:   "/admin", // 登陆后返回路径
 	})
 )
 

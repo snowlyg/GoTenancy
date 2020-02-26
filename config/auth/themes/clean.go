@@ -23,7 +23,7 @@ import (
 )
 
 // ErrPasswordConfirmationNotMatch password confirmation not match error
-var ErrPasswordConfirmationNotMatch = errors.New("password confirmation doesn't match password")
+var ErrPasswordConfirmationNotMatch = errors.New("两次密码输入不一致")
 var DefaultAuthorizeHandler = func(context *auth.Context) (*claims.Claims, error) {
 	var (
 		authInfo    auth_identity.AuthIdentity
@@ -37,21 +37,21 @@ var DefaultAuthorizeHandler = func(context *auth.Context) (*claims.Claims, error
 	authInfo.UID = strings.TrimSpace(req.Form.Get("login"))
 
 	if tx.Model(context.Auth.AuthIdentityModel).Where(authInfo).Scan(&authInfo).RecordNotFound() {
-		return nil, auth.ErrInvalidAccount
+		return nil, errors.New("请输入正确账号")
 	}
 
 	if provider.Config.Confirmable && authInfo.ConfirmedAt == nil {
 		currentUser, _ := context.Auth.UserStorer.Get(authInfo.ToClaims(), context)
 		_ = provider.Config.ConfirmMailer(authInfo.UID, context, authInfo.ToClaims(), currentUser)
 
-		return nil, password.ErrUnconfirmed
+		return nil, errors.New("请确认你的账号，再继续")
 	}
 
 	if err := provider.Encryptor.Compare(authInfo.EncryptedPassword, strings.TrimSpace(req.Form.Get("password"))); err == nil {
 		return authInfo.ToClaims(), err
 	}
 
-	return nil, auth.ErrInvalidPassword
+	return nil, errors.New("请输入正确密码")
 }
 
 // New initialize clean theme
@@ -62,7 +62,7 @@ func New(config *auth.Config) *auth.Auth {
 	config.URLPrefix = "admin"
 
 	if config.DB == nil {
-		fmt.Print("Please configure *gorm.DB for Auth theme clean")
+		fmt.Print("请为认证主题配置 *gorm.DB")
 	}
 
 	if config.Render == nil {

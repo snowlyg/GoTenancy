@@ -80,6 +80,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 注册 auth 路由和静态文件到 iris
 	application.IrisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
+	application.IrisApp.HandleDir("/admin/password/auth/assets", "public/auth_resource/assets")
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
 	application.IrisApp.Any(app.Config.Prefix+"/{p:path}", authHandler)
 }

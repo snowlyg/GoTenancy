@@ -22,6 +22,7 @@ func main() {
 		color.Red(fmt.Sprintf(" cmdLine.Parse error :%v", err))
 	}
 
+	// 初始化 iris
 	irisApp := irisapp.New()
 
 	if *compileTemplate { //处理前端静态文件

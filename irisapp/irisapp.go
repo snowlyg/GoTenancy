@@ -11,7 +11,6 @@ import (
 	"GoTenancy/config"
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
-	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/middleware"
 	"GoTenancy/utils/funcmapmaker"
@@ -59,16 +58,17 @@ func New() *iris.Application {
 	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
+	// 系统上传文件
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
 	// 静态打包文件加载
-	prefixs := []string{"dist", "favicon.ico"}
-	Application.Use(static.New(&static.Config{
-		Prefixs: prefixs, // 设置静态文件相关目录
-		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
-	}))
+	//prefixs := []string{"dist", "favicon.ico"}
+	//Application.Use(static.New(&static.Config{
+	//	Prefixs: prefixs, // 设置静态文件相关目录
+	//	Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
+	//}))
 
 	return irisApp
 }
