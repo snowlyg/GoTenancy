@@ -92,6 +92,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 		})
 	//子资源 ，例如用户管理等等,但是不覆盖登录了相关路由
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}", handler)
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}/{p:path}", handler)
 
 	// 注册 auth 路由和静态文件到 iris
 	application.IrisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
