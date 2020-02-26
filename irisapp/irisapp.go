@@ -50,10 +50,11 @@ func New() *iris.Application {
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())
 
-	// 静态资源
-	irisApp.HandleDir("/admin/assets", "public/architectui-html-free/assets")
-	irisApp.HandleDir("/admin", "public/architectui-html-free/style")
+	// 加载静态资源 for /admin
+	irisApp.HandleDir("/assets", "public/architectui-html-free/assets")
+	irisApp.HandleDir("/", "public/architectui-html-free/style")
 
+	irisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
 	// 加载认证前端模版
 	tml := iris.HTML("./app/views/auth", ".tmpl").
 		Reload(true)

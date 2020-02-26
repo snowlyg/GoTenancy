@@ -74,7 +74,6 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
 	// 注册 admin 路由和静态文件到 iris
-	// 静态文件路由,可以使用 IrisApp.HandleDir() 替换
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
 
