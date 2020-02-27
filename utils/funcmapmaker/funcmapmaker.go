@@ -6,6 +6,7 @@ import (
 
 	"GoTenancy/app/admin"
 	"GoTenancy/config"
+	"github.com/qor/action_bar"
 
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/products"
@@ -60,9 +61,9 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 		}
 
 		// Add `action_bar` method
-		//funcMap["render_action_bar"] = func() template.HTML {
-		//return admin.ActionBar.Actions(action_bar.Action{Name: "Edit SEO", Link: seo.SEOCollection.SEOSettingURL("/help")}).Render(w, req)
-		//}
+		funcMap["render_action_bar"] = func() template.HTML {
+			return admin.ActionBar.Actions(action_bar.Action{Name: "Edit SEO", Link: seo.SEOCollection.SEOSettingURL("/help")}).Render(w, req)
+		}
 
 		funcMap["render_seo_tag"] = func() template.HTML {
 			return seo.SEOCollection.Render(&qor.Context{DB: utils.GetDB(req)}, "Default Page")

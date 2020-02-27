@@ -63,4 +63,5 @@ func SetupDashboard(Admin *admin.Admin) {
 	Admin.AddMenu(&admin.Menu{Name: "工作面板", IconName: "pe-7s-rocket", Link: "/admin", Priority: 1})
 
 	Admin.GetRouter().Get("/reports", ReportsDataHandler)
+	initFuncMap(Admin)
 }
