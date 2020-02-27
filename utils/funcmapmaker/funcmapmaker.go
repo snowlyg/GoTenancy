@@ -18,7 +18,7 @@ import (
 	"github.com/qor/session/manager"
 )
 
-//GetEditMode get edit mode
+// GetEditMode get edit mode
 func GetEditMode(w http.ResponseWriter, req *http.Request) bool {
 	return admin.ActionBar.EditMode(w, req)
 }
@@ -32,7 +32,7 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			funcMap = oldFuncMapMaker(render, req, w)
 		}
 
-		//Add `t` method
+		// Add `t` method
 		for key, fc := range inline_edit.FuncMap(i18n.I18n, utils.GetCurrentLocale(req), GetEditMode(w, req)) {
 			funcMap[key] = fc
 		}

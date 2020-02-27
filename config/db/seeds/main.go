@@ -138,24 +138,6 @@ func createSeo() {
 	if err := db.DB.Create(&defaultSeo).Error; err != nil {
 		fmt.Println(fmt.Sprintf("create seo (%v) failure, got err %v", defaultSeo, err))
 	}
-
-	productSeo := adminseo.MySEOSetting{}
-	productSeo.Setting = seo.Setting{Title: "{{SiteName}}", Description: "{{SiteName}} - {{Name}} - {{Code}}", Keywords: "{{SiteName}},{{Name}},{{Code}}", Type: "Product Page"}
-	productSeo.Name = "Product Page"
-	productSeo.LanguageCode = "en-US"
-	if err := db.DB.Create(&productSeo).Error; err != nil {
-		fmt.Println(fmt.Sprintf("create seo (%v) failure, got err %v", productSeo, err))
-	}
-
-	// seoSetting := models.SEOSetting{}
-	// seoSetting.SiteName = Seeds.Seo.SiteName
-	// seoSetting.DefaultPage = seo.Setting{Title: Seeds.Seo.DefaultPage.Title, Description: Seeds.Seo.DefaultPage.Description, Keywords: Seeds.Seo.DefaultPage.Keywords}
-	// seoSetting.HomePage = seo.Setting{Title: Seeds.Seo.HomePage.Title, Description: Seeds.Seo.HomePage.Description, Keywords: Seeds.Seo.HomePage.Keywords}
-	// seoSetting.ProductPage = seo.Setting{Title: Seeds.Seo.ProductPage.Title, Description: Seeds.Seo.ProductPage.Description, Keywords: Seeds.Seo.ProductPage.Keywords}
-
-	// if err := DraftDB.Create(&seoSetting).Error; err != nil {
-	// 	fmt.Println(fmt.Sprintf("create seo (%v) failure, got err %v", seoSetting, err)
-	// }
 }
 
 func createAdminUsers() {
@@ -167,7 +149,7 @@ func createAdminUsers() {
 	if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
 		panic(fmt.Sprintf("file doesn't exist %v\n", err))
 	} else {
-		AdminUser.Avatar.Scan(avatar)
+		_ = AdminUser.Avatar.Scan(avatar)
 	}
 
 	DraftDB.Create(AdminUser)
@@ -190,7 +172,7 @@ func createAdminUsers() {
 	DraftDB.Create(authIdentity)
 
 	// Send welcome notification
-	Notification.Send(&notification.Message{
+	_ = Notification.Send(&notification.Message{
 		From:        AdminUser,
 		To:          AdminUser,
 		Title:       "Welcome To QOR Admin",
@@ -211,7 +193,7 @@ func createUsers() {
 			log.Fatal(fmt.Sprintf("create user (%v) failure, got err %v", user, err))
 		}
 
-		day := (-14 + i/45)
+		day := -14 + i/45
 		user.CreatedAt = now.EndOfDay().Add(time.Duration(day*rand.Intn(24)) * time.Hour)
 		if user.CreatedAt.After(time.Now()) {
 			user.CreatedAt = time.Now()
@@ -284,7 +266,7 @@ func createMediaLibraries() {
 			fmt.Printf("open file (%q) failure, got err %v", m.Image, err)
 		} else {
 			defer file.Close()
-			medialibrary.File.Scan(file)
+			_ = medialibrary.File.Scan(file)
 		}
 
 		if err := DraftDB.Create(&medialibrary).Error; err != nil {

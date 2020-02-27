@@ -17,7 +17,6 @@ require (
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/schema v1.1.0
 	github.com/gorilla/sessions v1.2.0 // indirect
 	github.com/gosimple/slug v1.9.0 // indirect
 	github.com/headzoo/surf v1.0.0 // indirect
@@ -42,13 +41,11 @@ require (
 	github.com/qor/action_bar v0.0.0-20190314070413-136e5e2c5b8c
 	github.com/qor/activity v0.0.0-20190717092745-b7d0527b3572
 	github.com/qor/admin v0.0.0-20200219141441-c773fc1f93a8
-	github.com/qor/amazon-pay-sdk-go v0.0.0-20190701100107-10aa1a55e598
 	github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14
 	github.com/qor/audited v0.0.0-20171228121055-b52c9c2f0571 // indirect
 	github.com/qor/auth v0.0.0-20190603071357-709ba0ce943b
 	github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e
 	github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba // indirect
-	github.com/qor/exchange v0.0.0-20190805090509-cbc64a40aa7c
 	github.com/qor/gomerchant v0.0.0-20180611045240-df0ba7636236
 	github.com/qor/help v0.0.0-20171031093129-202965d1156a
 	github.com/qor/i18n v0.0.0-20181014061908-f7206d223bcd
@@ -59,29 +56,25 @@ require (
 	github.com/qor/middlewares v0.0.0-20170822143614-781378b69454
 	github.com/qor/notification v0.0.0-20181014061619-c4c002490b78
 	github.com/qor/oss v0.0.0-20191031055114-aef9ba66bf76
-	github.com/qor/page_builder v0.0.0-20190619064344-2e4b0d81d42d
 	github.com/qor/publish v0.0.0-20181014061411-abfbacee9e0d // indirect
 	github.com/qor/publish2 v0.0.0-20200106024649-fcb930aa85ac
 	github.com/qor/qor v0.0.0-20200224122013-457d2e3f50e1
 	github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848
 	github.com/qor/render v0.0.0-20190612082614-5b68a63157c3
-	github.com/qor/responder v0.0.0-20171031032654-b6def473574f
+	github.com/qor/responder v0.0.0-20171031032654-b6def473574f // indirect
 	github.com/qor/roles v0.0.0-20171127035124-d6375609fe3e
 	github.com/qor/seo v0.0.0-20200116054232-0d23451676f2
 	github.com/qor/serializable_meta v0.0.0-20180510060738-5fd8542db417 // indirect
 	github.com/qor/session v0.0.0-20170907035918-8206b0adab70
-	github.com/qor/slug v0.0.0-20171031101006-545ed2e36452
 	github.com/qor/sorting v0.0.0-20191219075500-0775f01ad51c
 	github.com/qor/transition v0.0.0-20190608002025-f17b56902e4b
 	github.com/qor/validations v0.0.0-20171228122639-f364bca61b46
-	github.com/qor/widget v0.0.0-20191022085246-e5b7fea87307 // indirect
 	github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4
 	github.com/qor/worker v0.0.0-20190805090529-35a245417f70
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/snowlyg/qor-registerviews v0.0.0-20200227035957-869c5795e838
-	github.com/tealeg/xlsx v1.0.5 // indirect
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8 // indirect
 	github.com/theplant/htmltestingutils v0.0.0-20190423050759-0e06de7b6967 // indirect
 	github.com/theplant/testingutils v0.0.0-20190603093022-26d8b4d95c61 // indirect

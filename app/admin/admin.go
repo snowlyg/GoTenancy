@@ -6,6 +6,7 @@ import (
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
 	"GoTenancy/config/i18n"
+	"GoTenancy/models/settings"
 	registerviews "github.com/snowlyg/qor-registerviews"
 
 	"github.com/fatih/color"
@@ -45,11 +46,11 @@ type Config struct {
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
 
-	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "admin")); err != nil {
-		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
-	}
-	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "publish2")); err != nil {
-		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+	pkgnames := []string{"admin", "publish2", "seo", "action_bar"}
+	for _, pkgname := range pkgnames {
+		if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname)); err != nil {
+			color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+		}
 	}
 
 	// 静态文件加载
@@ -69,14 +70,14 @@ func (app App) ConfigureApplication(application *application.Application) {
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// 翻译
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, IconName: "Site", Priority: -1})
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, Priority: -1})
 
 	// 设置
-	//Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
-	SetupSEO(Admin)
+	//SetupSEO(Admin)
 	SetupDashboard(Admin)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris

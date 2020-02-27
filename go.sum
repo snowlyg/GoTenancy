@@ -93,8 +93,6 @@ github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGa
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gorilla/context v1.1.1 h1:AWwleXJkX/nhcU9bZSnZoi3h/qGYqQAGhq6zZe/aQW8=
 github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
-github.com/gorilla/schema v1.1.0 h1:CamqUDOFUBqzrvxuz2vEwo8+SUdwsluFh7IlzJh30LY=
-github.com/gorilla/schema v1.1.0/go.mod h1:kgLaKoK1FELgZqMAVxx/5cbj0kT+57qxUrAlIO2eleU=
 github.com/gorilla/securecookie v1.1.1 h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyCS8BvQ=
 github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+HVt/4epWDjd4=
 github.com/gorilla/sessions v1.2.0 h1:S7P+1Hm5V/AT9cjEcUD5uDaQSX0OE577aCXgoaKpYbQ=
@@ -217,8 +215,6 @@ github.com/qor/activity v0.0.0-20190717092745-b7d0527b3572 h1:VtURdMRvB3M2zJhnyh
 github.com/qor/activity v0.0.0-20190717092745-b7d0527b3572/go.mod h1:qs5+ZsItuTY2atj5JS4q6yJDW9R2Fso+85pskjsQ44w=
 github.com/qor/admin v0.0.0-20200219141441-c773fc1f93a8 h1:Neq5QOtTwye1JYOHTOJcD4JXBguUDNWxwgAFc+Mv08o=
 github.com/qor/admin v0.0.0-20200219141441-c773fc1f93a8/go.mod h1:Sm5kX+Hkq1LKiFyqZJLnncUg8dWM/2roOEiy98NOUzA=
-github.com/qor/amazon-pay-sdk-go v0.0.0-20190701100107-10aa1a55e598 h1:m6Chj/jhmQjyLm6GJmku+k0HXWHtDybntSGoNv10muc=
-github.com/qor/amazon-pay-sdk-go v0.0.0-20190701100107-10aa1a55e598/go.mod h1:gQxHnm+FoKTkGzfIQ/4i89wDc7/J0kra9qWDfKcO40M=
 github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14 h1:JRpyNNSRAkwNHd4WgyPcalTAhxOCh3eFNMoQkxWhjSw=
 github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14/go.mod h1:GZSCP3jIneuPsav3pXmpmJwz9ES+Fuq4ZPOUC3wwckQ=
 github.com/qor/audited v0.0.0-20171228121055-b52c9c2f0571 h1:87fy9oxrDUTN77K9VwHkmyNynRYl+Kn7HkX2HZbQYrE=
@@ -229,8 +225,6 @@ github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e h1:DiWQaAZIKUo/w
 github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e/go.mod h1:nPKq9kxHfFTl8WapTbvMdldUOufELgTQUeuKecj7Lxw=
 github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba h1:XBEqqX1xirq3pYMGw8Jr0urCfhPXbJEh1KPwKLd24MM=
 github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba/go.mod h1:DvjFc9BNYPuokuaZVaXvVukLqqkYDlToNC+Gszv3oRs=
-github.com/qor/exchange v0.0.0-20190805090509-cbc64a40aa7c h1:7FLAcLbtL9km0ozX/53miBOLpDi4uN9X0w8lcT5+9ro=
-github.com/qor/exchange v0.0.0-20190805090509-cbc64a40aa7c/go.mod h1:QrwtY6zppYzo3c1b5i+8oyZlnM9OCzjpoJX4xBzqJ7I=
 github.com/qor/gomerchant v0.0.0-20180611045240-df0ba7636236 h1:EDV6kcCLGJIkORI8BiwQMAL54Tcci+t/FRiRDGq6h7g=
 github.com/qor/gomerchant v0.0.0-20180611045240-df0ba7636236/go.mod h1:nTC+srKyTkx/zRbNC5NHszmFozq0uUb88BZeBphgwpY=
 github.com/qor/help v0.0.0-20171031093129-202965d1156a h1:oHAkPkHJeyt6XFjXlx4fw20dbnFdfnbCzYW0bNFF3qM=
@@ -251,8 +245,6 @@ github.com/qor/notification v0.0.0-20181014061619-c4c002490b78 h1:XYgu511isuQ7Vu
 github.com/qor/notification v0.0.0-20181014061619-c4c002490b78/go.mod h1:iDlj/2Qcr7lwzzg1/bflqU9Owonnir/HAS2NQuU5XnY=
 github.com/qor/oss v0.0.0-20191031055114-aef9ba66bf76 h1:J2Xj92efYLxPl3BiibgEDEUiMsCBzwTurE/8JjD8CG4=
 github.com/qor/oss v0.0.0-20191031055114-aef9ba66bf76/go.mod h1:JhtPzUhP5KGtCB2yksmxuYAD4hEWw4qGQJpucjsm3U0=
-github.com/qor/page_builder v0.0.0-20190619064344-2e4b0d81d42d h1:CdciX0mTBjryamor69j7DY0v3K36a9uySImbxTN1PME=
-github.com/qor/page_builder v0.0.0-20190619064344-2e4b0d81d42d/go.mod h1:19Ay+41Yl4/bBxmIihVN66n43Yf+pZz4hpKNlxPe0v0=
 github.com/qor/publish v0.0.0-20181014061411-abfbacee9e0d h1:U+g8WMSHCibub/ZnX5gIG8SKk8d1UA0Ppv863vGhfoE=
 github.com/qor/publish v0.0.0-20181014061411-abfbacee9e0d/go.mod h1:rsJ6QTqNLOPY3xaWmphqPkMqqbBPS8pAwkJWY+t5XHg=
 github.com/qor/publish2 v0.0.0-20200106024649-fcb930aa85ac h1:FwXx1vbVj9rtJW+150HCj/L17L5M4LiFw8JpopU9pfE=
@@ -273,16 +265,12 @@ github.com/qor/serializable_meta v0.0.0-20180510060738-5fd8542db417 h1:dnqlvo4M/
 github.com/qor/serializable_meta v0.0.0-20180510060738-5fd8542db417/go.mod h1:ZhRkze6qCgCNNqisHEFTAkndoBtY/XJbA03LJLJrzDY=
 github.com/qor/session v0.0.0-20170907035918-8206b0adab70 h1:8l21EEdlZ9R0AA3FbeUAANc5NAx8Y3tn1VKbyAgjYlI=
 github.com/qor/session v0.0.0-20170907035918-8206b0adab70/go.mod h1:ldgcaca0ZGx6tFtd/w0ELq5jHD/KLJ1Lbdn8qhr/pQ0=
-github.com/qor/slug v0.0.0-20171031101006-545ed2e36452 h1:uzUEFWUF6iyaApoAKbQdBDMk771n6vpSqV3w5Ny6LqQ=
-github.com/qor/slug v0.0.0-20171031101006-545ed2e36452/go.mod h1:Sa5oK6BdxuMYsW15EE6ej4SAq1uBy+crwLyXdEgqKM8=
 github.com/qor/sorting v0.0.0-20191219075500-0775f01ad51c h1:cGcMOi8wOSBOSYxu3Cgrt4JE9ha71Y+v4P/+Q+jlYq8=
 github.com/qor/sorting v0.0.0-20191219075500-0775f01ad51c/go.mod h1:emSfh69iWRzX3dyZKSnITJYOCG24CHfDLyxfgoHA4Qc=
 github.com/qor/transition v0.0.0-20190608002025-f17b56902e4b h1:BWCw28MTKaHJ5QcES+yOfAn9yL4/MLaosNrXtt4gX78=
 github.com/qor/transition v0.0.0-20190608002025-f17b56902e4b/go.mod h1:UaBYOdHVLYFAECiEuiKvKE7a4er4Eqhe5sjr838NW+4=
 github.com/qor/validations v0.0.0-20171228122639-f364bca61b46 h1:dRlsVUhwD1pwrasuVbNooGQITYjKzmXK5eYoEEvBGQI=
 github.com/qor/validations v0.0.0-20171228122639-f364bca61b46/go.mod h1:UJsA0AuvrKNaWtrb1UzKai10mN3ZBbQkPjUHpxwahTc=
-github.com/qor/widget v0.0.0-20191022085246-e5b7fea87307 h1:GH4Dd69emagA1P3UJDz2trlzdLqlmvY9PxuEn0Cp8pQ=
-github.com/qor/widget v0.0.0-20191022085246-e5b7fea87307/go.mod h1:jb+J4bwF2Tk2CNwayGG8wP8V+shIJm+ipUH/SrZL+3w=
 github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4 h1:IVsdnfC20DIQwjYcEeH8z1UJC5SXTU052aY+KofU6FQ=
 github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4/go.mod h1:3cy88sYfNCLaeYF0ikIfEVbvohMcq3wVexMlTiCRey4=
 github.com/qor/worker v0.0.0-20190805090529-35a245417f70 h1:EUo1U/EGuZ/CQeLvdQoqwRA/lxcf0rIiZ/Cc101+hV4=
@@ -315,8 +303,6 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
-github.com/tealeg/xlsx v1.0.5 h1:+f8oFmvY8Gw1iUXzPk+kz+4GpbDZPK1FhPiQRd+ypgE=
-github.com/tealeg/xlsx v1.0.5/go.mod h1:btRS8dz54TDnvKNosuAqxrM1QgN1udgk9O34bDCnORM=
 github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8 h1:di0cR5qqo2DllBMwmP75kZpUX6dAXhsn1O2dshQfMaA=
 github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8/go.mod h1:MIL7SmF8wRAYDn+JexczVRUiJXTCi4VbQavsCKWKwXI=
 github.com/theplant/htmltestingutils v0.0.0-20190423050759-0e06de7b6967 h1:yPrgtU8bj7Q/XbXgjjmngZtOhsUufBAraruNwxv/eXM=

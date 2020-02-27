@@ -7,7 +7,7 @@ import (
 	"github.com/qor/render"
 )
 
-// Controller products controller
+// Controller Profile controller
 type Controller struct {
 	View *render.Render
 }
@@ -25,7 +25,7 @@ func (ctrl Controller) Profile(ctx iris.Context) {
 	tx.Model(currentUser).Related(&billingAddress, "DefaultBillingAddress")
 	tx.Model(currentUser).Related(&shippingAddress, "DefaultShippingAddress")
 
-	ctrl.View.Execute("profile", map[string]interface{}{
+	_ = ctrl.View.Execute("profile", map[string]interface{}{
 		"CurrentUser": currentUser, "DefaultBillingAddress": billingAddress, "DefaultShippingAddress": shippingAddress,
 	}, ctx.Request(), ctx.ResponseWriter())
 }
