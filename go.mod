@@ -18,14 +18,13 @@ require (
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.0 // indirect
-	github.com/gosimple/slug v1.9.0 // indirect
 	github.com/headzoo/surf v1.0.0 // indirect
 	github.com/headzoo/ut v0.0.0-20181013193318-a13b5a7a02ca // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a // indirect
 	github.com/jinzhu/gorm v1.9.13-0.20200126152832-7180bd0f27d1
-	github.com/jinzhu/now v1.0.1
+	github.com/jinzhu/now v1.1.1
 	github.com/jteeuwen/go-bindata v3.0.8-0.20180305030458-6025e8de665b+incompatible
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
@@ -74,7 +73,7 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/snowlyg/qor-registerviews v0.0.0-20200227035957-869c5795e838
+	github.com/snowlyg/qor-registerviews v0.0.0-20200227040339-4e4fce0b1aac
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8 // indirect
 	github.com/theplant/htmltestingutils v0.0.0-20190423050759-0e06de7b6967 // indirect
 	github.com/theplant/testingutils v0.0.0-20190603093022-26d8b4d95c61 // indirect
