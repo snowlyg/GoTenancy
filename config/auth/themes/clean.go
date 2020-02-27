@@ -95,14 +95,28 @@ func New(config *auth.Config) *auth.Auth {
 	}
 
 	// 模版加载是前面覆盖后面
-	if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/snowlyg/GoTenancy/config/auth/themes/views", "")); err != nil {
+	if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/snowlyg/GoTenancy/config/auth/themes/views", "", "")); err != nil {
 		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
 	}
 
-	if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "auth")); err != nil {
-		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
+	// 支持 go mod 模式
+	pkgnames := map[string][]string{
+		"auth": {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
 	}
 
+	for pkgname, subpaths := range pkgnames {
+		if len(subpaths) > 0 {
+			for _, subpaths := range subpaths {
+				if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpaths)); err != nil {
+					color.Red(fmt.Sprintf(" config.Render.AssetFileSystem  %v/%v %v\n", pkgname, subpaths, err))
+				}
+			}
+		} else {
+			if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, "")); err != nil {
+				color.Red(fmt.Sprintf(" config.Render.AssetFileSystem  %v/%v %v\n", pkgname, subpaths, err))
+			}
+		}
+	}
 	Auth := auth.New(config)
 
 	Auth.RegisterProvider(password.New(&password.Config{

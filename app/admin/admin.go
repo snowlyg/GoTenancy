@@ -47,25 +47,37 @@ func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
 
 	// 支持 go mod 模式
-	pkgnames := []string{
-		"sorting",
-		"seo",
-		"publish2",
-		"pag_builder",
-		"notification",
-		"media",
-		"location",
-		"l10n",
-		"i18n",
-		"help",
-		"banner_editor",
-		"admin",
-		"action_bar",
-		"media",
+	pkgnames := map[string][]string{
+		"sorting":           {},
+		"seo":               {},
+		"publish2":          {},
+		"notification":      {},
+		"location":          {},
+		"help":              {},
+		"banner_editor":     {},
+		"admin":             {},
+		"action_bar":        {},
+		"activity":          {},
+		"serializable_meta": {},
+		"slug":              {},
+		"worker":            {},
+		"media":             {"/media_library/"},
+		"l10n":              {"/publish"},
+		"i18n":              {"/exchange_actions", "/inline_edit"},
+		"auth":              {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
 	}
-	for _, pkgname := range pkgnames {
-		if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname)); err != nil {
-			color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+
+	for pkgname, subpaths := range pkgnames {
+		if len(subpaths) > 0 {
+			for _, subpaths := range subpaths {
+				if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpaths)); err != nil {
+					color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpaths, err))
+				}
+			}
+		} else {
+			if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, "")); err != nil {
+				color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpaths, err))
+			}
 		}
 	}
 
