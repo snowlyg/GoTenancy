@@ -1,4 +1,8 @@
 'use strict';
+import '../stylesheets/home_banner.scss'
+import '../stylesheets/home_products.scss'
+import '../stylesheets/qor.scss'
+import '../stylesheets/qor_auth.scss'
 
 $(function () {
     /*   $("#add-cashe").submit(function(event) {

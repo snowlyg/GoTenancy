@@ -84,7 +84,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 注册 admin 路由和静态文件到 iris
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
 	application.IrisApp.Any(app.Config.Prefix, handler)
-	application.IrisApp.Macros().Get("string").RegisterFunc("notAuth",
+	application.IrisApp.Macros().Get("string").RegisterFunc("notHas",
 		func(validNames []string) func(string) bool {
 			return func(paramValue string) bool {
 				for _, validName := range validNames {
@@ -95,13 +95,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 				return true
 			}
 		})
-	//子资源 ，例如用户管理等等,但是不覆盖登录了相关路由
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}", handler)
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}/{p:path}", handler)
-
-	// 注册 auth 路由到 iris
-	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Macros().Get("string").RegisterFunc("isAuth",
+	application.IrisApp.Macros().Get("string").RegisterFunc("has",
 		func(validNames []string) func(string) bool {
 			return func(paramValue string) bool {
 				for _, validName := range validNames {
@@ -112,8 +106,12 @@ func (app App) ConfigureApplication(application *application.Application) {
 				return false
 			}
 		})
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string isAuth([login,logout])}", authHandler)
+	//子资源 ，例如用户管理等等,但是不覆盖登录了相关路由
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string notHas([login,logout,password])}", handler)
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string}/{p:path}", handler)
+
+	// 注册 auth 路由到 iris
+	authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string has([login,logout])}", authHandler)
 	application.IrisApp.Any(app.Config.Prefix+"/password/login", authHandler) // 提交登陆表单
-	//注册静态文件路由到 iris
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}/{p:path}", authHandler)
 }
