@@ -46,7 +46,22 @@ type Config struct {
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
 
-	pkgnames := []string{"admin", "publish2", "seo", "action_bar"}
+	pkgnames := []string{
+		"sorting",
+		"seo",
+		"publish2",
+		"pag_builder",
+		"notification",
+		"media",
+		"location",
+		"l10n",
+		"i18n",
+		"help",
+		"banner_editor",
+		"admin",
+		"action_bar",
+		"media",
+	}
 	for _, pkgname := range pkgnames {
 		if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname)); err != nil {
 			color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
