@@ -8,7 +8,6 @@ import (
 	"GoTenancy/config/bindatafs"
 	"github.com/qor/render"
 
-	//"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/models/users"
 	"github.com/qor/auth"
@@ -25,7 +24,7 @@ var (
 	Auth = themes.New(&auth.Config{
 		DB:         db.DB,
 		Mailer:     config.Mailer,
-		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("admin"), DefaultLayout: "layout"}),
+		Render:     render.New(&render.Config{AssetFileSystem: bindatafs.AssetFS.NameSpace("auth")}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
 	})

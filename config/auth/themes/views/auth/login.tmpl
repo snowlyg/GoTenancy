@@ -1,126 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>登陆 - GoTenancy</title>
+<link rel="stylesheet" media="all" href="{{.AuthURL "/assets/qor_auth.css"}}">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-    <link rel="stylesheet" href="./auth/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./auth/assets/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./auth/assets/css/form-elements.css">
-    <link rel="stylesheet" href="./auth/assets/css/style.css">
+<div class="container qor-auth">
+    <div class="qor-auth-box">
+        {{$flashes := .Flashes}}
+        {{if $flashes}}
+            <ul class="errors">
+                {{range $flash := $flashes}}
+                    <li>{{$flash.Message}}</li>
+                {{end}}
+            </ul>
+        {{end}}
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+        <h1>{{t "auth.sign_in"}}</h1>
 
-    <!-- Favicon and touch icons -->
-    <link rel="shortcut icon" href="./auth/assets/ico/favicon.png">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="./auth/assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"
-          href="./auth/assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./auth/assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="./auth/assets/ico/apple-touch-icon-57-precomposed.png">
+        <a class="signup-link" href="{{.AuthURL "register"}}">
+            {{ t "auth.links.sign_up" }}
+        </a>
 
-</head>
+        {{if .Auth.GetProvider "password"}}
+            <form action="{{.AuthURL "password/login"}}" method="POST">
+                <b>Demo Account: dev@getqor.com / testing</b>
 
-<body>
+                <ul class="auth-form">
+                    <li>
+                        <label for="email">{{t "auth.form.email"}}</label>
+                        <input type="email" id="email" name="login" placeholder="{{t "auth.form.email_placeholder"}}"
+                               value="{{.FormValue "login"}}">
+                    </li>
 
-<!-- Top content -->
-<div class="top-content">
+                    <li>
+                        <label for="password">{{t "auth.form.password"}}</label>
+                        <a class="forgot-password"
+                           href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password" }}</a>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="{{t "auth.form.password_placeholder"}}">
+                    </li>
 
-    <div class="inner-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1 class="site_name">GoTenancy</h1>
-                    <div class="description">
-                        <p>多商户管理平台</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 form-box">
-
-                    {{$flashes := .Flashes}}
-                    {{if $flashes}}
-                        <div class="errors">
-                            {{range $flash := $flashes}}
-                                <a href="javascript:void(0);">{{$flash.Message}}</a>
-                            {{end}}
-                        </div>
-                    {{end}}
-                    <div class="form-top">
-                        <div class="form-top-left">
-                            <h3>登 陆</h3>
-                            <p>输入你的账号和密码:</p>
-                        </div>
-                        <div class="form-top-right">
-                            <i class="fa fa-key"></i>
-                        </div>
-                    </div>
-                    <div class="form-bottom">
-                        <form role="form" action="{{.AuthURL "password/login"}}" method="POST" class="login-form">
-                            <div class="form-group">
-                                <label class="sr-only" for="email">{{ t "auth.form.email" "邮箱"}}</label>
-                                <input type="email" id="email" name="login"
-                                       placeholder="{{ t "auth.form.email_placeholder" "邮箱"}}"
-                                       value="{{.FormValue "login"}}" class="form-username form-control"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="password">{{t "auth.form.password" "密码"}}</label>
-
-                                <input type="password" id="password" name="password"
-                                       placeholder="{{t "auth.form.password_placeholder"}}"
-                                       class="form-password form-control"/>
-                            </div>
-                            <button type="submit" class="btn">{{t "auth.form.sign_in" "登 陆"}}</button>
-
-                            <div class="register-help">
-                                <a href="{{.AuthURL "register"}}">{{ t "auth.links.sign_up" "注册"}}</a>
-                                <span>&nbsp;&nbsp; or &nbsp;&nbsp;</span>
-                                <a href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password"  "忘记密码"}}</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 social-login">
-                    <div class="social-login-buttons">
-                        <a class="btn btn-link-1 btn-link-1-facebook" href="#">
-                            <i class="fa fa-facebook"></i> Facebook
-                        </a>
-                        <a class="btn btn-link-1 btn-link-1-twitter" href="#">
-                            <i class="fa fa-twitter"></i> Twitter
-                        </a>
-                        <a class="btn btn-link-1 btn-link-1-google-plus" href="#">
-                            <i class="fa fa-google-plus"></i> Google Plus
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <li>
+                        <button type="submit" class="button button__primary">{{t "auth.form.sign_in"}}</button>
+                    </li>
+                </ul>
+            </form>
+        {{end}}
     </div>
 </div>
-
-<!-- Javascript -->
-<script src="./auth/assets/js/jquery-1.11.1.min.js"></script>
-<script src="./auth/assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="./auth/assets/js/jquery.backstretch.min.js"></script>
-<script src="./auth/assets/js/scripts.js"></script>
-
-<!--[if lt IE 10]>
-<script src="./auth/assets/js/placeholder.js"></script>
-<![endif]-->
-
-</body>
-
-</html>

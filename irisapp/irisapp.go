@@ -49,10 +49,6 @@ func New() *iris.Application {
 	irisApp.Use(logger.New())
 	irisApp.Use(recover2.New())
 
-	// 加载静态资源 for /admin
-	irisApp.HandleDir("/assets", "public/architectui-html-free/assets")
-	irisApp.HandleDir("/", "public/architectui-html-free/style")
-
 	// 加载应用
 	//Application.Use(api.New(&api.Config{}))
 	Application.Use(home.New(&home.Config{}))

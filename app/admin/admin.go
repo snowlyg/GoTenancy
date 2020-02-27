@@ -5,6 +5,7 @@ import (
 
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
+	"GoTenancy/config/i18n"
 	registerviews "github.com/snowlyg/qor-registerviews"
 
 	"GoTenancy/models/settings"
@@ -69,7 +70,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// 增加翻译
-	//Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, IconName: "Site", Priority: -1})
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, IconName: "Site", Priority: -1})
 
 	// 增加设置
 	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
@@ -98,10 +99,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}", handler)
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}/{p:path}", handler)
 
-	// 注册 auth 路由和静态文件到 iris
-	application.IrisApp.HandleDir("/admin/auth/assets", "public/auth_resource/assets")
-	application.IrisApp.HandleDir("/admin/password/auth/assets", "public/auth_resource/assets")
-
+	// 注册 auth 路由到 iris
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
 	application.IrisApp.Macros().Get("string").RegisterFunc("isAuth",
 		func(validNames []string) func(string) bool {
@@ -116,4 +114,6 @@ func (app App) ConfigureApplication(application *application.Application) {
 		})
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string isAuth([login,logout])}", authHandler)
 	application.IrisApp.Any(app.Config.Prefix+"/password/login", authHandler) // 提交登陆表单
+	//注册静态文件路由到 iris
+	application.IrisApp.Any(app.Config.Prefix+"/{name:string notAuth([login,logout,password])}/{p:path}", authHandler)
 }
