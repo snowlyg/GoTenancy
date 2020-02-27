@@ -2,9 +2,6 @@ package migrations
 
 import (
 	"GoTenancy/config/db"
-	"GoTenancy/models/blogs"
-	"GoTenancy/models/orders"
-	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
 	"GoTenancy/models/settings"
 	"GoTenancy/models/stores"
@@ -20,14 +17,7 @@ import (
 func init() {
 	AutoMigrate(&asset_manager.AssetManager{})
 
-	AutoMigrate(&products.Product{}, &products.ProductVariation{}, &products.ProductImage{}, &products.ColorVariation{}, &products.ColorVariationImage{}, &products.SizeVariation{})
-	AutoMigrate(&products.Color{}, &products.Size{}, &products.Material{}, &products.Category{}, &products.Collection{})
-
 	AutoMigrate(&users.User{}, &users.Address{})
-
-	AutoMigrate(&orders.Order{}, &orders.OrderItem{})
-
-	AutoMigrate(&orders.DeliveryMethod{})
 
 	AutoMigrate(&stores.Store{})
 
@@ -36,10 +26,6 @@ func init() {
 	AutoMigrate(&transition.StateChangeLog{})
 
 	AutoMigrate(&activity.QorActivity{})
-
-	//AutoMigrate(&admin.QorWidgetSetting{})
-
-	AutoMigrate(&blogs.Page{}, &blogs.Article{})
 
 	AutoMigrate(&seo.MySEOSetting{})
 

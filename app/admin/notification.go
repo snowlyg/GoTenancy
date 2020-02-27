@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"GoTenancy/config/db"
-	"GoTenancy/models/orders"
 	"github.com/qor/admin"
 	"github.com/qor/notification"
 	"github.com/qor/notification/channels/database"
@@ -22,22 +21,6 @@ func SetupNotification(Admin *admin.Admin) {
 			return data.ResolvedAt == nil
 		},
 		MessageTypes: []string{"order_returned"},
-		Handler: func(argument *notification.ActionArgument) error {
-			orderID := regexp.MustCompile(`#(\d+)`).FindStringSubmatch(argument.Message.Body)[1]
-			err := argument.Context.GetDB().Model(&orders.Order{}).Where("id = ? AND returned_at IS NULL", orderID).Update("returned_at", time.Now()).Error
-			if err == nil {
-				return argument.Context.GetDB().Model(argument.Message).Update("resolved_at", time.Now()).Error
-			}
-			return err
-		},
-		Undo: func(argument *notification.ActionArgument) error {
-			orderID := regexp.MustCompile(`#(\d+)`).FindStringSubmatch(argument.Message.Body)[1]
-			err := argument.Context.GetDB().Model(&orders.Order{}).Where("id = ? AND returned_at IS NOT NULL", orderID).Update("returned_at", nil).Error
-			if err == nil {
-				return argument.Context.GetDB().Model(argument.Message).Update("resolved_at", nil).Error
-			}
-			return err
-		},
 	})
 	_ = Notification.Action(&notification.Action{
 		Name:         "Check it out",

@@ -1,4 +1,23 @@
 zh-CN:
+  qor_admin:
+    layout:
+      logo: '<a href="{{.Prefix}}"><span class="visuallyhidden">GoTenancy</span></a><a href="/" target="_blank">查看网站<i class="material-icons md-14" aria-hidden="true">open_in_new</i></a>'
+      header:
+        actions: "操作"
+    filter:
+      advanced_filter: "高级筛选"
+      saved_filter: "保存过的筛选"
+      apply: "应用"
+      save_this_filter: "保存筛选结构"
+    actions:
+      advanced_filter: "高级筛选"
+      search_bar_search: "搜索"
+    pagination:
+      last: "最后一页"
+      20_entries: "每页20项"
+      50_entries: "每页50项"
+      100_entries: "每页100项"
+      1000_entries: "每页1000项"
   layout:
     connect: '联系我们'
     about_qor: '<p>Qor 是公开的开源项目，在 MIT 许可下发布。通过 <a href="https://theplant.jp/">The Plant</a> 呈现给你</p><p> “QOR” 是 The Plant 的商标<a href="https://theplant.jp/">受商标权的限制</a>.</p>'

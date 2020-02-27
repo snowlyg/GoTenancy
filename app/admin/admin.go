@@ -8,7 +8,6 @@ import (
 	"GoTenancy/config/i18n"
 	registerviews "github.com/snowlyg/qor-registerviews"
 
-	"GoTenancy/models/settings"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/action_bar"
@@ -60,7 +59,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar = action_bar.New(Admin)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
-	// 增加媒体库
+	// 媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Name: "媒体库", Menu: []string{"系统设置"}})
 	// 覆盖-系统设置-菜单的 IconName
 	Admin.GetMenu("系统设置").IconName = "Site"
@@ -69,11 +68,11 @@ func (app App) ConfigureApplication(application *application.Application) {
 	Help := Admin.NewResource(&help.QorHelpEntry{})
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
-	// 增加翻译
+	// 翻译
 	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, IconName: "Site", Priority: -1})
 
-	// 增加设置
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
+	// 设置
+	//Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)

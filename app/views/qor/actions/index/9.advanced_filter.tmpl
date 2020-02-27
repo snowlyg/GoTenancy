@@ -3,8 +3,9 @@
     <div class="qor-actions qor-advanced-filter" data-toggle="qor.advancedsearch">
         <button class="mdl-button mdl-button--colored qor-advanced-filter__toggle" type="button">
             {{if has_filter}}
-                <span class="qor-notifications__unread"><i class="material-icons"
-                                                           style="font-size: 1.05em">edit</i></span>
+                <span class="qor-notifications__unread">
+                    <i class="material-icons" style="font-size: 1.05em">编辑</i>
+                </span>
             {{end}}
             {{t "qor_admin.filter.advanced_filter" "Advanced Filter"}}
         </button>
@@ -36,9 +37,13 @@
                     {{render_filter $filter}}
                 {{end}}
                 <button type="submit"
-                        class="mdl-button mdl-button--colored mdl-button--raised">{{t "qor_admin.filter.apply" "Apply"}}</button>
+                        class="mdl-button mdl-button--colored mdl-button--raised">
+                    {{t "qor_admin.filter.apply" "Apply"}}
+                </button>
                 <button type="button"
-                        class="mdl-button mdl-button--colored qor-advanced-filter__save">{{t "qor_admin.filter.save_this_filter" "Save This Filter"}}</button>
+                        class="mdl-button mdl-button--colored qor-advanced-filter__save">
+                    {{t "qor_admin.filter.save_this_filter" "Save This Filter"}}
+                </button>
             </form>
         </div>
     </div>

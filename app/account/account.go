@@ -40,9 +40,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
-		account.Get("/", controller.Orders)
 		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
-
 		account.Get("/profile", controller.Profile)
 		account.Post("/profile", controller.Update)
 	})
@@ -51,7 +49,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 // ConfigureAdmin configure admin interface
 func (App) ConfigureAdmin(Admin *admin.Admin) {
 	Admin.AddMenu(&admin.Menu{Name: "用户管理", IconName: "User", Priority: 3})
-	user := Admin.AddResource(&users.User{}, &admin.Config{Name: "用户列表", Menu: []string{"用户管理"}})
+	user := Admin.AddResource(&users.User{}, &admin.Config{Name: "用户", Menu: []string{"用户管理"}})
 	user.Meta(&admin.Meta{Name: "Gender", Config: &admin.SelectOneConfig{Collection: []string{"Male", "Female", "Unknown"}}})
 	user.Meta(&admin.Meta{Name: "Birthday", Type: "date"})
 	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})

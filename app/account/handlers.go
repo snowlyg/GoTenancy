@@ -1,7 +1,6 @@
 package account
 
 import (
-	"GoTenancy/models/orders"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
 	"github.com/kataras/iris/v12"
@@ -29,19 +28,6 @@ func (ctrl Controller) Profile(ctx iris.Context) {
 	ctrl.View.Execute("profile", map[string]interface{}{
 		"CurrentUser": currentUser, "DefaultBillingAddress": billingAddress, "DefaultShippingAddress": shippingAddress,
 	}, ctx.Request(), ctx.ResponseWriter())
-}
-
-// Orders orders page
-func (ctrl Controller) Orders(ctx iris.Context) {
-	var (
-		Orders      []orders.Order
-		currentUser = utils.GetCurrentUser(ctx.Request())
-		tx          = utils.GetDB(ctx.Request())
-	)
-
-	tx.Preload("OrderItems").Where("state <> ? AND state != ?", orders.DraftState, "").Where(&orders.Order{UserID: &currentUser.ID}).Find(&Orders)
-
-	ctrl.View.Execute("orders", map[string]interface{}{"Orders": Orders}, ctx.Request(), ctx.ResponseWriter())
 }
 
 // Update update profile page

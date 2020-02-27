@@ -1,4 +1,23 @@
 en-US:
+  qor_admin:
+    layout:
+      logo: '<a href="{{.Prefix}}"><span class="visuallyhidden">GoTenancy</span></a><a href="/" target="_blank">View Site<i class="material-icons md-14" aria-hidden="true">open_in_new</i></a>'
+      header:
+        actions: "Actions"
+    filter:
+      advanced_filter: "Advanced Filter"
+      saved_filter: "Saved Filter"
+      apply: "Apply"
+      save_this_filter: "SAVE_THIS_FILTER"
+    actions:
+      advanced_filter: "Advanced Filter"
+      search_bar_search: "SEARCH"
+    pagination:
+      last: "Last Page"
+      20_entries: "20 Entries per page"
+      50_entries: "50 Entries per page"
+      100_entries: "100 Entries per page"
+      1000_entries: "1000 Entries per page"
   layout:
     connect: 'CONNECT'
     about_qor: '<p>QOR is Open Source software brought to you by <a href="https://theplant.jp/">The Plant</a> under an MIT license.</p><p>The name “QOR” is a trademark of The Plant and <a href="https://theplant.jp/">subject to trademark restrictions</a>.</p>'

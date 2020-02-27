@@ -22,6 +22,9 @@
 > 
 ---
 
+_注意：因为将原本的认证路由 `auth/*` 修改为 `admin/*`，导致认证 `auth` 包的 `assets/*` 资源路径和 `admin` 包的 `assets/*` 资源路径重叠_ 
+_导致只能用 iris 代理其中之一，为了解决这个问题我将 `auth` 包的前端文件都复制到了 `admin` 包中。_ 
+
 
 #### iris + qor-admin 使用案例 【 代码由 iris 的作者 @kataras 提供】
 > 提供一个我翻译的 iris'wiki 中文文档，方便大家学习 iris : 
@@ -116,16 +119,18 @@ go run config/db/seeds/main.go config/db/seeds/seeds.go
 > 打包模版文件和静态文件 
 
 ```shell script
-
-go run main.go -compile-templates=true  //模版文件
-
+# 模版文件
+go run main.go -compile-templates=true 
 
 # windows 环境如果安装失败,请尝试运行：
 # npm install -g node-gyp
 # npm install --global --production windows-build-tools
 
-npm install  //安装 npm 依赖
-npm run build  //打包静态文件
+#安装 npm 依赖
+npm install  
+
+#打包静态文件
+npm run build  
 
 ```
 
@@ -137,7 +142,8 @@ npm run build  //打包静态文件
 
 go get github.com/silenceper/gowatch
 
-gowatch //安装 gowatch 后才可以使用
+#安装 gowatch 后才可以使用
+gowatch 
 
 ```
 

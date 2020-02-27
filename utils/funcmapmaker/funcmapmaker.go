@@ -7,7 +7,6 @@ import (
 	"GoTenancy/app/admin"
 	"GoTenancy/config"
 	"GoTenancy/config/i18n"
-	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
@@ -68,29 +67,12 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			return seo.SEOCollection.Render(&qor.Context{DB: utils.GetDB(req)}, "Default Page")
 		}
 
-		funcMap["get_categories"] = func() (categories []products.Category) {
-			utils.GetDB(req).Find(&categories)
-			return
-		}
-
 		funcMap["current_locale"] = func() string {
 			return utils.GetCurrentLocale(req)
 		}
 
 		funcMap["current_user"] = func() *users.User {
 			return utils.GetCurrentUser(req)
-		}
-
-		funcMap["related_products"] = func(cv products.ColorVariation) []products.Product {
-			var products []products.Product
-			utils.GetDB(req).Preload("ColorVariations").Limit(4).Find(&products, "id <> ?", cv.ProductID)
-			return products
-		}
-
-		funcMap["other_also_bought"] = func(cv products.ColorVariation) []products.Product {
-			var products []products.Product
-			utils.GetDB(req).Preload("ColorVariations").Order("id ASC").Limit(8).Find(&products, "id <> ?", cv.ProductID)
-			return products
 		}
 
 		funcMap["amazon_payment_gateway"] = func() interface{} {
