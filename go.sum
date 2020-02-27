@@ -296,6 +296,8 @@ github.com/smartystreets/goconvey v1.6.4 h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIK
 github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
 github.com/snowlyg/qor-registerviews v0.0.0-20200227170918-1eccfcb16efe h1:eldwyAvG/0G2sxmYofRX2Vi00ewTCc17sz/3eFAJzNo=
 github.com/snowlyg/qor-registerviews v0.0.0-20200227170918-1eccfcb16efe/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
+github.com/snowlyg/qor-registerviews v0.0.0-20200227173158-873a84468898 h1:BU89l9T62ae7B9et1p5YLKjtb3IvBBuTtxvbGpoilTc=
+github.com/snowlyg/qor-registerviews v0.0.0-20200227173158-873a84468898/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/cobra v0.0.5/go.mod h1:3K3wKZymM7VvHMDS9+Akkh4K60UwM26emMESw8tLCHU=
