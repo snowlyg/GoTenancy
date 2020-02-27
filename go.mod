@@ -13,8 +13,7 @@ require (
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fatih/color v1.9.0
-	github.com/gin-gonic/gin v1.5.0
-	github.com/go-playground/locales v0.12.1
+	github.com/gin-gonic/gin v1.5.0 // indirect
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
@@ -47,7 +46,6 @@ require (
 	github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14
 	github.com/qor/audited v0.0.0-20171228121055-b52c9c2f0571 // indirect
 	github.com/qor/auth v0.0.0-20190603071357-709ba0ce943b
-	github.com/qor/auth_themes v0.0.0-20190103025702-000e8ac9b42d
 	github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e
 	github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba // indirect
 	github.com/qor/exchange v0.0.0-20190805090509-cbc64a40aa7c
@@ -76,7 +74,7 @@ require (
 	github.com/qor/sorting v0.0.0-20191219075500-0775f01ad51c
 	github.com/qor/transition v0.0.0-20190608002025-f17b56902e4b
 	github.com/qor/validations v0.0.0-20171228122639-f364bca61b46
-	github.com/qor/widget v0.0.0-20191022085246-e5b7fea87307
+	github.com/qor/widget v0.0.0-20191022085246-e5b7fea87307 // indirect
 	github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4
 	github.com/qor/worker v0.0.0-20190805090529-35a245417f70
 	github.com/sergi/go-diff v1.1.0 // indirect

@@ -18,6 +18,7 @@ import (
 	"github.com/kataras/iris/v12/middleware/logger"
 	recover2 "github.com/kataras/iris/v12/middleware/recover"
 	"github.com/qor/admin"
+	"github.com/qor/publish2"
 	"github.com/qor/qor/utils"
 )
 
@@ -29,7 +30,7 @@ func New() *iris.Application {
 		Admin = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancy", // 站点名称
 			Auth:     adminAuth,
-			DB:       db.DB,
+			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 		})
 
 		//定义应用

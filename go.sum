@@ -225,8 +225,6 @@ github.com/qor/audited v0.0.0-20171228121055-b52c9c2f0571 h1:87fy9oxrDUTN77K9VwH
 github.com/qor/audited v0.0.0-20171228121055-b52c9c2f0571/go.mod h1:XQ/SY+Bgd2pHTAQhsSwN7KoCJSr8jJVnUqDMPk9rhYk=
 github.com/qor/auth v0.0.0-20190603071357-709ba0ce943b h1:Kl7t/WDqmFFyo5oKFd3toWtJPHED+lB/Iww9EjTaMMA=
 github.com/qor/auth v0.0.0-20190603071357-709ba0ce943b/go.mod h1:W1ePrrC11DHVhm3nNdIhvD5X23supw1uqTv+EtTUTHs=
-github.com/qor/auth_themes v0.0.0-20190103025702-000e8ac9b42d h1:Dp3/5A9jw3G56Pc40QSrcW8NlHYEBE0EFZImsqSqwDQ=
-github.com/qor/auth_themes v0.0.0-20190103025702-000e8ac9b42d/go.mod h1:sbQN/eJ8JzTcYRoFlgzuf7UeEfqqpvCYDBHOveC+Ktw=
 github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e h1:DiWQaAZIKUo/wQ10gtfIKOK3opwa7m7M9xZSm2zzlcM=
 github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e/go.mod h1:nPKq9kxHfFTl8WapTbvMdldUOufELgTQUeuKecj7Lxw=
 github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba h1:XBEqqX1xirq3pYMGw8Jr0urCfhPXbJEh1KPwKLd24MM=
@@ -265,8 +263,6 @@ github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848 h1:p8fFfW3hQzNMq
 github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848/go.mod h1:AVSTi6lUuohiM2HbnXuN07YucBDRSGHaKz8jAI2DYOU=
 github.com/qor/render v0.0.0-20190612082614-5b68a63157c3 h1:t/sQRyWyxEha/HB6MBvodJqPgLl2+bqt4KbfARoo4RQ=
 github.com/qor/render v0.0.0-20190612082614-5b68a63157c3/go.mod h1:0cGVpTjSVSjjyrhLiLTMgbMeblLQba7vcKkZHMLlYJw=
-github.com/qor/render v1.1.1 h1:DaGaKlf0OzpOB+hJUEiOTbZ40mg+n+LlSJx20/KUfes=
-github.com/qor/render v1.1.1/go.mod h1:0cGVpTjSVSjjyrhLiLTMgbMeblLQba7vcKkZHMLlYJw=
 github.com/qor/responder v0.0.0-20171031032654-b6def473574f h1:sKELSAyL+z5BRHFe97Bx71z197cBEobVJ6rASKTMSqU=
 github.com/qor/responder v0.0.0-20171031032654-b6def473574f/go.mod h1:0TL2G+qGDYhHJ6XIJ6UcqkZVN+jp8AGqGU2wDnv2qas=
 github.com/qor/roles v0.0.0-20171127035124-d6375609fe3e h1:F0BNcPJKfubM/+IIILu/GbrH9v2vPZWQ5/StSRKUfK4=

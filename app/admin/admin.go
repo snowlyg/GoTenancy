@@ -77,7 +77,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
-	//SetupSEO(Admin)
+	SetupSEO(Admin)
 	SetupDashboard(Admin)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris

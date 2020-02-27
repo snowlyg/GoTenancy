@@ -1,8 +1,10 @@
 package home
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
@@ -16,7 +18,9 @@ type Controller struct {
 
 // Index home index page
 func (ctrl Controller) Index(ctx iris.Context) {
-	ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter())
+	if err := ctrl.View.Execute("index", map[string]interface{}{}, ctx.Request(), ctx.ResponseWriter()); err != nil {
+		color.Red(fmt.Sprintf("Home Index View error: %v\n", err))
+	}
 }
 
 // SwitchLocale switch locale
