@@ -48,7 +48,7 @@ public/assets/
 public/webpack/
 public/downloads
 public/dist
-#public/system
+public/system
 *.js.map
 *.css.map
 npm-debug.log
