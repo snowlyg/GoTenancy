@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"GoTenancy/utils/registerviews"
 	"github.com/fatih/color"
 	"github.com/qor/auth"
 	"github.com/qor/auth/auth_identity"
@@ -20,6 +19,7 @@ import (
 	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 	"github.com/qor/render"
+	registerviews "github.com/snowlyg/qor-registerviews"
 )
 
 // ErrPasswordConfirmationNotMatch password confirmation not match error

@@ -11,6 +11,7 @@ import (
 	"GoTenancy/config"
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
+	"GoTenancy/config/bindatafs"
 	"GoTenancy/config/db"
 	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
@@ -63,11 +64,11 @@ func New() *iris.Application {
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
 	// 静态打包文件加载
-	//prefixs := []string{"dist", "favicon.ico"}
-	//Application.Use(static.New(&static.Config{
-	//	Prefixs: prefixs, // 设置静态文件相关目录
-	//	Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
-	//}))
+	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
+	Application.Use(static.New(&static.Config{
+		Prefixs: prefixs, // 设置静态文件相关目录
+		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
+	}))
 
 	return irisApp
 }

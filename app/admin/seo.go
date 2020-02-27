@@ -38,5 +38,5 @@ func SetupSEO(Admin *admin.Admin) {
 			return context
 		},
 	})
-	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 2})
+	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 2})
 }

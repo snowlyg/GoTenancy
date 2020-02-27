@@ -26,7 +26,7 @@ type Translation struct {
     前端模版文件打包。
     简单的解决方案是：将相应的组件的视图直接复制到自己项目的, `app/views/qor` 目录下。
     
-    另外的方法写一个方法重新注册组件视图文件，详情可以查看 [registerview.go](utils/registerviews/registerview.go)
+    另外的方法写一个方法重新注册组件视图文件，详情可以查看 [https://github.com/snowlyg/qor-registerviews](https://github.com/snowlyg/qor-registerviews)
 
     
     

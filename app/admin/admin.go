@@ -5,11 +5,9 @@ import (
 
 	"GoTenancy/config/application"
 	"GoTenancy/config/auth"
+	registerviews "github.com/snowlyg/qor-registerviews"
 
-	//"GoTenancy/config/auth"
-	"GoTenancy/config/i18n"
 	"GoTenancy/models/settings"
-	"GoTenancy/utils/registerviews"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/action_bar"
@@ -46,7 +44,11 @@ type Config struct {
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
 	Admin := application.Admin
+
 	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "admin")); err != nil {
+		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
+	}
+	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", "publish2")); err != nil {
 		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath %v\n", err))
 	}
 
@@ -58,21 +60,23 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// 增加媒体库
-	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"站点管理"}})
+	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Name: "媒体库", Menu: []string{"系统设置"}})
+	// 覆盖-系统设置-菜单的 IconName
+	Admin.GetMenu("系统设置").IconName = "Site"
 
 	// Add Help
 	Help := Admin.NewResource(&help.QorHelpEntry{})
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// 增加翻译
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"站点管理"}, Priority: -1})
+	//Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, IconName: "Site", Priority: -1})
 
 	// 增加设置
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"站点管理"}, Singleton: true, Priority: 1})
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
-	SetupSEO(Admin)
+	//SetupSEO(Admin)
 	SetupDashboard(Admin)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
