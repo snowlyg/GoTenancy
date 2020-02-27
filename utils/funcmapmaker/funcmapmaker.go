@@ -6,13 +6,12 @@ import (
 
 	"GoTenancy/app/admin"
 	"GoTenancy/config"
-	"github.com/qor/action_bar"
-
 	"GoTenancy/config/i18n"
 	"GoTenancy/models/products"
 	"GoTenancy/models/seo"
 	"GoTenancy/models/users"
 	"GoTenancy/utils"
+	"github.com/qor/action_bar"
 	"github.com/qor/i18n/inline_edit"
 	"github.com/qor/qor"
 	"github.com/qor/render"
@@ -39,9 +38,9 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			funcMap[key] = fc
 		}
 
-		//for key, value := range admin.ActionBar.FuncMap(w, req) {
-		//	funcMap[key] = value
-		//}
+		for key, value := range admin.ActionBar.FuncMap(w, req) {
+			funcMap[key] = value
+		}
 
 		//widgetContext := admin.Widgets.NewContext(&widget.Context{
 		//	DB:         utils.GetDB(req),
