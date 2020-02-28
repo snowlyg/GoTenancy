@@ -1,4 +1,4 @@
-# 问题总结 (记录的问题在 [https://github.com/qor/qor-example/issues](https://github.com/qor/qor-example/issues) 上都可以找到)
+##### 问题总结 
 
 - `Error 1054: Unknown column 'basics.provider' in 'where clause' - "invalid account" error message`
     
