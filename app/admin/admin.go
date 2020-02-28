@@ -3,11 +3,11 @@ package admin
 import (
 	"fmt"
 
-	"GoTenancy/config/application"
-	"GoTenancy/config/auth"
-	"GoTenancy/config/i18n"
-	"GoTenancy/models/settings"
 	registerviews "github.com/snowlyg/qor-registerviews"
+	"go-tenancy/config/application"
+	"go-tenancy/config/auth"
+	"go-tenancy/config/i18n"
+	"go-tenancy/models/settings"
 
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"

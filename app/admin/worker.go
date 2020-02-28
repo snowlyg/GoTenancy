@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"GoTenancy/config/i18n"
 	"github.com/qor/admin"
 	"github.com/qor/i18n/exchange_actions"
 	"github.com/qor/worker"
+	"go-tenancy/config/i18n"
 )
 
 // SetupWorker setup worker

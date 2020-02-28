@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"GoTenancy/config/application"
 	"github.com/kataras/iris/v12"
+	"go-tenancy/config/application"
 )
 
 // New 新建 static app

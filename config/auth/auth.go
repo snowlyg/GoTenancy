@@ -3,19 +3,19 @@ package auth
 import (
 	"time"
 
-	"GoTenancy/config"
-	"GoTenancy/config/auth/themes"
-	"GoTenancy/config/bindatafs"
 	"github.com/qor/render"
+	"go-tenancy/config"
+	"go-tenancy/config/auth/themes"
+	"go-tenancy/config/bindatafs"
 
-	"GoTenancy/config/db"
-	"GoTenancy/models/users"
 	"github.com/qor/auth"
 	"github.com/qor/auth/authority"
 	"github.com/qor/auth/providers/facebook"
 	"github.com/qor/auth/providers/github"
 	"github.com/qor/auth/providers/google"
 	"github.com/qor/auth/providers/twitter"
+	"go-tenancy/config/db"
+	"go-tenancy/models/users"
 )
 
 var (

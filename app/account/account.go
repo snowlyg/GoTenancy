@@ -3,10 +3,6 @@ package account
 import (
 	"strconv"
 
-	"GoTenancy/config/application"
-	"GoTenancy/middleware"
-	"GoTenancy/models/users"
-	"GoTenancy/utils/funcmapmaker"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
@@ -14,6 +10,10 @@ import (
 	qorutils "github.com/qor/qor/utils"
 	"github.com/qor/render"
 	"github.com/qor/validations"
+	"go-tenancy/config/application"
+	"go-tenancy/middleware"
+	"go-tenancy/models/users"
+	"go-tenancy/utils/funcmapmaker"
 	"golang.org/x/crypto/bcrypt"
 )
 

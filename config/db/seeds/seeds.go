@@ -10,7 +10,7 @@ import (
 	"github.com/jinzhu/configor"
 	"github.com/qor/publish2"
 
-	"GoTenancy/config/db"
+	"go-tenancy/config/db"
 )
 
 var Fake *faker.Faker

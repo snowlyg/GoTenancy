@@ -3,13 +3,13 @@ package stores
 import (
 	"strings"
 
-	"GoTenancy/config/application"
-	"GoTenancy/models/stores"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
 	"github.com/qor/qor/resource"
 	"github.com/qor/qor/utils"
 	"github.com/qor/validations"
+	"go-tenancy/config/application"
+	"go-tenancy/models/stores"
 )
 
 // New 新建 stores app

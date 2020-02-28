@@ -13,13 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"GoTenancy/config/auth"
-	"GoTenancy/config/db"
-	_ "GoTenancy/config/db/migrations"
-	adminseo "GoTenancy/models/seo"
-	"GoTenancy/models/settings"
-	"GoTenancy/models/stores"
-	"GoTenancy/models/users"
 	"github.com/jinzhu/now"
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/auth/providers/password"
@@ -31,6 +24,13 @@ import (
 	"github.com/qor/notification/channels/database"
 	"github.com/qor/qor"
 	"github.com/qor/seo"
+	"go-tenancy/config/auth"
+	"go-tenancy/config/db"
+	_ "go-tenancy/config/db/migrations"
+	adminseo "go-tenancy/models/seo"
+	"go-tenancy/models/settings"
+	"go-tenancy/models/stores"
+	"go-tenancy/models/users"
 )
 
 /* How to run this script

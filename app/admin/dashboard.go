@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"GoTenancy/config/db"
 	"github.com/jinzhu/now"
 	"github.com/qor/admin"
+	"go-tenancy/config/db"
 )
 
 type Chart struct {

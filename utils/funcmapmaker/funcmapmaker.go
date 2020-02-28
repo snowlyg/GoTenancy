@@ -4,18 +4,18 @@ import (
 	"html/template"
 	"net/http"
 
-	"GoTenancy/app/admin"
-	"GoTenancy/config"
-	"GoTenancy/config/i18n"
-	"GoTenancy/models/seo"
-	"GoTenancy/models/users"
-	"GoTenancy/utils"
 	"github.com/qor/action_bar"
 	"github.com/qor/i18n/inline_edit"
 	"github.com/qor/qor"
 	"github.com/qor/render"
 	"github.com/qor/session"
 	"github.com/qor/session/manager"
+	"go-tenancy/app/admin"
+	"go-tenancy/config"
+	"go-tenancy/config/i18n"
+	"go-tenancy/models/seo"
+	"go-tenancy/models/users"
+	"go-tenancy/utils"
 )
 
 // GetEditMode get edit mode

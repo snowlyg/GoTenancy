@@ -1,17 +1,17 @@
 package migrations
 
 import (
-	"GoTenancy/config/db"
-	"GoTenancy/models/seo"
-	"GoTenancy/models/settings"
-	"GoTenancy/models/stores"
-	"GoTenancy/models/users"
 	"github.com/qor/activity"
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/banner_editor"
 	"github.com/qor/help"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/transition"
+	"go-tenancy/config/db"
+	"go-tenancy/models/seo"
+	"go-tenancy/models/settings"
+	"go-tenancy/models/stores"
+	"go-tenancy/models/users"
 )
 
 func init() {

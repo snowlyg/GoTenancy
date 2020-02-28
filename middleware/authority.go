@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"GoTenancy/config/auth"
 	"github.com/kataras/iris/v12"
+	"go-tenancy/config/auth"
 )
 
 func Authorize(ctx iris.Context) {

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"GoTenancy/models/users"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
 	"github.com/qor/roles"
+	"go-tenancy/models/users"
 )
 
 func init() {

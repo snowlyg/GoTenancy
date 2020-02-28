@@ -1,4 +1,4 @@
-module GoTenancy
+module go-tenancy
 
 go 1.13
 

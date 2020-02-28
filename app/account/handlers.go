@@ -1,10 +1,10 @@
 package account
 
 import (
-	"GoTenancy/models/users"
-	"GoTenancy/utils"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/render"
+	"go-tenancy/models/users"
+	"go-tenancy/utils"
 )
 
 // Controller Profile controller

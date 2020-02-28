@@ -7,8 +7,8 @@ import (
 	"github.com/qor/i18n/backends/database"
 	"github.com/qor/i18n/backends/yaml"
 
-	"GoTenancy/config"
-	"GoTenancy/config/db"
+	"go-tenancy/config"
+	"go-tenancy/config/db"
 )
 
 var I18n *i18n.I18n
