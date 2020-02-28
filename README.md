@@ -17,6 +17,7 @@
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
 > [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构了路由 （有部分问题未修复），详细代码位于 [devForQor](https://github.com/snowlyg/go-tenancy/tree/devForQor) 分支。
+> [devForGoTenancy](https://github.com/snowlyg/go-tenancy/tree/devForGoTenancy) 分支 , 是一次更换 qor-admin 前端模版的尝试，因为前端水平有限，目前没有完成，暂停更新....。
 > 
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
