@@ -48,9 +48,9 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 支持 go mod 模式
 	pkgnames := map[string][]string{
-		"sorting":           {},
-		"seo":               {},
-		"publish2":          {},
+		"sorting": {},
+		"seo":     {},
+		//"publish2":          {},
 		"notification":      {},
 		"location":          {},
 		"help":              {},
@@ -61,7 +61,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 		"serializable_meta": {},
 		"slug":              {},
 		"worker":            {},
-		"media":             {"/media_library/"},
+		"media":             {"/media_library"},
 		"l10n":              {"/publish"},
 		"i18n":              {"/exchange_actions", "/inline_edit"},
 		"auth":              {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},

@@ -8,10 +8,10 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	// _ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/qor/l10n"
 	"github.com/qor/media"
-	"github.com/qor/publish2"
+	//"github.com/qor/publish2"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
 	"go-tenancy/config"
@@ -45,7 +45,7 @@ func init() {
 		sorting.RegisterCallbacks(DB)
 		validations.RegisterCallbacks(DB)
 		media.RegisterCallbacks(DB)
-		publish2.RegisterCallbacks(DB)
+		//publish2.RegisterCallbacks(DB)
 	} else {
 		panic(err)
 	}
