@@ -62,7 +62,7 @@ var Config = struct {
 }{}
 
 var (
-	Root   = os.Getenv("GOPATH") + "/src/github.com/snowlyg/GoTenancy"
+	Root   = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
 	Mailer *mailer.Mailer
 	Render = render.New()
 	//AmazonPay      amazonpay.AmazonPayService

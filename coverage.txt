@@ -1,9 +1,9 @@
 mode: atomic
-GoTenancy/main.go:18.28,23.16 5 0
-GoTenancy/main.go:27.2,27.10 1 0
-GoTenancy/main.go:23.16,25.3 1 0
-GoTenancy/main.go:30.33,46.34 6 1
-GoTenancy/main.go:50.2,63.12 3 1
-GoTenancy/main.go:46.34,48.3 1 0
-GoTenancy/main.go:66.13,73.16 6 0
-GoTenancy/main.go:73.16,75.3 1 0
+go-tenancy/main.go:18.28,23.16 5 0
+go-tenancy/main.go:27.2,27.10 1 0
+go-tenancy/main.go:23.16,25.3 1 0
+go-tenancy/main.go:30.33,46.34 6 1
+go-tenancy/main.go:50.2,63.12 3 1
+go-tenancy/main.go:46.34,48.3 1 0
+go-tenancy/main.go:66.13,73.16 6 0
+go-tenancy/main.go:73.16,75.3 1 0

@@ -1,11 +1,11 @@
 <h1 align="center">GoTenancy</h1>
 
 <div align="center">
-    <a href="https://travis-ci.org/snowlyg/GoTenancy"><img src="https://travis-ci.org/snowlyg/GoTenancy.svg?branch=master" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/snowlyg/GoTenancy"><img src="https://codecov.io/gh/snowlyg/GoTenancy/branch/master/graph/badge.svg" alt="Code Coverage"></a>
-    <a href="https://goreportcard.com/report/github.com/snowlyg/GoTenancy"><img src="https://goreportcard.com/badge/github.com/snowlyg/GoTenancy" alt="Go Report Card"></a>
-    <a href="https://godoc.org/github.com/snowlyg/GoTenancy"><img src="https://godoc.org/github.com/snowlyg/GoTenancy?status.svg" alt="GoDoc"></a>
-    <a href="https://github.com/snowlyg/GoTenancy/blob/master/LICENSE"><img src="https://img.shields.io/github/license/snowlyg/GoTenancy" alt="Licenses"></a>
+    <a href="https://travis-ci.org/snowlyg/go-tenancy"><img src="https://travis-ci.org/snowlyg/go-tenancy.svg?branch=master" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/snowlyg/go-tenancy"><img src="https://codecov.io/gh/snowlyg/go-tenancy/branch/master/graph/badge.svg" alt="Code Coverage"></a>
+    <a href="https://goreportcard.com/report/github.com/snowlyg/go-tenancy"><img src="https://goreportcard.com/badge/github.com/snowlyg/go-tenancy" alt="Go Report Card"></a>
+    <a href="https://godoc.org/github.com/snowlyg/go-tenancy"><img src="https://godoc.org/github.com/snowlyg/go-tenancy?status.svg" alt="GoDoc"></a>
+    <a href="https://github.com/snowlyg/go-tenancy/blob/master/LICENSE"><img src="https://img.shields.io/github/license/snowlyg/go-tenancy" alt="Licenses"></a>
     <h5 align="center">多商户管理平台</h5>
 </div>
 
@@ -16,7 +16,7 @@
 > `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris 结合 Qor-Admin` 形式开发，其他框架大同小异。
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
-> [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构了路由 （有部分问题未修复），详细代码位于 [devForQor](https://github.com/snowlyg/GoTenancy/tree/devForQor) 分支。
+> [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构了路由 （有部分问题未修复），详细代码位于 [devForQor](https://github.com/snowlyg/go-tenancy/tree/devForQor) 分支。
 > 
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
@@ -83,11 +83,11 @@ func main() {
 
 ```shell script
 
-git clone https://github.com/snowlyg/GoTenancy.git
+git clone https://github.com/snowlyg/go-tenancy.git
 
 // github 克隆太慢可以用 gitee 地址:
 
-git clone https://gitee.com/dtouyu/GoTenancy.git
+git clone https://gitee.com/dtouyu/go-tenancy.git
 
 ```
 
@@ -101,7 +101,7 @@ go env -w GOPROXY=https://goproxy.cn,direct
 
 ```
 
-> 修改 `GoTenancy/config` 下的配置文件 :
+> 修改 `go-tenancy/config` 下的配置文件 :
 > application.yml - 应用配置 
 > database.yml - 数据配置 
 > smtp.yml - 邮箱配置 

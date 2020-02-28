@@ -3,7 +3,7 @@
 - `Error 1054: Unknown column 'basics.provider' in 'where clause' - "invalid account" error message`
     
     这个问题是登陆报错，`qor-example` 中使用了 `auth_themes` 认证主题包, 其它组件更新后这个主题包没有及时更新，导致了这个错误。
-    解决方法很简单，我们只需要定义一个自己的认证主题包就可以了，实现方法可以参照 [https://github.com/snowlyg/GoTenancy/config/auth/themes](https://github.com/snowlyg/GoTenancy/config/auth/themes)。
+    解决方法很简单，我们只需要定义一个自己的认证主题包就可以了，实现方法可以参照 [https://github.com/snowlyg/go-tenancy/config/auth/themes](https://github.com/snowlyg/go-tenancy/config/auth/themes)。
 
 
 - `Error 1170: BLOB/TEXT column 'key' used in key specification without a key length`

@@ -95,7 +95,7 @@ func New(config *auth.Config) *auth.Auth {
 	}
 
 	// 模版加载是前面覆盖后面
-	if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/snowlyg/GoTenancy/config/auth/themes/views", "", "")); err != nil {
+	if err := config.Render.AssetFileSystem.RegisterPath(registerviews.DetectViewsDir("github.com/snowlyg/go-tenancy/config/auth/themes/views", "", "")); err != nil {
 		color.Red(fmt.Sprintf(" Auth.Render.AssetFileSystem.RegisterPath %v\n", err))
 	}
 
