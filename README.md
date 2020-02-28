@@ -9,7 +9,7 @@
     <h5 align="center">多商户管理平台</h5>
 </div>
 
-#### 项目介绍  【项目目前仍在开发中】
+#### 项目介绍  
 > 本来采用此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
 > 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qor/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了,它有很多值得我去深入了解的地方。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
@@ -22,6 +22,8 @@
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
 ---
+
+#### 项目进度 - 基本完成 iris 和 qor 的结合，踩了一遍坑，详情都记录在 [问题记录](ERRORS.MD)
 
 _注意：因为将原本的认证路由 `auth/*` 修改为 `admin/*`，导致认证 `auth` 包的 `assets/*` 资源路径和 `admin` 包的 `assets/*` 资源路径重叠_ 
 _导致只能用 iris 代理其中之一，为了解决这个问题我将 `auth` 包的前端文件都复制到了 `admin` 包中。_ 
@@ -70,11 +72,11 @@ func main() {
 ---
 
 #### 更新日志
-[日志](UPDATE.MD)
+[UPDATE](UPDATE.MD)
 ---
 
 #### 问题总结
-[问题记录](ERRORS.MD)
+[ERRORS](ERRORS.MD)
 
 ---
 
