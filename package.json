@@ -1,7 +1,7 @@
 {
-  "name": "gotenancy",
+  "name": "go-tenancy",
   "version": "1.0.0",
-  "description": "<h1 align=\"center\">GoTenancy</h1>",
+  "description": "<h1 align=\"center\">go-tenancy</h1>",
   "main": "webpack.config.js",
   "dependencies": {},
   "devDependencies": {
@@ -23,15 +23,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snowlyg/GoTenancy.git"
+    "url": "git+https://github.com/snowlyg/go-tenancy.git"
   },
   "keywords": [
-    "GoTenancy"
+    "go-tenancy"
   ],
   "author": "snowlyg",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/snowlyg/GoTenancy/issues"
+    "url": "https://github.com/snowlyg/go-tenancy/issues"
   },
-  "homepage": "https://github.com/snowlyg/GoTenancy#readme"
+  "homepage": "https://github.com/snowlyg/go-tenancy#readme"
 }
