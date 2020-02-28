@@ -28,7 +28,7 @@ _testmain.go
 *.test
 *.prof
 runner-build
-GoTenancy
+go-tenancy
 
 
 
