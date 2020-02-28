@@ -89,19 +89,19 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// 媒体库
-	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Name: "媒体库", Menu: []string{"系统设置"}})
-	// 覆盖-系统设置-菜单的 IconName
-	Admin.GetMenu("系统设置").IconName = "Site"
+	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
+	// 覆盖-Site Management-菜单的 IconName
+	Admin.GetMenu("Site Management").IconName = "Site"
 
 	// Add Help
 	Help := Admin.NewResource(&help.QorHelpEntry{})
 	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
 
 	// 翻译
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"系统设置"}, Priority: -1})
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: -1})
 
 	// 设置
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "店铺设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 1})
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
@@ -134,7 +134,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 				return false
 			}
 		})
-	//子资源 ，例如用户管理等等,但是不覆盖登录了相关路由
+	//子资源 ，例如User Management等等,但是不覆盖登录了相关路由
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string notHas([login,logout,password])}", handler)
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string}/{p:path}", handler)
 

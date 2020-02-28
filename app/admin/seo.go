@@ -14,5 +14,5 @@ func SetupSEO(Admin *admin.Admin) {
 	seo.SEOCollection.RegisterSEO(&qor_seo.SEO{
 		Name: "Default Page",
 	})
-	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO 设置", Menu: []string{"系统设置"}, Singleton: true, Priority: 2})
+	Admin.AddResource(seo.SEOCollection, &admin.Config{Name: "SEO Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 2})
 }

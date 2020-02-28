@@ -48,8 +48,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 // ConfigureAdmin configure admin interface
 func (App) ConfigureAdmin(Admin *admin.Admin) {
-	Admin.AddMenu(&admin.Menu{Name: "用户管理", IconName: "User", Priority: 3})
-	user := Admin.AddResource(&users.User{}, &admin.Config{Name: "用户", Menu: []string{"用户管理"}})
+	Admin.AddMenu(&admin.Menu{Name: "User Management", IconName: "User", Priority: 3})
+	user := Admin.AddResource(&users.User{}, &admin.Config{Menu: []string{"User Management"}})
 	user.Meta(&admin.Meta{Name: "Gender", Config: &admin.SelectOneConfig{Collection: []string{"Male", "Female", "Unknown"}}})
 	user.Meta(&admin.Meta{Name: "Birthday", Type: "date"})
 	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})

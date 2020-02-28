@@ -38,5 +38,5 @@ func SetupWorker(Admin *admin.Admin) {
 	})
 
 	exchange_actions.RegisterExchangeJobs(i18n.I18n, Worker)
-	Admin.AddResource(Worker, &admin.Config{Menu: []string{"系统设置"}, Priority: 3})
+	Admin.AddResource(Worker, &admin.Config{Menu: []string{"Site Management"}, Priority: 3})
 }
