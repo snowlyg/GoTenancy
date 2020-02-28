@@ -59,12 +59,12 @@ func (app App) ConfigureApplication(application *application.Application) {
 		"action_bar":        {},
 		"activity":          {},
 		"serializable_meta": {},
-		"slug":              {},
-		"worker":            {},
-		"media":             {"/media_library"},
-		"l10n":              {"/publish"},
-		"i18n":              {"/exchange_actions", "/inline_edit"},
-		"auth":              {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
+		//"slug":              {},
+		"worker": {},
+		"media":  {"/media_library"},
+		"l10n":   {"/publish"},
+		"i18n":   {"/exchange_actions", "/inline_edit"},
+		"auth":   {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
 	}
 
 	for pkgname, subpaths := range pkgnames {

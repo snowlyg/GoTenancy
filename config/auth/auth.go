@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/qor/render"
+	themes "github.com/snowlyg/qor-auth-theme"
 	"go-tenancy/config"
-	"go-tenancy/config/auth/themes"
 	"go-tenancy/config/bindatafs"
 
 	"github.com/qor/auth"
