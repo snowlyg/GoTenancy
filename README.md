@@ -30,10 +30,14 @@ _导致只能用 iris 代理其中之一，为了解决这个问题我将 `auth`
 
 
 #### iris + qor-admin 使用案例 【 代码由 iris 的作者 @kataras 提供】
-> 提供一个我翻译的 iris'wiki 中文文档，方便大家学习 iris : 
+> 提供一个 iris'wiki 中文文档，方便大家学习 iris : 
 
 - [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
 - [github 地址](https://github.com/snowlyg/iris/wiki)
+
+> qor 文档地址
+- [中文地址](https://brendenaudrina6287.gitbook.io/qor-doc-zh/)
+- [原文地址](https://doc.getqor.com/)
 
 ---
 也欢迎加入 Iris-go 学习交流QQ群，一起交流学习心得 ：676717248 
