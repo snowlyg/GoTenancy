@@ -48,9 +48,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 支持 go mod 模式
 	pkgnames := map[string][]string{
-		"sorting": {},
-		"seo":     {},
-		//"publish2":          {},
+		"sorting":           {},
+		"seo":               {},
 		"notification":      {},
 		"location":          {},
 		"help":              {},
@@ -59,27 +58,13 @@ func (app App) ConfigureApplication(application *application.Application) {
 		"action_bar":        {},
 		"activity":          {},
 		"serializable_meta": {},
-		//"slug":              {},
-		"worker": {},
-		"media":  {"/media_library"},
-		"l10n":   {"/publish"},
-		"i18n":   {"/exchange_actions", "/inline_edit"},
-		"auth":   {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
+		"worker":            {},
+		"media":             {"/media_library"},
+		"l10n":              {"/publish"},
+		"i18n":              {"/exchange_actions", "/inline_edit"},
+		"auth":              {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
 	}
-
-	for pkgname, subpaths := range pkgnames {
-		if len(subpaths) > 0 {
-			for _, subpaths := range subpaths {
-				if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpaths)); err != nil {
-					color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpaths, err))
-				}
-			}
-		} else {
-			if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, "")); err != nil {
-				color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpaths, err))
-			}
-		}
-	}
+	registerPaths(pkgnames, Admin)
 
 	// 静态文件加载
 	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
@@ -142,4 +127,24 @@ func (app App) ConfigureApplication(application *application.Application) {
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
 	application.IrisApp.Any(app.Config.Prefix+"/{name:string has([login,logout])}", authHandler)
 	application.IrisApp.Any(app.Config.Prefix+"/password/login", authHandler) // 提交登陆表单
+}
+
+// registerPaths 循环注册视图
+func registerPaths(pkgnames map[string][]string, Admin *admin.Admin) {
+	for pkgname, subpaths := range pkgnames {
+		if len(subpaths) > 0 {
+			for _, subpath := range subpaths {
+				registerPath(Admin, pkgname, subpath)
+			}
+		} else {
+			registerPath(Admin, pkgname, "")
+		}
+	}
+}
+
+// registerPath 注册视图
+func registerPath(Admin *admin.Admin, pkgname, subpath string) {
+	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpath)); err != nil {
+		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpath, err))
+	}
 }
