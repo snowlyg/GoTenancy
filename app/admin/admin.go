@@ -48,21 +48,20 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 支持 go mod 模式
 	pkgnames := map[string][]string{
-		"sorting":           {},
-		"seo":               {},
-		"notification":      {},
-		"location":          {},
-		"help":              {},
-		"banner_editor":     {},
-		"admin":             {},
-		"action_bar":        {},
-		"activity":          {},
-		"serializable_meta": {},
-		"worker":            {},
-		"media":             {"/media_library"},
-		"l10n":              {"/publish"},
-		"i18n":              {"/exchange_actions", "/inline_edit"},
-		"auth":              {"/providers/password", "/providers/facebook", "/providers/twitter", "/providers/github"},
+		"sorting":           {""},
+		"seo":               {""},
+		"notification":      {""},
+		"location":          {""},
+		"help":              {""},
+		"banner_editor":     {""},
+		"admin":             {""},
+		"action_bar":        {""},
+		"activity":          {""},
+		"serializable_meta": {""},
+		"worker":            {""},
+		"media":             {"/media_library", ""},
+		"l10n":              {"/publish", ""},
+		"i18n":              {"/exchange_actions", "/inline_edit", ""},
 	}
 	registerPaths(pkgnames, Admin)
 
@@ -132,12 +131,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 // registerPaths 循环注册视图
 func registerPaths(pkgnames map[string][]string, Admin *admin.Admin) {
 	for pkgname, subpaths := range pkgnames {
-		if len(subpaths) > 0 {
-			for _, subpath := range subpaths {
-				registerPath(Admin, pkgname, subpath)
-			}
-		} else {
-			registerPath(Admin, pkgname, "")
+		for _, subpath := range subpaths {
+			registerPath(Admin, pkgname, subpath)
 		}
 	}
 }
