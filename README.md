@@ -121,7 +121,7 @@ go env -w GOPROXY=https://goproxy.cn,direct
 > 加载数据 
 
 ```shell script
-
+#第一次启动执行
 go run config/db/seeds/main.go config/db/seeds/seeds.go
 
 ```
@@ -129,7 +129,7 @@ go run config/db/seeds/main.go config/db/seeds/seeds.go
 > 打包模版文件和静态文件 
 
 ```shell script
-# 模版文件
+# 模版文件 - 仅部署到生产环境使用，开发跳过此步骤
 go run main.go -compile-templates=true 
 
 # windows 环境如果安装失败,请尝试运行：
@@ -166,7 +166,7 @@ go run main.go
 ```
 
 #### 账号密码 
-> dev@getqor.com / testing
+> dev@getqor.com/testing
 
 ---
 
