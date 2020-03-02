@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
-	github.com/Selvatico/go-mocket v1.0.7 // indirect
 	github.com/Shaked/gomobiledetect v0.0.0-20171211181707-25f014f66568 // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
@@ -16,8 +15,6 @@ require (
 	github.com/headzoo/surf v1.0.0 // indirect
 	github.com/headzoo/ut v0.0.0-20181013193318-a13b5a7a02ca // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/iris-contrib/middleware/jwt v0.0.0-20191219204441-78279b78a367
-	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/gorm v1.9.13-0.20200126152832-7180bd0f27d1
 	github.com/jinzhu/now v1.1.1

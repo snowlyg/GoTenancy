@@ -10,7 +10,7 @@ import (
 	//"github.com/snowlyg/iris-base-rabc/validates"
 )
 
-type Permission struct {
+type RabcPermission struct {
 	gorm.Model
 	Name        string `gorm:"not null VARCHAR(191)"`
 	DisplayName string `gorm:"VARCHAR(191)"`
@@ -18,8 +18,8 @@ type Permission struct {
 	Act         string `gorm:"VARCHAR(191)"`
 }
 
-func NewPermission(id uint, name, act string) *Permission {
-	return &Permission{
+func NewRabcPermission(id uint, name, act string) *RabcPermission {
+	return &RabcPermission{
 		Model: gorm.Model{
 			ID:        id,
 			CreatedAt: time.Now(),

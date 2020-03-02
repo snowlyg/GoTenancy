@@ -8,7 +8,7 @@ import (
 	//"github.com/snowlyg/iris-base-rabc/validates"
 )
 
-type Role struct {
+type RabcRole struct {
 	gorm.Model
 
 	Name        string `gorm:"unique;not null VARCHAR(191)"`
@@ -16,8 +16,8 @@ type Role struct {
 	Description string `gorm:"VARCHAR(191)"`
 }
 
-func NewRole(id uint, name string) *Role {
-	return &Role{
+func NewRabcRole(id uint, name string) *RabcRole {
+	return &RabcRole{
 		Model: gorm.Model{
 			ID:        id,
 			CreatedAt: time.Now(),
