@@ -8,6 +8,8 @@ import (
 	"github.com/kataras/iris/v12/middleware/logger"
 	recover2 "github.com/kataras/iris/v12/middleware/recover"
 	"github.com/qor/admin"
+	"go-tenancy/app/tenancy"
+
 	//"github.com/qor/publish2"
 	"github.com/qor/qor/utils"
 	"go-tenancy/app/account"
@@ -56,6 +58,7 @@ func New() *iris.Application {
 	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
+	Application.Use(tenancy.New(&tenancy.Config{}))
 	// 系统上传文件
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},

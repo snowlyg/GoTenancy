@@ -11,11 +11,14 @@ import (
 	"go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
+	"go-tenancy/models/tenancy"
 	"go-tenancy/models/users"
 )
 
 func init() {
 	AutoMigrate(&asset_manager.AssetManager{})
+
+	AutoMigrate(&tenancy.Tenant{})
 
 	AutoMigrate(&users.User{}, &users.Address{})
 
