@@ -53,7 +53,8 @@ public/system
 *.css.map
 npm-debug.log
 
-config/*.example.yml
+config/*.yml
+!config/*.example.yml
 public/microsites/*
 vendor/*
 .DS_Store
