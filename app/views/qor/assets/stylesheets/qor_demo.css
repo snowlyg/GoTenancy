@@ -46,3 +46,9 @@
     max-height: 30px;
     margin-right: 8px;
 }
+
+
+/*租户图标*/
+[qor-icon-name*="Tenancy"] > a::before {
+    content: "\E2BF";
+}
