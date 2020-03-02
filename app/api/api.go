@@ -6,7 +6,6 @@ import (
 	"github.com/qor/qor"
 	"go-tenancy/config/application"
 	"go-tenancy/config/db"
-	"go-tenancy/models/rabc"
 )
 
 // New new api app
@@ -31,10 +30,10 @@ type Config struct {
 func (app App) ConfigureApplication(application *application.Application) {
 	API := admin.New(&qor.Config{DB: db.DB})
 
-	API.AddResource(&rabc.RabcUser{})
-	API.AddResource(&rabc.Role{})
-	API.AddResource(&rabc.Permission{})
-	API.AddResource(&rabc.OauthToken{})
+	//API.AddResource(&rabc.RabcUser{})
+	//API.AddResource(&rabc.Role{})
+	//API.AddResource(&rabc.Permission{})
+	//API.AddResource(&rabc.OauthToken{})
 
 	application.IrisApp.Any(app.Config.Prefix, iris.FromStd(API.NewServeMux(app.Config.Prefix)))
 }

@@ -59,4 +59,5 @@ type Tenant struct {
 
 	PermissionKey string `valid:"MaxSize(20)"`
 	TenantKey     string `valid:"MaxSize(20)"`
+	RabcUsers     []*RabcUser
 }
