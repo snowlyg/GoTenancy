@@ -8,7 +8,6 @@ import (
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/transition"
 	"go-tenancy/config/db"
-	"go-tenancy/models/rabc"
 	"go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
@@ -19,8 +18,7 @@ import (
 func init() {
 	AutoMigrate(&asset_manager.AssetManager{})
 
-	AutoMigrate(&tenancy.Tenant{})
-	AutoMigrate(&rabc.RabcUser{}, &rabc.OauthToken{}, &rabc.RabcRole{}, &rabc.RabcPermission{})
+	AutoMigrate(&tenancy.Tenant{}, &tenancy.RabcUser{}, &tenancy.OauthToken{}, &tenancy.RabcRole{}, &tenancy.RabcPermission{})
 
 	AutoMigrate(&users.User{}, &users.Address{})
 

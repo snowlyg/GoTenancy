@@ -10,7 +10,7 @@
 </div>
 
 #### 项目介绍  
-> 本来采用此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
+> 此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
 > 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qor/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了,它有很多值得我去深入了解的地方。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
 > `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris 结合 Qor-Admin` 形式开发，其他框架大同小异。
@@ -112,16 +112,15 @@ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
 > 修改 `go-tenancy/config` 下的配置文件 :
-> application.yml - 应用配置 
-> database.yml - 数据配置 
-> smtp.yml - 邮箱配置 
-
+> application.example.yml - 应用配置 application.yml
+> database.example.yml - 数据配置 database.yml
+> smtp.example.yml - 邮箱配置 smtp.yml
 
 
 > 加载数据 
 
 ```shell script
-#第一次启动执行
+# 首次启动项目执行
 go run config/db/seeds/main.go config/db/seeds/seeds.go
 
 ```
@@ -129,7 +128,7 @@ go run config/db/seeds/main.go config/db/seeds/seeds.go
 > 打包模版文件和静态文件 
 
 ```shell script
-# 模版文件 - 仅部署到生产环境使用，开发跳过此步骤
+# 编译模版文件 - 仅部署到生产环境使用，开发跳过此步骤
 go run main.go -compile-templates=true 
 
 # windows 环境如果安装失败,请尝试运行：

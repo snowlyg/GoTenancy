@@ -1,4 +1,4 @@
-package rabc
+package tenancy
 
 import (
 	"github.com/jinzhu/gorm"
