@@ -6,6 +6,7 @@ import (
 	"github.com/qor/admin"
 	"github.com/qor/render"
 	"go-tenancy/config/application"
+	"go-tenancy/models/rabc"
 	"go-tenancy/models/tenancy"
 	"go-tenancy/utils/funcmapmaker"
 )
@@ -75,6 +76,11 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 
 	// Add Tenancy
 	tenant := Admin.AddResource(&tenancy.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+
+	_ = Admin.AddResource(&rabc.RabcUser{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	_ = Admin.AddResource(&rabc.RabcRole{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	_ = Admin.AddResource(&rabc.RabcPermission{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	_ = Admin.AddResource(&rabc.OauthToken{}, &admin.Config{Menu: []string{"Tenancy Management"}})
 	//tenant.Meta(&admin.Meta{Name: "Gender", Config: &admin.SelectOneConfig{Collection: Genders, AllowBlank: true}})
 
 	//tenantPropertiesRes := tenant.Meta(&admin.Meta{Name: "TenancyProperties"}).Resource
