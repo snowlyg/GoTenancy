@@ -428,6 +428,8 @@ github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123 h1:ulbM5/A
 github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123/go.mod h1:XQTsi1E7BSdtkFtsDNh0bLb7cooz/MfqoJws4FFIwYE=
 github.com/snowlyg/iris-base-rabc v0.0.0-20200229025010-be9a60fb4729 h1:zykXrFun7m2yKBj9msKBJCQ2+LDunosE80ZQGnelZac=
 github.com/snowlyg/iris-base-rabc v0.0.0-20200229025010-be9a60fb4729/go.mod h1:gG2LMmydhs2cd62xEz800ZxwzJvCXyrxVECj4dubcB4=
+github.com/snowlyg/iris-base-rabc v0.0.0-20200303033124-04718cc85114 h1:NdsSIEWvSwAfuko7PlO+GbFSib+pxav5C0osdPq49d8=
+github.com/snowlyg/iris-base-rabc v0.0.0-20200303033124-04718cc85114/go.mod h1:OqT8Q5TpyZ6qq5sOFb0Sw+rgbx3z4U7bV4Wcd3cjxhs=
 github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515 h1:V/LMOLrPMiPzpr2eir9EUOhdsy+PAgb2q860ShxEgC0=
 github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515/go.mod h1:8hXLPdW6oNxYNHhtzdmcl1I6dmVjxOqT9mX0M9iKLAQ=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa h1:TOHLCwWvYQEepL8SJH/xPS9ZNgjm9Kwqv1dCrPEsDhQ=

@@ -36,5 +36,4 @@ func (App) ConfigureAdmin(Admin *admin.Admin) {
 	// Add Tenancy
 	tenant := Admin.AddResource(&tenancy.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}})
 	tenant.Meta(&admin.Meta{Name: "RabcUsers", Config: &admin.SelectManyConfig{SelectMode: "bottom_sheet"}})
-
 }

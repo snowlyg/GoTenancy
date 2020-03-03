@@ -12,9 +12,9 @@ import (
 type RabcUser struct {
 	gorm.Model
 
-	Name         string `gorm:"not null VARCHAR(191)"`
-	RabcUsername string `gorm:"unique;VARCHAR(191)"`
-	Password     string `gorm:"not null VARCHAR(191)"`
+	Name     string `gorm:"not null VARCHAR(191)"`
+	Username string `gorm:"unique;VARCHAR(191)"`
+	Password string `gorm:"not null VARCHAR(191)"`
 }
 
 func NewRabcUser(id uint, username string) *RabcUser {
@@ -24,7 +24,7 @@ func NewRabcUser(id uint, username string) *RabcUser {
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
-		RabcUsername: username,
+		Username: username,
 	}
 }
 
