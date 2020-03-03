@@ -1,6 +1,7 @@
 package home
 
 import (
+	"github.com/kataras/iris/v12"
 	"github.com/qor/render"
 	"go-tenancy/config/application"
 	"go-tenancy/utils/funcmapmaker"
@@ -25,6 +26,8 @@ func (App) ConfigureApplication(application *application.Application) {
 	controller := &Controller{View: render.New(&render.Config{AssetFileSystem: application.AssetFS.NameSpace("home")}, "app/home/views")}
 
 	funcmapmaker.AddFuncMapMaker(controller.View)
+	application.IrisApp.HandleDir("/static", "app/home/views/static")
+	application.IrisApp.RegisterView(iris.HTML("app/home/views", ".html"))
 	application.IrisApp.Get("/", controller.Index)
-	application.IrisApp.Get("/switch_locale", controller.SwitchLocale)
+	//application.IrisApp.Get("/switch_locale", controller.SwitchLocale)
 }

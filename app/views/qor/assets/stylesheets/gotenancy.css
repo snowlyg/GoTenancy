@@ -50,5 +50,10 @@
 
 /*租户图标*/
 [qor-icon-name*="Tenancy"] > a::before {
-    content: "\E2BF";
+    content: "store";
+}
+
+/*面板*/
+[qor-icon-name*="Dashboard"] > a::before {
+    content: "dashboard";
 }

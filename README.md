@@ -103,7 +103,7 @@ git clone https://github.com/snowlyg/go-tenancy.git
 
 // github 克隆太慢可以用 gitee 地址:
 
-git clone https://gitee.com/dtouyu/go-tenancy.git
+git clone https://gitee.com/snowlyg/go-tenancy.git
 
 ```
 
