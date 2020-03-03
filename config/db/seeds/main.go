@@ -30,6 +30,7 @@ import (
 	adminseo "go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
+	"go-tenancy/models/tenancy"
 	"go-tenancy/models/users"
 )
 
@@ -60,6 +61,12 @@ var (
 		&notification.QorNotification{},
 
 		&help.QorHelpEntry{},
+
+		&tenancy.Tenant{},
+		&tenancy.RabcUser{},
+		&tenancy.OauthToken{},
+		&tenancy.RabcRole{},
+		&tenancy.RabcPermission{},
 	}
 )
 

@@ -21,52 +21,63 @@ var (
 )
 
 var Seeds = struct {
-	Categories []struct {
-		Name string
-	}
-	Collections []struct {
-		Name string
-	}
-	Colors []struct {
-		Name string
-		Code string
-	}
-	Sizes []struct {
-		Name string
-		Code string
-	}
-	Materials []struct {
-		Name string
-		Code string
-	}
-	Products []struct {
-		CategoryName string
-		Collections  []struct {
-			Name string
-		}
-		Name          string
-		ZhName        string
-		NameWithSlug  string
-		Code          string
-		Price         float32
-		Description   string
-		ZhDescription string
-		MadeCountry   string
-		Gender        string
-		ZhGender      string
-		ZhMadeCountry string
+	//Categories []struct {
+	//	Name string
+	//}
+	//Collections []struct {
+	//	Name string
+	//}
+	//Colors []struct {
+	//	Name string
+	//	Code string
+	//}
+	//Sizes []struct {
+	//	Name string
+	//	Code string
+	//}
+	//Materials []struct {
+	//	Name string
+	//	Code string
+	//}
+	Tenants []struct {
+		Name         string
+		Mode         uint8
+		Times        uint
+		ExpireTime   *time.Time
+		CreationTime *time.Time
+		State        int8
+		IsTop        uint8
+		Order        int64
+		IsDel        int8
+		Amount       float32
+		Price        float32
+		Logo         string
+		Tag          string
+		AreaId       int64
+		Province     string
+		City         string
+		County       string
+		Addr         string
+		Linkman      string
+		Phone        string
+		Lng          float64
+		Lat          float64
+		Appid        uint
+		FullName     string
+		CertifyPics  string
+		Desc         string
+		Pics         string
+		Remark       string
 
-		ColorVariations []struct {
-			ColorName string
-			ColorCode string
-			Images    []struct {
-				URL string
-			}
-		}
-		SizeVariations []struct {
-			SizeName string
+		PermissionKey string
+		TenantKey     string
+		RabcUsers     []struct {
+			Name     string
+			Username string
+			Password string
 		}
 	}
+
 	Stores []struct {
 		Name      string
 		Phone     string

@@ -9,8 +9,7 @@ import (
 type TenantBase struct {
 	gorm.Model
 
-	Name string `valid:"MaxSize(20)"`
-
+	Name string
 	Mode uint8
 	//`剩余次数',
 	Times uint
@@ -27,16 +26,16 @@ type TenantBase struct {
 	//'价格',
 	Price float32
 	//'头像',
-	Logo string `valid:"MaxSize(255)"`
-	Tag  string `valid:"MaxSize(255)"`
+	Logo string
+	Tag  string
 	//'所在区域代码',
 	AreaId   int64
-	Province string `valid:"MaxSize(20)"`
-	City     string `valid:"MaxSize(20)"`
-	County   string `valid:"MaxSize(20)"`
-	Addr     string `valid:"MaxSize(20)"`
-	Linkman  string `valid:"MaxSize(20)"`
-	Phone    string `valid:"MaxSize(20)"`
+	Province string
+	City     string
+	County   string
+	Addr     string
+	Linkman  string
+	Phone    string
 	// 经度
 	Lng float64
 	// 纬度
@@ -47,17 +46,17 @@ type TenantBase struct {
 type Tenant struct {
 	TenantBase
 	// 全称
-	FullName string `valid:"MaxSize(63)"`
+	FullName string
 	// 资质证明材料
-	CertifyPics string `valid:"MaxSize(255)"`
+	CertifyPics string
 	Desc        string
 
 	//'多图上传',
-	Pics string `valid:"MaxSize(255)"`
+	Pics string
 	// 审核说明
-	Remark string `valid:"MaxSize(200)"`
+	Remark string
 
-	PermissionKey string `valid:"MaxSize(20)"`
-	TenantKey     string `valid:"MaxSize(20)"`
+	PermissionKey string
+	TenantKey     string
 	RabcUsers     []*RabcUser
 }
