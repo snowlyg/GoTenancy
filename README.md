@@ -22,6 +22,7 @@
 > 
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
+> 完成 IrisAdminApi 项目代码整合 
 ---
 
 #### 项目进度 - 基本完成 iris 和 qor 的结合，踩了一遍坑，详情都记录在 [问题记录](ERRORS.MD)
@@ -172,17 +173,20 @@ go run main.go
 
 #### 账号密码 
 > dev@getqor.com/testing
-
 ---
 
 
 #### 演示
-> 登录页： http://localhost:8080/admin/login
+> 应用端 (原 IrisAdminApi 项目 ) 登陆地址： http://localhost:8081/#/login
+
+![](localhost_8081_login.png)
+
+> 管理端登录页： http://localhost:8081/admin/login
 
 ![](localhost_8080_admin_login.png)
 
 
-> 控制面板： http://localhost:8080/admin
+> 管理端控制面板： http://localhost:8081/admin
 
 ![](localhost_8080_admin.png)
 
