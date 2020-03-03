@@ -1,10 +1,15 @@
 package home
 
 import (
+	"fmt"
+
+	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
-	"github.com/qor/render"
+	iris_base_rabc "github.com/snowlyg/iris-base-rabc"
+	"github.com/snowlyg/iris-base-rabc/routes"
+	"go-tenancy/config"
 	"go-tenancy/config/application"
-	"go-tenancy/utils/funcmapmaker"
+	"go-tenancy/config/db"
 )
 
 // New new home app
@@ -23,11 +28,18 @@ type Config struct {
 
 // ConfigureApplication configure application
 func (App) ConfigureApplication(application *application.Application) {
-	controller := &Controller{View: render.New(&render.Config{AssetFileSystem: application.AssetFS.NameSpace("home")}, "app/home/views")}
+	iris_base_rabc.New(db.DB)
+	if err := iris_base_rabc.SetCasbinEnforcer(config.Config.DB.Adapter, db.GetConn()); err != nil {
+		color.Red(fmt.Sprintf("iris_base_rabc.SetCasbinEnforcer error: %v\n", err))
+	}
 
-	funcmapmaker.AddFuncMapMaker(controller.View)
+	routes.Register(application.IrisApp)
+
 	application.IrisApp.HandleDir("/static", "app/home/views/static")
-	application.IrisApp.RegisterView(iris.HTML("app/home/views", ".html"))
-	application.IrisApp.Get("/", controller.Index)
-	//application.IrisApp.Get("/switch_locale", controller.SwitchLocale)
+	application.IrisApp.RegisterView(iris.HTML("./app/home/views", ".html"))
+	application.IrisApp.Get("/", func(ctx iris.Context) {
+		if err := ctx.View("index.html"); err != nil {
+			color.Red(fmt.Sprintf("Home Index View error: %v\n", err))
+		}
+	})
 }
