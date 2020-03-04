@@ -31,7 +31,7 @@ import (
 	adminseo "go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
-	"go-tenancy/models/tenancy"
+	"go-tenancy/models/tenant"
 	"go-tenancy/models/users"
 )
 
@@ -63,11 +63,11 @@ var (
 
 		&help.QorHelpEntry{},
 
-		&tenancy.Tenant{},
-		&tenancy.RabcUser{},
-		&tenancy.OauthToken{},
-		&tenancy.RabcRole{},
-		&tenancy.RabcPermission{},
+		&tenant.Tenant{},
+		&tenant.RabcUser{},
+		&tenant.OauthToken{},
+		&tenant.RabcRole{},
+		&tenant.RabcPermission{},
 	}
 )
 
@@ -255,10 +255,10 @@ func createAddresses() {
 
 func createRabcUsers() {
 	for _, u := range Seeds.RabcUsers {
-		rabcuser := tenancy.RabcUser{}
+		rabcuser := tenant.RabcUser{}
 		rabcuser.Name = u.Name
 		rabcuser.Username = u.Username
-		rabcuser.Password = libs.HashPassword(u.Password)
+		rabcuser.Password = libs.HashPassword("password")
 		if err := DraftDB.Create(&rabcuser).Error; err != nil {
 			log.Fatal(fmt.Sprintf("create rabcuser (%v) failure, got err %v", rabcuser, err))
 		}
@@ -267,44 +267,44 @@ func createRabcUsers() {
 
 func createTenants() {
 	for _, t := range Seeds.Tenants {
-		tenant := tenancy.Tenant{}
-		tenant.Name = t.Name
-		tenant.Price = t.Price
-		tenant.Mode = t.Mode
-		tenant.Times = t.Times
-		tenant.ExpireTime = time.Now()
-		tenant.CreationTime = time.Now()
-		tenant.State = t.State
-		tenant.IsTop = t.IsTop
-		tenant.Order = t.Order
-		tenant.IsDel = t.IsDel
-		tenant.Amount = t.Amount
-		tenant.Logo = t.Logo
-		tenant.Tag = t.Tag
-		tenant.AreaId = t.AreaId
-		tenant.Province = t.Province
-		tenant.City = t.City
-		tenant.County = t.County
-		tenant.Addr = t.Addr
-		tenant.Linkman = t.Linkman
-		tenant.Phone = t.Phone
-		tenant.Lng = t.Lng
-		tenant.Lat = t.Lat
-		tenant.Appid = t.Appid
-		tenant.FullName = t.FullName
-		tenant.CertifyPics = t.CertifyPics
-		tenant.Desc = t.Desc
-		tenant.Pics = t.Pics
-		tenant.Remark = t.Remark
-		tenant.PermissionKey = t.PermissionKey
-		tenant.TenantKey = t.TenantKey
+		tt := tenant.Tenant{}
+		tt.Name = t.Name
+		tt.Price = t.Price
+		tt.Mode = t.Mode
+		tt.Times = t.Times
+		tt.ExpireTime = time.Now()
+		tt.CreationTime = time.Now()
+		tt.State = t.State
+		tt.IsTop = t.IsTop
+		tt.Order = t.Order
+		tt.IsDel = t.IsDel
+		tt.Amount = t.Amount
+		tt.Logo = t.Logo
+		tt.Tag = t.Tag
+		tt.AreaId = t.AreaId
+		tt.Province = t.Province
+		tt.City = t.City
+		tt.County = t.County
+		tt.Addr = t.Addr
+		tt.Linkman = t.Linkman
+		tt.Phone = t.Phone
+		tt.Lng = t.Lng
+		tt.Lat = t.Lat
+		tt.Appid = t.Appid
+		tt.FullName = t.FullName
+		tt.CertifyPics = t.CertifyPics
+		tt.Desc = t.Desc
+		tt.Pics = t.Pics
+		tt.Remark = t.Remark
+		tt.PermissionKey = t.PermissionKey
+		tt.TenantKey = t.TenantKey
 		for _, c := range t.RabcUsers {
 			rabcUser := findRabcUserByName(c.Name)
-			tenant.RabcUsers = append(tenant.RabcUsers, rabcUser)
+			tt.RabcUsers = append(tt.RabcUsers, rabcUser)
 		}
 
-		if err := DraftDB.Create(&tenant).Error; err != nil {
-			log.Fatalf("create tenant (%v) failure, got err %v", tenant, err)
+		if err := DraftDB.Create(&tt).Error; err != nil {
+			log.Fatalf("create tenant (%v) failure, got err %v", tt, err)
 		}
 
 		//for _, cv := range p.ColorVariations {
@@ -527,9 +527,9 @@ func openFileByURL(rawURL string) (*os.File, error) {
 	}
 }
 
-func findRabcUserByName(name string) *tenancy.RabcUser {
-	rabcUser := &tenancy.RabcUser{}
-	if err := DraftDB.Where(&tenancy.RabcUser{Name: name}).First(rabcUser).Error; err != nil {
+func findRabcUserByName(name string) *tenant.RabcUser {
+	rabcUser := &tenant.RabcUser{}
+	if err := DraftDB.Where(&tenant.RabcUser{Name: name}).First(rabcUser).Error; err != nil {
 		log.Fatalf("can't find rabcUser with name = %q, got err %v", name, err)
 	}
 	return rabcUser

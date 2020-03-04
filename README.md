@@ -172,7 +172,8 @@ go run main.go
 ```
 
 #### 账号密码 
-> dev@getqor.com/testing
+> 管理端：  dev@getqor.com/testing
+> 用户端：  dev@getqor.com/testing
 ---
 
 

@@ -29,9 +29,11 @@ func (App) ConfigureApplication(application *application.Application) {
 
 	application.IrisApp.HandleDir("/static", "app/home/views/static")
 	application.IrisApp.RegisterView(iris.HTML("./app/home/views", ".html"))
+
 	application.IrisApp.Get("/", func(ctx iris.Context) {
 		if err := ctx.View("index.html"); err != nil {
 			color.Red(fmt.Sprintf("Home Index View error: %v\n", err))
 		}
 	})
+
 }

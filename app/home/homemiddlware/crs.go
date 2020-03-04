@@ -1,4 +1,4 @@
-package middleware
+package homemiddlware
 
 import (
 	"github.com/iris-contrib/middleware/cors"

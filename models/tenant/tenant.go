@@ -1,4 +1,4 @@
-package tenancy
+package tenant
 
 import (
 	"time"

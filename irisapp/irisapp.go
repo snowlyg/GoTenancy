@@ -10,7 +10,6 @@ import (
 	"github.com/qor/admin"
 	"go-tenancy/app/tenancy"
 
-	//"github.com/qor/publish2"
 	"github.com/qor/qor/utils"
 	"go-tenancy/app/account"
 	adminapp "go-tenancy/app/admin"
@@ -33,7 +32,6 @@ func New() *iris.Application {
 			SiteName: "GoTenancy", // 站点名称
 			Auth:     adminAuth,
 			DB:       db.DB,
-			//.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
 		})
 
 		//定义应用

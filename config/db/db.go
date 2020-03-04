@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
@@ -14,9 +15,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/qor/l10n"
 	"github.com/qor/media"
-	registerviews "github.com/snowlyg/qor-registerviews"
-
-	//"github.com/qor/publish2"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
 	"go-tenancy/config"
@@ -76,7 +74,8 @@ func GetCasbinEnforcer() *casbin.Enforcer {
 		color.Red(fmt.Sprintf("gormadapter.NewAdapter 错误: %v", err))
 	}
 
-	rbacModel := registerviews.DetectViewsDir("github.com/snowlyg", "go-tenancy", "config/casbin") + "/rbac_model.conf"
+	rbacModel := filepath.Join("config", "casbin", "rbac_model.conf")
+
 	e, err := casbin.NewEnforcer(rbacModel, c)
 	if err != nil {
 		color.Red(fmt.Sprintf("NewEnforcer 错误: %v", err))
