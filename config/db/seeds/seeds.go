@@ -35,10 +35,13 @@ var Seeds = struct {
 	//	Name string
 	//	Code string
 	//}
-	//Materials []struct {
-	//	Name string
-	//	Code string
-	//}
+
+	RabcUsers []struct {
+		Name     string
+		Username string
+		Password string
+	}
+
 	Tenants []struct {
 		Name         string
 		Mode         uint8

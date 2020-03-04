@@ -9,53 +9,39 @@ import (
 type TenantBase struct {
 	gorm.Model
 
-	Name string
-	Mode uint8
-	//`剩余次数',
-	Times uint
-	//'到期时间',
-	ExpireTime   *time.Time
-	CreationTime *time.Time
-	//'数据状态0未审核，1审核未通过，2：审核通过，-1删除',
-	State int8
-	IsTop uint8
-	Order int64
-	IsDel int8 //
-	//'金钱',
-	Amount float32
-	//'价格',
-	Price float32
-	//'头像',
-	Logo string
-	Tag  string
-	//'所在区域代码',
-	AreaId   int64
-	Province string
-	City     string
-	County   string
-	Addr     string
-	Linkman  string
-	Phone    string
-	// 经度
-	Lng float64
-	// 纬度
-	Lat   float64
-	Appid uint
+	Name         string
+	Mode         uint8
+	Times        uint      //`剩余次数',
+	ExpireTime   time.Time //'到期时间',
+	CreationTime time.Time
+	State        int8 //'数据状态0未审核，1审核未通过，2：审核通过，-1删除',
+	IsTop        uint8
+	Order        int64
+	IsDel        int8    //
+	Amount       float32 //'金钱',
+	Price        float32 //'价格',
+	Logo         string  //'头像',
+	Tag          string
+	AreaId       int64 //'所在区域代码',
+	Province     string
+	City         string
+	County       string
+	Addr         string
+	Linkman      string
+	Phone        string
+	Lng          float64 // 经度
+	Lat          float64 // 纬度
+	Appid        uint
 }
 
 type Tenant struct {
 	TenantBase
-	// 全称
-	FullName string
-	// 资质证明材料
-	CertifyPics string
-	Desc        string
 
-	//'多图上传',
-	Pics string
-	// 审核说明
-	Remark string
-
+	FullName      string // 全称
+	CertifyPics   string // 资质证明材料
+	Desc          string
+	Pics          string //'多图上传',
+	Remark        string // 审核说明
 	PermissionKey string
 	TenantKey     string
 	RabcUsers     []*RabcUser

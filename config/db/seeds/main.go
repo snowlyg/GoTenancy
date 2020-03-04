@@ -24,6 +24,7 @@ import (
 	"github.com/qor/notification/channels/database"
 	"github.com/qor/qor"
 	"github.com/qor/seo"
+	"github.com/snowlyg/iris-base-rabc/libs"
 	"go-tenancy/config/auth"
 	"go-tenancy/config/db"
 	_ "go-tenancy/config/db/migrations"
@@ -90,8 +91,15 @@ func createRecords() {
 
 	createUsers()
 	fmt.Println("--> 填充 users.")
+
 	createAddresses()
 	fmt.Println("--> 填充 addresses.")
+
+	createRabcUsers()
+	fmt.Println("--> 填充 rabcusers.")
+
+	createTenants()
+	fmt.Println("--> 填充 tenants.")
 
 	createMediaLibraries()
 	fmt.Println("--> 填充 medialibraries.")
@@ -245,6 +253,160 @@ func createAddresses() {
 	}
 }
 
+func createRabcUsers() {
+	for _, u := range Seeds.RabcUsers {
+		rabcuser := tenancy.RabcUser{}
+		rabcuser.Name = u.Name
+		rabcuser.Username = u.Username
+		rabcuser.Password = libs.HashPassword(u.Password)
+		if err := DraftDB.Create(&rabcuser).Error; err != nil {
+			log.Fatal(fmt.Sprintf("create rabcuser (%v) failure, got err %v", rabcuser, err))
+		}
+	}
+}
+
+func createTenants() {
+	for _, t := range Seeds.Tenants {
+		tenant := tenancy.Tenant{}
+		tenant.Name = t.Name
+		tenant.Price = t.Price
+		tenant.Mode = t.Mode
+		tenant.Times = t.Times
+		tenant.ExpireTime = time.Now()
+		tenant.CreationTime = time.Now()
+		tenant.State = t.State
+		tenant.IsTop = t.IsTop
+		tenant.Order = t.Order
+		tenant.IsDel = t.IsDel
+		tenant.Amount = t.Amount
+		tenant.Logo = t.Logo
+		tenant.Tag = t.Tag
+		tenant.AreaId = t.AreaId
+		tenant.Province = t.Province
+		tenant.City = t.City
+		tenant.County = t.County
+		tenant.Addr = t.Addr
+		tenant.Linkman = t.Linkman
+		tenant.Phone = t.Phone
+		tenant.Lng = t.Lng
+		tenant.Lat = t.Lat
+		tenant.Appid = t.Appid
+		tenant.FullName = t.FullName
+		tenant.CertifyPics = t.CertifyPics
+		tenant.Desc = t.Desc
+		tenant.Pics = t.Pics
+		tenant.Remark = t.Remark
+		tenant.PermissionKey = t.PermissionKey
+		tenant.TenantKey = t.TenantKey
+		for _, c := range t.RabcUsers {
+			rabcUser := findRabcUserByName(c.Name)
+			tenant.RabcUsers = append(tenant.RabcUsers, rabcUser)
+		}
+
+		if err := DraftDB.Create(&tenant).Error; err != nil {
+			log.Fatalf("create tenant (%v) failure, got err %v", tenant, err)
+		}
+
+		//for _, cv := range p.ColorVariations {
+		//	color := findColorByName(cv.ColorName)
+		//
+		//	colorVariation := tenants.ColorVariation{}
+		//	colorVariation.ProductID = tenant.ID
+		//	colorVariation.ColorID = color.ID
+		//	colorVariation.ColorCode = cv.ColorCode
+
+		//for _, i := range cv.Images {
+		//	image := tenants.ProductImage{Title: p.Name, SelectedType: "image"}
+		//	if file, err := openFileByURL(i.URL); err != nil {
+		//		fmt.Printf("open file (%q) failure, got err %v", i.URL, err)
+		//	} else {
+		//		defer file.Close()
+		//		image.File.Scan(file)
+		//	}
+		//	if err := DraftDB.Create(&image).Error; err != nil {
+		//		log.Fatalf("create color_variation_image (%v) failure, got err %v when %v", image, err, i.URL)
+		//	} else {
+		//		colorVariation.Images.Files = append(colorVariation.Images.Files, media_library.File{
+		//			ID:  json.Number(fmt.Sprint(image.ID)),
+		//			Url: image.File.URL(),
+		//		})
+		//
+		//		Admin := qoradmin.New(&qoradmin.AdminConfig{
+		//			SiteName: "QOR DEMO",
+		//			Auth:     auth.AdminAuth{},
+		//			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
+		//		})
+		//
+		//		colorVariation.Images.Crop(Admin.NewResource(&tenants.ProductImage{}), DraftDB, media_library.MediaOption{
+		//			Sizes: map[string]*media.Size{
+		//				"main":    {Width: 560, Height: 700},
+		//				"icon":    {Width: 50, Height: 50},
+		//				"preview": {Width: 300, Height: 300},
+		//				"listing": {Width: 640, Height: 640},
+		//			},
+		//		})
+		//
+		//		if len(tenant.MainImage.Files) == 0 {
+		//			tenant.MainImage.Files = []media_library.File{{
+		//				ID:  json.Number(fmt.Sprint(image.ID)),
+		//				Url: image.File.URL(),
+		//			}}
+		//			DraftDB.Save(&tenant)
+		//		}
+		//	}
+		//}
+
+		//if err := DraftDB.Create(&colorVariation).Error; err != nil {
+		//	log.Fatalf("create color_variation (%v) failure, got err %v", colorVariation, err)
+		//}
+
+		//for _, sv := range p.SizeVariations {
+		//	size := findSizeByName(sv.SizeName)
+		//
+		//	sizeVariation := tenants.SizeVariation{}
+		//	sizeVariation.ColorVariationID = colorVariation.ID
+		//	sizeVariation.SizeID = size.ID
+		//	sizeVariation.AvailableQuantity = 20
+		//	if err := DraftDB.Create(&sizeVariation).Error; err != nil {
+		//		log.Fatalf("create size_variation (%v) failure, got err %v", sizeVariation, err)
+		//	}
+		//}
+		//}
+
+		//tenant.Name = t.ZhName
+		//tenant.Description = t.ZhDescription
+		//tenant.MadeCountry = t.ZhMadeCountry
+		//tenant.Gender = t.ZhGender
+		//DraftDB.Set("l10n:locale", "zh-CN").Create(&tenant)
+
+		//if idx%3 == 0 {
+		//	start := time.Now().AddDate(0, 0, idx-7)
+		//	end := time.Now().AddDate(0, 0, idx-4)
+		//	tenant.SetVersionName("v1")
+		//	tenant.Name = t.Name + " - v1"
+		//	tenant.Description = t.Description + " - v1"
+		//	tenant.MadeCountry = t.MadeCountry
+		//	tenant.Gender = t.Gender
+		//	tenant.SetScheduledStartAt(&start)
+		//	tenant.SetScheduledEndAt(&end)
+		//	DraftDB.Save(&tenant)
+		//}
+		//
+		//if idx%2 == 0 {
+		//	start := time.Now().AddDate(0, 0, idx-7)
+		//	end := time.Now().AddDate(0, 0, idx-4)
+		//	tenant.SetVersionName("v1")
+		//	tenant.Name = t.ZhName + " - 版本 1"
+		//	tenant.Description = t.ZhDescription + " - 版本 1"
+		//	tenant.MadeCountry = t.ZhMadeCountry
+		//	tenant.Gender = t.ZhGender
+		//	tenant.SetScheduledStartAt(&start)
+		//	tenant.SetScheduledEndAt(&end)
+		//	DraftDB.Set("l10n:locale", "zh-CN").Save(&tenant)
+		//}
+	}
+}
+
 func createStores() {
 	for _, s := range Seeds.Stores {
 		store := stores.Store{}
@@ -284,28 +446,28 @@ func createMediaLibraries() {
 
 func createHelps() {
 	helps := map[string][]string{
-		"How to setup a microsite":           []string{"micro_sites"},
-		"How to create a user":               []string{"users"},
-		"How to create an admin user":        []string{"users"},
-		"How to handle abandoned order":      []string{"abandoned_orders", "orders"},
-		"How to cancel a order":              []string{"orders"},
-		"How to create a order":              []string{"orders"},
-		"How to upload product images":       []string{"products", "product_images"},
-		"How to create a product":            []string{"products"},
-		"How to create a discounted product": []string{"products"},
-		"How to create a store":              []string{"stores"},
-		"How shop setting works":             []string{"shop_settings"},
-		"How to setup seo settings":          []string{"seo_settings"},
-		"How to setup seo for blog":          []string{"seo_settings"},
-		"How to setup seo for product":       []string{"seo_settings"},
-		"How to setup seo for microsites":    []string{"micro_sites", "seo_settings"},
-		"How to setup promotions":            []string{"promotions"},
-		"How to publish a promotion":         []string{"schedules", "promotions"},
-		"How to create a publish event":      []string{"schedules", "scheduled_events"},
-		"How to publish a product":           []string{"schedules", "products"},
-		"How to publish a microsite":         []string{"schedules", "micro_sites"},
-		"How to create a scheduled data":     []string{"schedules"},
-		"How to take something offline":      []string{"schedules"},
+		"How to setup a microsite":          []string{"micro_sites"},
+		"How to create a user":              []string{"users"},
+		"How to create an admin user":       []string{"users"},
+		"How to handle abandoned order":     []string{"abandoned_orders", "orders"},
+		"How to cancel a order":             []string{"orders"},
+		"How to create a order":             []string{"orders"},
+		"How to upload tenant images":       []string{"tenants", "tenant_images"},
+		"How to create a tenant":            []string{"tenants"},
+		"How to create a discounted tenant": []string{"tenants"},
+		"How to create a store":             []string{"stores"},
+		"How shop setting works":            []string{"shop_settings"},
+		"How to setup seo settings":         []string{"seo_settings"},
+		"How to setup seo for blog":         []string{"seo_settings"},
+		"How to setup seo for tenant":       []string{"seo_settings"},
+		"How to setup seo for microsites":   []string{"micro_sites", "seo_settings"},
+		"How to setup promotions":           []string{"promotions"},
+		"How to publish a promotion":        []string{"schedules", "promotions"},
+		"How to create a publish event":     []string{"schedules", "scheduled_events"},
+		"How to publish a tenant":           []string{"schedules", "tenants"},
+		"How to publish a microsite":        []string{"schedules", "micro_sites"},
+		"How to create a scheduled data":    []string{"schedules"},
+		"How to take something offline":     []string{"schedules"},
 	}
 
 	for key, value := range helps {
@@ -363,4 +525,12 @@ func openFileByURL(rawURL string) (*os.File, error) {
 		}
 		return file, nil
 	}
+}
+
+func findRabcUserByName(name string) *tenancy.RabcUser {
+	rabcUser := &tenancy.RabcUser{}
+	if err := DraftDB.Where(&tenancy.RabcUser{Name: name}).First(rabcUser).Error; err != nil {
+		log.Fatalf("can't find rabcUser with name = %q, got err %v", name, err)
+	}
+	return rabcUser
 }
