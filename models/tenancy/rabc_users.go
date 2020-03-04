@@ -4,9 +4,6 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	//"github.com/snowlyg/iris-base-rabc/database"
-	//"github.com/snowlyg/iris-base-rabc/libs"
-	//"github.com/snowlyg/iris-base-rabc/validates"
 )
 
 type RabcUser struct {

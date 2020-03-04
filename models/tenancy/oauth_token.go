@@ -2,7 +2,6 @@ package tenancy
 
 import (
 	"github.com/jinzhu/gorm"
-	//"github.com/snowlyg/iris-base-rabc/database"
 )
 
 type OauthToken struct {

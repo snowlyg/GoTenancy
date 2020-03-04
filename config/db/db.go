@@ -5,12 +5,17 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/casbin/casbin/v2"
+	gormadapter "github.com/casbin/gorm-adapter/v2"
+	"github.com/fatih/color"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/qor/l10n"
 	"github.com/qor/media"
+	registerviews "github.com/snowlyg/qor-registerviews"
+
 	//"github.com/qor/publish2"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
@@ -63,4 +68,23 @@ func GetConn() string {
 	}
 
 	return conn
+}
+
+func GetCasbinEnforcer() *casbin.Enforcer {
+	c, err := gormadapter.NewAdapter(config.Config.DB.Adapter, GetConn(), true) // Your driver and data source.
+	if err != nil {
+		color.Red(fmt.Sprintf("gormadapter.NewAdapter 错误: %v", err))
+	}
+
+	rbacModel := registerviews.DetectViewsDir("github.com/snowlyg", "go-tenancy", "config/casbin") + "/rbac_model.conf"
+	e, err := casbin.NewEnforcer(rbacModel, c)
+	if err != nil {
+		color.Red(fmt.Sprintf("NewEnforcer 错误: %v", err))
+	}
+
+	if err := e.LoadPolicy(); err != nil {
+		color.Red(fmt.Sprintf("LoadPolicy error %v\n", err))
+	}
+
+	return e
 }
