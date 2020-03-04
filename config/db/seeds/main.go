@@ -299,7 +299,7 @@ func createTenants() {
 		tt.PermissionKey = t.PermissionKey
 		tt.TenantKey = t.TenantKey
 		for _, c := range t.RabcUsers {
-			rabcUser := findRabcUserByName(c.Name)
+			rabcUser := findRabcUserByUserName(c.Username)
 			tt.RabcUsers = append(tt.RabcUsers, rabcUser)
 		}
 
@@ -527,10 +527,10 @@ func openFileByURL(rawURL string) (*os.File, error) {
 	}
 }
 
-func findRabcUserByName(name string) *tenant.RabcUser {
+func findRabcUserByUserName(username string) *tenant.RabcUser {
 	rabcUser := &tenant.RabcUser{}
-	if err := DraftDB.Where(&tenant.RabcUser{Name: name}).First(rabcUser).Error; err != nil {
-		log.Fatalf("can't find rabcUser with name = %q, got err %v", name, err)
+	if err := DraftDB.Where(&tenant.RabcUser{Username: username}).First(rabcUser).Error; err != nil {
+		log.Fatalf("can't find rabcUser with name = %q, got err %v", username, err)
 	}
 	return rabcUser
 }
