@@ -1,0 +1,10 @@
+rabcroles:
+    - name: 'admin'
+      displayname: '管理员'
+      description: '管理员'
+    - name: 'guest'
+      displayname: '访客'
+      description: '访客'
+    - name: 'test'
+      displayname: '测试'
+      description: '测试'

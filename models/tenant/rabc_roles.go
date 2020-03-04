@@ -95,14 +95,15 @@ func GetAllRabcRoles(name, orderBy string, offset, limit int) (roles []*RabcRole
 * @param  {[type]} cp int    [description]
 * @param  {[type]} mp int    [description]
  */
-func (r *RabcRole) CreateRabcRole(permIds []uint) {
+func (r *RabcRole) CreateRabcRole(permIds []uint) error {
 	if err := db.DB.Create(r).Error; err != nil {
 		color.Red(fmt.Sprintf("CreateRoleErr:%v \n", err))
+		return err
 	}
 
 	addPerms(permIds, r)
 
-	return
+	return nil
 }
 
 func addPerms(permIds []uint, role *RabcRole) {

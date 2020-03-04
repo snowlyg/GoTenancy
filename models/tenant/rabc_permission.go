@@ -31,20 +31,6 @@ func NewRabcPermission(id uint, name, act string) *RabcPermission {
 	}
 }
 
-func NewRabcPermissionByStruct(jp *homevalidates.RabcPermissionRequest) *RabcPermission {
-	return &RabcPermission{
-		Model: gorm.Model{
-			ID:        0,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		},
-		Name:        jp.Name,
-		DisplayName: jp.DisplayName,
-		Description: jp.Description,
-		Act:         jp.Act,
-	}
-}
-
 /**
 * 通过 id 获取 permission 记录
 * @method GetPermissionById
@@ -96,11 +82,12 @@ func GetAllRabcPermissions(name, orderBy string, offset, limit int) (permissions
 * @param  {[type]} cp int    [description]
 * @param  {[type]} mp int    [description]
  */
-func (p *RabcPermission) CreateRabcPermission() {
+func (p *RabcPermission) CreateRabcPermission() error {
 	if err := db.DB.Create(p).Error; err != nil {
 		color.Red(fmt.Sprintf("CreatePermissionError:%s \n", err))
+		return err
 	}
-	return
+	return nil
 }
 
 /**

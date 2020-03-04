@@ -91,15 +91,15 @@ func GetAllRabcUsers(name, orderBy string, offset, limit int) []*RabcUser {
 * @param  {[type]} cp int    [description]
 * @param  {[type]} mp int    [description]
  */
-func (u *RabcUser) CreateRabcUser(aul *homevalidates.CreateUpdateRabcUserRequest) {
-	u.Password = libs.HashPassword(aul.Password)
+func (u *RabcUser) CreateRabcUser(roleIds []uint) error {
 	if err := db.DB.Create(u).Error; err != nil {
 		color.Red(fmt.Sprintf("CreateRabcUserErr:%s \n ", err))
+		return err
 	}
 
-	addRoles(aul, u)
+	addRoles(roleIds, u)
 
-	return
+	return nil
 }
 
 /**
@@ -115,17 +115,17 @@ func (u *RabcUser) UpdateRabcUser(uj *homevalidates.CreateUpdateRabcUserRequest)
 		color.Red(fmt.Sprintf("UpdateRabcUserErr:%s \n ", err))
 	}
 
-	addRoles(uj, u)
+	addRoles(uj.RoleIds, u)
 }
 
-func addRoles(uj *homevalidates.CreateUpdateRabcUserRequest, user *RabcUser) {
-	if len(uj.RoleIds) > 0 {
+func addRoles(roleIds []uint, user *RabcUser) {
+	if len(roleIds) > 0 {
 		userId := strconv.FormatUint(uint64(user.ID), 10)
 		if _, err := db.GetCasbinEnforcer().DeleteRolesForUser(userId); err != nil {
 			color.Red(fmt.Sprintf("CreateRabcUserErr:%s \n ", err))
 		}
 
-		for _, roleId := range uj.RoleIds {
+		for _, roleId := range roleIds {
 			roleId := strconv.FormatUint(uint64(roleId), 10)
 			if _, err := db.GetCasbinEnforcer().AddRoleForUser(userId, roleId); err != nil {
 				color.Red(fmt.Sprintf("CreateRabcUserErr:%s \n ", err))

@@ -95,8 +95,14 @@ func createRecords() {
 	createAddresses()
 	fmt.Println("--> 填充 addresses.")
 
+	createRabcPermissions()
+	fmt.Println("--> 填充 RabcPermission.")
+
+	createRabcRoles()
+	fmt.Println("--> 填充 RabcRole.")
+
 	createRabcUsers()
-	fmt.Println("--> 填充 rabcusers.")
+	fmt.Println("--> 填充 RabcUser.")
 
 	createTenants()
 	fmt.Println("--> 填充 tenants.")
@@ -253,14 +259,52 @@ func createAddresses() {
 	}
 }
 
+func createRabcPermissions() {
+	for _, u := range Seeds.RabcPermissions {
+		rabcperm := tenant.RabcPermission{}
+		rabcperm.Name = u.Name
+		rabcperm.DisplayName = u.DisplayName
+		rabcperm.Description = u.Description
+		rabcperm.Act = u.Act
+		if err := rabcperm.CreateRabcPermission(); err != nil {
+			log.Fatal(fmt.Sprintf("create RabcPermission (%v) failure, got err %v", rabcperm, err))
+		}
+	}
+}
+
+func createRabcRoles() {
+
+	var rabcPermIds []uint
+	rabcPerms := tenant.GetAllRabcPermissions("", "", 0, 0)
+	for _, rabcPerm := range rabcPerms {
+		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
+	}
+
+	for _, u := range Seeds.RabcRoles {
+		rabcrole := tenant.RabcRole{}
+		rabcrole.Name = u.Name
+		rabcrole.DisplayName = u.DisplayName
+		rabcrole.Description = u.Description
+		if err := rabcrole.CreateRabcRole(rabcPermIds); err != nil {
+			log.Fatal(fmt.Sprintf("create RabcRole (%v) failure, got err %v", rabcrole, err))
+		}
+	}
+}
+
 func createRabcUsers() {
+	var rabcRoleIds []uint
+	rabcRoles := tenant.GetAllRabcRoles("", "", 0, 0)
+	for _, rabcRole := range rabcRoles {
+		rabcRoleIds = append(rabcRoleIds, rabcRole.ID)
+	}
+
 	for _, u := range Seeds.RabcUsers {
 		rabcuser := tenant.RabcUser{}
 		rabcuser.Name = u.Name
 		rabcuser.Username = u.Username
 		rabcuser.Password = libs.HashPassword("password")
-		if err := DraftDB.Create(&rabcuser).Error; err != nil {
-			log.Fatal(fmt.Sprintf("create rabcuser (%v) failure, got err %v", rabcuser, err))
+		if err := rabcuser.CreateRabcUser(rabcRoleIds); err != nil {
+			log.Fatal(fmt.Sprintf("create RabcUser (%v) failure, got err %v", rabcuser, err))
 		}
 	}
 }
@@ -304,7 +348,7 @@ func createTenants() {
 		}
 
 		if err := DraftDB.Create(&tt).Error; err != nil {
-			log.Fatalf("create tenant (%v) failure, got err %v", tt, err)
+			log.Fatalf("create Tenant (%v) failure, got err %v", tt, err)
 		}
 
 		//for _, cv := range p.ColorVariations {

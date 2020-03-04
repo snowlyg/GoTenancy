@@ -40,13 +40,6 @@ func Register(api *iris.Application) {
 					roles.Put("/{id:uint}", homecontrollers.UpdateRole).Name = "编辑角色"
 					roles.Delete("/{id:uint}", homecontrollers.DeleteRole).Name = "删除角色"
 				})
-				app.PartyFunc("/permissions", func(permissions iris.Party) {
-					permissions.Get("/", homecontrollers.GetAllPermissions).Name = "权限列表"
-					permissions.Get("/{id:uint}", homecontrollers.GetPermission).Name = "权限详情"
-					//permissions.Post("/", controllers.CreatePermission).Name = "创建权限"
-					//permissions.Put("/{id:uint}", controllers.UpdatePermission).Name = "编辑权限"
-					//permissions.Delete("/{id:uint}", controllers.DeletePermission).Name = "删除权限"
-				})
 			})
 		}
 	}

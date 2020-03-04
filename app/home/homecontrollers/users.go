@@ -91,7 +91,7 @@ func CreateUser(ctx iris.Context) {
 	}
 
 	user := tenant.NewRabcUserByStruct(aul)
-	user.CreateRabcUser(aul)
+	user.CreateRabcUser(aul.RoleIds)
 	ctx.StatusCode(iris.StatusOK)
 	if user.ID == 0 {
 		_, _ = ctx.JSON(ApiResource(false, user, "操作失败"))
