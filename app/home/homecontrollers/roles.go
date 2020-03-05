@@ -8,8 +8,8 @@ import (
 	gf "github.com/snowlyg/gotransformer"
 	"go-tenancy/app/home/hometransformer"
 	"go-tenancy/app/home/homevalidates"
-	"go-tenancy/libs"
 	"go-tenancy/models/tenant"
+	"go-tenancy/utils"
 )
 
 /**
@@ -191,8 +191,8 @@ func DeleteRole(ctx iris.Context) {
 * @apiPermission null
  */
 func GetAllRoles(ctx iris.Context) {
-	offset := libs.ParseInt(ctx.FormValue("offset"), 1)
-	limit := libs.ParseInt(ctx.FormValue("limit"), 20)
+	offset := utils.ParseInt(ctx.FormValue("offset"), 1)
+	limit := utils.ParseInt(ctx.FormValue("limit"), 20)
 	name := ctx.FormValue("name")
 	orderBy := ctx.FormValue("orderBy")
 

@@ -27,12 +27,12 @@ import (
 	"go-tenancy/config/auth"
 	"go-tenancy/config/db"
 	_ "go-tenancy/config/db/migrations"
-	"go-tenancy/libs"
 	adminseo "go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
 	"go-tenancy/models/tenant"
 	"go-tenancy/models/users"
+	"go-tenancy/utils"
 )
 
 /* How to run this script
@@ -302,7 +302,7 @@ func createRabcUsers() {
 		rabcuser := tenant.RabcUser{}
 		rabcuser.Name = u.Name
 		rabcuser.Username = u.Username
-		rabcuser.Password = libs.HashPassword("password")
+		rabcuser.Password = utils.HashPassword("password")
 		if err := rabcuser.CreateRabcUser(rabcRoleIds); err != nil {
 			log.Fatal(fmt.Sprintf("create RabcUser (%v) failure, got err %v", rabcuser, err))
 		}

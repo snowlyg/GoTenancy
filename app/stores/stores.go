@@ -34,7 +34,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 // ConfigureAdmin 配置 admin 接口
 func (App) ConfigureAdmin(Admin *admin.Admin) {
 	// Add Store
-	store := Admin.AddResource(&stores.Store{}, &admin.Config{Menu: []string{"商店管理"}})
+	store := Admin.AddResource(&stores.Store{}, &admin.Config{Menu: []string{"Store Management"}})
 	store.Meta(&admin.Meta{Name: "Owner", Type: "single_edit"})
 	store.AddValidator(&resource.Validator{
 		Handler: func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {

@@ -6,8 +6,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/kataras/iris/v12"
 	"go-tenancy/app/home/homevalidates"
-	"go-tenancy/libs"
 	"go-tenancy/models/tenant"
+	"go-tenancy/utils"
 )
 
 /**
@@ -72,7 +72,7 @@ func UserLogin(ctx iris.Context) {
  */
 func UserLogout(ctx iris.Context) {
 	aui := ctx.Values().GetString("auth_user_id")
-	uid := uint(libs.ParseInt(aui, 0))
+	uid := uint(utils.ParseInt(aui, 0))
 	tenant.RabcUserAdminLogout(uid)
 
 	ctx.Application().Logger().Infof("%d 退出系统", uid)

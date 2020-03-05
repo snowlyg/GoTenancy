@@ -11,7 +11,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"go-tenancy/app/home/homevalidates"
 	"go-tenancy/config/db"
-	"go-tenancy/libs"
 	"go-tenancy/utils"
 )
 
@@ -43,7 +42,7 @@ func NewRabcUserByStruct(ru *homevalidates.CreateUpdateRabcUserRequest) *RabcUse
 		},
 		Username: ru.Username,
 		Name:     ru.Name,
-		Password: libs.HashPassword(ru.Password),
+		Password: utils.HashPassword(ru.Password),
 	}
 }
 
@@ -110,7 +109,7 @@ func (u *RabcUser) CreateRabcUser(roleIds []uint) error {
 * @param  {[type]} mp int    [description]
  */
 func (u *RabcUser) UpdateRabcUser(uj *homevalidates.CreateUpdateRabcUserRequest) {
-	uj.Password = libs.HashPassword(uj.Password)
+	uj.Password = utils.HashPassword(uj.Password)
 	if err := utils.Update(u, uj); err != nil {
 		color.Red(fmt.Sprintf("UpdateRabcUserErr:%s \n ", err))
 	}

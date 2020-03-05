@@ -78,7 +78,30 @@ func main() {
 ```
 
 #### 项目目录结构
-- 项目重构中....
+- /app  
+    - /account  【账号，用户功能 】 
+    - /admin  【控制面板，seo,消息，任务，Qor Admin  】
+    - /api  【Api 】
+    - /home  【首页】  
+    - /static  【静态文件注册】  
+    - /stores  【Store Management】  
+    - /tenancy  【Tenant,RabcUser】  
+    - /views    【视图模版文件】
+- /config 
+    - /application  【应用注册】
+    - /auth  【管理端身份验证】
+    - /bindatafs  【模版打包】
+    - /casbin  【casbin】
+    - /db  【数据库链接，数据填充，数据表初始化】
+    - /i18n  【国际化】
+    - /local_certs  
+    - /locales  【本地化】
+- /irisapp  【iris初始化】
+- /middleware  【中间件】
+- /models  【数据模型】
+- /public  【静态文件】
+- /utils  【辅助函数】
+- main.go  【项目入口】
 
 ---
 
