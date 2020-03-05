@@ -147,20 +147,17 @@ go env -w GOPROXY=https://goproxy.cn,direct
 > smtp.example.yml - 邮箱配置 smtp.yml
 
 
-> 加载数据 
+> 加载数据 & 打包模版文件
 
 ```shell script
 # 首次启动项目执行
-go run config/db/seeds/main.go config/db/seeds/seeds.go
+go generate
 
 ```
 
 > 打包模版文件和静态文件 
 
 ```shell script
-# 编译模版文件 - 仅部署到生产环境使用，开发跳过此步骤
-go run main.go -compile-templates=true 
-
 # windows 环境如果安装失败,请尝试运行：
 # npm install -g node-gyp
 # npm install --global --production windows-build-tools

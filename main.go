@@ -1,3 +1,5 @@
+//go:generate go run config/db/seeds/main.go config/db/seeds/seeds.go
+//go:generate go run main.go -compile-templates=true
 package main
 
 import (
