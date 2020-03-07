@@ -15,11 +15,14 @@
 > 此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
 > 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qor/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了,它有很多值得我去深入了解的地方。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
-> `Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris 结合 Qor-Admin` 形式开发，其他框架大同小异。
+> 
+>`Qor-Admin` 可以单独使用，也可以和其他框架结合使用。本项目采用 `Iris 结合 Qor-Admin` 形式开发，其他框架大同小异。
+>
 > 参考项目：[qor-example](https://github.com/qor/qor-example)
 > 
 > [qor-example](https://github.com/qor/qor-example) 是一个购物商城实例，目前已经使用 iris 重构了路由 （有部分问题未修复），详细代码位于 [devForQor](https://github.com/snowlyg/go-tenancy/tree/devForQor) 分支。
-> [devForGoTenancy](https://github.com/snowlyg/go-tenancy/tree/devForGoTenancy) 分支 , 是一次更换 qor-admin 前端模版的尝试，因为前端水平有限，目前没有完成，暂停更新....。
+> 
+>[devForGoTenancy](https://github.com/snowlyg/go-tenancy/tree/devForGoTenancy) 分支 , 是一次更换 qor-admin 前端模版的尝试，因为前端水平有限，目前没有完成，暂停更新....。
 > 
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
