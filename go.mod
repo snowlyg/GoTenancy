@@ -10,6 +10,7 @@ require (
 	github.com/betacraft/yaag v1.0.1-0.20191027021412-565f65e36090
 	github.com/casbin/casbin/v2 v2.2.1
 	github.com/casbin/gorm-adapter/v2 v2.0.3
+	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fatih/color v1.9.0
 	github.com/gin-gonic/gin v1.5.0 // indirect
 	github.com/go-playground/locales v0.13.0
@@ -25,6 +26,7 @@ require (
 	github.com/jinzhu/gorm v1.9.13-0.20200126152832-7180bd0f27d1
 	github.com/jinzhu/now v1.1.1
 	github.com/jteeuwen/go-bindata v3.0.8-0.20180305030458-6025e8de665b+incompatible
+	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
@@ -61,11 +63,14 @@ require (
 	github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4
 	github.com/qor/worker v0.0.0-20190805090529-35a245417f70
 	github.com/sergi/go-diff v1.1.0 // indirect
+	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123
 	github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515
 	github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c
 	github.com/unrolled/render v1.0.2
+	github.com/valyala/fasthttp v1.9.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
+	github.com/yudai/pp v2.0.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 )
