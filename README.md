@@ -100,7 +100,6 @@ func main() {
     - /i18n  【国际化】
     - /local_certs  
     - /locales  【本地化】
-- /irisapp  【iris初始化】
 - /middleware  【中间件】
 - /models  【数据模型】
 - /public  【静态文件】

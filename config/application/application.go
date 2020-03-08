@@ -37,7 +37,7 @@ func New(cfg *Config) *Application {
 	}
 
 	if cfg.IrisApp == nil {
-		cfg.IrisApp = iris.New()
+		cfg.IrisApp = iris.Default()
 	}
 
 	if cfg.AssetFS == nil {
@@ -56,9 +56,9 @@ func (application *Application) Use(app MicroAppInterface) {
 
 // NewServeMux allocates and returns a new ServeMux.
 func (application *Application) NewServeMux() http.Handler {
-	if len(application.Config.Handlers) == 0 {
-		return middlewares.Apply(application.Config.IrisApp)
-	}
+	//if len(application.Config.Handlers) == 0 {
+	//	return middlewares.Apply(application.Config.IrisApp)
+	//}
 
 	wildcardRouter := wildcard_router.New()
 	for _, handler := range application.Config.Handlers {
