@@ -213,7 +213,7 @@ go run main.go
 
 > 管理端登录页： http://localhost:8081/admin/login
 
-![](localhost_8080_admin_login.png)
+![](localhost_8081_admin_login.png)
 
 
 > 管理端控制面板： http://localhost:8081/admin
