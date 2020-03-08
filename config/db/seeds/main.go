@@ -313,38 +313,23 @@ func createTenants() {
 	for _, t := range Seeds.Tenants {
 		tt := tenant.Tenant{}
 		tt.Name = t.Name
-		tt.Price = t.Price
-		tt.Mode = t.Mode
-		tt.Times = t.Times
-		tt.ExpireTime = time.Now()
-		tt.CreationTime = time.Now()
-		tt.State = t.State
-		tt.IsTop = t.IsTop
-		tt.Order = t.Order
-		tt.IsDel = t.IsDel
-		tt.Amount = t.Amount
-		tt.Logo = t.Logo
-		tt.Tag = t.Tag
-		tt.AreaId = t.AreaId
 		tt.Province = t.Province
 		tt.City = t.City
 		tt.County = t.County
 		tt.Addr = t.Addr
-		tt.Linkman = t.Linkman
 		tt.Phone = t.Phone
 		tt.Lng = t.Lng
 		tt.Lat = t.Lat
-		tt.Appid = t.Appid
 		tt.FullName = t.FullName
-		tt.CertifyPics = t.CertifyPics
-		tt.Desc = t.Desc
-		tt.Pics = t.Pics
-		tt.Remark = t.Remark
-		tt.PermissionKey = t.PermissionKey
-		tt.TenantKey = t.TenantKey
 		for _, c := range t.RabcUsers {
 			rabcUser := findRabcUserByUserName(c.Username)
 			tt.RabcUsers = append(tt.RabcUsers, rabcUser)
+		}
+
+		if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
+			panic(fmt.Sprintf("file doesn't exist %v\n", err))
+		} else {
+			_ = AdminUser.Avatar.Scan(avatar)
 		}
 
 		if err := DraftDB.Create(&tt).Error; err != nil {

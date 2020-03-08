@@ -1,48 +1,42 @@
 package tenant
 
 import (
-	"time"
-
 	"github.com/jinzhu/gorm"
+	"github.com/qor/media"
+	"github.com/qor/media/oss"
 )
 
-type TenantBase struct {
+type Tenant struct {
 	gorm.Model
 
-	Name         string
-	Mode         uint8
-	Times        uint      //`剩余次数',
-	ExpireTime   time.Time //'到期时间',
-	CreationTime time.Time
-	State        int8 //'数据状态0未审核，1审核未通过，2：审核通过，-1删除',
-	IsTop        uint8
-	Order        int64
-	IsDel        int8    //
-	Amount       float32 //'金钱',
-	Price        float32 //'价格',
-	Logo         string  //'头像',
-	Tag          string
-	AreaId       int64 //'所在区域代码',
-	Province     string
-	City         string
-	County       string
-	Addr         string
-	Linkman      string
-	Phone        string
-	Lng          float64 // 经度
-	Lat          float64 // 纬度
-	Appid        uint
+	Name      string
+	FullName  string             // 全称
+	Avatar    AvatarImageStorage //'头像',
+	Province  string
+	City      string
+	County    string
+	Addr      string
+	Phone     string
+	Lng       float64 // 经度
+	Lat       float64 // 纬度
+	RabcUsers []*RabcUser
 }
 
-type Tenant struct {
-	TenantBase
+type AvatarImageStorage struct{ oss.OSS }
 
-	FullName      string // 全称
-	CertifyPics   string // 资质证明材料
-	Desc          string
-	Pics          string //'多图上传',
-	Remark        string // 审核说明
-	PermissionKey string
-	TenantKey     string
-	RabcUsers     []*RabcUser
+func (AvatarImageStorage) GetSizes() map[string]*media.Size {
+	return map[string]*media.Size{
+		"small":  {Width: 50, Height: 50},
+		"middle": {Width: 120, Height: 120},
+		"big":    {Width: 320, Height: 320},
+	}
+}
+
+func (tenant Tenant) AvatarImageURL() string {
+
+	if &tenant.Avatar != nil && len(tenant.Avatar.URL("original")) > 0 {
+		return tenant.Avatar.URL("original")
+	}
+
+	return "assets/images/avatars/3.jpg"
 }

@@ -1,34 +1,14 @@
 tenants:
     - name: '默认租户'
-      mode: 1
-      times: 0
-      state: 1
-      istop: 0
-      order: 0
-      isdel: 0
-      amount: 0.00
-      price: 0.00
-      logo: '/static/upload/file/2019-03-28/20190328175821885742200.jpg'
-      tag: ''
-      areaid:
-      province: ''
-      city: ''
-      county: ''
-      addr: ''
-      linkman: ''
-      phone: ''
+      province: '广东'
+      city: '东莞'
+      county: '中国'
+      addr: '松山湖科技园'
+      phone: '13800000000'
       lng: 0
       lat: 0
-      appid: 0
-      fullname: NULL
-      certifypics:
-      desc: ''
-      pics:  ''
-      remark: ''
-      permissionkey: ''
-      tenantkey: ''
-
+      fullname: "默认租户"
       rabcusers:
-          - name:  'admin'
-          - username: 'username'
-          - password: 'password'
+        - name:  'admin'
+        - username: 'username'
+        - password: 'password'

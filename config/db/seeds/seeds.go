@@ -39,38 +39,17 @@ var Seeds = struct {
 	}
 
 	Tenants []struct {
-		Name         string
-		Mode         uint8
-		Times        uint
-		ExpireTime   *time.Time
-		CreationTime *time.Time
-		State        int8
-		IsTop        uint8
-		Order        int64
-		IsDel        int8
-		Amount       float32
-		Price        float32
-		Logo         string
-		Tag          string
-		AreaId       int64
-		Province     string
-		City         string
-		County       string
-		Addr         string
-		Linkman      string
-		Phone        string
-		Lng          float64
-		Lat          float64
-		Appid        uint
-		FullName     string
-		CertifyPics  string
-		Desc         string
-		Pics         string
-		Remark       string
-
-		PermissionKey string
-		TenantKey     string
-		RabcUsers     []struct {
+		Name      string
+		Avatar    string
+		Province  string
+		City      string
+		County    string
+		Addr      string
+		Phone     string
+		Lng       float64
+		Lat       float64
+		FullName  string
+		RabcUsers []struct {
 			Name     string
 			Username string
 			Password string

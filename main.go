@@ -19,7 +19,6 @@ import (
 	adminapp "go-tenancy/app/admin"
 	"go-tenancy/app/home"
 	"go-tenancy/app/static"
-	"go-tenancy/app/tenancy"
 	"go-tenancy/config"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
@@ -68,7 +67,6 @@ func main() {
 	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
-	Application.Use(tenancy.New(&tenancy.Config{}))
 
 	// 系统上传文件
 	Application.Use(static.New(&static.Config{
