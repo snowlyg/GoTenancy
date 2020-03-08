@@ -9,13 +9,13 @@
 - `Error 1170: BLOB/TEXT column 'key' used in key specification without a key length`
     
     这个错误是字段定义的问题，`github.com/qor/i18n/backends/database/database.go` 文件中 `Translation` 结构 `Key` 字段定义有问题，
-    修改为 varchar(500) ，代码如下：
+    修改为 varchar(1500) ，代码如下：
     
     
 ```go
 type Translation struct {
     Locale string `sql:"size:12;"`
-    Key    string `sql:"size:500;"`
+    Key    string `sql:"size:1500;"`
     Value  string `sql:"size:4294967295"`
 }
 ```
@@ -35,7 +35,7 @@ type Translation struct {
     
 - 如果发现 github.com/snowlyg/* 依赖包报错，也就是本人写的相关项目报错：
     
-    尝试执行 `go get github.com/snowlyg/*@master` 解决问题，因为本人水平有限，写的项目会经常更新，而且没有写小版本的习惯(不是好习惯，只是懒而已)。
+    尝试执行 `go get github.com/snowlyg/...@master` 解决问题，因为本人水平有限，写的项目会经常更新，而且没有写小版本的习惯(不是好习惯，只是懒而已)。
     
     
     

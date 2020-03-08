@@ -11,8 +11,9 @@ import (
 )
 
 func init() {
-	roles.Register("admin", func(req *http.Request, currentUser interface{}) bool {
-		return currentUser != nil && currentUser.(*users.User).Role == "Admin"
+	// 注册角色
+	roles.Register("super_admin", func(req *http.Request, currentUser interface{}) bool {
+		return currentUser != nil && currentUser.(*users.User).Role == "SuperAdmin"
 	})
 }
 

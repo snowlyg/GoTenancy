@@ -165,8 +165,8 @@ func createAdminUsers() {
 	AdminUser = &users.User{}
 	AdminUser.Email = "dev@getqor.com"
 	AdminUser.Confirmed = true
-	AdminUser.Name = "QOR Admin"
-	AdminUser.Role = "Admin"
+	AdminUser.Name = "SuperAdmin"
+	AdminUser.Role = "SuperAdmin"
 	if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
 		panic(fmt.Sprintf("file doesn't exist %v\n", err))
 	} else {

@@ -31,8 +31,8 @@
 
 #### 项目进度 - 基本完成 iris 和 qor 的结合，踩了一遍坑，详情都记录在 [问题记录](ERRORS.MD)
 
-_注意：因为将原本的认证路由 `auth/*` 修改为 `admin/*`，导致认证 `auth` 包的 `assets/*` 资源路径和 `admin` 包的 `assets/*` 资源路径重叠_ 
-_导致只能用 iris 代理其中之一，为了解决这个问题我将 `auth` 包的前端文件都复制到了 `admin` 包中。_ 
+_注意：因为将原本的认证路由 `auth/*` 修改为 `admin/*`，导致认证 `qor-auth-theme` 包的 `assets/*` 资源路径和 `admin` 包的 `assets/*` 资源路径重叠_ 
+_导致只能用 iris 代理其中之一，为了解决这个问题我将 `qor-auth-theme` 包的前端文件都复制到了 `admin` 包中。_ 
 
 
 #### iris + qor-admin 使用案例 【 代码由 iris 的作者 @kataras 提供】
