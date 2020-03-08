@@ -1,5 +1,19 @@
 <div class="admin-login-background">
+    <div class="layui-col-md12">
+        {{range $message := flashes}}
+            {{if eq $message.Type "error"}}
+                <blockquote class="layui-elem-quote main_btn">
+                    <div class="alert alert-danger">{{$message.Message}}</div>
+                </blockquote>
+            {{else}}
+                <blockquote class="layui-elem-quote main_btn">
+                    <div class="alert alert-success">{{$message.Message}}</div>
+                </blockquote>
+            {{end}}
+        {{end}}
+    </div>
     <div class="layui-form login-form">
+
         {{if .Auth.GetProvider "password"}}
             <form class="layui-form" action="{{.AuthURL "password/login"}}" method="POST">
                 <div class="layui-form-item logo-title">
