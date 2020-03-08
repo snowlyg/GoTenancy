@@ -5,7 +5,7 @@
     {{render_seo_tag}}
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="stylesheet" media="all" href="{{.AuthURL "/assets//layui-v2.5.5/css/layui.css"}}">
+    <link rel="stylesheet" media="all" href="{{.AuthURL "/assets/layui-v2.5.5/css/layui.css"}}">
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -114,49 +114,25 @@
 
 <div class="layui-container">
     {{ yield }}
-
 </div>
 
-<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
-<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="../lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
-{{/*<script>*/}}
-{{/*  layui.use(['form'], function () {*/}}
-{{/*    var form = layui.form,*/}}
-{{/*            layer = layui.layer;*/}}
+<script src="{{.AuthURL "/assets/jquery-3.4.1/jquery-3.4.1.min.js"}}" charset="utf-8"></script>
+<script src="{{.AuthURL "/assets/layui-v2.5.5/layui.js"}}" charset="utf-8"></script>
+<script src="{{.AuthURL "/assets/jq-module/jquery.particleground.min.js"}}" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
 
-{{/*    // 登录过期的时候，跳出ifram框架*/}}
-{{/*    if (top.location != self.location) top.location = self.location;*/}}
+        // 登录过期的时候，跳出ifram框架
+        if (top.location != self.location) top.location = self.location;
 
-{{/*    // 粒子线条背景*/}}
-{{/*    $(document).ready(function(){*/}}
-{{/*      $('.layui-container').particleground({*/}}
-{{/*        dotColor:'#5cbdaa',*/}}
-{{/*        lineColor:'#5cbdaa'*/}}
-{{/*      });*/}}
-{{/*    });*/}}
-
-{{/*    // 进行登录操作*/}}
-{{/*    form.on('submit(login)', function (data) {*/}}
-{{/*      data = data.field;*/}}
-{{/*      if (data.username == '') {*/}}
-{{/*        layer.msg('用户名不能为空');*/}}
-{{/*        return false;*/}}
-{{/*      }*/}}
-{{/*      if (data.password == '') {*/}}
-{{/*        layer.msg('密码不能为空');*/}}
-{{/*        return false;*/}}
-{{/*      }*/}}
-{{/*      if (data.captcha == '') {*/}}
-{{/*        layer.msg('验证码不能为空');*/}}
-{{/*        return false;*/}}
-{{/*      }*/}}
-{{/*      layer.msg('登录成功', function () {*/}}
-{{/*        window.location = '/index.html';*/}}
-{{/*      });*/}}
-{{/*      return false;*/}}
-{{/*    });*/}}
-{{/*  });*/}}
-{{/*</script>*/}}
+        // 粒子线条背景
+        $(document).ready(function () {
+            $('.layui-container').particleground({
+                dotColor: '#5cbdaa',
+                lineColor: '#5cbdaa'
+            });
+        });
+    });
+</script>
 </body>
 </html>
