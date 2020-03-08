@@ -1,0 +1,29 @@
+<div class="admin-login-background">
+    <div class="layui-form login-form">
+        {{if .Auth.GetProvider "password"}}
+            <form class="layui-form" action="{{.AuthURL "password/login"}}" method="POST">
+                <div class="layui-form-item logo-title">
+                    <h1>GoTenancy</h1>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-username" for="email"></label>
+                    <input class="layui-input" lay-verify="required|account" type="email" id="email" name="login"
+                           placeholder="{{t "auth.form.email_placeholder"}}" value="{{.FormValue "login"}}">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-password" for="password"></label>
+                    <input type="password" lay-verify="required|password" class="layui-input" id="password"
+                           name="password"
+                           placeholder="{{t "auth.form.password_placeholder"}}">
+                </div>
+                <div class="layui-form-item">
+                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit=""
+                            lay-filter="login">{{t "auth.form.sign_in"}}</button>
+                </div>
+            </form>
+        {{end}}
+    </div>
+</div>

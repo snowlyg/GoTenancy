@@ -1,122 +1,152 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  {{render_seo_tag}}
-  <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0"/>
-  <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i|Playfair+Display|Raleway"
-        rel="stylesheet">
+    <meta charset="UTF-8">
+    {{render_seo_tag}}
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <link type="text/css" rel="stylesheet" href="/vendors/flexslider.css"/>
-  <link rel="stylesheet" media="all" href="/dist/main.css">
-  <script src="/vendors/jquery.js"></script>
-  <link href="//cdn.bootcss.com/font-awesome/5.12.1/css/all.min.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" media="all" href="{{.AuthURL "/assets//layui-v2.5.5/css/layui.css"}}">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            background: #009688;
+        }
+
+        body:after {
+            content: '';
+            background-repeat: no-repeat;
+            background-size: cover;
+            -webkit-filter: blur(3px);
+            -moz-filter: blur(3px);
+            -o-filter: blur(3px);
+            -ms-filter: blur(3px);
+            filter: blur(3px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .layui-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        .admin-login-background {
+            width: 360px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin-left: -180px;
+            margin-top: -100px;
+        }
+
+        .logo-title {
+            text-align: center;
+            letter-spacing: 2px;
+            padding: 14px 0;
+        }
+
+        .logo-title h1 {
+            color: #009688;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .login-form {
+            background-color: #fff;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            padding: 14px 20px;
+            box-shadow: 0 0 8px #eeeeee;
+        }
+
+        .login-form .layui-form-item {
+            position: relative;
+        }
+
+        .login-form .layui-form-item label {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 38px;
+            line-height: 36px;
+            text-align: center;
+            color: #d2d2d2;
+        }
+
+        .login-form .layui-form-item input {
+            padding-left: 36px;
+        }
+
+        .captcha-img img {
+            height: 34px;
+            border: 1px solid #e6e6e6;
+            height: 36px;
+            width: 100%;
+        }
+    </style>
 </head>
-
 <body>
-{{ if current_user }}
-  {{render_action_bar}}
-{{end}}
 
-<div class="header">
-  <header class="container">
-    <div class="grid">
-      <input type="checkbox" id="header-menustate" class="header__menustate" style="display: none"/>
-      <label class="header__mobileicon" for="header-menustate">
-        <i class="material-icons">&#xE3C7;</i>
-      </label>
+<div class="layui-container">
+    {{ yield }}
 
-      <div class="grid__col is-2 header__logo">
-        <a href="/" class="logo"><img src="/images/logo.png"/></a>
-      </div>
-
-      <a href="#" class="header__mobilemenu-cart">
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-      </a>
-
-      <div class="header__mobilemenu grid__col is-10">
-        <div class="header__menu">
-          <a href="/">Home</a>
-          <a href="/men">men</a>
-          <a href="/women">women</a>
-          <a href="/kids">kids</a>
-        </div>
-
-        <div class="header__func {{ if current_user }}header__func-login{{end}}">
-          {{ if current_user }}
-            <a href="/account">{{ t "layout.header_link.my_account" "ACCOUNT"}}</a>
-          {{ else }}
-            <a href="/auth/login">{{ t "layout.header_link.sign_in" "SIGN IN" }}</a>
-            <a href="/auth/register">{{ t "layout.header_link.register" "REGISTER" }}</a>
-          {{ end }}
-
-          <a href="/cart" class="header__menu-cart">
-            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
 </div>
 
-<div class="container">
-  <div class="row">
-    {{range $message := flashes}}
-      {{if eq $message.Type "error"}}
-        <div class="alert alert-danger">{{$message.Message}}</div>
-      {{else}}
-        <div class="alert alert-success">{{$message.Message}}</div>
-      {{end}}
-    {{end}}
-  </div>
-</div>
+<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
+{{/*<script>*/}}
+{{/*  layui.use(['form'], function () {*/}}
+{{/*    var form = layui.form,*/}}
+{{/*            layer = layui.layer;*/}}
 
-{{ yield }}
+{{/*    // 登录过期的时候，跳出ifram框架*/}}
+{{/*    if (top.location != self.location) top.location = self.location;*/}}
 
-<footer class="footer">
-  <div class="container">
+{{/*    // 粒子线条背景*/}}
+{{/*    $(document).ready(function(){*/}}
+{{/*      $('.layui-container').particleground({*/}}
+{{/*        dotColor:'#5cbdaa',*/}}
+{{/*        lineColor:'#5cbdaa'*/}}
+{{/*      });*/}}
+{{/*    });*/}}
 
-    <div class="grid">
-      <div class="grid__col is-8">
-        <h4>{{ t "layout.connect" }}</h4>
-        <div class="society">
-          <a href="#"><img src="/images/twitter.png"/></a>
-          <a href="#"><img src="/images/facebook.png"/></a>
-          <a href="#"><img src="/images/gplus.png"/></a>
-          <a href="#"><img src="/images/youtube.png"/></a>
-        </div>
-
-        {{ t "layout.about_qor" }}
-
-        <!-- Switch language -->
-        <div class="footer__change-language">
-          <select>
-            <option {{ if (eq current_locale "en-US") }}selected{{end}} value="/switch_locale?locale=en-US">English
-            </option>
-            <option {{ if (eq current_locale "zh-CN") }}selected{{end}} value="/switch_locale?locale=zh-CN">简体中文
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid__col is-4">
-        <h4>{{ t "layout.support_and_info" }}</h4>
-
-        <ul>
-          <li><a href="#">{{ t "layout.footer_link.faq" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.size_guide" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.shipping" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.privacy_policy" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.terms_of_use" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.press" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.about_us" }}</a></li>
-          <li><a href="#">{{ t "layout.footer_link.blog" }}</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script src="/dist/app.js"></script>
+{{/*    // 进行登录操作*/}}
+{{/*    form.on('submit(login)', function (data) {*/}}
+{{/*      data = data.field;*/}}
+{{/*      if (data.username == '') {*/}}
+{{/*        layer.msg('用户名不能为空');*/}}
+{{/*        return false;*/}}
+{{/*      }*/}}
+{{/*      if (data.password == '') {*/}}
+{{/*        layer.msg('密码不能为空');*/}}
+{{/*        return false;*/}}
+{{/*      }*/}}
+{{/*      if (data.captcha == '') {*/}}
+{{/*        layer.msg('验证码不能为空');*/}}
+{{/*        return false;*/}}
+{{/*      }*/}}
+{{/*      layer.msg('登录成功', function () {*/}}
+{{/*        window.location = '/index.html';*/}}
+{{/*      });*/}}
+{{/*      return false;*/}}
+{{/*    });*/}}
+{{/*  });*/}}
+{{/*</script>*/}}
 </body>
 </html>
