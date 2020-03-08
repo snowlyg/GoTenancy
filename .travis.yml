@@ -19,7 +19,9 @@ env:
     - GOARCH=386
 
 script:
-  - cp ./backend/config/conf.tml.example ./backend/config/conf.tml
+  - cp ./config/application.example.yml  ./config/application.yml
+  - cp ./config/database.example.yml  ./config/database.yml
+  - cp ./config/smtp.example.yml  ./config/smtp.yml
   - go vet ./...
   - go test ./... -v -coverprofile=coverage.txt -covermode=atomic
 after_success:

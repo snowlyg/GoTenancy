@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/kataras/iris/v12"
 	"go-tenancy/config"
 	"go-tenancy/config/bindatafs"

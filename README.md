@@ -146,16 +146,22 @@ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
 > 修改 `go-tenancy/config` 下的配置文件 :
-> application.example.yml - 应用配置 application.yml
-> database.example.yml - 数据配置 database.yml
-> smtp.example.yml - 邮箱配置 smtp.yml
 
+```shell script
+  cp ./config/application.example.yml  ./config/application.yml
+
+  cp ./config/database.example.yml  ./config/database.yml
+
+  cp ./config/smtp.example.yml  ./config/smtp.yml
+ 
+```
 
 > 加载数据 & 打包模版文件
 
 ```shell script
-# 首次启动项目执行
-go generate
+
+  # 首次启动项目执行
+  go generate 
 
 ```
 
@@ -178,6 +184,7 @@ npm run build
 > 运行项目 
 
 [gowatch](https://gitee.com/silenceper/gowatch)
+
 ```shell script
 
 go get github.com/silenceper/gowatch
