@@ -24,6 +24,7 @@ import (
 	"github.com/qor/notification/channels/database"
 	"github.com/qor/qor"
 	"github.com/qor/seo"
+	qortenant_database "github.com/snowlyg/qortenant/backend/database"
 	"go-tenancy/config/auth"
 	"go-tenancy/config/db"
 	_ "go-tenancy/config/db/migrations"
@@ -63,11 +64,12 @@ var (
 
 		&help.QorHelpEntry{},
 
-		&tenant.Tenant{},
+		&qortenant_database.Tenant{},
+		//&tenant.Tenant{},
 		&tenant.RabcUser{},
-		&tenant.OauthToken{},
-		&tenant.RabcRole{},
-		&tenant.RabcPermission{},
+		//&tenant.OauthToken{},
+		//&tenant.RabcRole{},
+		//&tenant.RabcPermission{},
 	}
 )
 
@@ -95,11 +97,11 @@ func createRecords() {
 	createAddresses()
 	fmt.Println("--> 填充 addresses.")
 
-	createRabcPermissions()
-	fmt.Println("--> 填充 RabcPermission.")
-
-	createRabcRoles()
-	fmt.Println("--> 填充 RabcRole.")
+	//createRabcPermissions()
+	//fmt.Println("--> 填充 RabcPermission.")
+	//
+	//createRabcRoles()
+	//fmt.Println("--> 填充 RabcRole.")
 
 	createRabcUsers()
 	fmt.Println("--> 填充 RabcUser.")
@@ -259,37 +261,37 @@ func createAddresses() {
 	}
 }
 
-func createRabcPermissions() {
-	for _, u := range Seeds.RabcPermissions {
-		rabcperm := tenant.RabcPermission{}
-		rabcperm.Name = u.Name
-		rabcperm.DisplayName = u.DisplayName
-		rabcperm.Description = u.Description
-		rabcperm.Act = u.Act
-		if err := rabcperm.CreateRabcPermission(); err != nil {
-			log.Fatal(fmt.Sprintf("create RabcPermission (%v) failure, got err %v", rabcperm, err))
-		}
-	}
-}
-
-func createRabcRoles() {
-
-	var rabcPermIds []uint
-	rabcPerms := tenant.GetAllRabcPermissions("", "", 0, 0)
-	for _, rabcPerm := range rabcPerms {
-		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
-	}
-
-	for _, u := range Seeds.RabcRoles {
-		rabcrole := tenant.RabcRole{}
-		rabcrole.Name = u.Name
-		rabcrole.DisplayName = u.DisplayName
-		rabcrole.Description = u.Description
-		if err := rabcrole.CreateRabcRole(rabcPermIds); err != nil {
-			log.Fatal(fmt.Sprintf("create RabcRole (%v) failure, got err %v", rabcrole, err))
-		}
-	}
-}
+//func createRabcPermissions() {
+//	for _, u := range Seeds.RabcPermissions {
+//		rabcperm := tenant.RabcPermission{}
+//		rabcperm.Name = u.Name
+//		rabcperm.DisplayName = u.DisplayName
+//		rabcperm.Description = u.Description
+//		rabcperm.Act = u.Act
+//		if err := rabcperm.CreateRabcPermission(); err != nil {
+//			log.Fatal(fmt.Sprintf("create RabcPermission (%v) failure, got err %v", rabcperm, err))
+//		}
+//	}
+//}
+//
+//func createRabcRoles() {
+//
+//	var rabcPermIds []uint
+//	rabcPerms := tenant.GetAllRabcPermissions("", "", 0, 0)
+//	for _, rabcPerm := range rabcPerms {
+//		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
+//	}
+//
+//	for _, u := range Seeds.RabcRoles {
+//		rabcrole := tenant.RabcRole{}
+//		rabcrole.Name = u.Name
+//		rabcrole.DisplayName = u.DisplayName
+//		rabcrole.Description = u.Description
+//		if err := rabcrole.CreateRabcRole(rabcPermIds); err != nil {
+//			log.Fatal(fmt.Sprintf("create RabcRole (%v) failure, got err %v", rabcrole, err))
+//		}
+//	}
+//}
 
 func createRabcUsers() {
 	var rabcRoleIds []uint
@@ -311,7 +313,7 @@ func createRabcUsers() {
 
 func createTenants() {
 	for _, t := range Seeds.Tenants {
-		tt := tenant.Tenant{}
+		tt := qortenant_database.Tenant{}
 		tt.Name = t.Name
 		tt.Province = t.Province
 		tt.City = t.City
@@ -321,10 +323,10 @@ func createTenants() {
 		tt.Lng = t.Lng
 		tt.Lat = t.Lat
 		tt.FullName = t.FullName
-		for _, c := range t.RabcUsers {
-			rabcUser := findRabcUserByUserName(c.Username)
-			tt.RabcUsers = append(tt.RabcUsers, rabcUser)
-		}
+		//for _, c := range t.RabcUsers {
+		//	rabcUser := findRabcUserByUserName(c.Username)
+		//	tt.TUsers = append(tt.TUsers, rabcUser)
+		//}
 
 		if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
 			panic(fmt.Sprintf("file doesn't exist %v\n", err))
@@ -335,104 +337,6 @@ func createTenants() {
 		if err := DraftDB.Create(&tt).Error; err != nil {
 			log.Fatalf("create Tenant (%v) failure, got err %v", tt, err)
 		}
-
-		//for _, cv := range p.ColorVariations {
-		//	color := findColorByName(cv.ColorName)
-		//
-		//	colorVariation := tenants.ColorVariation{}
-		//	colorVariation.ProductID = tenant.ID
-		//	colorVariation.ColorID = color.ID
-		//	colorVariation.ColorCode = cv.ColorCode
-
-		//for _, i := range cv.Images {
-		//	image := tenants.ProductImage{Title: p.Name, SelectedType: "image"}
-		//	if file, err := openFileByURL(i.URL); err != nil {
-		//		fmt.Printf("open file (%q) failure, got err %v", i.URL, err)
-		//	} else {
-		//		defer file.Close()
-		//		image.File.Scan(file)
-		//	}
-		//	if err := DraftDB.Create(&image).Error; err != nil {
-		//		log.Fatalf("create color_variation_image (%v) failure, got err %v when %v", image, err, i.URL)
-		//	} else {
-		//		colorVariation.Images.Files = append(colorVariation.Images.Files, media_library.File{
-		//			ID:  json.Number(fmt.Sprint(image.ID)),
-		//			Url: image.File.URL(),
-		//		})
-		//
-		//		Admin := qoradmin.New(&qoradmin.AdminConfig{
-		//			SiteName: "QOR DEMO",
-		//			Auth:     auth.AdminAuth{},
-		//			DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
-		//		})
-		//
-		//		colorVariation.Images.Crop(Admin.NewResource(&tenants.ProductImage{}), DraftDB, media_library.MediaOption{
-		//			Sizes: map[string]*media.Size{
-		//				"main":    {Width: 560, Height: 700},
-		//				"icon":    {Width: 50, Height: 50},
-		//				"preview": {Width: 300, Height: 300},
-		//				"listing": {Width: 640, Height: 640},
-		//			},
-		//		})
-		//
-		//		if len(tenant.MainImage.Files) == 0 {
-		//			tenant.MainImage.Files = []media_library.File{{
-		//				ID:  json.Number(fmt.Sprint(image.ID)),
-		//				Url: image.File.URL(),
-		//			}}
-		//			DraftDB.Save(&tenant)
-		//		}
-		//	}
-		//}
-
-		//if err := DraftDB.Create(&colorVariation).Error; err != nil {
-		//	log.Fatalf("create color_variation (%v) failure, got err %v", colorVariation, err)
-		//}
-
-		//for _, sv := range p.SizeVariations {
-		//	size := findSizeByName(sv.SizeName)
-		//
-		//	sizeVariation := tenants.SizeVariation{}
-		//	sizeVariation.ColorVariationID = colorVariation.ID
-		//	sizeVariation.SizeID = size.ID
-		//	sizeVariation.AvailableQuantity = 20
-		//	if err := DraftDB.Create(&sizeVariation).Error; err != nil {
-		//		log.Fatalf("create size_variation (%v) failure, got err %v", sizeVariation, err)
-		//	}
-		//}
-		//}
-
-		//tenant.Name = t.ZhName
-		//tenant.Description = t.ZhDescription
-		//tenant.MadeCountry = t.ZhMadeCountry
-		//tenant.Gender = t.ZhGender
-		//DraftDB.Set("l10n:locale", "zh-CN").Create(&tenant)
-
-		//if idx%3 == 0 {
-		//	start := time.Now().AddDate(0, 0, idx-7)
-		//	end := time.Now().AddDate(0, 0, idx-4)
-		//	tenant.SetVersionName("v1")
-		//	tenant.Name = t.Name + " - v1"
-		//	tenant.Description = t.Description + " - v1"
-		//	tenant.MadeCountry = t.MadeCountry
-		//	tenant.Gender = t.Gender
-		//	tenant.SetScheduledStartAt(&start)
-		//	tenant.SetScheduledEndAt(&end)
-		//	DraftDB.Save(&tenant)
-		//}
-		//
-		//if idx%2 == 0 {
-		//	start := time.Now().AddDate(0, 0, idx-7)
-		//	end := time.Now().AddDate(0, 0, idx-4)
-		//	tenant.SetVersionName("v1")
-		//	tenant.Name = t.ZhName + " - 版本 1"
-		//	tenant.Description = t.ZhDescription + " - 版本 1"
-		//	tenant.MadeCountry = t.ZhMadeCountry
-		//	tenant.Gender = t.ZhGender
-		//	tenant.SetScheduledStartAt(&start)
-		//	tenant.SetScheduledEndAt(&end)
-		//	DraftDB.Set("l10n:locale", "zh-CN").Save(&tenant)
-		//}
 	}
 }
 

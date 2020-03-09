@@ -9,17 +9,17 @@ import (
 type Tenant struct {
 	gorm.Model
 
-	Name      string
-	FullName  string             // 全称
-	Avatar    AvatarImageStorage //'头像',
-	Province  string
-	City      string
-	County    string
-	Addr      string
-	Phone     string
-	Lng       float64 // 经度
-	Lat       float64 // 纬度
-	RabcUsers []*RabcUser
+	Name     string
+	FullName string             // 全称
+	Avatar   AvatarImageStorage //'头像',
+	Province string
+	City     string
+	County   string
+	Addr     string
+	Phone    string
+	Lng      float64 // 经度
+	Lat      float64 // 纬度
+	TUsers   []*RabcUser
 }
 
 type AvatarImageStorage struct{ oss.OSS }

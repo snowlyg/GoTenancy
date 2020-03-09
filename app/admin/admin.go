@@ -3,13 +3,6 @@ package admin
 import (
 	"fmt"
 
-	registerviews "github.com/snowlyg/qor-registerviews"
-	"go-tenancy/config/application"
-	"go-tenancy/config/auth"
-	"go-tenancy/config/i18n"
-	"go-tenancy/models/settings"
-	"go-tenancy/models/tenant"
-
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/qor/action_bar"
@@ -17,6 +10,12 @@ import (
 	"github.com/qor/help"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
+	registerviews "github.com/snowlyg/qor-registerviews"
+	"go-tenancy/config/application"
+	"go-tenancy/config/auth"
+	"go-tenancy/config/i18n"
+	"go-tenancy/config/tenant"
+	"go-tenancy/models/settings"
 )
 
 // ActionBar admin action bar
@@ -73,6 +72,9 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar = action_bar.New(Admin)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
+	// 租户
+	Admin.AddResource(tenant.Tenant, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
+
 	// 媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
 	// 覆盖-Site Management-菜单的 IconName
@@ -88,15 +90,15 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 设置
 	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
 
-	Admin.AddMenu(&admin.Menu{Name: "Tenancy Management", Priority: 2})
-	_ = Admin.AddResource(&tenant.RabcUser{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	_ = Admin.AddResource(&tenant.RabcRole{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	_ = Admin.AddResource(&tenant.RabcPermission{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	_ = Admin.AddResource(&tenant.OauthToken{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-
-	// 租户
-	tenant := Admin.AddResource(&tenant.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	tenant.Meta(&admin.Meta{Name: "RabcUsers", Config: &admin.SelectManyConfig{SelectMode: "bottom_sheet"}})
+	//Admin.AddMenu(&admin.Menu{Name: "Tenancy Management", Priority: 2})
+	//_ = Admin.AddResource(&tenant.RabcUser{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	//_ = Admin.AddResource(&tenant.RabcRole{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	//_ = Admin.AddResource(&tenant.RabcPermission{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	//_ = Admin.AddResource(&tenant.OauthToken{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	//
+	//// 租户
+	//tenant := Admin.AddResource(&tenant.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	//tenant.Meta(&admin.Meta{Name: "RabcUsers", Config: &admin.SelectManyConfig{SelectMode: "bottom_sheet"}})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)

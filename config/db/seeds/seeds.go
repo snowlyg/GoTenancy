@@ -21,17 +21,17 @@ var (
 )
 
 var Seeds = struct {
-	RabcPermissions []struct {
-		Name        string
-		DisplayName string
-		Description string
-		Act         string
-	}
-	RabcRoles []struct {
-		Name        string
-		DisplayName string
-		Description string
-	}
+	//RabcPermissions []struct {
+	//	Name        string
+	//	DisplayName string
+	//	Description string
+	//	Act         string
+	//}
+	//RabcRoles []struct {
+	//	Name        string
+	//	DisplayName string
+	//	Description string
+	//}
 	RabcUsers []struct {
 		Name     string
 		Username string

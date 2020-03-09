@@ -67,6 +67,7 @@ require (
 	github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123
 	github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515
 	github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c
+	github.com/snowlyg/qortenant v0.0.0-20200309093222-24d8927dd9ff
 	github.com/unrolled/render v1.0.2
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
