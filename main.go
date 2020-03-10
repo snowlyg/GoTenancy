@@ -17,8 +17,9 @@ import (
 	"github.com/qor/qor/utils"
 	"go-tenancy/app/backend/account"
 	adminapp "go-tenancy/app/backend/admin"
-	"go-tenancy/app/backend/home"
 	"go-tenancy/app/backend/static"
+	tenantaccount "go-tenancy/app/tenant/account"
+	tenantapp "go-tenancy/app/tenant/admin"
 	"go-tenancy/config"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
@@ -76,7 +77,6 @@ func main() {
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
 	// 加载应用
-	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
 	Application.Use(static.New(&static.Config{
@@ -88,6 +88,9 @@ func main() {
 		Prefixs: prefixs,
 		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
 	}))
+
+	Application.Use(tenantapp.New(&tenantapp.Config{}))
+	Application.Use(tenantaccount.New(&tenantaccount.Config{}))
 
 	if *compileTemplate { //处理前端静态文件
 		if err := bindatafs.AssetFS.Compile(); err != nil {
