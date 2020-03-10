@@ -5,6 +5,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
+	"github.com/snowlyg/qortenant/backend"
 	"go-tenancy/config/application"
 )
 
@@ -25,7 +26,7 @@ type Config struct {
 // ConfigureApplication configure application
 func (App) ConfigureApplication(application *application.Application) {
 
-	Register(application.IrisApp)
+	backend.Register(application.IrisApp)
 
 	application.IrisApp.HandleDir("/static", "app/home/views/static")
 	application.IrisApp.RegisterView(iris.HTML("./app/home/views", ".html"))

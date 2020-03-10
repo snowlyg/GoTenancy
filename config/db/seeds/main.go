@@ -65,11 +65,10 @@ var (
 		&help.QorHelpEntry{},
 
 		&qortenant_database.Tenant{},
-		//&tenant.Tenant{},
-		&tenant.RabcUser{},
-		//&tenant.OauthToken{},
-		//&tenant.RabcRole{},
-		//&tenant.RabcPermission{},
+		&qortenant_database.TUser{},
+		&qortenant_database.TOauthToken{},
+		&qortenant_database.TRole{},
+		&qortenant_database.TPermission{},
 	}
 )
 
@@ -261,52 +260,52 @@ func createAddresses() {
 	}
 }
 
-//func createRabcPermissions() {
-//	for _, u := range Seeds.RabcPermissions {
-//		rabcperm := tenant.RabcPermission{}
-//		rabcperm.Name = u.Name
-//		rabcperm.DisplayName = u.DisplayName
-//		rabcperm.Description = u.Description
-//		rabcperm.Act = u.Act
-//		if err := rabcperm.CreateRabcPermission(); err != nil {
-//			log.Fatal(fmt.Sprintf("create RabcPermission (%v) failure, got err %v", rabcperm, err))
-//		}
-//	}
-//}
-//
-//func createRabcRoles() {
-//
-//	var rabcPermIds []uint
-//	rabcPerms := tenant.GetAllRabcPermissions("", "", 0, 0)
-//	for _, rabcPerm := range rabcPerms {
-//		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
-//	}
-//
-//	for _, u := range Seeds.RabcRoles {
-//		rabcrole := tenant.RabcRole{}
-//		rabcrole.Name = u.Name
-//		rabcrole.DisplayName = u.DisplayName
-//		rabcrole.Description = u.Description
-//		if err := rabcrole.CreateRabcRole(rabcPermIds); err != nil {
-//			log.Fatal(fmt.Sprintf("create RabcRole (%v) failure, got err %v", rabcrole, err))
-//		}
-//	}
-//}
+func createTPermissions() {
+	for _, u := range Seeds.TPermissions {
+		rabcperm := qortenant_database.TPermission{}
+		rabcperm.Name = u.Name
+		rabcperm.DisplayName = u.DisplayName
+		rabcperm.Description = u.Description
+		rabcperm.Act = u.Act
+		if err := qortenant_database.CreateTPermission(); err != nil {
+			log.Fatal(fmt.Sprintf("create TPermission (%v) failure, got err %v", rabcperm, err))
+		}
+	}
+}
 
-func createRabcUsers() {
+func createTRoles() {
+
+	var rabcPermIds []uint
+	rabcPerms := qortenant_database.GetAllTPermissions("", "", 0, 0)
+	for _, rabcPerm := range rabcPerms {
+		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
+	}
+
+	for _, u := range Seeds.TRoles {
+		rabcrole :=qortenant_database.TRole{}
+		rabcrole.Name = u.Name
+		rabcrole.DisplayName = u.DisplayName
+		rabcrole.Description = u.Description
+		if err := qortenant_database.CreateTRole(rabcPermIds); err != nil {
+			log.Fatal(fmt.Sprintf("create TRole (%v) failure, got err %v", rabcrole, err))
+		}
+	}
+}
+
+func createTUsers() {
 	var rabcRoleIds []uint
-	rabcRoles := tenant.GetAllRabcRoles("", "", 0, 0)
+	rabcRoles := qortenant_database.GetAllTRoles("", "", 0, 0)
 	for _, rabcRole := range rabcRoles {
 		rabcRoleIds = append(rabcRoleIds, rabcRole.ID)
 	}
 
-	for _, u := range Seeds.RabcUsers {
-		rabcuser := tenant.RabcUser{}
+	for _, u := range Seeds.TUsers {
+		rabcuser := qortenant_database.TUser{}
 		rabcuser.Name = u.Name
 		rabcuser.Username = u.Username
 		rabcuser.Password = utils.HashPassword("password")
-		if err := rabcuser.CreateRabcUser(rabcRoleIds); err != nil {
-			log.Fatal(fmt.Sprintf("create RabcUser (%v) failure, got err %v", rabcuser, err))
+		if err := qortenant_database.CreateTUser(rabcRoleIds); err != nil {
+			log.Fatal(fmt.Sprintf("create TUser (%v) failure, got err %v", rabcuser, err))
 		}
 	}
 }
@@ -323,10 +322,10 @@ func createTenants() {
 		tt.Lng = t.Lng
 		tt.Lat = t.Lat
 		tt.FullName = t.FullName
-		//for _, c := range t.RabcUsers {
-		//	rabcUser := findRabcUserByUserName(c.Username)
-		//	tt.TUsers = append(tt.TUsers, rabcUser)
-		//}
+		for _, c := range t.TUsers {
+			tUser := findTUserByUserName(c.Username)
+			tt.TUsers = append(tt.TUsers, tUser)
+		}
 
 		if avatar, err := os.Open("config/db/seeds/data/avatars/2.jpg"); err != nil {
 			panic(fmt.Sprintf("file doesn't exist %v\n", err))
@@ -460,10 +459,10 @@ func openFileByURL(rawURL string) (*os.File, error) {
 	}
 }
 
-func findRabcUserByUserName(username string) *tenant.RabcUser {
-	rabcUser := &tenant.RabcUser{}
-	if err := DraftDB.Where(&tenant.RabcUser{Username: username}).First(rabcUser).Error; err != nil {
+func findTUserByUserName(username string) *qortenant_database.TUser {
+	tUser := &qortenant_database.TUser{}
+	if err := DraftDB.Where(&qortenant_database.TUser{Username: username}).First(tUser).Error; err != nil {
 		log.Fatalf("can't find rabcUser with name = %q, got err %v", username, err)
 	}
-	return rabcUser
+	return tUser
 }

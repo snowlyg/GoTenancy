@@ -17,22 +17,21 @@ var Fake *faker.Faker
 var (
 	Root, _ = os.Getwd()
 	DraftDB = db.DB
-	//.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff)
 )
 
 var Seeds = struct {
-	//RabcPermissions []struct {
-	//	Name        string
-	//	DisplayName string
-	//	Description string
-	//	Act         string
-	//}
-	//RabcRoles []struct {
-	//	Name        string
-	//	DisplayName string
-	//	Description string
-	//}
-	RabcUsers []struct {
+	TPermissions []struct {
+		Name        string
+		DisplayName string
+		Description string
+		Act         string
+	}
+	TRoles []struct {
+		Name        string
+		DisplayName string
+		Description string
+	}
+	TUsers []struct {
 		Name     string
 		Username string
 		Password string
@@ -49,7 +48,7 @@ var Seeds = struct {
 		Lng       float64
 		Lat       float64
 		FullName  string
-		RabcUsers []struct {
+		TUsers []struct {
 			Name     string
 			Username string
 			Password string

@@ -16,7 +16,7 @@ require (
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.2.0
-	github.com/google/go-github v17.0.0+incompatible // indirect
+	github.com/google/go-github v17.0.0+incompatible
 	github.com/headzoo/surf v1.0.0 // indirect
 	github.com/headzoo/ut v0.0.0-20181013193318-a13b5a7a02ca // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367
@@ -29,8 +29,9 @@ require (
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
+	github.com/mattn/go-sqlite3 v2.0.1+incompatible
 	github.com/microcosm-cc/bluemonday v1.0.2
-	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
+	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/qor/action_bar v0.0.0-20190314070413-136e5e2c5b8c
@@ -50,7 +51,7 @@ require (
 	github.com/qor/middlewares v0.0.0-20170822143614-781378b69454
 	github.com/qor/notification v0.0.0-20181014061619-c4c002490b78
 	github.com/qor/oss v0.0.0-20191031055114-aef9ba66bf76
-	github.com/qor/publish v0.0.0-20181014061411-abfbacee9e0d // indirect
+	github.com/qor/publish v0.0.0-20181014061411-abfbacee9e0d
 	github.com/qor/qor v0.0.0-20200224122013-457d2e3f50e1
 	github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848
 	github.com/qor/render v1.1.1
@@ -67,11 +68,11 @@ require (
 	github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123
 	github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515
 	github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c
-	github.com/snowlyg/qortenant v0.0.0-20200309093222-24d8927dd9ff
+	github.com/snowlyg/qortenant v0.0.0-20200309141957-a7074b1ed336
 	github.com/unrolled/render v1.0.2
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
-	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

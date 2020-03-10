@@ -21,21 +21,40 @@ import (
 )
 
 // DB 全局 DB 链接
-var DB *gorm.DB
+var (
+	DB *gorm.DB
+	CE *casbin.Enforcer
+)
 
 func init() {
-	var err error
+	var (
+		err error
+		c   *gormadapter.Adapter
+	)
 
-	conn := GetConn()
 	if config.Config.DB.Adapter == "mysql" {
-		DB, err = gorm.Open("mysql", conn)
+		DB, err = gorm.Open("mysql", getConn())
 		// DB = DB.Set("gorm:table_options", "CHARSET=utf8")
 	} else if config.Config.DB.Adapter == "postgres" {
-		DB, err = gorm.Open("postgres", conn)
+		DB, err = gorm.Open("postgres", getConn())
 	} else if config.Config.DB.Adapter == "sqlite" {
-		DB, err = gorm.Open("sqlite3", conn)
+		DB, err = gorm.Open("sqlite3", getConn())
 	} else {
 		panic(errors.New("not supported database adapter"))
+	}
+
+	c, err = gormadapter.NewAdapter(config.Config.DB.Adapter, getConn(), true) // Your driver and data source.
+	if err != nil {
+		color.Red(fmt.Sprintf("gormadapter.NewAdapter 错误: %v", err))
+	}
+
+	CE, err = casbin.NewEnforcer(filepath.Join("config", "casbin", "rbac_model.conf"), c)
+	if err != nil {
+		color.Red(fmt.Sprintf("NewEnforcer 错误: %v", err))
+	}
+
+	if err = CE.LoadPolicy(); err != nil {
+		color.Red(fmt.Sprintf("LoadPolicy error %v\n", err))
 	}
 
 	if err == nil {
@@ -48,13 +67,12 @@ func init() {
 		sorting.RegisterCallbacks(DB)
 		validations.RegisterCallbacks(DB)
 		media.RegisterCallbacks(DB)
-		//publish2.RegisterCallbacks(DB)
 	} else {
 		panic(err)
 	}
 }
 
-func GetConn() string {
+func getConn() string {
 	dbConfig := config.Config.DB
 	var conn string
 	if config.Config.DB.Adapter == "mysql" {
@@ -66,24 +84,4 @@ func GetConn() string {
 	}
 
 	return conn
-}
-
-func GetCasbinEnforcer() *casbin.Enforcer {
-	c, err := gormadapter.NewAdapter(config.Config.DB.Adapter, GetConn(), true) // Your driver and data source.
-	if err != nil {
-		color.Red(fmt.Sprintf("gormadapter.NewAdapter 错误: %v", err))
-	}
-
-	rbacModel := filepath.Join("config", "casbin", "rbac_model.conf")
-
-	e, err := casbin.NewEnforcer(rbacModel, c)
-	if err != nil {
-		color.Red(fmt.Sprintf("NewEnforcer 错误: %v", err))
-	}
-
-	if err := e.LoadPolicy(); err != nil {
-		color.Red(fmt.Sprintf("LoadPolicy error %v\n", err))
-	}
-
-	return e
 }

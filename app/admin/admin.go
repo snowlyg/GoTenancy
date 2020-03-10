@@ -11,10 +11,10 @@ import (
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
 	registerviews "github.com/snowlyg/qor-registerviews"
+	"github.com/snowlyg/qortenant/backend/database"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
 	"go-tenancy/config/i18n"
-	"go-tenancy/config/tenant"
 	"go-tenancy/models/settings"
 )
 
@@ -73,7 +73,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// 租户
-	Admin.AddResource(tenant.Tenant, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
+	Admin.AddResource(database.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
 
 	// 媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})

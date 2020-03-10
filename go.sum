@@ -429,8 +429,8 @@ github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa h1:TOHLC
 github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c h1:WgsdfuIB/NNyTKOxobp1Ofo0GeelMHA68jxi7GhSjck=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
-github.com/snowlyg/qortenant v0.0.0-20200309093222-24d8927dd9ff h1:wPGjSd96d6H1IITcOfh5UMgACY0BSYA2BAChDJI+GAY=
-github.com/snowlyg/qortenant v0.0.0-20200309093222-24d8927dd9ff/go.mod h1:IHN2RDUq9b9r88i8qQOAEzjj3mbxxKTwY+2IZxZv6vg=
+github.com/snowlyg/qortenant v0.0.0-20200309141957-a7074b1ed336 h1:Hlju5NjgC8UFo/EGaIqXQf/60psbJ+dsYGR2r++EdRs=
+github.com/snowlyg/qortenant v0.0.0-20200309141957-a7074b1ed336/go.mod h1:IHN2RDUq9b9r88i8qQOAEzjj3mbxxKTwY+2IZxZv6vg=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/cobra v0.0.5/go.mod h1:3K3wKZymM7VvHMDS9+Akkh4K60UwM26emMESw8tLCHU=
