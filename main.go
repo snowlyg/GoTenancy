@@ -15,10 +15,10 @@ import (
 	recover2 "github.com/kataras/iris/v12/middleware/recover"
 	"github.com/qor/admin"
 	"github.com/qor/qor/utils"
-	"go-tenancy/app/account"
-	adminapp "go-tenancy/app/admin"
-	"go-tenancy/app/home"
-	"go-tenancy/app/static"
+	"go-tenancy/app/backend/account"
+	adminapp "go-tenancy/app/backend/admin"
+	"go-tenancy/app/backend/home"
+	"go-tenancy/app/backend/static"
 	"go-tenancy/config"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
@@ -36,47 +36,46 @@ func main() {
 		color.Red(fmt.Sprintf(" cmdLine.Parse error :%v", err))
 	}
 
-	// 初始化 iris
 	var (
+		Iris      = iris.Default()
 		adminAuth = auth.NewAdminAuth(&auth.PathConfig{})
-		//定义 admin 对象
-		Admin = admin.New(&admin.AdminConfig{
-			SiteName: "GoTenancy", // 站点名称
+		Admin     = admin.New(&admin.AdminConfig{
+			SiteName: "GoTenancyAdmin",
+			Auth:     adminAuth,
+			DB:       db.DB,
+		})
+		Tenant = admin.New(&admin.AdminConfig{
+			SiteName: "GoTenancyTenant",
 			Auth:     adminAuth,
 			DB:       db.DB,
 		})
 
-		//定义应用
 		Application = application.New(&application.Config{
-			Admin: Admin,
-			DB:    db.DB,
+			Iris:   Iris,
+			Admin:  Admin,
+			Tenant: Tenant,
+			DB:     db.DB,
 		})
 	)
+
+	Iris.Logger().SetLevel("debug")
+	Iris.Use(logger.New())
+	Iris.Use(recover2.New())
 
 	// 认证相关视图渲染
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
 
-	// 全局中间件
-	//irisApp.Use(middleware.AddHeader)
-	Application.IrisApp.Logger().SetLevel("debug")
-	Application.IrisApp.Use(logger.New())
-	Application.IrisApp.Use(recover2.New())
-
 	// 加载应用
-	//Application.Use(api.New(&api.Config{}))
 	Application.Use(home.New(&home.Config{}))
 	Application.Use(adminapp.New(&adminapp.Config{}))
 	Application.Use(account.New(&account.Config{}))
-
-	// 系统上传文件
 	Application.Use(static.New(&static.Config{
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
-	// 静态打包文件加载
 	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
 	Application.Use(static.New(&static.Config{
-		Prefixs: prefixs, // 设置静态文件相关目录
+		Prefixs: prefixs,
 		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
 	}))
 
@@ -86,13 +85,11 @@ func main() {
 		}
 	} else {
 		if config.Config.HTTPS {
-			// 启动服务
-			if err := Application.IrisApp.Run(iris.TLS(":443", "./config/local_certs/server.crt", "./config/local_certs/server.key")); err != nil {
+			if err := Iris.Run(iris.TLS(":443", "./config/local_certs/server.crt", "./config/local_certs/server.key")); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}
 		} else {
-			// iris 配置设置
 			irisConfig := iris.WithConfiguration(
 				iris.Configuration{
 					DisableStartupLog:                 true,
@@ -101,8 +98,7 @@ func main() {
 					TimeFormat:                        "Mon, 01 Jan 2006 15:04:05 GMT",
 					Charset:                           "UTF-8",
 				})
-			// 启动服务
-			if err := Application.IrisApp.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), irisConfig); err != nil {
+			if err := Iris.Run(iris.Addr(fmt.Sprintf(":%d", config.Config.Port)), iris.WithoutServerError(iris.ErrServerClosed), irisConfig); err != nil {
 				color.Red(fmt.Sprintf("app.Listen %v", err))
 				panic(err)
 			}

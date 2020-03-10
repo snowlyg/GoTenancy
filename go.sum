@@ -351,8 +351,6 @@ github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e h1:DiWQaAZIKUo/w
 github.com/qor/banner_editor v0.0.0-20181014061955-007b0b21481e/go.mod h1:nPKq9kxHfFTl8WapTbvMdldUOufELgTQUeuKecj7Lxw=
 github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba h1:XBEqqX1xirq3pYMGw8Jr0urCfhPXbJEh1KPwKLd24MM=
 github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba/go.mod h1:DvjFc9BNYPuokuaZVaXvVukLqqkYDlToNC+Gszv3oRs=
-github.com/qor/gomerchant v0.0.0-20180611045240-df0ba7636236 h1:EDV6kcCLGJIkORI8BiwQMAL54Tcci+t/FRiRDGq6h7g=
-github.com/qor/gomerchant v0.0.0-20180611045240-df0ba7636236/go.mod h1:nTC+srKyTkx/zRbNC5NHszmFozq0uUb88BZeBphgwpY=
 github.com/qor/help v0.0.0-20171031093129-202965d1156a h1:oHAkPkHJeyt6XFjXlx4fw20dbnFdfnbCzYW0bNFF3qM=
 github.com/qor/help v0.0.0-20171031093129-202965d1156a/go.mod h1:/aq3Dk6HUMlfufKdYD/Ywgdn4ElZLdAKcYFI4Z1Ek1Y=
 github.com/qor/i18n v0.0.0-20181014061908-f7206d223bcd h1:vMNFvjn0dHz7Y+RedFPwvDore+i+DvjsEN33rsfUC+M=
@@ -429,8 +427,8 @@ github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa h1:TOHLC
 github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c h1:WgsdfuIB/NNyTKOxobp1Ofo0GeelMHA68jxi7GhSjck=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
-github.com/snowlyg/qortenant v0.0.0-20200309141957-a7074b1ed336 h1:Hlju5NjgC8UFo/EGaIqXQf/60psbJ+dsYGR2r++EdRs=
-github.com/snowlyg/qortenant v0.0.0-20200309141957-a7074b1ed336/go.mod h1:IHN2RDUq9b9r88i8qQOAEzjj3mbxxKTwY+2IZxZv6vg=
+github.com/snowlyg/qortenant v0.0.0-20200310024236-bff2e6ba1cba h1:Ct3wVhDjwaIrpcanjh1y81bIgKs/U9fq0eJ4wau1egQ=
+github.com/snowlyg/qortenant v0.0.0-20200310024236-bff2e6ba1cba/go.mod h1:IHN2RDUq9b9r88i8qQOAEzjj3mbxxKTwY+2IZxZv6vg=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/cobra v0.0.5/go.mod h1:3K3wKZymM7VvHMDS9+Akkh4K60UwM26emMESw8tLCHU=

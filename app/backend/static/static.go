@@ -28,8 +28,8 @@ type Config struct {
 func (app App) ConfigureApplication(application *application.Application) {
 	for _, prefix := range app.Config.Prefixs {
 		if app.Config.Handler != nil {
-			application.IrisApp.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
+			application.Iris.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
 		}
-		application.IrisApp.HandleDir("/"+strings.TrimPrefix(prefix, "/"), "./public/"+strings.TrimPrefix(prefix, "/"))
+		application.Iris.HandleDir("/"+strings.TrimPrefix(prefix, "/"), "./public/"+strings.TrimPrefix(prefix, "/"))
 	}
 }

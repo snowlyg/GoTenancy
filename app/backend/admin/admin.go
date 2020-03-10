@@ -111,8 +111,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
 	// 注册 admin 路由和静态文件到 iris
 	handler := iris.FromStd(Admin.NewServeMux(app.Config.Prefix))
-	application.IrisApp.Any(app.Config.Prefix, handler)
-	application.IrisApp.Macros().Get("string").RegisterFunc("notHas",
+	application.Iris.Any(app.Config.Prefix, handler)
+	application.Iris.Macros().Get("string").RegisterFunc("notHas",
 		func(validNames []string) func(string) bool {
 			return func(paramValue string) bool {
 				for _, validName := range validNames {
@@ -123,7 +123,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 				return true
 			}
 		})
-	application.IrisApp.Macros().Get("string").RegisterFunc("has",
+	application.Iris.Macros().Get("string").RegisterFunc("has",
 		func(validNames []string) func(string) bool {
 			return func(paramValue string) bool {
 				for _, validName := range validNames {
@@ -135,13 +135,13 @@ func (app App) ConfigureApplication(application *application.Application) {
 			}
 		})
 	//子资源 ，例如User Management等等,但是不覆盖登录了相关路由
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string notHas([login,logout,password])}", handler)
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string}/{p:path}", handler)
+	application.Iris.Any(app.Config.Prefix+"/{name:string notHas([login,logout,password])}", handler)
+	application.Iris.Any(app.Config.Prefix+"/{name:string}/{p:path}", handler)
 
 	// 注册 auth 路由到 iris
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Any(app.Config.AuthPerfix+"/{name:string has([login,logout])}", authHandler)
-	application.IrisApp.Any(app.Config.AuthPerfix+"/{name:string}/{p:path}", authHandler) // 提交登陆表单,静态资源
+	application.Iris.Any(app.Config.AuthPerfix+"/{name:string has([login,logout])}", authHandler)
+	application.Iris.Any(app.Config.AuthPerfix+"/{name:string}/{p:path}", authHandler) // 提交登陆表单,静态资源
 }
 
 // registerPaths 循环注册视图

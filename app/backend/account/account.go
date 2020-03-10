@@ -38,7 +38,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	funcmapmaker.AddFuncMapMaker(controller.View)
 	app.ConfigureAdmin(application.Admin)
 
-	application.IrisApp.PartyFunc("/admin/account", func(account iris.Party) {
+	application.Iris.PartyFunc("/admin/account", func(account iris.Party) {
 		account.Use(middleware.Authorize)
 		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
 		account.Get("/profile", controller.Profile)

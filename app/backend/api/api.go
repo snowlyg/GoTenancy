@@ -35,6 +35,6 @@ func (app App) ConfigureApplication(application *application.Application) {
 	//API.AddResource(&rabc.OauthToken{})
 
 	//std := iris.FromStd(API.NewServeMux(app.Config.Prefix))
-	//application.IrisApp.Any(app.Config.Prefix, std)
+	//application.Iris.Any(app.Config.Prefix, std)
 
 }
