@@ -26,10 +26,11 @@ type Config struct {
 
 // ConfigureApplication configure application
 func (app App) ConfigureApplication(application *application.Application) {
+	AdminParty := application.IrisApplication.AdminParty
 	for _, prefix := range app.Config.Prefixs {
 		if app.Config.Handler != nil {
-			application.Iris.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
+			AdminParty.Any("/"+strings.TrimPrefix(prefix, "/")+"/{p:path}", iris.FromStd(app.Config.Handler))
 		}
-		application.Iris.HandleDir("/"+strings.TrimPrefix(prefix, "/"), "./public/"+strings.TrimPrefix(prefix, "/"))
+		AdminParty.HandleDir("/"+strings.TrimPrefix(prefix, "/"), "./public/"+strings.TrimPrefix(prefix, "/"))
 	}
 }

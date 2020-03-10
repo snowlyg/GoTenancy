@@ -63,7 +63,7 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123 // indirect
-	github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515
+	github.com/snowlyg/qor-auth-theme v0.0.0-20200310080011-7ea3fcf4de50
 	github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c
 	github.com/snowlyg/qortenant v0.0.0-20200310024236-bff2e6ba1cba
 	github.com/unrolled/render v1.0.2

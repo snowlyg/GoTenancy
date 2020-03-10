@@ -423,6 +423,8 @@ github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123 h1:ulbM5/A
 github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123/go.mod h1:XQTsi1E7BSdtkFtsDNh0bLb7cooz/MfqoJws4FFIwYE=
 github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515 h1:V/LMOLrPMiPzpr2eir9EUOhdsy+PAgb2q860ShxEgC0=
 github.com/snowlyg/qor-auth-theme v0.0.0-20200228055710-18e5032d3515/go.mod h1:8hXLPdW6oNxYNHhtzdmcl1I6dmVjxOqT9mX0M9iKLAQ=
+github.com/snowlyg/qor-auth-theme v0.0.0-20200310080011-7ea3fcf4de50 h1:tGDNHHxSwz8XJ1R1CL+QoW9ecuavAORuIEvKd3RkxBU=
+github.com/snowlyg/qor-auth-theme v0.0.0-20200310080011-7ea3fcf4de50/go.mod h1:8hXLPdW6oNxYNHhtzdmcl1I6dmVjxOqT9mX0M9iKLAQ=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa h1:TOHLCwWvYQEepL8SJH/xPS9ZNgjm9Kwqv1dCrPEsDhQ=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228034429-c4067bf21caa/go.mod h1:bInyxCwlU5fuviD0vWuKcKEPEMs4qKVXVJbDXlobe6A=
 github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c h1:WgsdfuIB/NNyTKOxobp1Ofo0GeelMHA68jxi7GhSjck=

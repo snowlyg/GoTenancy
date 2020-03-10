@@ -37,26 +37,36 @@ func main() {
 	}
 
 	var (
-		Iris      = iris.Default()
 		adminAuth = auth.NewAdminAuth(&auth.PathConfig{})
 		Admin     = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancyAdmin",
 			Auth:     adminAuth,
 			DB:       db.DB,
 		})
-		Tenant = admin.New(&admin.AdminConfig{
+
+		tenantAuth = auth.NewAdminAuth(&auth.PathConfig{})
+		Tenant     = admin.New(&admin.AdminConfig{
 			SiteName: "GoTenancyTenant",
-			Auth:     adminAuth,
+			Auth:     tenantAuth,
 			DB:       db.DB,
 		})
 
+		Iris        = iris.Default()
 		Application = application.New(&application.Config{
-			Iris:   Iris,
+			IrisApplication: application.IrisApplication{
+				Iris:        Iris,
+				AdminParty:  Iris.Subdomain("admin"),
+				TenantParty: Iris.Subdomain("tenant"),
+			},
 			Admin:  Admin,
 			Tenant: Tenant,
 			DB:     db.DB,
 		})
 	)
+
+	f := NewLogFile()
+	defer f.Close()
+	Iris.Logger().SetOutput(f) //记录日志
 
 	Iris.Logger().SetLevel("debug")
 	Iris.Use(logger.New())

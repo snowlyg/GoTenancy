@@ -25,13 +25,14 @@ type Config struct {
 
 // ConfigureApplication configure application
 func (App) ConfigureApplication(application *application.Application) {
+	AdminParty := application.IrisApplication.AdminParty
+	Iris := application.IrisApplication.Iris
+	backend.Register(Iris)
 
-	backend.Register(application.Iris)
+	AdminParty.HandleDir("/static", "app/backend/home/views/static")
+	Iris.RegisterView(iris.HTML("./app/backend/home/views", ".html"))
 
-	application.Iris.HandleDir("/static", "app/home/views/static")
-	application.Iris.RegisterView(iris.HTML("./app/home/views", ".html"))
-
-	application.Iris.Get("/", func(ctx iris.Context) {
+	AdminParty.Get("/", func(ctx iris.Context) {
 		if err := ctx.View("index.html"); err != nil {
 			color.Red(fmt.Sprintf("Home Index View error: %v\n", err))
 		}

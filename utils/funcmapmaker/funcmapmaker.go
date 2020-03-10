@@ -10,7 +10,7 @@ import (
 	"github.com/qor/render"
 	"github.com/qor/session"
 	"github.com/qor/session/manager"
-	"go-tenancy/app/admin"
+	"go-tenancy/app/backend/admin"
 	"go-tenancy/config"
 	"go-tenancy/config/i18n"
 	"go-tenancy/models/seo"

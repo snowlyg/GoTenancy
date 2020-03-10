@@ -1,4 +1,5 @@
 https: false
+host: gotenant.com
 port: 8081
 
 github:

@@ -21,24 +21,27 @@ type Application struct {
 	*Config
 }
 
+// IrisApplication main application
+type IrisApplication struct {
+	Iris        *iris.Application
+	AdminParty  iris.Party
+	TenantParty iris.Party
+}
+
 // Config application config
 type Config struct {
-	Iris     *iris.Application
-	Handlers []http.Handler
-	AssetFS  assetfs.Interface
-	Admin    *admin.Admin
-	Tenant   *admin.Admin
-	DB       *gorm.DB
+	IrisApplication IrisApplication
+	Handlers        []http.Handler
+	AssetFS         assetfs.Interface
+	Admin           *admin.Admin
+	Tenant          *admin.Admin
+	DB              *gorm.DB
 }
 
 // New new application
 func New(cfg *Config) *Application {
 	if cfg == nil {
 		cfg = &Config{}
-	}
-
-	if cfg.Iris == nil {
-		cfg.Iris = iris.Default()
 	}
 
 	if cfg.AssetFS == nil {
@@ -57,15 +60,16 @@ func (application *Application) Use(app MicroAppInterface) {
 
 // NewServeMux allocates and returns a new ServeMux.
 func (application *Application) NewServeMux() http.Handler {
+	Iris := application.Config.IrisApplication.Iris
 	if len(application.Config.Handlers) == 0 {
-		return middlewares.Apply(application.Config.Iris)
+		return middlewares.Apply(Iris)
 	}
 
 	wildcardRouter := wildcard_router.New()
 	for _, handler := range application.Config.Handlers {
 		wildcardRouter.AddHandler(handler)
 	}
-	wildcardRouter.AddHandler(application.Config.Iris)
+	wildcardRouter.AddHandler(Iris)
 
 	return middlewares.Apply(wildcardRouter)
 }
