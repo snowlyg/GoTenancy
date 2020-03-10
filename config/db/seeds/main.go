@@ -96,13 +96,13 @@ func createRecords() {
 	fmt.Println("--> 填充 addresses.")
 
 	createTPermissions()
-	fmt.Println("--> 填充 RabcPermission.")
+	fmt.Println("--> 填充 tpermission.")
 
 	createTRoles()
-	fmt.Println("--> 填充 RabcRole.")
+	fmt.Println("--> 填充 trole.")
 
 	createTUsers()
-	fmt.Println("--> 填充 RabcUser.")
+	fmt.Println("--> 填充 tuser.")
 
 	createTenants()
 	fmt.Println("--> 填充 tenants.")
@@ -266,7 +266,7 @@ func createTPermissions() {
 		tpermission.DisplayName = u.DisplayName
 		tpermission.Description = u.Description
 		tpermission.Act = u.Act
-		if err := tpermission.CreateTPermission(); err != nil {
+		if err := DraftDB.Create(&tpermission); err != nil {
 			log.Fatal(fmt.Sprintf("create TPermission (%v) failure, got err %v", tpermission, err))
 		}
 	}
@@ -275,8 +275,7 @@ func createTPermissions() {
 func createTRoles() {
 
 	var rabcPermIds []uint
-	rabcPerms := qortenant_database.GetAllTPermissions("", "", 0, 0)
-	for _, rabcPerm := range rabcPerms {
+	for _, rabcPerm := range findAllTPermissions() {
 		rabcPermIds = append(rabcPermIds, rabcPerm.ID)
 	}
 
@@ -285,7 +284,7 @@ func createTRoles() {
 		trole.Name = u.Name
 		trole.DisplayName = u.DisplayName
 		trole.Description = u.Description
-		if err := trole.CreateTRole(rabcPermIds); err != nil {
+		if err := DraftDB.Create(&trole); err != nil {
 			log.Fatal(fmt.Sprintf("create TRole (%v) failure, got err %v", trole, err))
 		}
 	}
@@ -293,8 +292,7 @@ func createTRoles() {
 
 func createTUsers() {
 	var rabcRoleIds []uint
-	rabcRoles := qortenant_database.GetAllTRoles("", "", 0, 0)
-	for _, rabcRole := range rabcRoles {
+	for _, rabcRole := range findAllTRole() {
 		rabcRoleIds = append(rabcRoleIds, rabcRole.ID)
 	}
 
@@ -303,7 +301,7 @@ func createTUsers() {
 		tuser.Name = u.Name
 		tuser.Username = u.Username
 		tuser.Password = utils.HashPassword("password")
-		if err := tuser.CreateTUser(rabcRoleIds); err != nil {
+		if err := DraftDB.Create(&tuser); err != nil {
 			log.Fatal(fmt.Sprintf("create TUser (%v) failure, got err %v", tuser, err))
 		}
 	}
@@ -464,4 +462,20 @@ func findTUserByUserName(username string) *qortenant_database.TUser {
 		log.Fatalf("can't find rabcUser with name = %q, got err %v", username, err)
 	}
 	return tUser
+}
+
+func findAllTRole() []*qortenant_database.TRole {
+	var troles []*qortenant_database.TRole
+	if err := DraftDB.First(&troles).Error; err != nil {
+		log.Fatalf("can't find all troles, got err %v", err)
+	}
+	return troles
+}
+
+func findAllTPermissions() []*qortenant_database.TPermission {
+	var tpermissions []*qortenant_database.TPermission
+	if err := DraftDB.First(&tpermissions).Error; err != nil {
+		log.Fatalf("can't find all tpermissions, got err %v", err)
+	}
+	return tpermissions
 }
