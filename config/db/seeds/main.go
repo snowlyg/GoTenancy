@@ -31,7 +31,6 @@ import (
 	adminseo "go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
-	"go-tenancy/models/tenant"
 	"go-tenancy/models/users"
 	"go-tenancy/utils"
 )
@@ -96,13 +95,13 @@ func createRecords() {
 	createAddresses()
 	fmt.Println("--> 填充 addresses.")
 
-	//createRabcPermissions()
-	//fmt.Println("--> 填充 RabcPermission.")
-	//
-	//createRabcRoles()
-	//fmt.Println("--> 填充 RabcRole.")
+	createTPermissions()
+	fmt.Println("--> 填充 RabcPermission.")
 
-	createRabcUsers()
+	createTRoles()
+	fmt.Println("--> 填充 RabcRole.")
+
+	createTUsers()
 	fmt.Println("--> 填充 RabcUser.")
 
 	createTenants()
@@ -262,13 +261,13 @@ func createAddresses() {
 
 func createTPermissions() {
 	for _, u := range Seeds.TPermissions {
-		rabcperm := qortenant_database.TPermission{}
-		rabcperm.Name = u.Name
-		rabcperm.DisplayName = u.DisplayName
-		rabcperm.Description = u.Description
-		rabcperm.Act = u.Act
-		if err := qortenant_database.CreateTPermission(); err != nil {
-			log.Fatal(fmt.Sprintf("create TPermission (%v) failure, got err %v", rabcperm, err))
+		tpermission := qortenant_database.TPermission{}
+		tpermission.Name = u.Name
+		tpermission.DisplayName = u.DisplayName
+		tpermission.Description = u.Description
+		tpermission.Act = u.Act
+		if err := tpermission.CreateTPermission(); err != nil {
+			log.Fatal(fmt.Sprintf("create TPermission (%v) failure, got err %v", tpermission, err))
 		}
 	}
 }
@@ -282,12 +281,12 @@ func createTRoles() {
 	}
 
 	for _, u := range Seeds.TRoles {
-		rabcrole :=qortenant_database.TRole{}
-		rabcrole.Name = u.Name
-		rabcrole.DisplayName = u.DisplayName
-		rabcrole.Description = u.Description
-		if err := qortenant_database.CreateTRole(rabcPermIds); err != nil {
-			log.Fatal(fmt.Sprintf("create TRole (%v) failure, got err %v", rabcrole, err))
+		trole := qortenant_database.TRole{}
+		trole.Name = u.Name
+		trole.DisplayName = u.DisplayName
+		trole.Description = u.Description
+		if err := trole.CreateTRole(rabcPermIds); err != nil {
+			log.Fatal(fmt.Sprintf("create TRole (%v) failure, got err %v", trole, err))
 		}
 	}
 }
@@ -300,12 +299,12 @@ func createTUsers() {
 	}
 
 	for _, u := range Seeds.TUsers {
-		rabcuser := qortenant_database.TUser{}
-		rabcuser.Name = u.Name
-		rabcuser.Username = u.Username
-		rabcuser.Password = utils.HashPassword("password")
-		if err := qortenant_database.CreateTUser(rabcRoleIds); err != nil {
-			log.Fatal(fmt.Sprintf("create TUser (%v) failure, got err %v", rabcuser, err))
+		tuser := qortenant_database.TUser{}
+		tuser.Name = u.Name
+		tuser.Username = u.Username
+		tuser.Password = utils.HashPassword("password")
+		if err := tuser.CreateTUser(rabcRoleIds); err != nil {
+			log.Fatal(fmt.Sprintf("create TUser (%v) failure, got err %v", tuser, err))
 		}
 	}
 }

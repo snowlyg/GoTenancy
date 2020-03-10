@@ -73,7 +73,12 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
 	// 租户
-	Admin.AddResource(database.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
+	tenant := Admin.AddResource(database.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
+	tenant.Meta(&admin.Meta{Name: "TUsers", Config: &admin.SelectManyConfig{SelectMode: "bottom_sheet"}})
+	Admin.AddResource(database.TUser{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	Admin.AddResource(database.TRole{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	Admin.AddResource(database.TPermission{}, &admin.Config{Menu: []string{"Tenancy Management"}})
+	Admin.AddResource(database.TOauthToken{}, &admin.Config{Menu: []string{"Tenancy Management"}})
 
 	// 媒体库
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
@@ -89,16 +94,6 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 设置
 	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
-
-	//Admin.AddMenu(&admin.Menu{Name: "Tenancy Management", Priority: 2})
-	//_ = Admin.AddResource(&tenant.RabcUser{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	//_ = Admin.AddResource(&tenant.RabcRole{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	//_ = Admin.AddResource(&tenant.RabcPermission{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	//_ = Admin.AddResource(&tenant.OauthToken{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	//
-	//// 租户
-	//tenant := Admin.AddResource(&tenant.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}})
-	//tenant.Meta(&admin.Meta{Name: "RabcUsers", Config: &admin.SelectManyConfig{SelectMode: "bottom_sheet"}})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
