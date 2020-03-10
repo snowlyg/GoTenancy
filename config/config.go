@@ -8,7 +8,6 @@ import (
 	"github.com/qor/auth/providers/github"
 	"github.com/qor/auth/providers/google"
 	"github.com/qor/auth/providers/twitter"
-	"github.com/qor/gomerchant"
 	"github.com/qor/location"
 	"github.com/qor/mailer"
 	"github.com/qor/mailer/logger"
@@ -66,11 +65,12 @@ var (
 	Mailer *mailer.Mailer
 	Render = render.New()
 	//AmazonPay      amazonpay.AmazonPayService
-	PaymentGateway gomerchant.PaymentGateway
-	RedirectBack   = redirect_back.New(&redirect_back.Config{
-		SessionManager: manager.SessionManager,
-		IgnoredPaths:   []string{"/admin/login", "/admin/password/login"},
-		FallbackPath:   "/admin", // 登陆后返回路径
+	//PaymentGateway gomerchant.PaymentGateway
+	RedirectBack = redirect_back.New(&redirect_back.Config{
+		SessionManager:  manager.SessionManager,
+		IgnoredPrefixes: []string{"/auth"},
+		//IgnoredPaths:   []string{"/auth/login", "/auth/password/login"},
+		//FallbackPath:   "", // 登陆后返回路径
 	})
 )
 

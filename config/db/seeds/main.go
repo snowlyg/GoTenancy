@@ -28,11 +28,11 @@ import (
 	"go-tenancy/config/auth"
 	"go-tenancy/config/db"
 	_ "go-tenancy/config/db/migrations"
+	"go-tenancy/libs"
 	adminseo "go-tenancy/models/seo"
 	"go-tenancy/models/settings"
 	"go-tenancy/models/stores"
 	"go-tenancy/models/users"
-	"go-tenancy/utils"
 )
 
 /* How to run this script
@@ -300,7 +300,7 @@ func createTUsers() {
 		tuser := qortenant_database.TUser{}
 		tuser.Name = u.Name
 		tuser.Username = u.Username
-		tuser.Password = utils.HashPassword("password")
+		tuser.Password = libs.HashPassword("password")
 		if err := DraftDB.Create(&tuser); err != nil {
 			log.Fatal(fmt.Sprintf("create TUser (%v) failure, got err %v", tuser, err))
 		}

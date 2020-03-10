@@ -1,4 +1,4 @@
-package utils
+package libs
 
 import (
 	"encoding/json"
@@ -35,4 +35,14 @@ func StructToMap(obj interface{}) map[string]interface{} {
 		data[strings.ToLower(k.Field(i).Name)] = v.Field(i).Interface()
 	}
 	return data
+}
+
+func InStringSlices(arg string, ss []string) bool {
+	for _, s := range ss {
+		if s == arg {
+			return true
+		}
+	}
+
+	return false
 }

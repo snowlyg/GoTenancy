@@ -10,6 +10,7 @@ import (
 	"github.com/qor/help"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
+	"github.com/qor/roles"
 	registerviews "github.com/snowlyg/qor-registerviews"
 	"github.com/snowlyg/qortenant/backend/database"
 	"go-tenancy/config/application"
@@ -27,7 +28,11 @@ var AssetManager *admin.Resource
 // New new home app
 func New(config *Config) *App {
 	if config.Prefix == "" {
-		config.Prefix = "/admin"
+		config.Prefix = "/"
+	}
+
+	if config.AuthPerfix == "" {
+		config.AuthPerfix = "/auth"
 	}
 	return &App{Config: config}
 }
@@ -39,7 +44,8 @@ type App struct {
 
 // Config home config struct
 type Config struct {
-	Prefix string
+	Prefix     string
+	AuthPerfix string
 }
 
 // ConfigureApplication configure application
@@ -66,11 +72,13 @@ func (app App) ConfigureApplication(application *application.Application) {
 	registerPaths(pkgnames, Admin)
 
 	// 静态文件加载
-	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
+	AssetManager = Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{
+		Invisible: true,
+	})
 
 	// Add action bar
 	ActionBar = action_bar.New(Admin)
-	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
+	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/"})
 
 	// 租户
 	tenant := Admin.AddResource(database.Tenant{}, &admin.Config{Menu: []string{"Tenancy Management"}, Priority: 2})
@@ -93,7 +101,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: -1})
 
 	// 设置
-	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1})
+	Admin.AddResource(&settings.Setting{}, &admin.Config{Name: "Shop Setting", Menu: []string{"Site Management"}, Singleton: true, Priority: 1, Permission: roles.Allow(roles.Read, "super_admin")})
 
 	SetupNotification(Admin)
 	SetupWorker(Admin)
@@ -132,8 +140,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 
 	// 注册 auth 路由到 iris
 	authHandler := iris.FromStd(auth.Auth.NewServeMux())
-	application.IrisApp.Any(app.Config.Prefix+"/{name:string has([login,logout])}", authHandler)
-	application.IrisApp.Any(app.Config.Prefix+"/password/login", authHandler) // 提交登陆表单
+	application.IrisApp.Any(app.Config.AuthPerfix+"/{name:string has([login,logout])}", authHandler)
+	application.IrisApp.Any(app.Config.AuthPerfix+"/{name:string}/{p:path}", authHandler) // 提交登陆表单,静态资源
 }
 
 // registerPaths 循环注册视图

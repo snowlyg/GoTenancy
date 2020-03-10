@@ -19,7 +19,6 @@ import (
 )
 
 var (
-
 	// Auth 初始化用于认证的 Auth
 	Auth = themes.New(&auth.Config{
 		DB:         db.DB,
