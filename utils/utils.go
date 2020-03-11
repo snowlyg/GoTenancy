@@ -24,6 +24,14 @@ func GetCurrentUser(req *http.Request) *users.User {
 	return nil
 }
 
+// GetTenantCurrentUser 从请求中获取当前用户
+func GetTenantCurrentUser(req *http.Request) *users.User {
+	if currentUser, ok := auth.TenantAuth.GetCurrentUser(req).(*users.User); ok {
+		return currentUser
+	}
+	return nil
+}
+
 // GetCurrentLocale 从请求中获取本地设置
 func GetCurrentLocale(req *http.Request) string {
 	locale := l10n.Global

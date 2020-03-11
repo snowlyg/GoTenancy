@@ -75,6 +75,7 @@ func main() {
 
 	// 认证相关视图渲染
 	funcmapmaker.AddFuncMapMaker(auth.Auth.Config.Render)
+	funcmapmaker.AddFuncMapMaker(auth.TenantAuth.Config.Render)
 
 	// 加载应用
 	Application.Use(adminapp.New(&adminapp.Config{}))

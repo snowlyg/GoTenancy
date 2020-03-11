@@ -11,7 +11,6 @@ import (
 	"github.com/qor/session"
 	"github.com/qor/session/manager"
 	"go-tenancy/app/backend/admin"
-	"go-tenancy/config"
 	"go-tenancy/config/i18n"
 	"go-tenancy/models/seo"
 	"go-tenancy/models/users"
@@ -66,8 +65,8 @@ func AddFuncMapMaker(view *render.Render) *render.Render {
 			return utils.GetCurrentUser(req)
 		}
 
-		funcMap["amazon_payment_gateway"] = func() interface{} {
-			return config.Config.AmazonPay
+		funcMap["tenant_current_user"] = func() *users.User {
+			return utils.GetTenantCurrentUser(req)
 		}
 
 		funcMap["format_price"] = func(price interface{}) string {

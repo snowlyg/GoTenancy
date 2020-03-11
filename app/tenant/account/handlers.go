@@ -15,7 +15,7 @@ type Controller struct {
 // Profile profile show page
 func (ctrl Controller) Profile(ctx iris.Context) {
 	var (
-		currentUser                     = utils.GetCurrentUser(ctx.Request())
+		currentUser                     = utils.GetTenantCurrentUser(ctx.Request())
 		tx                              = utils.GetDB(ctx.Request())
 		billingAddress, shippingAddress users.Address
 	)

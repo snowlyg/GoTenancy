@@ -7,7 +7,6 @@ require (
 	github.com/Shaked/gomobiledetect v0.0.0-20171211181707-25f014f66568 // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
-	github.com/betacraft/yaag v1.0.1-0.20191027021412-565f65e36090 // indirect
 	github.com/casbin/casbin/v2 v2.2.1
 	github.com/casbin/gorm-adapter/v2 v2.0.3
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
@@ -15,9 +14,10 @@ require (
 	github.com/gin-gonic/gin v1.5.0 // indirect
 	github.com/go-playground/validator/v10 v10.2.0 // indirect
 	github.com/google/go-github v17.0.0+incompatible
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/headzoo/surf v1.0.0 // indirect
 	github.com/headzoo/ut v0.0.0-20181013193318-a13b5a7a02ca // indirect
-	github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367 // indirect
+	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/iris-contrib/middleware/jwt v0.0.0-20191219204441-78279b78a367 // indirect
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/jinzhu/configor v1.1.1
@@ -29,6 +29,9 @@ require (
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible
 	github.com/microcosm-cc/bluemonday v1.0.2
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
@@ -61,14 +64,17 @@ require (
 	github.com/qor/wildcard_router v0.0.0-20171031035524-56710e5bb5a4
 	github.com/qor/worker v0.0.0-20190805090529-35a245417f70
 	github.com/sergi/go-diff v1.1.0 // indirect
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/snowlyg/gotransformer v0.1.1-0.20200203150046-087a5f2b1123 // indirect
 	github.com/snowlyg/qor-auth-theme v0.0.0-20200310080011-7ea3fcf4de50
 	github.com/snowlyg/qor-registerviews v0.0.0-20200228055356-1db9340ae42c
 	github.com/snowlyg/qortenant v0.0.0-20200310024236-bff2e6ba1cba
 	github.com/unrolled/render v1.0.2
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
+	github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0 // indirect
+	github.com/yudai/gojsondiff v1.0.0 // indirect
+	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d

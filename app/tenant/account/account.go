@@ -39,8 +39,8 @@ func (app App) ConfigureApplication(application *application.Application) {
 	app.ConfigureAdmin(application.Admin)
 
 	application.IrisApplication.TenantParty.PartyFunc("/admin/account", func(account iris.Party) {
-		account.Use(middleware.Authorize)
-		account.Post("/add_user_credit", middleware.AuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
+		account.Use(middleware.TenantAuthorize)
+		account.Post("/add_user_credit", middleware.TenantAuthorizeloggedInHalfHour, controller.AddCredit) // role: logged_in_half_hour
 		account.Get("/profile", controller.Profile)
 		account.Post("/profile", controller.Update)
 	})

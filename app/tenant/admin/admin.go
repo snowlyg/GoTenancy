@@ -108,7 +108,7 @@ func (app App) ConfigureApplication(application *application.Application) {
 	TenantParty.Any(app.Config.Prefix+"/{name:string}/{p:path}", handler)
 
 	// 注册 auth 路由到 iris
-	authHandler := iris.FromStd(auth.Auth.NewServeMux())
+	authHandler := iris.FromStd(auth.TenantAuth.NewServeMux())
 	TenantParty.Any(app.Config.AuthPerfix+"/{name:string has([login,logout])}", authHandler)
 	TenantParty.Any(app.Config.AuthPerfix+"/{name:string}/{p:path}", authHandler) // 提交登陆表单,静态资源
 }
@@ -125,6 +125,6 @@ func registerPaths(pkgnames map[string][]string, Tenant *admin.Admin) {
 // registerPath 注册视图
 func registerPath(Tenant *admin.Admin, pkgname, subpath string) {
 	if err := Tenant.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpath)); err != nil {
-		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpath, err))
+		color.Yellow(fmt.Sprintf("WARNING: Tenant.AssetFS.RegisterPath  %v/%v%v %v\n", "github.com/qor", pkgname, subpath, err))
 	}
 }

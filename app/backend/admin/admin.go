@@ -157,6 +157,6 @@ func registerPaths(pkgnames map[string][]string, Admin *admin.Admin) {
 // registerPath 注册视图
 func registerPath(Admin *admin.Admin, pkgname, subpath string) {
 	if err := Admin.AssetFS.RegisterPath(registerviews.DetectViewsDir("github.com/qor", pkgname, subpath)); err != nil {
-		color.Red(fmt.Sprintf("Admin.AssetFS.RegisterPath  %v/%v %v\n", pkgname, subpath, err))
+		color.Yellow(fmt.Sprintf("WARNING: Admin.AssetFS.RegisterPath  %v/%v%v %v\n", pkgname, subpath, err))
 	}
 }

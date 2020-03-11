@@ -16,10 +16,6 @@ func init() {
 	roles.Register("super_admin", func(req *http.Request, currentUser interface{}) bool {
 		return libs.InStringSlices(req.RemoteAddr, []string{"127.0.0.1", "admin.gotenant.com"}) && currentUser != nil && currentUser.(*users.User).Role == "SuperAdmin"
 	})
-	// 注册租户角色
-	roles.Register("tenant", func(req *http.Request, currentUser interface{}) bool {
-		return req.RemoteAddr == "tenant.gotenant.com" && currentUser != nil && currentUser.(*users.User).Role == "Tenant"
-	})
 }
 
 func NewAdminAuth(config *PathConfig) *AdminAuth {

@@ -11,8 +11,6 @@ import (
 	"github.com/qor/location"
 	"github.com/qor/mailer"
 	"github.com/qor/mailer/logger"
-	"github.com/qor/media/oss"
-	"github.com/qor/oss/s3"
 	"github.com/qor/redirect_back"
 	"github.com/qor/session/manager"
 	"github.com/unrolled/render"
@@ -27,7 +25,7 @@ type SMTPConfig struct {
 
 var Config = struct {
 	HTTPS bool `default:"false" env:"HTTPS"`
-	Port  uint `default:"7000" env:"PORT"`
+	Port  uint `default:"8080" env:"PORT"`
 	DB    struct {
 		Name     string `env:"DBName" default:"qor_example"`
 		Adapter  string `env:"DBAdapter" default:"mysql"`
@@ -42,15 +40,6 @@ var Config = struct {
 		Region          string `env:"AWS_Region"`
 		S3Bucket        string `env:"AWS_Bucket"`
 	}
-	AmazonPay struct {
-		MerchantID   string `env:"AmazonPayMerchantID"`
-		AccessKey    string `env:"AmazonPayAccessKey"`
-		SecretKey    string `env:"AmazonPaySecretKey"`
-		ClientID     string `env:"AmazonPayClientID"`
-		ClientSecret string `env:"AmazonPayClientSecret"`
-		Sandbox      bool   `env:"AmazonPaySandbox"`
-		CurrencyCode string `env:"AmazonPayCurrencyCode" default:"JPY"`
-	}
 	SMTP         SMTPConfig
 	Github       github.Config
 	Google       google.Config
@@ -64,13 +53,10 @@ var (
 	Root   = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
 	Mailer *mailer.Mailer
 	Render = render.New()
-	//AmazonPay      amazonpay.AmazonPayService
-	//PaymentGateway gomerchant.PaymentGateway
+
 	RedirectBack = redirect_back.New(&redirect_back.Config{
 		SessionManager:  manager.SessionManager,
 		IgnoredPrefixes: []string{"/auth"},
-		//IgnoredPaths:   []string{"/auth/login", "/auth/password/login"},
-		//FallbackPath:   "", // 登陆后返回路径
 	})
 )
 
@@ -82,29 +68,6 @@ func init() {
 	location.GoogleAPIKey = Config.GoogleAPIKey
 	location.BaiduAPIKey = Config.BaiduAPIKey
 
-	if Config.S3.AccessKeyID != "" {
-		oss.Storage = s3.New(&s3.Config{
-			AccessID:  Config.S3.AccessKeyID,
-			AccessKey: Config.S3.SecretAccessKey,
-			Region:    Config.S3.Region,
-			Bucket:    Config.S3.S3Bucket,
-		})
-	}
-
-	//AmazonPay = amazonpay.New(&amazonpay.Config{
-	//	MerchantID: Config.AmazonPay.MerchantID,
-	//	AccessKey:  Config.AmazonPay.AccessKey,
-	//	SecretKey:  Config.AmazonPay.SecretKey,
-	//	Sandbox:    true,
-	//	Region:     "jp",
-	//})
-
-	// dialer := gomail.NewDialer(Config.SMTP.Host, Config.SMTP.Port, Config.SMTP.User, Config.SMTP.Password)
-	// sender, err := dialer.Dial()
-
-	// Mailer = mailer.New(&mailer.Config{
-	// 	Sender: gomailer.New(&gomailer.Config{Sender: sender}),
-	// })
 	Mailer = mailer.New(&mailer.Config{
 		Sender: logger.New(&logger.Config{}),
 	})

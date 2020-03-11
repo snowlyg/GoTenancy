@@ -20,29 +20,28 @@ import (
 
 var (
 	// Auth 初始化用于认证的 Auth
-	Auth = themes.New(&auth.Config{
+	TenantAuth = themes.New(&auth.Config{
 		DB:     db.DB,
 		Mailer: config.Mailer,
 		Render: render.New(&render.Config{
 			AssetFileSystem: bindatafs.AssetFS.NameSpace("auth"),
-			ViewPaths:       []string{"app/backend/views"},
+			ViewPaths:       []string{"app/tenant/views"},
 		}),
 		UserModel:  users.User{},
 		Redirector: auth.Redirector{RedirectBack: config.RedirectBack},
 	})
 
 	// Authority 初始化用于认证的 Authority
-	Authority = authority.New(&authority.Config{
-		Auth: Auth,
+	TenantAuthority = authority.New(&authority.Config{
+		Auth: TenantAuth,
 	})
 )
 
 func init() {
+	TenantAuth.RegisterProvider(github.New(&config.Config.Github))
+	TenantAuth.RegisterProvider(google.New(&config.Config.Google))
+	TenantAuth.RegisterProvider(facebook.New(&config.Config.Facebook))
+	TenantAuth.RegisterProvider(twitter.New(&config.Config.Twitter))
 
-	Auth.RegisterProvider(github.New(&config.Config.Github))
-	Auth.RegisterProvider(google.New(&config.Config.Google))
-	Auth.RegisterProvider(facebook.New(&config.Config.Facebook))
-	Auth.RegisterProvider(twitter.New(&config.Config.Twitter))
-
-	Authority.Register("logged_in_half_hour", authority.Rule{TimeoutSinceLastLogin: time.Minute * 30})
+	TenantAuthority.Register("logged_in_half_hour", authority.Rule{TimeoutSinceLastLogin: time.Minute * 30})
 }
