@@ -20,6 +20,7 @@ import (
 	"go-tenancy/app/backend/static"
 	tenantaccount "go-tenancy/app/tenant/account"
 	tenantapp "go-tenancy/app/tenant/admin"
+	tenantstatic "go-tenancy/app/tenant/static"
 	"go-tenancy/config"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
@@ -84,8 +85,9 @@ func main() {
 		Prefixs: []string{"/system"},
 		Handler: utils.FileServer(http.Dir(filepath.Join(config.Root, "public"))),
 	}))
+
 	prefixs := []string{"javascripts", "stylesheets", "images", "dist", "fonts", "vendors", "favicon.ico"}
-	Application.Use(static.New(&static.Config{
+	Application.Use(tenantstatic.New(&tenantstatic.Config{
 		Prefixs: prefixs,
 		Handler: bindatafs.AssetFS.FileServer("public", prefixs...),
 	}))

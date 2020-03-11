@@ -11,10 +11,10 @@
       </ul>
     {{end}}
 
-    <h1>{{t "auth.sign_in"}}</h1>
+    <h1>{{t "auth.sign_in" "Sign In"}}</h1>
 
     <a class="signup-link" href="{{.AuthURL "register"}}">
-      {{ t "auth.links.sign_up" }}
+      {{ t "auth.links.sign_up" "Sign Up"}}
     </a>
 
     {{if .Auth.GetProvider "password"}}
@@ -23,18 +23,18 @@
 
         <ul class="auth-form">
           <li>
-            <label for="email">{{t "auth.form.email"}}</label>
-            <input type="email" id="email" name="login" placeholder="{{t "auth.form.email_placeholder"}}" value="{{.FormValue "login"}}">
+            <label for="email">{{t "auth.form.email" "Email"}}</label>
+            <input type="email" id="email" name="login" placeholder="{{t "auth.form.email_placeholder" "Entry Your Email"}}" value="{{.FormValue "login"}}">
           </li>
 
           <li>
-            <label for="password">{{t "auth.form.password"}}</label>
-            <a class="forgot-password" href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password" }}</a>
-            <input type="password" class="form-control" id="password" name="password" placeholder="{{t "auth.form.password_placeholder"}}">
+            <label for="password">{{t "auth.form.password" "Password"}}</label>
+            <a class="forgot-password" href="{{.AuthURL "password/new"}}">{{ t "auth.links.forgot_password" "Forgot Password"}}</a>
+            <input type="password" class="form-control" id="password" name="password" placeholder="{{t "auth.form.password_placeholder" "Entry Your Password"}}">
           </li>
 
           <li>
-            <button type="submit" class="button button__primary">{{t "auth.form.sign_in"}}</button>
+            <button type="submit" class="button button__primary">{{t "auth.form.sign_in" "Sign In"}}</button>
           </li>
         </ul>
       </form>
