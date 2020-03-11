@@ -26,7 +26,7 @@
 > 
 > [qor](https://github.com/qor/qor) 整体框架组件十分的完善，实现了大部分的功能。当然，框架做了太多事情，随之而来的问题也会很多。我在使用过程中总结了一些问题都集中记录在 [问题记录](ERRORS.MD) 中。
 > 
-> 完成 IrisAdminApi 项目代码整合 ，`app/home/views` 中的代码（此处为打包后的代码，如果需要修改请参考 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) ）仅供演示使用，开发时根据需求自行替换。
+> 使用 [iris-子域](https://learnku.com/docs/iris-wiki/v12/%E5%AD%90%E5%9F%9F/6992) 功能将站点后台和租户端进行了隔离。
 ---
 
 #### 项目进度 - 基本完成 iris 和 qor 的结合，踩了一遍坑，详情都记录在 [问题记录](ERRORS.MD)
@@ -145,6 +145,7 @@ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
 > 修改 `go-tenancy/config` 下的配置文件 :
+> 注意：config/config.go , line 53 ,内容需要修改为当前项目目录 ，比如：`	Root   = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"`
 
 ```shell script
   cp ./config/application.example.yml  ./config/application.yml
@@ -179,8 +180,6 @@ npm run build
 
 ```
 
-////
-
 [gowatch](https://gitee.com/silenceper/gowatch)
 
 ```shell script
@@ -200,6 +199,16 @@ go run main.go
 
 ```
 
+#### 域名配置
+> 本地开发需要在 host 增加一个域名配置,文本如下：
+```shell script
+
+127.0.0.1  admin.gotenant.com
+
+127.0.0.1  tenant.gotenant.com
+
+```
+
 #### 账号密码 
 > 管理端：  dev@getqor.com/testing
 > 用户端：  dev@getqor.com/testing
@@ -207,16 +216,16 @@ go run main.go
 
 
 #### 演示
-> 应用端 (原 IrisAdminApi 项目 ) 登陆地址： http://localhost:8081/#/login
+> 应用端 (原 IrisAdminApi 项目 ) 登陆地址： http://tenant.gotenant.com:8081/#/login
 
 ![](localhost_8081_login.png)
 
-> 管理端登录页： http://localhost:8081/admin/login
+> 管理端登录页： http://admin.gotenant.com:8081/admin/login
 
 ![](localhost_8081_admin_login.png)
 
 
-> 管理端控制面板： http://localhost:8081/admin
+> 管理端控制面板： http://admin.gotenant.com:8081/admin
 
 ![](localhost_8080_admin.png)
 

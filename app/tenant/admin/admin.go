@@ -7,10 +7,12 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/qor/action_bar"
 	"github.com/qor/admin"
+	"github.com/qor/help"
 	"github.com/qor/media/asset_manager"
 	registerviews "github.com/snowlyg/qor-registerviews"
 	"go-tenancy/config/application"
 	"go-tenancy/config/auth"
+	"go-tenancy/config/i18n"
 )
 
 // ActionBar admin action bar
@@ -75,6 +77,16 @@ func (app App) ConfigureApplication(application *application.Application) {
 	ActionBar = action_bar.New(Tenant)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/"})
 
+	// Add Help
+	Help := Tenant.NewResource(&help.QorHelpEntry{})
+	Help.Meta(&admin.Meta{Name: "Body", Config: &admin.RichEditorConfig{AssetManager: AssetManager}})
+
+	// 翻译
+	Tenant.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: -1})
+
+	SetupNotification(Tenant)
+	SetupWorker(Tenant)
+	SetupSEO(Tenant)
 	SetupDashboard(Tenant)
 
 	// 使用 `iris.FromStd`创建一个 qor 处理器并覆盖到 iris
