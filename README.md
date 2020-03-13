@@ -12,7 +12,7 @@
 [![Gitter](https://badges.gitter.im/iris-go-tenancy/community.svg)](https://gitter.im/iris-go-tenancy/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 #### 项目介绍  
-> 此项目是从 [IrisAdminApi](https://github.com/snowlyg/IrisAdminApi) 升级而来。在开发过程中遇到一个问题：gorm 的多对多关系中间表中自定义字段。
+>
 > 在搜索的过程中无意间发现了 [gorm](https://gorm.io/zh_CN/docs/index.html) 作者团队的 CMS 框架 [Qor-Admin](https://github.com/qor/admin) ,文档请见 [https://doc.getqor.com/](https://doc.getqor.com/)。
 > 一见到 `Qor-Admin` 框架，我就决定使用它重构我的项目了,它有很多值得我去深入了解的地方。 —— 不想偷懒的程序员无法成为一个优秀的程序员。
 > 
