@@ -1,7 +1,0 @@
-rabcusers:
-    - name: '管理员'
-      username: 'username'
-    - name: '访客'
-      username: 'guestuser'
-    - name: '测试'
-      username: 'testuser'
