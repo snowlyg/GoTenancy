@@ -27,41 +27,20 @@ _testmain.go
 *.exe
 *.test
 *.prof
-runner-build
 go-tenancy
 
 
-
-config/bindatafs/templates_bindatafs.go
-config/bindatafs/templates/*
-
-.editorconfig
-deploy.sh
-db/seeds/enterprise
-db/seeds/main
-harp.json
-.harp
-tmp/*
-
 node_modules/
-public/assets/
-public/webpack/
-public/downloads
-public/dist
-public/system
 *.js.map
 *.css.map
 npm-debug.log
 
 config/*.yml
-!config/*.example.yml
-public/microsites/*
+!config/*.example
+
 vendor/*
 .DS_Store
 
 *_env
 
-frontend/.next/
-
-__debug_bin
 
