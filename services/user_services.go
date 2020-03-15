@@ -3,8 +3,8 @@ package services
 import (
 	"errors"
 
+	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/repositories"
 )
 
 type UserService interface {
@@ -20,47 +20,33 @@ type UserService interface {
 	Create(userPassword string, user models.User) (models.User, error)
 }
 
-func NewUserService(repo repositories.UserRepository) UserService {
+func NewUserService(gdb *gorm.DB) UserService {
 	return &userService{
-		repo: repo,
+		gdb: gdb,
 	}
 }
 
 type userService struct {
-	repo repositories.UserRepository
+	gdb *gorm.DB
 }
 
 func (s *userService) GetAll() []models.User {
-	return s.repo.SelectMany(func(_ models.User) bool {
-		return true
-	}, -1)
+	//return s.repo.SelectMany(func(_ models.User) bool {
+	//	return true
+	//}, -1)
+	return nil
 }
 
 func (s *userService) GetByID(id int64) (models.User, bool) {
-	return s.repo.Select(func(m models.User) bool {
-		return m.ID == id
-	})
+	return models.User{}, true
 }
 
 func (s *userService) GetByUsernameAndPassword(username, userPassword string) (models.User, bool) {
-	if username == "" || userPassword == "" {
-		return models.User{}, false
-	}
-
-	return s.repo.Select(func(m models.User) bool {
-		if m.Username == username {
-			hashed := m.HashedPassword
-			if ok, _ := models.ValidatePassword(userPassword, hashed); ok {
-				return true
-			}
-		}
-		return false
-	})
+	return models.User{}, true
 }
 
 func (s *userService) Update(id int64, user models.User) (models.User, error) {
-	user.ID = id
-	return s.repo.InsertOrUpdate(user)
+	return models.User{}, nil
 }
 
 func (s *userService) UpdatePassword(id int64, newPassword string) (models.User, error) {
@@ -92,11 +78,9 @@ func (s *userService) Create(userPassword string, user models.User) (models.User
 	}
 	user.HashedPassword = hashed
 
-	return s.repo.InsertOrUpdate(user)
+	return models.User{}, nil
 }
 
 func (s *userService) DeleteByID(id int64) bool {
-	return s.repo.Delete(func(m models.User) bool {
-		return m.ID == id
-	}, 1)
+	return true
 }

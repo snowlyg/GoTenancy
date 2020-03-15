@@ -1,4 +1,4 @@
-package SysInit
+package sysinit
 
 import (
 	"time"

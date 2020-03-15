@@ -66,12 +66,13 @@ func (c *AuthController) PostRegister() mvc.Result {
 }
 
 var loginStaticView = mvc.View{
-	Name: "user/login.html",
-	Data: iris.Map{"Title": "User Login"},
+	Name: "login.html",
+	Data: iris.Map{"Title": "登陆"},
 }
 
 // GetLogin handles GET: http://localhost:8080/auth/login.
 func (c *AuthController) GetLogin() mvc.Result {
+	c.Ctx.ViewLayout(iris.NoLayout)
 	if c.isLoggedIn() {
 		c.logout()
 	}

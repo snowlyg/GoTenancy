@@ -6,9 +6,9 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="../lib/layui-v2.5.5/css/layui.css" media="all">
-    <link rel="stylesheet" href="../lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
-    <link rel="stylesheet" href="../css/public.css" media="all">
+    <link rel="stylesheet" href="./public/lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="./public/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="./public/css/public.css" media="all">
     <style>
         .top-panel {
             border: 1px solid #eceff9;
@@ -33,6 +33,7 @@
     </style>
 </head>
 <body>
+<!--<div class="layuimini-container">-->
 <div class="layuimini-main">
 
     <div class="layui-row layui-col-space15">
@@ -132,8 +133,8 @@
 
 </div>
 <!--</div>-->
-<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script src="./public/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="./public/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
 <script>
     layui.use(['layer', 'echarts'], function () {
         var $ = layui.jquery,
@@ -294,8 +295,6 @@
             },
             xAxis: {type: 'category'},
             yAxis: {},
-            // Declare several bar series, each will be mapped
-            // to a column of dataset.source by default.
             series: [
                 {type: 'bar'},
                 {type: 'bar'},
@@ -304,8 +303,6 @@
         };
 
         echartsDataset.setOption(optionDataset);
-
-
         /**
          * 中国地图
          */
@@ -354,8 +351,6 @@
 
         echartsMap.setOption(optionMap);
 
-
-        // echarts 窗口缩放自适应
         window.onresize = function () {
             echartsRecords.resize();
         }
