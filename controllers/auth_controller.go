@@ -5,7 +5,6 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/snowlyg/go-tenancy/api_types"
-	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
@@ -27,42 +26,6 @@ func (c *AuthController) isLoggedIn() bool {
 
 func (c *AuthController) logout() {
 	c.Session.Destroy()
-}
-
-var registerStaticView = mvc.View{
-	Name: "user/register.html",
-	Data: iris.Map{"Title": "User Registration"},
-}
-
-// GetRegister handles GET: http://localhost:8080/auth/register.
-func (c *AuthController) GetRegister() mvc.Result {
-	if c.isLoggedIn() {
-		c.logout()
-	}
-
-	return registerStaticView
-}
-
-// PostRegister handles POST: http://localhost:8080/auth/register.
-func (c *AuthController) PostRegister() mvc.Result {
-
-	var (
-		firstname = c.Ctx.FormValue("firstname")
-		username  = c.Ctx.FormValue("username")
-		password  = c.Ctx.FormValue("password")
-	)
-
-	u, err := c.Service.Create(password, models.User{
-		Username:  username,
-		Firstname: firstname,
-	})
-
-	c.Session.Set(sysinit.UserIDKey, u.ID)
-
-	return mvc.Response{
-		Err:  err,
-		Path: "/user/me",
-	}
 }
 
 var loginStaticView = mvc.View{
