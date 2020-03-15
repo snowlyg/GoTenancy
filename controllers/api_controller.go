@@ -22,7 +22,7 @@ func GetMenus(ctx iris.Context) {
 		}{
 			Title: "LAYUI MINI",
 			Href:  "",
-			Image: "./public/images/logo.pngxfsass",
+			Image: "./public/images/logo.png",
 		},
 		MenuInfo: []struct {
 			Title  string `json:"title"`

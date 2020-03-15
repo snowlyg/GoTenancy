@@ -1,5 +1,6 @@
 package api_types
 
+// Menus 菜单
 type Menus struct {
 	HomeInfo struct {
 		Title string `json:"title"`
@@ -28,4 +29,11 @@ type Menus struct {
 			} `json:"child"`
 		} `json:"child"`
 	} `json:"menuInfo"`
+}
+
+// Response 接口响应数据
+type Response struct {
+	Status bool        `json:"status"`
+	Msg    string      `json:"msg"`
+	Data   interface{} `json:"data"`
 }

@@ -4,8 +4,10 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
+	"github.com/snowlyg/go-tenancy/api_types"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
+	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
 type AuthController struct {
@@ -14,10 +16,8 @@ type AuthController struct {
 	Session *sessions.Session
 }
 
-const userIDKey = "UserID"
-
 func (c *AuthController) getCurrentUserID() int64 {
-	userID := c.Session.GetInt64Default(userIDKey, 0)
+	userID := c.Session.GetInt64Default(sysinit.UserIDKey, 0)
 	return userID
 }
 
@@ -57,7 +57,7 @@ func (c *AuthController) PostRegister() mvc.Result {
 		Firstname: firstname,
 	})
 
-	c.Session.Set(userIDKey, u.ID)
+	c.Session.Set(sysinit.UserIDKey, u.ID)
 
 	return mvc.Response{
 		Err:  err,
@@ -80,32 +80,27 @@ func (c *AuthController) GetLogin() mvc.Result {
 	return loginStaticView
 }
 
-// PostLogin handles POST: http://localhost:8080/auth/register.
-func (c *AuthController) PostLogin() mvc.Result {
+// PostLogin handles GET: http://localhost:8080/auth/login.
+func (c *AuthController) PostLogin() interface{} {
 	var (
 		username = c.Ctx.FormValue("username")
 		password = c.Ctx.FormValue("password")
 	)
 
-	u, found := c.Service.GetByUsernameAndPassword(username, password)
+	user, found := c.Service.GetByUsernameAndPassword(username, password)
 
 	if !found {
-		return mvc.Response{
-			Path: "/user/register",
-		}
+		return api_types.Response{Msg: "用户名或者密码错误"}
 	}
 
-	c.Session.Set(userIDKey, u.ID)
+	c.Session.Set(sysinit.UserIDKey, user.ID)
 
-	return mvc.Response{
-		Path: "/user/me",
-	}
+	return api_types.Response{Status: true, Msg: "登陆成功", Data: user}
 }
 
 // GetMe handles GET: http://localhost:8080/auth/me.
 func (c *AuthController) GetMe() mvc.Result {
 	if !c.isLoggedIn() {
-		// if it's not logged in then redirect user to the login page.
 		return mvc.Response{Path: "/user/login"}
 	}
 
@@ -125,10 +120,10 @@ func (c *AuthController) GetMe() mvc.Result {
 }
 
 // AnyLogout handles All/Any HTTP Methods for: http://localhost:8080/auth/logout.
-func (c *AuthController) AnyLogout() {
+func (c *AuthController) AnyLogout() interface{} {
 	if c.isLoggedIn() {
 		c.logout()
 	}
 
-	c.Ctx.Redirect("/auth/login")
+	return api_types.Response{Status: true, Msg: "退出登录"}
 }

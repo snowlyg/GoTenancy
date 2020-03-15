@@ -8,6 +8,8 @@ import (
 	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
 )
 
+const UserIDKey = "UserID"
+
 var (
 	cookieNameForSessionID = "mycookiesessionnameid"
 	Sess                   = sessions.New(sessions.Config{Cookie: cookieNameForSessionID, AllowReclaim: true})

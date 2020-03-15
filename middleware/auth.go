@@ -6,11 +6,10 @@ import (
 )
 
 func Auth(ctx iris.Context) {
-	if auth, _ := sysinit.Sess.Start(ctx).GetBoolean("authenticated"); !auth {
+	if userID := sysinit.Sess.Start(ctx).GetInt64Default(sysinit.UserIDKey, 0); userID == 0 {
 		ctx.Redirect("/auth/login")
-		ctx.WriteString("don't login")
 		return
 	}
-	ctx.WriteString("The cake is a lie!")
+
 	ctx.Next()
 }

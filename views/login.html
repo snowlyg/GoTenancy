@@ -110,7 +110,6 @@
         .captcha-img img {
             height: 34px;
             border: 1px solid #e6e6e6;
-            height: 36px;
             width: 100%;
         }
     </style>
@@ -119,9 +118,9 @@
 <div class="layui-container">
     <div class="admin-login-background">
         <div class="layui-form login-form">
-            <form class="layui-form" action="">
+            <form class="layui-form">
                 <div class="layui-form-item logo-title">
-                    <h1>LayuiMini后台登录</h1>
+                    <h1>GoTenancy 登录</h1>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="username"></label>
@@ -133,17 +132,17 @@
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码"
                            autocomplete="off" class="layui-input" value="123456">
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>
-                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码"
-                           autocomplete="off" class="layui-input verification captcha" value="xszg">
-                    <div class="captcha-img">
-                        <img id="captchaPic" src="/public/images/captcha.jpg">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
-                </div>
+                {{/*                <div class="layui-form-item">*/}}
+                {{/*                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>*/}}
+                {{/*                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码"*/}}
+                {{/*                           autocomplete="off" class="layui-input verification captcha" value="xszg">*/}}
+                {{/*                    <div class="captcha-img">*/}}
+                {{/*                        <img id="captchaPic" src="/public/images/captcha.jpg">*/}}
+                {{/*                    </div>*/}}
+                {{/*                </div>*/}}
+                {{/*                <div class="layui-form-item">*/}}
+                {{/*                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">*/}}
+                {{/*                </div>*/}}
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
                 </div>
@@ -181,12 +180,26 @@
                 layer.msg('密码不能为空');
                 return false;
             }
-            if (data.captcha == '') {
-                layer.msg('验证码不能为空');
-                return false;
-            }
-            layer.msg('登录成功', function () {
-                window.location = '/index.html';
+            // if (data.captcha == '') {
+            //     layer.msg('验证码不能为空');
+            //     return false;
+            // }
+
+            $.ajax({
+                type: "POST",
+                url: "/auth/login",
+                data: data.field,
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    if (res.status) {
+                        layer.msg(res.msg, function () {
+                            window.location = '/';
+                        }, 150);
+                    } else {
+                        layer.msg(res.msg, null, 150);
+                    }
+                }
             });
             return false;
         });

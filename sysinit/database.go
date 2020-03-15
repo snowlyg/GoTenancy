@@ -15,6 +15,7 @@ import (
 var Db *gorm.DB
 
 func init() {
+
 	var err error
 	var conn string
 	if config.Config.DB.Adapter == "mysql" {
@@ -31,4 +32,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
 }
