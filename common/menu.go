@@ -1,4 +1,4 @@
-package api_types
+package common
 
 // Menus 菜单
 type Menus struct {

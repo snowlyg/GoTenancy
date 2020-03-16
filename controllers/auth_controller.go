@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
-	"github.com/snowlyg/go-tenancy/api_types"
+	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
@@ -29,7 +29,7 @@ func (c *AuthController) logout() {
 }
 
 var loginStaticView = mvc.View{
-	Name: "login.html",
+	Name: "auth/login.html",
 	Data: iris.Map{"Title": "登陆"},
 }
 
@@ -53,12 +53,12 @@ func (c *AuthController) PostLogin() interface{} {
 	user, found := c.Service.GetByUsernameAndPassword(username, password)
 
 	if !found {
-		return api_types.Response{Msg: "用户名或者密码错误"}
+		return common.Response{Msg: "用户名或者密码错误"}
 	}
 
 	c.Session.Set(sysinit.UserIDKey, user.ID)
 
-	return api_types.Response{Status: true, Msg: "登陆成功", Data: user}
+	return common.Response{Status: true, Msg: "登陆成功", Data: user}
 }
 
 // GetMe handles GET: http://localhost:8080/auth/me.
@@ -88,5 +88,5 @@ func (c *AuthController) AnyLogout() interface{} {
 		c.logout()
 	}
 
-	return api_types.Response{Status: true, Msg: "退出登录"}
+	return common.Response{Status: true, Msg: "退出登录"}
 }

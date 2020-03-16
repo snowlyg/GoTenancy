@@ -8,8 +8,6 @@ import (
 	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/controllers"
 	"github.com/snowlyg/go-tenancy/middleware"
-	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
@@ -42,18 +40,13 @@ func main() {
 	control.Router.Use(middleware.Auth)
 	control.Handle(new(controllers.Controlcontroller))
 
-	sysinit.Db.AutoMigrate(
-		&models.User{},
-	)
-
 	iris.RegisterOnInterrupt(func() {
 		_ = sysinit.Db.Close()
 	})
 
-	userService := services.NewUserService(sysinit.Db)
 	auth := mvc.New(app.Party("/auth"))
 	auth.Register(
-		userService,
+		sysinit.UserService,
 		sysinit.Sess.Start,
 	)
 	auth.Handle(new(controllers.AuthController))

@@ -10,9 +10,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/snowlyg/go-tenancy/config"
+	"github.com/snowlyg/go-tenancy/services"
 )
 
-var Db *gorm.DB
+var (
+	Db          *gorm.DB
+	UserService services.UserService
+)
 
 func init() {
 
@@ -32,5 +36,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	UserService = services.NewUserService(Db)
 
 }

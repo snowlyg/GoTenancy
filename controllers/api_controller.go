@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/snowlyg/go-tenancy/api_types"
+	"github.com/snowlyg/go-tenancy/common"
 )
 
 func GetMenus(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	menus := api_types.Menus{
+	menus := common.Menus{
 		HomeInfo: struct {
 			Title string `json:"title"`
 			Href  string `json:"href"`

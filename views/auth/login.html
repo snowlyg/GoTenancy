@@ -125,12 +125,12 @@
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="username"></label>
                     <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱"
-                           autocomplete="off" class="layui-input" value="admin">
+                           autocomplete="off" class="layui-input" value="username">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" for="password"></label>
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码"
-                           autocomplete="off" class="layui-input" value="123456">
+                           autocomplete="off" class="layui-input" value="password">
                 </div>
                 {{/*                <div class="layui-form-item">*/}}
                 {{/*                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>*/}}
@@ -144,7 +144,7 @@
                 {{/*                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">*/}}
                 {{/*                </div>*/}}
                 <div class="layui-form-item">
-                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
+                    <button class="layui-btn layui-btn-fluid" lay-submit="login" lay-filter="login">登 入</button>
                 </div>
             </form>
         </div>
@@ -188,10 +188,10 @@
             $.ajax({
                 type: "POST",
                 url: "/auth/login",
-                data: data.field,
+                data: data,
                 dataType: "json",
                 success: function (res) {
-                    console.log(res);
+
                     if (res.status) {
                         layer.msg(res.msg, function () {
                             window.location = '/';
