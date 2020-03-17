@@ -1,3 +1,5 @@
+// +build ignore
+
 package main
 
 import (
@@ -12,7 +14,7 @@ func main() {
 	AutoMigrates()
 
 	fmt.Println(fmt.Sprintf("管理员填充开始"))
-	createAdminUsers()
+	CreateAdminUsers()
 	fmt.Println(fmt.Sprintf("管理员填充完成"))
 }
 

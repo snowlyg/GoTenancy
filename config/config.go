@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/jinzhu/configor"
 )
@@ -20,10 +21,10 @@ var Config = struct {
 	}
 }{}
 
-var Root = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
+var Root = os.Getenv("GOPATH") + "/src/go-tenancy"
 
 func init() {
-	if err := configor.Load(&Config, "config/application.yml"); err != nil {
+	if err := configor.Load(&Config, filepath.Join(Root, "config/application.yml")); err != nil {
 		panic(err)
 	}
 }

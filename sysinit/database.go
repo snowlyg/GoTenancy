@@ -26,7 +26,7 @@ func init() {
 		conn = fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local", config.Config.DB.User, config.Config.DB.Password, config.Config.DB.Host, config.Config.DB.Port, config.Config.DB.Name)
 	} else if config.Config.DB.Adapter == "postgres" {
 		conn = fmt.Sprintf("postgres://%v:%v@%v/%v?sslmode=disable", config.Config.DB.User, config.Config.DB.Password, config.Config.DB.Host, config.Config.DB.Name)
-	} else if config.Config.DB.Adapter == "sqlite" {
+	} else if config.Config.DB.Adapter == "sqlite3" {
 		conn = fmt.Sprintf("%v/%v", os.TempDir(), config.Config.DB.Name)
 	} else {
 		panic(errors.New("not supported database adapter"))

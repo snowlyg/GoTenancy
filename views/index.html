@@ -166,11 +166,17 @@
                 dataType: "json",
                 success: function (res) {
                     if (res.status) {
-                        layer.msg(res.msg, function () {
+                        layer.msg(res.msg,{
+                            icon: 1,
+                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                        },  function () {
                             window.location = '/auth/login';
                         }, 150);
                     } else {
-                        layer.msg(res.msg, 150);
+                        layer.msg(res.msg, {
+                            icon: 1,
+                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                        }, );
                     }
                 }
             });

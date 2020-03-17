@@ -10,7 +10,7 @@ import (
 type UserService interface {
 	GetAll() []*models.User
 	GetByID(id int64) (models.User, bool)
-	GetByUsernameAndPassword(username, userPassword string) (models.User, bool)
+	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
 	DeleteByID(id int64) bool
 
 	Update(id int64, user *models.User) error
@@ -41,8 +41,8 @@ func (s *userService) GetByID(id int64) (models.User, bool) {
 	return models.User{}, true
 }
 
-func (s *userService) GetByUsernameAndPassword(username, password string) (models.User, bool) {
-	user := models.User{Username: username, Password: []byte(password)}
+func (s *userService) GetByUsernameAndPassword(username, password string) (*models.User, bool) {
+	user := &models.User{Username: username, Password: []byte(password)}
 	if notFound := s.gdb.Find(user).RecordNotFound(); notFound {
 		return user, false
 	}

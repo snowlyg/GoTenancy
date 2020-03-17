@@ -9,7 +9,7 @@ Dockerfile
 # 目录
 _obj
 _test
-.idea
+/.idea/
 
 # 特定体系结构的扩展/前缀
 *.[568vq]

@@ -1,3 +1,5 @@
+// +build ignore
+
 package main
 
 import (
@@ -8,7 +10,7 @@ import (
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
-func createAdminUsers() {
+func CreateAdminUsers() {
 	admin := &models.User{
 		Username:  "username",
 		Firstname: "超级管理员",
