@@ -1,10 +1,10 @@
 menus:
-  - title:  "常规管理"
-    href:   "fa fa-address-book"
-    icon:   ""
+  - title:  "站点管理"
+    href:   ""
+    icon:   "fa fa-cogs"
     target: "_self"
     child:
-      - title:  "主页一"
-        href:   "page/welcome-1.html"
-        icon:   "fa fa-tachometer"
+      - title:  "菜单管理"
+        href:   "menu"
+        icon:   "fa fa-window-maximize"
         target: "_self"

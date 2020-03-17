@@ -7,13 +7,13 @@ import (
 	"github.com/snowlyg/go-tenancy/services"
 )
 
-type Homecontroller struct {
+type HomeController struct {
 	Ctx     iris.Context
 	Service services.UserService
 	Session *sessions.Session
 }
 
-func (c *Homecontroller) Get() mvc.Result {
+func (c *HomeController) Get() mvc.Result {
 	c.Ctx.ViewLayout(iris.NoLayout)
 	return mvc.View{
 		Name: "index.html",

@@ -1,227 +1,76 @@
 package controllers
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
+	"github.com/snowlyg/go-tenancy/transformer"
+	"github.com/snowlyg/gotransformer"
 )
 
-func GetMenus(ctx iris.Context) {
+//GetInitMenus 站点头部，侧边栏菜单接口
+func GetInitMenus(ctx iris.Context) {
 	menuinfo := sysinit.MenuService.GetAll()
 
 	ctx.StatusCode(iris.StatusOK)
-	menus := common.Menus{
+	init := common.Menus{
 		HomeInfo: struct {
 			Title string `json:"title"`
 			Href  string `json:"href"`
 		}{
 			Title: "首页",
-			Href:  "/control",
+			Href:  "control",
 		},
 		LogoInfo: struct {
 			Title string `json:"title"`
 			Href  string `json:"href"`
 			Image string `json:"image"`
 		}{
-			Title: "LAYUI MINI",
+			Title: "GOTENACY",
 			Href:  "",
 			Image: "./public/images/logo.png",
 		},
 		MenuInfo: menuinfo,
-		//MenuInfo: []struct {
-		//	Title  string `json:"title"`
-		//	Href   string `json:"href"`
-		//	Icon   string `json:"icon"`
-		//	Target string `json:"target"`
-		//	Child  []struct {
-		//		Title  string `json:"title"`
-		//		Href   string `json:"href"`
-		//		Icon   string `json:"icon"`
-		//		Target string `json:"target"`
-		//		Child  []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//		} `json:"child"`
-		//	} `json:"child"`
-		//}{
-		//	{
-		//		Title:  "常规管理",
-		//		Href:   "fa fa-address-book",
-		//		Icon:   "",
-		//		Target: "_self",
-		//		Child: []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//			Child  []struct {
-		//				Title  string `json:"title"`
-		//				Href   string `json:"href"`
-		//				Icon   string `json:"icon"`
-		//				Target string `json:"target"`
-		//			} `json:"child"`
-		//		}{
-		//			{
-		//				Title:  "主页一",
-		//				Href:   "page/welcome-1.html",
-		//				Icon:   "fa fa-tachometer",
-		//				Target: "_self",
-		//			},
-		//			{
-		//				Title:  "主页二",
-		//				Href:   "page/welcome-2.html",
-		//				Icon:   "fa fa-tachometer",
-		//				Target: "_self",
-		//			},
-		//			{
-		//				Title:  "主页三",
-		//				Href:   "page/welcome-3.html",
-		//				Icon:   "fa fa-tachometer",
-		//				Target: "_self",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Title:  "菜单管理",
-		//		Href:   "page/menu.html",
-		//		Icon:   "fa fa-window-maximize",
-		//		Target: "_self",
-		//	},
-		//	{
-		//		Title:  "系统设置",
-		//		Href:   "page/setting.html",
-		//		Icon:   "fa fa-gears",
-		//		Target: "_self",
-		//	},
-		//	{
-		//		Title:  "表格示例",
-		//		Href:   "page/table.html",
-		//		Icon:   "fa fa-file-text",
-		//		Target: "_self",
-		//	},
-		//	{
-		//		Title:  "表单示例",
-		//		Href:   "",
-		//		Icon:   "fa fa-calendar",
-		//		Target: "_self",
-		//		Child: []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//			Child  []struct {
-		//				Title  string `json:"title"`
-		//				Href   string `json:"href"`
-		//				Icon   string `json:"icon"`
-		//				Target string `json:"target"`
-		//			} `json:"child"`
-		//		}{
-		//			{
-		//				Title:  "普通表单",
-		//				Href:   "page/form.html",
-		//				Icon:   "fa fa-list-alt",
-		//				Target: "_self",
-		//			},
-		//			{
-		//				Title:  "分步表单",
-		//				Href:   "page/form-step.html",
-		//				Icon:   "fa fa-navicon",
-		//				Target: "_self",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Title:  "登录模板",
-		//		Href:   "",
-		//		Icon:   "fa fa-flag-o",
-		//		Target: "_self",
-		//		Child: []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//			Child  []struct {
-		//				Title  string `json:"title"`
-		//				Href   string `json:"href"`
-		//				Icon   string `json:"icon"`
-		//				Target string `json:"target"`
-		//			} `json:"child"`
-		//		}{
-		//			{
-		//				Title:  "登录-1",
-		//				Href:   "page/login-1.html",
-		//				Icon:   "fa fa-stumbleupon-circle",
-		//				Target: "_blank",
-		//			},
-		//			{
-		//				Title:  "登录-2",
-		//				Href:   "page/login-2.html",
-		//				Icon:   "fa fa-viacoin",
-		//				Target: "_blank",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Title:  "异常页面",
-		//		Href:   "",
-		//		Icon:   "fa fa-home",
-		//		Target: "_self",
-		//		Child: []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//			Child  []struct {
-		//				Title  string `json:"title"`
-		//				Href   string `json:"href"`
-		//				Icon   string `json:"icon"`
-		//				Target string `json:"target"`
-		//			} `json:"child"`
-		//		}{
-		//			{
-		//				Title:  "404页面",
-		//				Href:   "page/404.html",
-		//				Icon:   "fa fa-hourglass-end",
-		//				Target: "_self",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Title:  "其它界面",
-		//		Href:   "",
-		//		Icon:   "fa fa-snowflake-o",
-		//		Target: "",
-		//		Child: []struct {
-		//			Title  string `json:"title"`
-		//			Href   string `json:"href"`
-		//			Icon   string `json:"icon"`
-		//			Target string `json:"target"`
-		//			Child  []struct {
-		//				Title  string `json:"title"`
-		//				Href   string `json:"href"`
-		//				Icon   string `json:"icon"`
-		//				Target string `json:"target"`
-		//			} `json:"child"`
-		//		}{
-		//			{
-		//				Title:  "按钮示例",
-		//				Href:   "page/button.html",
-		//				Icon:   "fa fa-snowflake-o",
-		//				Target: "_self",
-		//			},
-		//			{
-		//				Title:  "弹出层",
-		//				Href:   "page/layer.html",
-		//				Icon:   "fa fa-shield",
-		//				Target: "_self",
-		//			},
-		//		},
-		//	},
-		//},
 	}
-	if _, err := ctx.JSON(menus); err != nil {
+	if _, err := ctx.JSON(init); err != nil {
 		panic(err)
 	}
+}
+
+//GetMenus 菜单表格接口
+func GetMenus(ctx iris.Context) {
+	menus := sysinit.MenuService.GetAll()
+	ttms := transformerTableMenus(menus)
+
+	ctx.StatusCode(iris.StatusOK)
+	if _, err := ctx.JSON(common.Table{Code: 0, Msg: "", Count: len(ttms), Data: ttms}); err != nil {
+		panic(err)
+	}
+}
+
+// transformerTableMenus 菜单表格接口数据转换
+func transformerTableMenus(menus []*models.Menu) []*transformer.TableMenu {
+	var tableMenus []*transformer.TableMenu
+
+	for mun, menu := range menus {
+		tableMenu := &transformer.TableMenu{}
+		g := gotransformer.NewTransform(tableMenu, menu, time.RFC3339)
+		err := g.Transformer()
+		if err != nil {
+			panic(fmt.Sprintf("菜单表格接口数据转换错误：%v", err))
+		}
+
+		tableMenu.OrderNumber = mun + 1
+
+		if menu.ParentId == 0 {
+			tableMenu.ParentId = -1
+		}
+		tableMenus = append(tableMenus, tableMenu)
+	}
+
+	return tableMenus
 }

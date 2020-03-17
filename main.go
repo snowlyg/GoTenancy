@@ -30,15 +30,23 @@ func main() {
 		}
 	})
 
-	app.Get("/init", controllers.GetMenus)
+	app.Get("/init", controllers.GetInitMenus)
+	app.Get("/menus", controllers.GetMenus)
 
 	home := mvc.New(app.Party("/"))
 	home.Router.Use(middleware.Auth)
-	home.Handle(new(controllers.Homecontroller))
+	home.Handle(new(controllers.HomeController))
 
 	control := mvc.New(app.Party("/control"))
 	control.Router.Use(middleware.Auth)
-	control.Handle(new(controllers.Controlcontroller))
+	control.Handle(new(controllers.ControlController))
+
+	menu := mvc.New(app.Party("/menu"))
+	menu.Register(
+		sysinit.MenuService,
+	)
+	menu.Router.Use(middleware.Auth)
+	menu.Handle(new(controllers.MenuController))
 
 	iris.RegisterOnInterrupt(func() {
 		_ = sysinit.Db.Close()
