@@ -16,6 +16,7 @@ import (
 var (
 	Db          *gorm.DB
 	UserService services.UserService
+	MenuService services.MenuService
 )
 
 func init() {
@@ -38,5 +39,6 @@ func init() {
 	}
 
 	UserService = services.NewUserService(Db)
+	MenuService = services.NewMenuService(Db)
 
 }

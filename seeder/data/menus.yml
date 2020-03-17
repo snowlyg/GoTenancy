@@ -1,0 +1,9 @@
+title:  "常规管理"
+href:   "fa fa-address-book"
+icon:   ""
+target: "_self"
+child:
+  title:  "主页一"
+  href:   "page/welcome-1.html"
+  icon:   "fa fa-tachometer"
+  target: "_self"

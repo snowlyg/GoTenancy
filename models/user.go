@@ -1,17 +1,15 @@
 package models
 
 import (
-	"time"
-
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID        int64     `json:"id" form:"id"`
-	Firstname string    `json:"firstname" form:"firstname"`
-	Username  string    `json:"username" form:"username"`
-	Password  []byte    `json:"password" form:"-"`
-	CreatedAt time.Time `json:"created_at" form:"created_at"`
+	gorm.Model
+	Firstname string `json:"firstname" form:"firstname"`
+	Username  string `json:"username" form:"username"`
+	Password  []byte `json:"password" form:"-"`
 }
 
 func (u User) IsValid() bool {

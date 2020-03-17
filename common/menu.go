@@ -1,5 +1,7 @@
 package common
 
+import "github.com/snowlyg/go-tenancy/models"
+
 // Menus 菜单
 type Menus struct {
 	HomeInfo struct {
@@ -11,24 +13,26 @@ type Menus struct {
 		Href  string `json:"href"`
 		Image string `json:"image"`
 	} `json:"logoInfo"`
-	MenuInfo []struct {
-		Title  string `json:"title"`
-		Href   string `json:"href"`
-		Icon   string `json:"icon"`
-		Target string `json:"target"`
-		Child  []struct {
-			Title  string `json:"title"`
-			Href   string `json:"href"`
-			Icon   string `json:"icon"`
-			Target string `json:"target"`
-			Child  []struct {
-				Title  string `json:"title"`
-				Href   string `json:"href"`
-				Icon   string `json:"icon"`
-				Target string `json:"target"`
-			} `json:"child"`
-		} `json:"child"`
-	} `json:"menuInfo"`
+
+	MenuInfo []*models.Menu `json:"menuInfo"`
+	//MenuInfo []struct {
+	//	Title  string `json:"title"`
+	//	Href   string `json:"href"`
+	//	Icon   string `json:"icon"`
+	//	Target string `json:"target"`
+	//	Child  []struct {
+	//		Title  string `json:"title"`
+	//		Href   string `json:"href"`
+	//		Icon   string `json:"icon"`
+	//		Target string `json:"target"`
+	//		Child  []struct {
+	//			Title  string `json:"title"`
+	//			Href   string `json:"href"`
+	//			Icon   string `json:"icon"`
+	//			Target string `json:"target"`
+	//		} `json:"child"`
+	//	} `json:"child"`
+	//} `json:"menuInfo"`
 }
 
 // Response 接口响应数据
