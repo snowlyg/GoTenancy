@@ -26,10 +26,11 @@ type menuService struct {
 }
 
 func (s *menuService) GetAll() []*models.Menu {
-	//return s.repo.SelectMany(func(_ models.Menu) bool {
-	//	return true
-	//}, -1)
-	return nil
+	var meuns []*models.Menu
+	if err := s.gdb.Where("parent_id = ?", 0).Preload("Child").Find(&meuns).Error; err != nil {
+		panic(err)
+	}
+	return meuns
 }
 
 func (s *menuService) GetByID(id int64) (models.Menu, bool) {

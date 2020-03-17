@@ -21,7 +21,7 @@ var Config = struct {
 	}
 }{}
 
-var Root = os.Getenv("GOPATH") + "/src/go-tenancy"
+var Root = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
 
 func init() {
 	if err := configor.Load(&Config, filepath.Join(Root, "config/application.yml")); err != nil {

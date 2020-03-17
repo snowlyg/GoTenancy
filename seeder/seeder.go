@@ -114,8 +114,7 @@ func CreateMenus() {
 	sysinit.Db.AutoMigrate 重建数据表
 */
 func AutoMigrates() {
-	tableNames := []string{"users", "menus"}
-	sysinit.Db.DropTableIfExists(tableNames)
+	sysinit.Db.DropTableIfExists("users", "menus")
 
 	sysinit.Db.AutoMigrate(
 		&models.User{},

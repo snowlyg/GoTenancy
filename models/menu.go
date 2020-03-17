@@ -7,9 +7,10 @@ import (
 type Menu struct {
 	gorm.Model
 
-	Title  string `json:"title"`
-	Href   string `json:"href"`
-	Icon   string `json:"icon"`
-	Target string `json:"target"`
-	Child  []*Menu
+	Title    string  `json:"title"`
+	Href     string  `json:"href"`
+	Icon     string  `json:"icon"`
+	Target   string  `json:"target"`
+	ParentId uint    `json:"parent_id" gorm:"default:0"`
+	Child    []*Menu `json:"child" gorm:"foreignkey:ParentId"`
 }
