@@ -14,7 +14,7 @@ type InitController struct {
 
 // GetInfo handles GET: http://localhost:8080/user/table.
 func (c *InitController) GetInfo() interface{} {
-	perms := sysinit.PermService.GetAll(map[string]interface{}{"is_menu": 1, "parent_id": ""}, true)
+	perms := sysinit.PermService.GetAll(map[string]interface{}{"is_menu": 1, "parent_id": 0}, true)
 
 	return common.Menus{
 		HomeInfo: struct {

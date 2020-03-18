@@ -16,7 +16,7 @@ type Perm struct {
 	Title       string        `json:"title" gorm:"not null;size:255"`
 	Href        string        `json:"href" gorm:"size:255"`
 	Icon        string        `json:"icon"`
-	Target      string        `json:"target" gorm:"default(_self)"`
-	ParentId    sql.NullInt64 `json:"parent_id" gorm:"default(0))"`
+	Target      string        `json:"target"`
+	ParentId    sql.NullInt64 `json:"parent_id" gorm:"default:0"`
 	Child       []*Perm       `json:"child" gorm:"foreignkey:ParentId"`
 }

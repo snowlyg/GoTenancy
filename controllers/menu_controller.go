@@ -7,6 +7,8 @@ import (
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
+	"github.com/snowlyg/go-tenancy/transformer"
+	"github.com/snowlyg/gotransformer"
 )
 
 type MenuController struct {
@@ -25,17 +27,26 @@ func (c *MenuController) Get() mvc.Result {
 func (c *MenuController) GetTable() interface{} {
 	args := map[string]interface{}{}
 	perms := sysinit.PermService.GetAll(args, false)
-	transformerTableMenus(perms)
+	tablemenus := transformerTableMenus(perms)
 
-	return common.Table{Code: 0, Msg: "", Count: len(perms), Data: perms}
+	return common.Table{Code: 0, Msg: "", Count: len(tablemenus), Data: tablemenus}
 }
 
 // transformerTableMenus 菜单表格接口数据转换
-func transformerTableMenus(perms []*models.Perm) {
+func transformerTableMenus(perms []*models.Perm) []*transformer.MenuTable {
+	var tablemenus []*transformer.MenuTable
 	for _, perm := range perms {
-		if perm.ParentId.Int64 == 0 {
-			perm.ParentId.Int64 = -1
-		}
-	}
+		tablemenu := &transformer.MenuTable{}
+		g := gotransformer.NewTransform(tablemenu, perm, "")
+		_ = g.Transformer()
 
+		if perm.ParentId.Int64 == 0 {
+			tablemenu.ParentId = -1
+		} else {
+			tablemenu.ParentId = perm.ParentId.Int64
+		}
+
+		tablemenus = append(tablemenus, tablemenu)
+	}
+	return tablemenus
 }
