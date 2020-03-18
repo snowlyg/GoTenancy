@@ -7,11 +7,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string `json:"name" validate:"gte=2,lte=50"  comment:"姓名" form:"name" gorm:"size:255"`
-	Username string `json:"username" validate:"required,gte=2,lte=50" comment:"用户名" form:"username" gorm:"unique;not null;size:255"`
-	Email    string `json:"email" form:"email" gorm:"unique"`
+	Name     string `json:"name" validate:"gte=6,lte=50"  comment:"姓名" form:"name" gorm:"size:50"`
+	Username string `json:"username" validate:"required,gte=6,lte=50" comment:"用户名" form:"username" gorm:"unique;not null;size:50"`
+	Email    string `json:"email" form:"email" gorm:"unique" validate:"email"`
 	Telphone string `json:"telphone" form:"telphone" gorm:"unique;size:13"`
-	Password []byte `json:"password" validate:"required"  comment:"密码" form:"-" gorm:"not null"`
+	Password []byte `json:"password" validate:"gte=6"  comment:"密码" form:"-" gorm:"not null"`
 }
 
 func (u User) IsValid() bool {

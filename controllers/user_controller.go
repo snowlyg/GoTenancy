@@ -60,6 +60,10 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
+	if string(user.Password) == "" {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("密码不能为空")}
+	}
+
 	if err := validatas.Vaild(user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
@@ -71,13 +75,22 @@ func (c *UserController) Post() interface{} {
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }
 
-// Get handles Post: http://localhost:8080/user.
+// Get handles Post: http://localhost:8080/user/id.
 func (c *UserController) PostBy(id uint) interface{} {
-	user, _ := c.Service.GetByID(id)
-	return mvc.View{
-		Name: "user/edit.html",
-		Data: iris.Map{
-			"User": user,
-		},
+
+	var user models.User
+
+	if err := c.Ctx.ReadJSON(&user); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
+
+	if err := validatas.Vaild(user); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
+	}
+
+	if err := c.Service.Update(id, &user); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
+	}
+
+	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }

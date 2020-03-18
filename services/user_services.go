@@ -66,6 +66,9 @@ func (s *userService) GetByUsernameAndPassword(username, password string) (*mode
 }
 
 func (s *userService) Update(id uint, user *models.User) error {
+	if err := s.gdb.Where("id = ?", id).Update(user).Error; err != nil {
+		return err
+	}
 	return nil
 }
 

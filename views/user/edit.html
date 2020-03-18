@@ -56,18 +56,34 @@
 
             //监听提交
             form.on('submit(saveBtn)', function (data) {
-                var index = layer.alert(JSON.stringify(data.field), {
-                    title: '最终的提交信息'
-                }, function () {
-
-                    // 关闭弹出层
-                    layer.close(index);
-
-                    var iframeIndex = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(iframeIndex);
-
+                $.ajax({
+                    type: "POST",
+                    url: "/user/" + {{.User.ID}},
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.status) {
+                            layer.msg(res.msg, {
+                                icon: 1,
+                                time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                            });
+                        } else {
+                            layer.msg(res.msg, {
+                                icon: 2,
+                            },);
+                        }
+                    },
+                    error: function (error) {
+                        layer.msg(error.msg, {
+                            icon: 2,
+                            time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
+                        },);
+                    }
                 });
-
                 return false;
             });
 
