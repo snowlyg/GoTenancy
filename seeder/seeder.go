@@ -3,6 +3,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"path/filepath"
 	"time"
@@ -64,6 +65,7 @@ func CreateAdminUsers() {
 		Name:     "超级管理员",
 		Email:    "admin@admin.com",
 		Telphone: "13800138000",
+		IsAdmin:  sql.NullBool{Bool: true, Valid: true},
 		Model:    gorm.Model{CreatedAt: time.Now()},
 	}
 

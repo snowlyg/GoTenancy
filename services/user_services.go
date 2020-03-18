@@ -7,6 +7,8 @@ import (
 	"github.com/snowlyg/go-tenancy/models"
 )
 
+var IsAdmin = map[string]interface{}{"is_admin": 0}
+
 type UserService interface {
 	GetAll(args map[string]interface{}, ispreload bool) []*models.User
 	GetByID(id uint) (models.User, bool)
@@ -32,13 +34,8 @@ type userService struct {
 
 func (s *userService) GetAll(args map[string]interface{}, ispreload bool) []*models.User {
 	var users []*models.User
-	db := s.gdb
-	if len(args) > 0 {
-		for parm, arg := range args {
-			db = db.Where(parm, arg)
-		}
-	}
-
+	args["is_admin"] = 0
+	db := s.gdb.Where(args)
 	if ispreload {
 		//db = db.Preload("Child")
 	}
@@ -66,7 +63,7 @@ func (s *userService) GetByUsernameAndPassword(username, password string) (*mode
 }
 
 func (s *userService) Update(id uint, user *models.User) error {
-	if err := s.gdb.Where("id = ?", id).Update(user).Error; err != nil {
+	if err := s.gdb.Where("id = ?", id).Where(IsAdmin).Update(user).Error; err != nil {
 		return err
 	}
 	return nil
@@ -112,7 +109,7 @@ func (s *userService) Create(userPassword string, user *models.User) error {
 }
 
 func (s *userService) DeleteByID(id uint) error {
-	if err := s.gdb.Delete(models.User{Model: gorm.Model{ID: id}}).Error; err != nil {
+	if err := s.gdb.Where(IsAdmin).Delete(models.User{Model: gorm.Model{ID: id}}).Error; err != nil {
 		return err
 	}
 	return nil
