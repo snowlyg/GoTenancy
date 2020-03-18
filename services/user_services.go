@@ -9,13 +9,13 @@ import (
 
 type UserService interface {
 	GetAll(args map[string]interface{}, ispreload bool) []*models.User
-	GetByID(id int64) (models.User, bool)
+	GetByID(id uint) (models.User, bool)
 	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
-	DeleteByID(id int64) bool
+	DeleteByID(id uint) bool
 
-	Update(id int64, user *models.User) error
-	UpdatePassword(id int64, newPassword string) error
-	UpdateUsername(id int64, newUsername string) error
+	Update(id uint, user *models.User) error
+	UpdatePassword(id uint, newPassword string) error
+	UpdateUsername(id uint, newUsername string) error
 
 	Create(userPassword string, user *models.User) error
 }
@@ -49,23 +49,27 @@ func (s *userService) GetAll(args map[string]interface{}, ispreload bool) []*mod
 	return users
 }
 
-func (s *userService) GetByID(id int64) (models.User, bool) {
-	return models.User{}, true
-}
-
-func (s *userService) GetByUsernameAndPassword(username, password string) (*models.User, bool) {
-	user := &models.User{Username: username, Password: []byte(password)}
-	if notFound := s.gdb.Find(user).RecordNotFound(); notFound {
+func (s *userService) GetByID(id uint) (models.User, bool) {
+	user := models.User{Model: gorm.Model{ID: id}}
+	if notFound := s.gdb.Find(&user).RecordNotFound(); notFound {
 		return user, false
 	}
 	return user, true
 }
 
-func (s *userService) Update(id int64, user *models.User) error {
+func (s *userService) GetByUsernameAndPassword(username, password string) (*models.User, bool) {
+	user := &models.User{Username: username, Password: []byte(password)}
+	if notFound := s.gdb.Find(user).RecordNotFound(); notFound {
+		return nil, false
+	}
+	return user, true
+}
+
+func (s *userService) Update(id uint, user *models.User) error {
 	return nil
 }
 
-func (s *userService) UpdatePassword(id int64, newPassword string) error {
+func (s *userService) UpdatePassword(id uint, newPassword string) error {
 
 	hashed, err := models.GeneratePassword(newPassword)
 	if err != nil {
@@ -77,7 +81,7 @@ func (s *userService) UpdatePassword(id int64, newPassword string) error {
 	})
 }
 
-func (s *userService) UpdateUsername(id int64, newUsername string) error {
+func (s *userService) UpdateUsername(id uint, newUsername string) error {
 	return s.Update(id, &models.User{
 		Username: newUsername,
 	})
@@ -104,6 +108,6 @@ func (s *userService) Create(userPassword string, user *models.User) error {
 	return nil
 }
 
-func (s *userService) DeleteByID(id int64) bool {
+func (s *userService) DeleteByID(id uint) bool {
 	return true
 }

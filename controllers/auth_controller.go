@@ -15,9 +15,9 @@ type AuthController struct {
 	Session *sessions.Session
 }
 
-func (c *AuthController) getCurrentUserID() int64 {
+func (c *AuthController) getCurrentUserID() uint {
 	userID := c.Session.GetInt64Default(sysinit.UserIDKey, 0)
-	return userID
+	return uint(userID)
 }
 
 func (c *AuthController) isLoggedIn() bool {

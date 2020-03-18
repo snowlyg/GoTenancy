@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
@@ -35,9 +36,9 @@ func main() {
 	})
 
 	//表格接口
-	app.Get("/init", controllers.GetInitMenus)
-	app.Get("/menus", controllers.GetMenus)
-	app.Get("/users", controllers.GetUsers)
+	init := mvc.New(app.Party("/init"))
+	init.Router.Use(middleware.Auth)
+	init.Handle(new(controllers.InitController))
 
 	home := mvc.New(app.Party("/"))
 	home.Router.Use(middleware.Auth)
@@ -72,7 +73,7 @@ func main() {
 		iris.Addr(fmt.Sprintf("%s:%d", config.Config.Host, config.Config.Port)),
 		iris.WithoutServerError(iris.ErrServerClosed),
 		iris.WithOptimizations,
-		iris.WithTimeFormat("Mon, 01 Jan 2006 15:04:05 GMT"),
+		iris.WithTimeFormat(time.RFC3339),
 	); err != nil {
 		fmt.Println("App is closed")
 	}
