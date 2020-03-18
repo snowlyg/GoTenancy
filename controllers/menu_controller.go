@@ -8,7 +8,7 @@ import (
 
 type MenuController struct {
 	Ctx     iris.Context
-	Service services.MenuService
+	Service services.PermService
 }
 
 // Get handles GET: http://localhost:8080/menus.

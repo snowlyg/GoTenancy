@@ -1,0 +1,18 @@
+perms:
+  - title: "站点管理"
+    href: ""
+    icon: "fa fa-cogs"
+    target: "_self"
+    ordernumber: 1
+    authority: ""
+    checked: 0
+    ismenu: 1
+    child:
+      - title: "菜单管理"
+        href: "menu"
+        icon: "fa fa-window-maximize"
+        target: "_self"
+        ordernumber: 2
+        authority: ""
+        checked: 0
+        ismenu: 1

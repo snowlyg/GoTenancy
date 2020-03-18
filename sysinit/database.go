@@ -16,7 +16,7 @@ import (
 var (
 	Db          *gorm.DB
 	UserService services.UserService
-	MenuService services.MenuService
+	PermService services.PermService
 )
 
 func init() {
@@ -39,6 +39,6 @@ func init() {
 	}
 
 	UserService = services.NewUserService(Db)
-	MenuService = services.NewMenuService(Db)
+	PermService = services.NewPermService(Db)
 
 }

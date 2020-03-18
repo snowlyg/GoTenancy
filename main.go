@@ -43,7 +43,7 @@ func main() {
 
 	menu := mvc.New(app.Party("/menu"))
 	menu.Register(
-		sysinit.MenuService,
+		sysinit.PermService,
 	)
 	menu.Router.Use(middleware.Auth)
 	menu.Handle(new(controllers.MenuController))
