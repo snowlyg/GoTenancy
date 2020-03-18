@@ -16,15 +16,15 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">姓名</label>
+        <label class="layui-form-label">姓名</label>
         <div class="layui-input-block">
-            <input type="text" name="name" placeholder="请输入姓名" value="" class="layui-input">
+            <input type="text" name="name" placeholder="请输入姓名" value="{{.User.Name}}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">手机</label>
+        <label class="layui-form-label ">手机</label>
         <div class="layui-input-block">
-            <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机"
+            <input type="number" name="telphone" placeholder="请输入手机"
                    value="{{.User.Telphone}}" class="layui-input">
         </div>
     </div>
@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">角色</label>
+        <label class="layui-form-label required">角色</label>
         <div class="layui-input-block">
             <input type="radio" name="roles" value="男" title="男" checked="">
             <input type="radio" name="roles" value="女" title="女">

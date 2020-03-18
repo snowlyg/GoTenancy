@@ -52,24 +52,23 @@ func (c *UserController) GetBy(id uint) mvc.Result {
 
 // Get handles Post: http://localhost:8080/user.
 // 使用 ReadJSON 获取数据前端数据需要格式化成json, JSON.stringify(data.field),
-// 并且前端提交的数据格式需要是"application/x-www-form-urlencoded"，  dataType: "application/x-www-form-urlencoded",
 func (c *UserController) Post() interface{} {
 
 	var user models.User
 
 	if err := c.Ctx.ReadJSON(&user); err != nil {
-		return common.ActionResponse{Code: 0, Msg: fmt.Sprintf("数据获取错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
 	if err := validatas.Vaild(user); err != nil {
-		return common.ActionResponse{Code: 0, Msg: fmt.Sprintf("数据验证错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
 	if err := c.Service.Create(string(user.Password), &user); err != nil {
-		return common.ActionResponse{Code: 0, Msg: fmt.Sprintf("用户创建错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户创建错误：%v", err)}
 	}
 
-	return common.ActionResponse{Code: 1, Msg: "操作成功"}
+	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }
 
 // Get handles Post: http://localhost:8080/user.

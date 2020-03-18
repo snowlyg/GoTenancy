@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string `json:"name" validate:"required,gte=2,lte=50"  comment:"名称" form:"name" gorm:"size:255"`
+	Name     string `json:"name" validate:"gte=2,lte=50"  comment:"姓名" form:"name" gorm:"size:255"`
 	Username string `json:"username" validate:"required,gte=2,lte=50" comment:"用户名" form:"username" gorm:"unique;not null;size:255"`
 	Email    string `json:"email" form:"email" gorm:"unique"`
 	Telphone string `json:"telphone" form:"telphone" gorm:"unique;size:13"`
