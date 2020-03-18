@@ -163,7 +163,7 @@
             $.ajax({
                 type: "GET",
                 url: "/auth/logout",
-                dataType: "json",
+                dataType: "application/json",
                 success: function (res) {
                     if (res.status) {
                         layer.msg(res.msg,{
@@ -175,7 +175,7 @@
                     } else {
                         layer.msg(res.msg, {
                             icon: 1,
-                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
                         }, );
                     }
                 }

@@ -64,7 +64,6 @@ func CreateAdminUsers() {
 		Name:     "超级管理员",
 		Email:    "admin@admin.com",
 		Telphone: "13800138000",
-		City:     "东莞",
 		Model:    gorm.Model{CreatedAt: time.Now()},
 	}
 

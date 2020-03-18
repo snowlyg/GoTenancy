@@ -33,8 +33,8 @@ func (c *MenuController) GetTable() interface{} {
 // transformerTableMenus 菜单表格接口数据转换
 func transformerTableMenus(perms []*models.Perm) {
 	for _, perm := range perms {
-		if perm.ParentId == 0 {
-			perm.ParentId = -1
+		if perm.ParentId.Int64 == 0 {
+			perm.ParentId.Int64 = -1
 		}
 	}
 
