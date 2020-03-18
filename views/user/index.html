@@ -154,8 +154,34 @@
                     return false;
                 } else if (obj.event === 'delete') {
                     layer.confirm('真的删除行么', function (index) {
-                        obj.del();
-                        layer.close(index);
+                        $.ajax({
+                            type: "DELETE",
+                            url: "/user/" + data.ID,
+                            data: JSON.stringify(data.field),
+                            dataType: "json",
+                            success: function (res) {
+                                console.log(res);
+                                if (res.status) {
+                                    layer.msg(res.msg, {
+                                        icon: 1,
+                                        time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                                    }, function () {
+                                        obj.del();
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg(res.msg, {
+                                        icon: 2,
+                                    },);
+                                }
+                            },
+                            error: function (error) {
+                                layer.msg(error.msg, {
+                                    icon: 2,
+                                    time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
+                                },);
+                            }
+                        });
                     });
                 }
             });

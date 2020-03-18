@@ -11,7 +11,7 @@ type UserService interface {
 	GetAll(args map[string]interface{}, ispreload bool) []*models.User
 	GetByID(id uint) (models.User, bool)
 	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
-	DeleteByID(id uint) bool
+	DeleteByID(id uint) error
 
 	Update(id uint, user *models.User) error
 	UpdatePassword(id uint, newPassword string) error
@@ -111,6 +111,9 @@ func (s *userService) Create(userPassword string, user *models.User) error {
 	return nil
 }
 
-func (s *userService) DeleteByID(id uint) bool {
-	return true
+func (s *userService) DeleteByID(id uint) error {
+	if err := s.gdb.Delete(models.User{Model: gorm.Model{ID: id}}).Error; err != nil {
+		return err
+	}
+	return nil
 }
