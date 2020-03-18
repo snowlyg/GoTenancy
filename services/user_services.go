@@ -8,7 +8,7 @@ import (
 )
 
 type UserService interface {
-	GetAll() []*models.User
+	GetAll(args map[string]interface{}, ispreload bool) []*models.User
 	GetByID(id int64) (models.User, bool)
 	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
 	DeleteByID(id int64) bool
@@ -30,11 +30,23 @@ type userService struct {
 	gdb *gorm.DB
 }
 
-func (s *userService) GetAll() []*models.User {
-	//return s.repo.SelectMany(func(_ models.User) bool {
-	//	return true
-	//}, -1)
-	return nil
+func (s *userService) GetAll(args map[string]interface{}, ispreload bool) []*models.User {
+	var users []*models.User
+	db := s.gdb
+	if len(args) > 0 {
+		for parm, arg := range args {
+			db = db.Where(parm, arg)
+		}
+	}
+
+	if ispreload {
+		//db = db.Preload("Child")
+	}
+
+	if err := db.Find(&users).Error; err != nil {
+		panic(err)
+	}
+	return users
 }
 
 func (s *userService) GetByID(id int64) (models.User, bool) {
@@ -76,7 +88,7 @@ func (s *userService) Create(userPassword string, user *models.User) error {
 		hashed []byte
 		err    error
 	)
-	if user.ID > 0 || userPassword == "" || user.Firstname == "" || user.Username == "" {
+	if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
 		return errors.New("unable to create this user")
 	}
 

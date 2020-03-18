@@ -7,9 +7,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Firstname string `json:"firstname" form:"firstname"`
-	Username  string `json:"username" form:"username"`
-	Password  []byte `json:"password" form:"-"`
+	Name     string `json:"name" form:"name" gorm:"size:255"`
+	Username string `json:"username" form:"username" gorm:"unique;not null;size:255"`
+	Email    string `json:"email" form:"email" gorm:"unique"`
+	City     string `json:"city" form:"city"`
+	Telphone string `json:"telphone" form:"telphone" gorm:"unique;size:13"`
+	Password []byte `json:"password" form:"-" gorm:"not null"`
 }
 
 func (u User) IsValid() bool {

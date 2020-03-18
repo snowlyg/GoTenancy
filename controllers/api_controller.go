@@ -61,3 +61,14 @@ func transformerTableMenus(perms []*models.Perm) {
 	}
 
 }
+
+//GetUsers 用户表格接口
+func GetUsers(ctx iris.Context) {
+	args := map[string]interface{}{}
+	users := sysinit.UserService.GetAll(args, false)
+
+	ctx.StatusCode(iris.StatusOK)
+	if _, err := ctx.JSON(common.Table{Code: 0, Msg: "", Count: len(users), Data: users}); err != nil {
+		panic(err)
+	}
+}

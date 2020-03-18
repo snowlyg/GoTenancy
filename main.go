@@ -30,8 +30,14 @@ func main() {
 		}
 	})
 
+	iris.RegisterOnInterrupt(func() {
+		_ = sysinit.Db.Close()
+	})
+
+	//表格接口
 	app.Get("/init", controllers.GetInitMenus)
 	app.Get("/menus", controllers.GetMenus)
+	app.Get("/users", controllers.GetUsers)
 
 	home := mvc.New(app.Party("/"))
 	home.Router.Use(middleware.Auth)
@@ -48,9 +54,12 @@ func main() {
 	menu.Router.Use(middleware.Auth)
 	menu.Handle(new(controllers.MenuController))
 
-	iris.RegisterOnInterrupt(func() {
-		_ = sysinit.Db.Close()
-	})
+	user := mvc.New(app.Party("/user"))
+	user.Register(
+		sysinit.UserService,
+	)
+	user.Router.Use(middleware.Auth)
+	user.Handle(new(controllers.UserController))
 
 	auth := mvc.New(app.Party("/auth"))
 	auth.Register(

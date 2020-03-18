@@ -60,9 +60,12 @@ func init() {
 // CreateAdminUsers 新建管理员数据
 func CreateAdminUsers() {
 	admin := &models.User{
-		Username:  "username",
-		Firstname: "超级管理员",
-		Model:     gorm.Model{CreatedAt: time.Now()},
+		Username: "username",
+		Name:     "超级管理员",
+		Email:    "admin@admin.com",
+		Telphone: "13800138000",
+		City:     "东莞",
+		Model:    gorm.Model{CreatedAt: time.Now()},
 	}
 
 	if err := sysinit.UserService.Create("password", admin); err != nil {
