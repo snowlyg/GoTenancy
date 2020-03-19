@@ -10,7 +10,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名"
+            <input type="text" name="username" lay-verify="required|username" lay-reqtext="用户名不能为空" placeholder="请输入用户名"
                    value="{{.User.Username}}" class="layui-input">
             <tip>填写自己管理账号的名称。</tip>
         </div>
@@ -24,21 +24,26 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">手机</label>
         <div class="layui-input-block">
-            <input type="number" name="telphone" placeholder="请输入手机"
-                   value="{{.User.Telphone}}" class="layui-input">
+            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value="{{.User.Telphone}}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">邮箱</label>
         <div class="layui-input-block">
-            <input type="email" name="email" placeholder="请输入邮箱" value="{{.User.Email}}" class="layui-input">
+            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="{{.User.Email}}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">角色</label>
         <div class="layui-input-block">
-            <input type="radio" name="roles" value="男" title="男" checked="">
-            <input type="radio" name="roles" value="女" title="女">
+            <select name="roles" lay-filter="aihao">
+                <option value=""></option>
+                <option value="0">写作</option>
+                <option value="1" selected="">阅读</option>
+                <option value="2">游戏</option>
+                <option value="3">音乐</option>
+                <option value="4">旅行</option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
@@ -53,6 +58,24 @@
             var form = layui.form,
                 layer = layui.layer,
                 $ = layui.$;
+
+            form.verify({
+                username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '用户名首尾不能出现下划线\'_\'';
+                    }
+                    if (/^\d+\d+\d$/.test(value)) {
+                        return '用户名不能全为数字';
+                    }
+                    if (value.length < 6 || value.length > 50) {
+                        return '用户名必须6到50位';
+                    }
+                }
+            });
+
 
             //监听提交
             form.on('submit(saveBtn)', function (data) {

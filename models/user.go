@@ -10,7 +10,7 @@ import (
 type User struct {
 	gorm.Model
 	Name     string       `json:"name" validate:"gte=6,lte=50"  comment:"姓名" form:"name" gorm:"size:50"`
-	Username string       `json:"username" validate:"required,gte=6,lte=50" comment:"用户名" form:"username" gorm:"unique;not null;size:50"`
+	Username string       `json:"username" validate:"required,gte=6,lte=12" comment:"用户名" form:"username" gorm:"unique;not null;size:50"`
 	Email    string       `json:"email" form:"email" gorm:"unique" validate:"email"`
 	Telphone string       `json:"telphone" form:"telphone" gorm:"unique;size:13"`
 	IsAdmin  sql.NullBool `json:"is_admin" gorm:"not null;default:0"`
