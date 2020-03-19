@@ -51,6 +51,9 @@ func (c *Casbin) Check(r *http.Request, userId string) bool {
 	method := r.Method
 	path := r.URL.Path
 
-	ok, _ := c.enforcer.Enforce(userId, path, method)
+	ok, err := c.enforcer.Enforce(userId, path, method)
+	if err != nil {
+		panic(err)
+	}
 	return ok
 }

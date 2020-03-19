@@ -33,7 +33,6 @@ func init() {
 	}
 
 	casbinmodelpath := filepath.Join(config.Root, "config", "rbac_model.conf")
-	fmt.Println(casbinmodelpath)
 	Enforcer, err = casbin.NewEnforcer(casbinmodelpath, c)
 	if err != nil {
 		panic(fmt.Sprintf("NewEnforcer 错误: %v", err))

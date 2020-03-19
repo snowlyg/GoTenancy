@@ -1,4 +1,5 @@
 perms:
+  -
   - title: "首页"
     ordernumber: 0
     href: "/"
@@ -7,14 +8,16 @@ perms:
     checked: 0
     ismenu: 0
     method: "GET"
+
   - title: "工作台"
     ordernumber: 0
-    href: "control"
+    href: "/control"
     icon: ""
     target: "_self"
     checked: 0
     ismenu: 0
     method: "GET"
+
   - title: "菜单信息"
     ordernumber: 0
     href: "/init/info"
@@ -23,6 +26,7 @@ perms:
     checked: 0
     ismenu: 0
     method: "GET"
+
   - title: "站点管理"
     ordernumber: 1
     href: ""
@@ -34,25 +38,54 @@ perms:
     child:
       - title: "用户管理"
         ordernumber: 2
-        href: "user"
+        href: "/user"
         icon: "fa fa-users"
         target: "_self"
         checked: 0
         ismenu: 1
         method: "GET"
+        child:
+          - title: "用户表格"
+            ordernumber: 0
+            href: "/user/table"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 1
+            method: "GET"
+
       - title: "角色管理"
         ordernumber: 3
-        href: "role"
+        href: "/role"
         icon: "fa fa-user-md"
         target: "_self"
         checked: 0
         ismenu: 1
         method: "GET"
+        child:
+          - title: "角色表格"
+            ordernumber: 0
+            href: "/role/table"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 1
+            method: "GET"
+
       - title: "菜单管理"
         ordernumber: 4
-        href: "menu"
+        href: "/menu"
         icon: "fa fa-window-maximize"
         target: "_self"
         checked: 0
         ismenu: 1
         method: "GET"
+        child:
+          - title: "菜单表格"
+            ordernumber: 0
+            href: "/menu/table"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 1
+            method: "GET"

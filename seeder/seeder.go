@@ -90,7 +90,7 @@ func CreatePerms() {
 					Icon:        mchild.Icon,
 					Target:      mchild.Target,
 					OrderNumber: mchild.OrderNumber,
-					Method:      m.Method,
+					Method:      mchild.Method,
 					Checked:     mchild.Checked,
 					IsMenu:      mchild.IsMenu,
 				}
@@ -105,7 +105,7 @@ func CreatePerms() {
 							Icon:        mmchild.Icon,
 							Target:      mmchild.Target,
 							OrderNumber: mmchild.OrderNumber,
-							Method:      m.Method,
+							Method:      mmchild.Method,
 							Checked:     mmchild.Checked,
 							IsMenu:      mmchild.IsMenu,
 						}
