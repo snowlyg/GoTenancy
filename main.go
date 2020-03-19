@@ -53,11 +53,14 @@ func main() {
 	control.Handle(new(controllers.ControlController))
 
 	menu := mvc.New(app.Party("/menu"))
-	menu.Register(
-		sysinit.PermService,
-	)
+	menu.Register(sysinit.PermService)
 	menu.Router.Use(middleware.Auth)
 	menu.Handle(new(controllers.MenuController))
+
+	role := mvc.New(app.Party("/role"))
+	role.Register(sysinit.RoleService)
+	role.Router.Use(middleware.Auth)
+	role.Handle(new(controllers.RoleController))
 
 	user := mvc.New(app.Party("/user"))
 	user.Register(

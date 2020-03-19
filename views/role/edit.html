@@ -1,0 +1,115 @@
+{{define "role/edit-header"}}
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+{{end}}
+
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" lay-verify="required|username" lay-reqtext="用户名不能为空" placeholder="请输入用户名"
+                   value="{{.User.Username}}" class="layui-input">
+            <tip>填写自己管理账号的名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请输入姓名" value="{{.User.Name}}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">手机</label>
+        <div class="layui-input-block">
+            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value="{{.User.Telphone}}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-block">
+            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="{{.User.Email}}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色</label>
+        <div class="layui-input-block">
+            <select name="roles" lay-filter="aihao">
+                <option value=""></option>
+                <option value="0">写作</option>
+                <option value="1" selected="">阅读</option>
+                <option value="2">游戏</option>
+                <option value="3">音乐</option>
+                <option value="4">旅行</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+{{define "role/edit-footer"}}
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.$;
+
+            form.verify({
+                username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '用户名首尾不能出现下划线\'_\'';
+                    }
+                    if (/^\d+\d+\d$/.test(value)) {
+                        return '用户名不能全为数字';
+                    }
+                    if (value.length < 6 || value.length > 50) {
+                        return '用户名必须6到50位';
+                    }
+                }
+            });
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                $.ajax({
+                    type: "POST",
+                    url: "/role/" + {{.User.ID}},
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.status) {
+                            layer.msg(res.msg, {
+                                icon: 1,
+                                time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                            });
+                        } else {
+                            layer.msg(res.msg, {
+                                icon: 2,
+                            },);
+                        }
+                    },
+                    error: function (error) {
+                        layer.msg(error.msg, {
+                            icon: 2,
+                            time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
+                        },);
+                    }
+                });
+                return false;
+            });
+
+        });
+    </script>
+{{end}}

@@ -58,7 +58,7 @@ func init() {
 	}
 }
 
-// CreateAdminUsers 新建管理员数据
+// CreateAdminUsers 新建管理员
 func CreateAdminUsers() {
 	admin := &models.User{
 		Username: "username",
@@ -74,7 +74,22 @@ func CreateAdminUsers() {
 	}
 }
 
-// CreatePerms 新建菜单数据
+// CreateAdminRoles 新建管理角色
+func CreateAdminRoles() {
+	role := &models.Role{
+		Name:        "超级管理员",
+		DisplayName: "超级管理员",
+		Rmk:         "超级管理员",
+		IsAdmin:     sql.NullBool{Bool: true, Valid: true},
+		Model:       gorm.Model{CreatedAt: time.Now()},
+	}
+
+	if err := sysinit.RoleService.Create(role); err != nil {
+		panic(fmt.Sprintf("管理员填充错误：%v", err))
+	}
+}
+
+// CreatePerms 新建菜单
 func CreatePerms() {
 	for _, m := range Seeds.Perms {
 		menu := &models.Perm{
@@ -142,10 +157,11 @@ func CreatePerms() {
 	sysinit.Db.AutoMigrate 重建数据表
 */
 func AutoMigrates() {
-	sysinit.Db.DropTableIfExists("users", "perms")
+	sysinit.Db.DropTableIfExists("users", "perms", "roles")
 
 	sysinit.Db.AutoMigrate(
 		&models.User{},
+		&models.Role{},
 		&models.Perm{},
 	)
 }

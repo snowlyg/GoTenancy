@@ -17,6 +17,7 @@ var (
 	Db          *gorm.DB
 	UserService services.UserService
 	PermService services.PermService
+	RoleService services.RoleService
 )
 
 func init() {
@@ -38,7 +39,9 @@ func init() {
 		panic(err)
 	}
 
+	// 注册模型服务
 	UserService = services.NewUserService(Db)
 	PermService = services.NewPermService(Db)
+	RoleService = services.NewRoleService(Db)
 
 }

@@ -9,15 +9,23 @@ perms:
     ismenu: 1
     child:
       - title: "用户管理"
-        ordernumber: 1
+        ordernumber: 2
         href: "user"
         icon: "fa fa-users"
         target: "_self"
         authority: ""
         checked: 0
         ismenu: 1
-      - title: "菜单管理"
+      - title: "角色管理"
         ordernumber: 3
+        href: "role"
+        icon: "fa fa-user-md"
+        target: "_self"
+        authority: ""
+        checked: 0
+        ismenu: 1
+      - title: "菜单管理"
+        ordernumber: 4
         href: "menu"
         icon: "fa fa-window-maximize"
         target: "_self"

@@ -8,10 +8,10 @@ import (
 )
 
 type PermService interface {
-	GetAll(args interface{}, ispreload bool) []*models.Perm
-	GetByID(id int64) (models.Perm, bool)
-	DeleteByID(id int64) bool
-	Update(id int64, menu *models.Perm) error
+	GetAll(args map[string]interface{}, ispreload bool) []*models.Perm
+	GetByID(id uint) (models.Perm, bool)
+	DeleteByID(id uint) bool
+	Update(id uint, menu *models.Perm) error
 	Create(menu *models.Perm) error
 }
 
@@ -27,7 +27,7 @@ type permService struct {
 
 //GetAll 查询所有数据
 //args 过滤条件 {"parent_id = ?" : 0}
-func (s *permService) GetAll(args interface{}, ispreload bool) []*models.Perm {
+func (s *permService) GetAll(args map[string]interface{}, ispreload bool) []*models.Perm {
 	var meuns []*models.Perm
 	db := s.gdb.Where(args)
 
@@ -41,11 +41,11 @@ func (s *permService) GetAll(args interface{}, ispreload bool) []*models.Perm {
 	return meuns
 }
 
-func (s *permService) GetByID(id int64) (models.Perm, bool) {
+func (s *permService) GetByID(id uint) (models.Perm, bool) {
 	return models.Perm{}, true
 }
 
-func (s *permService) Update(id int64, menu *models.Perm) error {
+func (s *permService) Update(id uint, menu *models.Perm) error {
 	return nil
 }
 
@@ -66,6 +66,6 @@ func (s *permService) Create(menu *models.Perm) error {
 	return nil
 }
 
-func (s *permService) DeleteByID(id int64) bool {
+func (s *permService) DeleteByID(id uint) bool {
 	return true
 }
