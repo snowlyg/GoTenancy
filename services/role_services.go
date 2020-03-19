@@ -12,6 +12,7 @@ type RoleService interface {
 	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.Role)
 	GetByID(id uint) (models.Role, bool)
 	DeleteByID(id uint) error
+	DeleteMnutil(ids []common.Id) error
 	Update(id uint, role *models.Role) error
 	Create(role *models.Role) error
 }
@@ -81,4 +82,17 @@ func (s *roleService) DeleteByID(id uint) error {
 		return err
 	}
 	return nil
+}
+
+func (s *roleService) DeleteMnutil(ids []common.Id) error {
+	return s.gdb.Transaction(func(tx *gorm.DB) error {
+		for _, id := range ids {
+			if err := tx.Where(IsAdmin).Delete(models.Role{Model: gorm.Model{ID: uint(id.Id)}}).Error; err != nil {
+				return err
+			}
+		}
+
+		// 返回 nil 提交事务
+		return nil
+	})
 }

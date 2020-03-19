@@ -6,7 +6,7 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">用户名</label>
                             <div class="layui-input-inline">
                                 <label>
                                     <input type="text" name="username" autocomplete="off" class="layui-input">
@@ -14,15 +14,21 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
+                            <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
+                            <label class="layui-form-label">邮箱</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                                <input type="text" name="email" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="telphone" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -82,9 +88,6 @@
             // 监听搜索操作
             form.on('submit(data-search-btn)', function (data) {
                 var result = JSON.stringify(data.field);
-                layer.alert(result, {
-                    title: '最终的搜索信息'
-                });
 
                 //执行搜索重载
                 table.reload('currentTableId', {
@@ -117,10 +120,45 @@
                         layer.full(index);
                     });
                 } else if (obj.event === 'delete') {  // 监听删除操作
-                    var checkStatus = table.checkStatus('currentTableId')
-                        , data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    var checkStatus = table.checkStatus('currentTableId'), data = checkStatus.data;
+                    var ids = [];
+                    data.forEach(function (item, index) {
+                        ids.push({"Id": item.ID})
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/user/deletes",
+                        data: JSON.stringify(ids),
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.status) {
+                                layer.msg(res.msg, {
+                                    icon: 1,
+                                    time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    table.reload('currentTableId', {
+                                        page: {curr: 1}
+                                        , where: {}
+                                    }, 'data');
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg(res.msg, {
+                                    icon: 2,
+                                },);
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg(error.msg, {
+                                icon: 2,
+                                time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
+                            },);
+                        }
+                    });
+
                 }
+                return false;
             });
 
             //监听表格复选框选择
@@ -131,7 +169,6 @@
             table.on('tool(currentTableFilter)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'edit') {
-
                     var index = layer.open({
                         title: '编辑用户',
                         type: 2,
@@ -153,7 +190,6 @@
                             data: JSON.stringify(data.field),
                             dataType: "json",
                             success: function (res) {
-                                console.log(res);
                                 if (res.status) {
                                     layer.msg(res.msg, {
                                         icon: 1,
@@ -175,7 +211,9 @@
                                 },);
                             }
                         });
+
                     });
+                    return false;
                 }
             });
 

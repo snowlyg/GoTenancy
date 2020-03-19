@@ -109,3 +109,18 @@ func (c *UserController) DeleteBy(id uint) interface{} {
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }
+
+// Get handles Post: http://localhost:8080/user/deletes.
+func (c *UserController) PostDeletes() interface{} {
+	var userIds []common.Id
+
+	if err := c.Ctx.ReadJSON(&userIds); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
+	}
+
+	if err := c.Service.DeleteMnutil(userIds); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
+	}
+
+	return common.ActionResponse{Status: true, Msg: "操作成功"}
+}

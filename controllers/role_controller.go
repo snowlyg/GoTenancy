@@ -71,7 +71,7 @@ func (c *RoleController) Post() interface{} {
 	}
 
 	if err := c.Service.Create(&role); err != nil {
-		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户创建错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色创建错误：%v", err)}
 	}
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
@@ -91,7 +91,7 @@ func (c *RoleController) PostBy(id uint) interface{} {
 	}
 
 	if err := c.Service.Update(id, &role); err != nil {
-		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色更新错误：%v", err)}
 	}
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
@@ -100,7 +100,22 @@ func (c *RoleController) PostBy(id uint) interface{} {
 // Get handles Post: http://localhost:8080/role/id.
 func (c *RoleController) DeleteBy(id uint) interface{} {
 	if err := c.Service.DeleteByID(id); err != nil {
-		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色删除错误：%v", err)}
+	}
+
+	return common.ActionResponse{Status: true, Msg: "操作成功"}
+}
+
+// Get handles Post: http://localhost:8080/user/deletes.
+func (c *RoleController) PostDeletes() interface{} {
+	var ids []common.Id
+
+	if err := c.Ctx.ReadJSON(&ids); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
+	}
+
+	if err := c.Service.DeleteMnutil(ids); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色删除错误：%v", err)}
 	}
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}

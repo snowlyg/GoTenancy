@@ -15,6 +15,7 @@ type UserService interface {
 	GetByID(id uint) (models.User, bool)
 	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
 	DeleteByID(id uint) error
+	DeleteMnutil(userIds []common.Id) error
 
 	Update(id uint, user *models.User) error
 	UpdatePassword(id uint, newPassword string) error
@@ -122,4 +123,17 @@ func (s *userService) DeleteByID(id uint) error {
 		return err
 	}
 	return nil
+}
+
+func (s *userService) DeleteMnutil(userIds []common.Id) error {
+	return s.gdb.Transaction(func(tx *gorm.DB) error {
+		for _, userid := range userIds {
+			if err := tx.Where(IsAdmin).Delete(models.User{Model: gorm.Model{ID: uint(userid.Id)}}).Error; err != nil {
+				return err
+			}
+		}
+
+		// 返回 nil 提交事务
+		return nil
+	})
 }

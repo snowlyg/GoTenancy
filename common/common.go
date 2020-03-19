@@ -17,3 +17,7 @@ type Pagination struct {
 	Page  int `url:"page"`
 	Limit int `url:"limit"`
 }
+
+type Id struct {
+	Id int `json:"id"`
+}

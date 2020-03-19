@@ -6,29 +6,11 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">标识</label>
                             <div class="layui-input-inline">
                                 <label>
-                                    <input type="text" name="username" autocomplete="off" class="layui-input">
+                                    <input type="text" name="name" autocomplete="off" class="layui-input">
                                 </label>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -42,8 +24,8 @@
         </fieldset>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户</button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用角色</button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除角色
                 </button>
             </div>
         </script>
@@ -73,12 +55,9 @@
                 cols: [[
                     {type: "checkbox", width: 50, fixed: "left"},
                     {field: 'ID', width: 80, title: 'ID', sort: true},
-                    {field: 'username', width: 150, title: '用户名'},
-                    {field: 'name', width: 150, title: '姓名'},
-                    {field: 'email', width: 250, title: '邮箱'},
-                    {field: 'city', width: 80, title: '城市'},
-                    {field: 'telphone', title: '手机', width: 150},
-                    {field: 'rolename', title: '角色', width: 150},
+                    {field: 'display_name', width: 150, title: '名称'},
+                    {field: 'name', width: 150, title: '标识'},
+                    {field: 'rmk', width: 250, title: '描述'},
                     {title: '操作', minWidth: 50, templet: '#currentTableBar', fixed: "right", align: "center"}
                 ]],
                 limits: [10, 15, 20, 25, 50, 100],
@@ -112,7 +91,7 @@
             table.on('toolbar(currentTableFilter)', function (obj) {
                 if (obj.event === 'add') {  // 监听添加操作
                     var index = layer.open({
-                        title: '添加用户',
+                        title: '添加角色',
                         type: 2,
                         shade: 0.2,
                         maxmin: true,
@@ -124,9 +103,42 @@
                         layer.full(index);
                     });
                 } else if (obj.event === 'delete') {  // 监听删除操作
-                    var checkStatus = table.checkStatus('currentTableId')
-                        , data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    var checkStatus = table.checkStatus('currentTableId'), data = checkStatus.data;
+                    var ids = [];
+                    data.forEach(function (item, index) {
+                        ids.push({"Id": item.ID})
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/role/deletes",
+                        data: JSON.stringify(ids),
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.status) {
+                                layer.msg(res.msg, {
+                                    icon: 1,
+                                    time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    table.reload('currentTableId', {
+                                        page: {curr: 1}
+                                        , where: {}
+                                    }, 'data');
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg(res.msg, {
+                                    icon: 2,
+                                },);
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg(error.msg, {
+                                icon: 2,
+                                time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
+                            },);
+                        }
+                    });
                 }
             });
 
@@ -140,7 +152,7 @@
                 if (obj.event === 'edit') {
 
                     var index = layer.open({
-                        title: '编辑用户',
+                        title: '编辑角色',
                         type: 2,
                         shade: 0.2,
                         maxmin: true,
@@ -156,7 +168,7 @@
                     layer.confirm('真的删除行么', function (index) {
                         $.ajax({
                             type: "DELETE",
-                            url: "/user/" + data.ID,
+                            url: "/role/" + data.ID,
                             data: JSON.stringify(data.field),
                             dataType: "json",
                             success: function (res) {
