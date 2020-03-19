@@ -53,7 +53,7 @@ func (c *AuthController) PostLogin() interface{} {
 		capId    = c.Ctx.FormValue("captchaId")
 	)
 
-	if captcha.VerifyString(captchaId, capId) {
+	if !captcha.VerifyString(captchaId, capId) {
 		return common.Response{Msg: "请输入正确验证码"}
 	}
 
