@@ -134,14 +134,11 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-vercode" for="captcha"></label>
-                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码"
-                           autocomplete="off" class="layui-input verification captcha" value="xszg">
+                    <input type="text" name="captchaId" lay-verify="required" placeholder="图形验证码"
+                           autocomplete="off" class="layui-input verification captcha" value="">
                     <div class="captcha-img">
                         <img id=captchaPic src="/captcha/{{.CaptchaId}}.png" alt="Captcha image" onclick="reload()">
-                        <input type=hidden name=captchaId value="{{.CaptchaId}}"><br>
                     </div>
-
-
                 </div>
                 <div class="layui-form-item">
                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
@@ -185,7 +182,6 @@
                 lineColor: '#5cbdaa'
             });
         });
-
 
         form.verify({
             username: function (value, item) { //value：表单的值、item：表单的DOM对象

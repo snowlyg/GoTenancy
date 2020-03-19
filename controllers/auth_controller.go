@@ -10,9 +10,7 @@ import (
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
-type captchaId struct {
-	CaptchaId string
-}
+var captchaId = captcha.New()
 
 type AuthController struct {
 	Ctx     iris.Context
@@ -42,7 +40,7 @@ func (c *AuthController) GetLogin() mvc.Result {
 
 	return mvc.View{
 		Name: "auth/login.html",
-		Data: iris.Map{"CaptchaId": captcha.New()},
+		Data: iris.Map{"CaptchaId": captchaId},
 	}
 
 }
@@ -52,7 +50,12 @@ func (c *AuthController) PostLogin() interface{} {
 	var (
 		username = c.Ctx.FormValue("username")
 		password = c.Ctx.FormValue("password")
+		capId    = c.Ctx.FormValue("captchaId")
 	)
+
+	if captchaId != capId {
+		return common.Response{Msg: "请输入正确验证码"}
+	}
 
 	user, found := c.Service.GetByUsernameAndPassword(username, password)
 
