@@ -5,15 +5,20 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"math/rand"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/azumads/faker"
 	"github.com/jinzhu/configor"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
+var Fake *faker.Faker
 var Seeds = struct {
 	Perms []struct {
 		Title       string `json:"title"`
@@ -48,44 +53,13 @@ var Seeds = struct {
 }{}
 
 func init() {
-	//Fake, _ = faker.New("en")
-	//Fake.Rand = rand.New(rand.NewSource(42))
-	//rand.Seed(time.Now().UnixNano())
+	Fake, _ = faker.New("en")
+	Fake.Rand = rand.New(rand.NewSource(42))
+	rand.Seed(time.Now().UnixNano())
 
 	filepaths, _ := filepath.Glob(filepath.Join("seeder", "data", "*.yml"))
 	if err := configor.Load(&Seeds, filepaths...); err != nil {
 		panic(err)
-	}
-}
-
-// CreateAdminUsers 新建管理员
-func CreateAdminUsers() {
-	admin := &models.User{
-		Username: "username",
-		Name:     "超级管理员",
-		Email:    "admin@admin.com",
-		Telphone: "13800138000",
-		IsAdmin:  sql.NullBool{Bool: true, Valid: true},
-		Model:    gorm.Model{CreatedAt: time.Now()},
-	}
-
-	if err := sysinit.UserService.Create("password", admin); err != nil {
-		panic(fmt.Sprintf("管理员填充错误：%v", err))
-	}
-}
-
-// CreateAdminRoles 新建管理角色
-func CreateAdminRoles() {
-	role := &models.Role{
-		Name:        "超级管理员",
-		DisplayName: "超级管理员",
-		Rmk:         "超级管理员",
-		IsAdmin:     sql.NullBool{Bool: true, Valid: true},
-		Model:       gorm.Model{CreatedAt: time.Now()},
-	}
-
-	if err := sysinit.RoleService.Create(role); err != nil {
-		panic(fmt.Sprintf("管理员填充错误：%v", err))
 	}
 }
 
@@ -148,6 +122,69 @@ func CreatePerms() {
 		}
 	}
 
+}
+
+// CreateAdminRoles 新建管理角色
+func CreateAdminRoles() {
+	role := &models.Role{
+		Name:        "超级管理员",
+		DisplayName: "超级管理员",
+		Rmk:         "超级管理员",
+		IsAdmin:     sql.NullBool{Bool: true, Valid: true},
+		Model:       gorm.Model{CreatedAt: time.Now()},
+	}
+
+	if err := sysinit.RoleService.Create(role); err != nil {
+		panic(fmt.Sprintf("管理员填充错误：%v", err))
+	}
+}
+
+// CreateAdminUsers 新建管理员
+func CreateAdminUsers() {
+	admin := &models.User{
+		Username: "username",
+		Name:     "超级管理员",
+		Email:    "admin@admin.com",
+		Telphone: "13800138000",
+		IsAdmin:  sql.NullBool{Bool: true, Valid: true},
+		Model:    gorm.Model{CreatedAt: time.Now()},
+	}
+
+	if err := sysinit.UserService.Create("password", admin); err != nil {
+		panic(fmt.Sprintf("管理员填充错误：%v", err))
+	}
+}
+
+// CreateUsers 新建用户
+func CreateUsers() {
+	emailRegexp := regexp.MustCompile(".*(@.*)")
+	// 最新手机正则 ^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$
+	totalCount := 50
+	for i := 0; i < totalCount; i++ {
+		name := Fake.Name()
+		admin := &models.User{
+			Username: name,
+			Name:     name,
+			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(name), " ", "_", -1)+"@example.com"),
+			Telphone: createPhoneNumber(i),
+			IsAdmin:  sql.NullBool{Bool: false, Valid: true},
+			Model:    gorm.Model{CreatedAt: time.Now()},
+		}
+
+		if err := sysinit.UserService.Create("password", admin); err != nil {
+			panic(fmt.Sprintf("管理员填充错误：%v", err))
+		}
+	}
+}
+
+// 生成随机手机号码
+func createPhoneNumber(i int) string {
+	prelist := []string{"130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "147", "150", "151", "152", "153", "155", "156", "157", "158", "159", "186", "187", "188"}
+
+	rd := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	phoneNumber := prelist[rd.Intn(23)] + fmt.Sprintf("%08v", rd.Int31n(100000000))
+	return phoneNumber
 }
 
 /*
