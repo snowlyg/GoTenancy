@@ -5,6 +5,8 @@ go 1.13
 require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
+	github.com/casbin/casbin/v2 v2.2.1
+	github.com/casbin/gorm-adapter/v2 v2.0.3
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/go-playground/locales v0.13.0
@@ -16,6 +18,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
+	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/moul/http2curl v1.0.0 // indirect

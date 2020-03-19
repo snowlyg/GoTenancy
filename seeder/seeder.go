@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/azumads/faker"
+	gormadapter "github.com/casbin/gorm-adapter/v2"
 	"github.com/jinzhu/configor"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/lib"
@@ -27,7 +28,7 @@ var Seeds = struct {
 		Icon        string `json:"icon"`
 		Target      string `json:"target"`
 		OrderNumber int64  `json:"order_number"`
-		Authority   string `json:"authority"`
+		Method      string `json:"method"`
 		Checked     int8   `json:"checked"`
 		IsMenu      int8   `json:"is_menu"`
 		Child       []struct {
@@ -36,7 +37,7 @@ var Seeds = struct {
 			Icon        string `json:"icon"`
 			Target      string `json:"target"`
 			OrderNumber int64  `json:"order_number"`
-			Authority   string `json:"authority"`
+			Method      string `json:"method"`
 			Checked     int8   `json:"checked"`
 			IsMenu      int8   `json:"is_menu"`
 			Child       []struct {
@@ -45,7 +46,7 @@ var Seeds = struct {
 				Icon        string `json:"icon"`
 				Target      string `json:"target"`
 				OrderNumber int64  `json:"order_number"`
-				Authority   string `json:"authority"`
+				Method      string `json:"method"`
 				Checked     int8   `json:"checked"`
 				IsMenu      int8   `json:"is_menu"`
 			}
@@ -74,7 +75,7 @@ func CreatePerms() {
 			Icon:        m.Icon,
 			Target:      m.Target,
 			OrderNumber: m.OrderNumber,
-			Authority:   m.Authority,
+			Method:      m.Method,
 			Checked:     m.Checked,
 			IsMenu:      m.IsMenu,
 		}
@@ -89,7 +90,7 @@ func CreatePerms() {
 					Icon:        mchild.Icon,
 					Target:      mchild.Target,
 					OrderNumber: mchild.OrderNumber,
-					Authority:   mchild.Authority,
+					Method:      m.Method,
 					Checked:     mchild.Checked,
 					IsMenu:      mchild.IsMenu,
 				}
@@ -104,7 +105,7 @@ func CreatePerms() {
 							Icon:        mmchild.Icon,
 							Target:      mmchild.Target,
 							OrderNumber: mmchild.OrderNumber,
-							Authority:   mmchild.Authority,
+							Method:      m.Method,
 							Checked:     mmchild.Checked,
 							IsMenu:      mmchild.IsMenu,
 						}
@@ -135,7 +136,13 @@ func CreateAdminRoles() {
 		Model:       gorm.Model{CreatedAt: time.Now()},
 	}
 
-	if err := sysinit.RoleService.Create(role); err != nil {
+	var permIds []uint
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
+	for _, perm := range perms {
+		permIds = append(permIds, perm.ID)
+	}
+
+	if err := sysinit.RoleService.Create(role, permIds); err != nil {
 		panic(fmt.Sprintf("管理员填充错误：%v", err))
 	}
 }
@@ -150,8 +157,11 @@ func CreateAdminUsers() {
 		IsAdmin:  sql.NullBool{Bool: true, Valid: true},
 		Model:    gorm.Model{CreatedAt: time.Now()},
 	}
-
-	if err := sysinit.UserService.Create("password", admin); err != nil {
+	adminrole, found := sysinit.RoleService.GetAdmin()
+	if !found {
+		panic("管理角色不存在")
+	}
+	if err := sysinit.UserService.Create("password", admin, []uint{adminrole.ID}); err != nil {
 		panic(fmt.Sprintf("管理员填充错误：%v", err))
 	}
 }
@@ -167,7 +177,7 @@ func CreateRoles() {
 			Model:       gorm.Model{CreatedAt: time.Now()},
 		}
 
-		if err := sysinit.RoleService.Create(role); err != nil {
+		if err := sysinit.RoleService.Create(role, []uint{}); err != nil {
 			panic(fmt.Sprintf("角色填充错误：%v", err))
 		}
 	}
@@ -188,7 +198,7 @@ func CreateUsers() {
 			Model:    gorm.Model{CreatedAt: time.Now()},
 		}
 
-		if err := sysinit.UserService.Create("password", admin); err != nil {
+		if err := sysinit.UserService.Create("password", admin, []uint{}); err != nil {
 			panic(fmt.Sprintf("用户填充错误：%v", err))
 		}
 	}
@@ -201,11 +211,12 @@ func CreateUsers() {
 	sysinit.Db.AutoMigrate 重建数据表
 */
 func AutoMigrates() {
-	sysinit.Db.DropTableIfExists("users", "perms", "roles")
+	sysinit.Db.DropTableIfExists("users", "perms", "roles", "casbin_rule")
 
 	sysinit.Db.AutoMigrate(
 		&models.User{},
 		&models.Role{},
 		&models.Perm{},
+		&gormadapter.CasbinRule{},
 	)
 }

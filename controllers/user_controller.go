@@ -13,8 +13,9 @@ import (
 )
 
 type UserController struct {
-	Ctx     iris.Context
-	Service services.UserService
+	Ctx         iris.Context
+	Service     services.UserService
+	RoleService services.RoleService
 }
 
 // GetUsers handles GET: http://localhost:8080/user/table.
@@ -48,10 +49,12 @@ func (c *UserController) GetCreate() mvc.Result {
 // Get handles GET: http://localhost:8080/user/id.
 func (c *UserController) GetBy(id uint) mvc.Result {
 	user, _ := c.Service.GetByID(id)
+	_, roles := c.RoleService.GetAll(map[string]interface{}{}, nil, false)
 	return mvc.View{
 		Name: "user/edit.html",
 		Data: iris.Map{
-			"User": user,
+			"User":  user,
+			"Roles": roles,
 		},
 	}
 }
@@ -74,7 +77,7 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(string(user.Password), &user); err != nil {
+	if err := c.Service.Create(string(user.Password), &user, []uint{}); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户创建错误：%v", err)}
 	}
 

@@ -7,6 +7,7 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
+	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/controllers"
 	"github.com/snowlyg/go-tenancy/middleware"
@@ -25,9 +26,8 @@ func main() {
 	app.HandleDir("/public", "./public")
 
 	app.OnAnyErrorCode(func(ctx iris.Context) {
-		ctx.ViewData("Message", ctx.Values().
-			GetStringDefault("message", "The page you're looking for doesn't exist"))
-		if err := ctx.View("shared/404.html"); err != nil {
+		ctx.ViewData("Status", common.ErrorStatus[ctx.GetStatusCode()])
+		if err := ctx.View("shared/error.html"); err != nil {
 			panic(err)
 		}
 	})
@@ -41,32 +41,33 @@ func main() {
 
 	//表格接口
 	init := mvc.New(app.Party("/init"))
-	init.Router.Use(middleware.Auth)
+	init.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	init.Handle(new(controllers.InitController))
 
 	home := mvc.New(app.Party("/"))
-	home.Router.Use(middleware.Auth)
+	home.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	home.Handle(new(controllers.HomeController))
 
 	control := mvc.New(app.Party("/control"))
-	control.Router.Use(middleware.Auth)
+	control.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	control.Handle(new(controllers.ControlController))
 
 	menu := mvc.New(app.Party("/menu"))
 	menu.Register(sysinit.PermService)
-	menu.Router.Use(middleware.Auth)
+	menu.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	menu.Handle(new(controllers.MenuController))
 
 	role := mvc.New(app.Party("/role"))
 	role.Register(sysinit.RoleService)
-	role.Router.Use(middleware.Auth)
+	role.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	role.Handle(new(controllers.RoleController))
 
 	user := mvc.New(app.Party("/user"))
 	user.Register(
 		sysinit.UserService,
+		sysinit.RoleService,
 	)
-	user.Router.Use(middleware.Auth)
+	user.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	user.Handle(new(controllers.UserController))
 
 	auth := mvc.New(app.Party("/auth"))

@@ -21,3 +21,25 @@ type Pagination struct {
 type Id struct {
 	Id int `json:"id"`
 }
+
+// 错误页面信息
+var ErrorStatus = map[int]map[string]interface{}{
+	500: {
+		"one":   5,
+		"two":   0,
+		"three": 0,
+		"msg":   "不好！有什么不好的事情在发生！！",
+	},
+	404: {
+		"one":   4,
+		"two":   0,
+		"three": 4,
+		"msg":   "不好！这个网页走丢了！！",
+	},
+	403: {
+		"one":   4,
+		"two":   0,
+		"three": 3,
+		"msg":   "不好！你的钥匙好像有点不对！！",
+	},
+}

@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
@@ -57,10 +60,14 @@ func (c *AuthController) PostLogin() interface{} {
 		return common.Response{Msg: "请输入正确验证码"}
 	}
 
-	user, found := c.Service.GetByUsernameAndPassword(username, password)
+	user, found := c.Service.GetByUsername(username)
+	if !found && user.ID > 0 {
+		return common.Response{Msg: "请输入正确用户名"}
+	}
 
-	if !found {
-		return common.Response{Msg: "用户名或者密码错误"}
+	validatePassword, err := models.ValidatePassword(password, user.Password)
+	if !validatePassword {
+		return common.Response{Msg: fmt.Sprintf("密码错误 %v", err)}
 	}
 
 	c.Session.Set(sysinit.UserIDKey, user.ID)

@@ -26,8 +26,10 @@ func GeneratePassword(userPassword string) ([]byte, error) {
 }
 
 func ValidatePassword(userPassword string, hashed []byte) (bool, error) {
+
 	if err := bcrypt.CompareHashAndPassword(hashed, []byte(userPassword)); err != nil {
 		return false, err
 	}
+
 	return true, nil
 }

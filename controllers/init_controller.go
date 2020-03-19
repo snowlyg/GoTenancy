@@ -31,7 +31,7 @@ func (c *InitController) GetInfo() interface{} {
 		}{
 			Title: "GOTENACY",
 			Href:  "",
-			Image: "./public/images/logo.png",
+			//Image: "./public/images/logo.png",
 		},
 		MenuInfo: perms,
 	}

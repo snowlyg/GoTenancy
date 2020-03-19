@@ -215,7 +215,7 @@
                     <span class="triangle"></span>
                 </div>
             </div>
-            <h2 class="h1">很抱歉，你访问的页面找不到了</h2>
+            <h2 class="h1">{{.Status.msg}}</h2>
         </div>
     </div>
 </div>
@@ -229,7 +229,7 @@
     loop3 = setInterval(function () {
         if (i > 40) {
             clearInterval(loop3);
-            document.querySelector('.thirdDigit').textContent = 4;
+            document.querySelector('.thirdDigit').textContent = {{.Status.one}};
         } else {
             document.querySelector('.thirdDigit').textContent = randomNum();
             i++;
@@ -238,7 +238,7 @@
     loop2 = setInterval(function () {
         if (i > 80) {
             clearInterval(loop2);
-            document.querySelector('.secondDigit').textContent = 0;
+            document.querySelector('.secondDigit').textContent = {{.Status.two}};
         } else {
             document.querySelector('.secondDigit').textContent = randomNum();
             i++;
@@ -247,7 +247,7 @@
     loop1 = setInterval(function () {
         if (i > 100) {
             clearInterval(loop1);
-            document.querySelector('.firstDigit').textContent = 4;
+            document.querySelector('.firstDigit').textContent = {{.Status.three}};
         } else {
             document.querySelector('.firstDigit').textContent = randomNum();
             i++;

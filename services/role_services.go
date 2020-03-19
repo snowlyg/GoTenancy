@@ -2,7 +2,9 @@ package services
 
 import (
 	"errors"
+	"strconv"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
@@ -14,17 +16,20 @@ type RoleService interface {
 	DeleteByID(id uint) error
 	DeleteMnutil(ids []common.Id) error
 	Update(id uint, role *models.Role) error
-	Create(role *models.Role) error
+	Create(role *models.Role, permIds []uint) error
+	GetAdmin() (models.Role, bool)
 }
 
-func NewRoleService(gdb *gorm.DB) RoleService {
+func NewRoleService(gdb *gorm.DB, ce *casbin.Enforcer) RoleService {
 	return &roleService{
 		gdb: gdb,
+		ce:  ce,
 	}
 }
 
 type roleService struct {
 	gdb *gorm.DB
+	ce  *casbin.Enforcer
 }
 
 //GetAll 查询所有数据
@@ -53,32 +58,43 @@ func (s *roleService) GetAll(args map[string]interface{}, pagination *common.Pag
 }
 
 func (s *roleService) GetByID(id uint) (models.Role, bool) {
-	return models.Role{}, true
+	user := models.Role{Model: gorm.Model{ID: id}}
+	if notFound := s.gdb.Find(&user).RecordNotFound(); notFound {
+		return user, false
+	}
+	return user, true
 }
 
 func (s *roleService) Update(id uint, role *models.Role) error {
+	if err := s.gdb.Where("id = ?", id).Where(NotAdmin).Update(role).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
-func (s *roleService) Create(role *models.Role) error {
-	var (
-		err error
-	)
-	if role.ID > 0 {
-		return errors.New("unable to create this role")
-	}
+func (s *roleService) Create(role *models.Role, permIds []uint) error {
+	return s.gdb.Transaction(func(tx *gorm.DB) error {
+		var err error
 
-	err = s.gdb.Create(role).Error
+		if role.ID > 0 {
+			return errors.New("unable to create this role")
+		}
 
-	if err != nil {
-		return err
-	}
+		if err = tx.Create(role).Error; err != nil {
+			return err
+		}
 
-	return nil
+		if err = s.addPerms(permIds, role); err != nil {
+			return err
+		}
+
+		// 返回 nil 提交事务
+		return nil
+	})
 }
 
 func (s *roleService) DeleteByID(id uint) error {
-	if err := s.gdb.Where(IsAdmin).Delete(models.Role{Model: gorm.Model{ID: id}}).Error; err != nil {
+	if err := s.gdb.Where(NotAdmin).Delete(models.Role{Model: gorm.Model{ID: id}}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -87,7 +103,7 @@ func (s *roleService) DeleteByID(id uint) error {
 func (s *roleService) DeleteMnutil(ids []common.Id) error {
 	return s.gdb.Transaction(func(tx *gorm.DB) error {
 		for _, id := range ids {
-			if err := tx.Where(IsAdmin).Delete(models.Role{Model: gorm.Model{ID: uint(id.Id)}}).Error; err != nil {
+			if err := tx.Where(NotAdmin).Delete(models.Role{Model: gorm.Model{ID: uint(id.Id)}}).Error; err != nil {
 				return err
 			}
 		}
@@ -95,4 +111,30 @@ func (s *roleService) DeleteMnutil(ids []common.Id) error {
 		// 返回 nil 提交事务
 		return nil
 	})
+}
+
+func (s *roleService) GetAdmin() (models.Role, bool) {
+	role := models.Role{}
+	if notFound := s.gdb.Where(IsAdmin).Find(&role).RecordNotFound(); notFound {
+		return role, false
+	}
+	return role, true
+}
+
+func (s *roleService) addPerms(permIds []uint, role *models.Role) error {
+	if len(permIds) > 0 {
+		roleId := strconv.FormatUint(uint64(role.ID), 10)
+		if _, err := s.ce.DeletePermissionsForUser(roleId); err != nil {
+			return err
+		}
+		var perms []models.Perm
+		s.gdb.Where("id in (?)", permIds).Find(&perms)
+		for _, perm := range perms {
+			if _, err := s.ce.AddPolicy(roleId, perm.Href, perm.Method); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

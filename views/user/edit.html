@@ -24,25 +24,25 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">手机</label>
         <div class="layui-input-block">
-            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value="{{.User.Telphone}}" class="layui-input">
+            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机"
+                   value="{{.User.Telphone}}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">邮箱</label>
         <div class="layui-input-block">
-            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="{{.User.Email}}" class="layui-input">
+            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="{{.User.Email}}"
+                   class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">角色</label>
         <div class="layui-input-block">
             <select name="roles" lay-filter="aihao">
-                <option value=""></option>
-                <option value="0">写作</option>
-                <option value="1" selected="">阅读</option>
-                <option value="2">游戏</option>
-                <option value="3">音乐</option>
-                <option value="4">旅行</option>
+                <option value="">选择角色</option>
+                {{  range .Roles }}
+                    <option value="{{.ID}}">{{.DisplayName}}</option>
+                {{end}}
             </select>
         </div>
     </div>
@@ -85,7 +85,6 @@
                     data: JSON.stringify(data.field),
                     dataType: "json",
                     success: function (res) {
-                        console.log(res);
                         if (res.status) {
                             layer.msg(res.msg, {
                                 icon: 1,

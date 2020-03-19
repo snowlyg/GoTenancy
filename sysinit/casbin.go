@@ -4,21 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/casbin/casbin/v2"
+	gormadapter "github.com/casbin/gorm-adapter/v2"
 	"github.com/snowlyg/go-tenancy/config"
-	"github.com/snowlyg/go-tenancy/services"
 )
 
-var (
-	Db          *gorm.DB
-	UserService services.UserService
-	PermService services.PermService
-	RoleService services.RoleService
-)
+var Enforcer *casbin.Enforcer
 
 func init() {
 
@@ -34,14 +27,18 @@ func init() {
 		panic(errors.New("not supported database adapter"))
 	}
 
-	Db, err = gorm.Open(config.Config.DB.Adapter, conn)
+	c, err := gormadapter.NewAdapter(config.Config.DB.Adapter, conn, true) // Your driver and data source.
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("NewAdapter 错误: %v", err))
 	}
 
-	// 注册模型服务
-	UserService = services.NewUserService(Db, Enforcer)
-	PermService = services.NewPermService(Db)
-	RoleService = services.NewRoleService(Db, Enforcer)
+	casbinmodelpath := filepath.Join(config.Root, "config", "rbac_model.conf")
+	fmt.Println(casbinmodelpath)
+	Enforcer, err = casbin.NewEnforcer(casbinmodelpath, c)
+	if err != nil {
+		panic(fmt.Sprintf("NewEnforcer 错误: %v", err))
+	}
+
+	_ = Enforcer.LoadPolicy()
 
 }

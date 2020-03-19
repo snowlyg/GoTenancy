@@ -2,18 +2,21 @@ package services
 
 import (
 	"errors"
+	"strconv"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
 )
 
-var IsAdmin = map[string]interface{}{"is_admin": 0}
+var NotAdmin = map[string]interface{}{"is_admin": 0}
+var IsAdmin = map[string]interface{}{"is_admin": 1}
 
 type UserService interface {
 	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.User)
 	GetByID(id uint) (models.User, bool)
-	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
+	GetByUsername(username string) (*models.User, bool)
 	DeleteByID(id uint) error
 	DeleteMnutil(userIds []common.Id) error
 
@@ -21,17 +24,19 @@ type UserService interface {
 	UpdatePassword(id uint, newPassword string) error
 	UpdateUsername(id uint, newUsername string) error
 
-	Create(userPassword string, user *models.User) error
+	Create(userPassword string, user *models.User, roleIds []uint) error
 }
 
-func NewUserService(gdb *gorm.DB) UserService {
+func NewUserService(gdb *gorm.DB, ce *casbin.Enforcer) UserService {
 	return &userService{
 		gdb: gdb,
+		ce:  ce,
 	}
 }
 
 type userService struct {
 	gdb *gorm.DB
+	ce  *casbin.Enforcer
 }
 
 func (s *userService) GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.User) {
@@ -64,16 +69,16 @@ func (s *userService) GetByID(id uint) (models.User, bool) {
 	return user, true
 }
 
-func (s *userService) GetByUsernameAndPassword(username, password string) (*models.User, bool) {
-	user := &models.User{Username: username, Password: []byte(password)}
-	if notFound := s.gdb.Find(user).RecordNotFound(); notFound {
+func (s *userService) GetByUsername(username string) (*models.User, bool) {
+	user := &models.User{}
+	if notFound := s.gdb.Where("username = ?", username).Find(&user).RecordNotFound(); notFound {
 		return nil, false
 	}
 	return user, true
 }
 
 func (s *userService) Update(id uint, user *models.User) error {
-	if err := s.gdb.Where("id = ?", id).Where(IsAdmin).Update(user).Error; err != nil {
+	if err := s.gdb.Where("id = ?", id).Where(NotAdmin).Update(user).Error; err != nil {
 		return err
 	}
 	return nil
@@ -97,29 +102,35 @@ func (s *userService) UpdateUsername(id uint, newUsername string) error {
 	})
 }
 
-func (s *userService) Create(userPassword string, user *models.User) error {
-	var (
-		hashed []byte
-		err    error
-	)
-	if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
-		return errors.New("unable to create this user")
-	}
+func (s *userService) Create(userPassword string, user *models.User, roleIds []uint) error {
+	return s.gdb.Transaction(func(tx *gorm.DB) error {
 
-	hashed, err = models.GeneratePassword(userPassword)
-	user.Password = hashed
+		if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
+			return errors.New("unable to create this user")
+		}
 
-	err = s.gdb.Create(user).Error
+		hashed, err := models.GeneratePassword(userPassword)
+		user.Password = hashed
+		if err != nil {
+			return err
+		}
 
-	if err != nil {
-		return err
-	}
+		if err = tx.Create(user).Error; err != nil {
+			return err
+		}
 
-	return nil
+		if err = s.addRoles(roleIds, user); err != nil {
+			return err
+		}
+
+		// 返回 nil 提交事务
+		return nil
+	})
+
 }
 
 func (s *userService) DeleteByID(id uint) error {
-	if err := s.gdb.Where(IsAdmin).Delete(models.User{Model: gorm.Model{ID: id}}).Error; err != nil {
+	if err := s.gdb.Where(NotAdmin).Delete(models.User{Model: gorm.Model{ID: id}}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -128,7 +139,7 @@ func (s *userService) DeleteByID(id uint) error {
 func (s *userService) DeleteMnutil(userIds []common.Id) error {
 	return s.gdb.Transaction(func(tx *gorm.DB) error {
 		for _, userid := range userIds {
-			if err := tx.Where(IsAdmin).Delete(models.User{Model: gorm.Model{ID: uint(userid.Id)}}).Error; err != nil {
+			if err := tx.Where(NotAdmin).Delete(models.User{Model: gorm.Model{ID: uint(userid.Id)}}).Error; err != nil {
 				return err
 			}
 		}
@@ -136,4 +147,22 @@ func (s *userService) DeleteMnutil(userIds []common.Id) error {
 		// 返回 nil 提交事务
 		return nil
 	})
+}
+
+func (s *userService) addRoles(roleids []uint, user *models.User) error {
+	if len(roleids) > 0 {
+		userId := strconv.FormatUint(uint64(user.ID), 10)
+		if _, err := s.ce.DeleteRolesForUser(userId); err != nil {
+			return err
+		}
+
+		for _, roleId := range roleids {
+			roleId := strconv.FormatUint(uint64(roleId), 10)
+			if _, err := s.ce.AddRoleForUser(userId, roleId); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

@@ -70,7 +70,7 @@ func (c *RoleController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(&role); err != nil {
+	if err := c.Service.Create(&role, []uint{}); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色创建错误：%v", err)}
 	}
 
