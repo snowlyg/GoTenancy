@@ -139,7 +139,9 @@ func CreateAdminRoles() {
 	var permIds []uint
 	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
 	for _, perm := range perms {
-		permIds = append(permIds, perm.ID)
+		if len(perm.Href) > 0 {
+			permIds = append(permIds, perm.ID)
+		}
 	}
 
 	if err := sysinit.RoleService.Create(role, permIds); err != nil {
