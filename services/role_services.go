@@ -4,15 +4,16 @@ import (
 	"errors"
 
 	"github.com/jinzhu/gorm"
+	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
 )
 
 type RoleService interface {
-	GetAll(args map[string]interface{}, ispreload bool) []*models.Role
+	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.Role)
 	GetByID(id uint) (models.Role, bool)
 	DeleteByID(id uint) error
-	Update(id uint, menu *models.Role) error
-	Create(menu *models.Role) error
+	Update(id uint, role *models.Role) error
+	Create(role *models.Role) error
 }
 
 func NewRoleService(gdb *gorm.DB) RoleService {
@@ -26,8 +27,9 @@ type roleService struct {
 }
 
 //GetAll 查询所有数据
-func (s *roleService) GetAll(args map[string]interface{}, ispreload bool) []*models.Role {
-	var meuns []*models.Role
+func (s *roleService) GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.Role) {
+	var roles []*models.Role
+	var count int64
 
 	args["is_admin"] = 0
 	db := s.gdb.Where(args)
@@ -36,29 +38,36 @@ func (s *roleService) GetAll(args map[string]interface{}, ispreload bool) []*mod
 		//db = db.Preload("Child")
 	}
 
-	if err := db.Find(&meuns).Error; err != nil {
+	db.Find(&roles).Count(&count)
+
+	if pagination != nil {
+		db = db.Limit(pagination.Limit).Offset(pagination.Limit * (pagination.Page - 1))
+	}
+
+	if err := db.Find(&roles).Error; err != nil {
 		panic(err)
 	}
-	return meuns
+
+	return count, roles
 }
 
 func (s *roleService) GetByID(id uint) (models.Role, bool) {
 	return models.Role{}, true
 }
 
-func (s *roleService) Update(id uint, menu *models.Role) error {
+func (s *roleService) Update(id uint, role *models.Role) error {
 	return nil
 }
 
-func (s *roleService) Create(menu *models.Role) error {
+func (s *roleService) Create(role *models.Role) error {
 	var (
 		err error
 	)
-	if menu.ID > 0 {
-		return errors.New("unable to create this menu")
+	if role.ID > 0 {
+		return errors.New("unable to create this role")
 	}
 
-	err = s.gdb.Create(menu).Error
+	err = s.gdb.Create(role).Error
 
 	if err != nil {
 		return err

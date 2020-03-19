@@ -19,10 +19,16 @@ type UserController struct {
 
 // GetUsers handles GET: http://localhost:8080/user/table.
 func (c *UserController) GetTable() interface{} {
-	args := map[string]interface{}{}
-	users := sysinit.UserService.GetAll(args, false)
 
-	return common.Table{Code: 0, Msg: "", Count: len(users), Data: users}
+	var pagination common.Pagination
+	if err := c.Ctx.ReadQuery(&pagination); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("分页参数获取错误：%v", err)}
+	}
+
+	args := map[string]interface{}{}
+	count, users := sysinit.UserService.GetAll(args, &pagination, false)
+
+	return common.Table{Code: 0, Msg: "", Count: count, Data: users}
 }
 
 // Get handles GET: http://localhost:8080/user.

@@ -4,13 +4,14 @@ import (
 	"errors"
 
 	"github.com/jinzhu/gorm"
+	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
 )
 
 var IsAdmin = map[string]interface{}{"is_admin": 0}
 
 type UserService interface {
-	GetAll(args map[string]interface{}, ispreload bool) []*models.User
+	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.User)
 	GetByID(id uint) (models.User, bool)
 	GetByUsernameAndPassword(username, userPassword string) (*models.User, bool)
 	DeleteByID(id uint) error
@@ -32,18 +33,26 @@ type userService struct {
 	gdb *gorm.DB
 }
 
-func (s *userService) GetAll(args map[string]interface{}, ispreload bool) []*models.User {
+func (s *userService) GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.User) {
 	var users []*models.User
+	var count int64
+
 	args["is_admin"] = 0
 	db := s.gdb.Where(args)
 	if ispreload {
 		//db = db.Preload("Child")
 	}
 
+	db.Find(&users).Count(&count)
+
+	if pagination != nil {
+		db = db.Limit(pagination.Limit).Offset(pagination.Limit * (pagination.Page - 1))
+	}
+
 	if err := db.Find(&users).Error; err != nil {
 		panic(err)
 	}
-	return users
+	return count, users
 }
 
 func (s *userService) GetByID(id uint) (models.User, bool) {

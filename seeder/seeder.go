@@ -14,6 +14,7 @@ import (
 	"github.com/azumads/faker"
 	"github.com/jinzhu/configor"
 	"github.com/jinzhu/gorm"
+	"github.com/snowlyg/go-tenancy/lib"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
@@ -155,36 +156,42 @@ func CreateAdminUsers() {
 	}
 }
 
+// CreateRoles 新建用户
+func CreateRoles() {
+	for i := 0; i < 50; i++ {
+		role := &models.Role{
+			Name:        Fake.Name(),
+			DisplayName: Fake.UserName(),
+			Rmk:         Fake.Paragraph(1, true),
+			IsAdmin:     sql.NullBool{Bool: false, Valid: true},
+			Model:       gorm.Model{CreatedAt: time.Now()},
+		}
+
+		if err := sysinit.RoleService.Create(role); err != nil {
+			panic(fmt.Sprintf("角色填充错误：%v", err))
+		}
+	}
+}
+
 // CreateUsers 新建用户
 func CreateUsers() {
-	emailRegexp := regexp.MustCompile(".*(@.*)")
 	// 最新手机正则 ^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$
+	emailRegexp := regexp.MustCompile(".*(@.*)")
 	totalCount := 50
 	for i := 0; i < totalCount; i++ {
-		name := Fake.Name()
 		admin := &models.User{
-			Username: name,
-			Name:     name,
-			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(name), " ", "_", -1)+"@example.com"),
-			Telphone: createPhoneNumber(i),
+			Username: Fake.UserName(),
+			Name:     Fake.Name(),
+			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.UserName()), " ", "_", -1)+"@example.com"),
+			Telphone: lib.CreatePhoneNumber(),
 			IsAdmin:  sql.NullBool{Bool: false, Valid: true},
 			Model:    gorm.Model{CreatedAt: time.Now()},
 		}
 
 		if err := sysinit.UserService.Create("password", admin); err != nil {
-			panic(fmt.Sprintf("管理员填充错误：%v", err))
+			panic(fmt.Sprintf("用户填充错误：%v", err))
 		}
 	}
-}
-
-// 生成随机手机号码
-func createPhoneNumber(i int) string {
-	prelist := []string{"130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "147", "150", "151", "152", "153", "155", "156", "157", "158", "159", "186", "187", "188"}
-
-	rd := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	phoneNumber := prelist[rd.Intn(23)] + fmt.Sprintf("%08v", rd.Int31n(100000000))
-	return phoneNumber
 }
 
 /*

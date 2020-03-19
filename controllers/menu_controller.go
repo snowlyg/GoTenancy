@@ -26,10 +26,10 @@ func (c *MenuController) Get() mvc.Result {
 // Get handles GET: http://localhost:8080/menu/table.
 func (c *MenuController) GetTable() interface{} {
 	args := map[string]interface{}{}
-	perms := sysinit.PermService.GetAll(args, false)
+	count, perms := sysinit.PermService.GetAll(args, false)
 	tablemenus := transformerTableMenus(perms)
 
-	return common.Table{Code: 0, Msg: "", Count: len(tablemenus), Data: tablemenus}
+	return common.Table{Code: 0, Msg: "", Count: count, Data: tablemenus}
 }
 
 // transformerTableMenus 菜单表格接口数据转换

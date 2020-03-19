@@ -18,6 +18,10 @@ func main() {
 	CreateAdminRoles()
 	fmt.Println(fmt.Sprintf("管理角色填充完成！！"))
 
+	fmt.Println(fmt.Sprintf("角色填充开始！！"))
+	CreateRoles()
+	fmt.Println(fmt.Sprintf("角色填充完成！！"))
+
 	fmt.Println(fmt.Sprintf("管理员填充开始！！"))
 	CreateAdminUsers()
 	fmt.Println(fmt.Sprintf("管理员填充完成！！"))

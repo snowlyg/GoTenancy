@@ -19,10 +19,16 @@ type RoleController struct {
 
 // GetRoles handles GET: http://localhost:8080/role/table.
 func (c *RoleController) GetTable() interface{} {
-	args := map[string]interface{}{}
-	roles := sysinit.RoleService.GetAll(args, false)
 
-	return common.Table{Code: 0, Msg: "", Count: len(roles), Data: roles}
+	var pagination common.Pagination
+	if err := c.Ctx.ReadQuery(&pagination); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("分页参数获取错误：%v", err)}
+	}
+
+	args := map[string]interface{}{}
+	count, roles := sysinit.RoleService.GetAll(args, &pagination, false)
+
+	return common.Table{Code: 0, Msg: "", Count: count, Data: roles}
 }
 
 // Get handles GET: http://localhost:8080/role.

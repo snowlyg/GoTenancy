@@ -8,7 +8,7 @@ import (
 )
 
 type PermService interface {
-	GetAll(args map[string]interface{}, ispreload bool) []*models.Perm
+	GetAll(args map[string]interface{}, ispreload bool) (int64, []*models.Perm)
 	GetByID(id uint) (models.Perm, bool)
 	DeleteByID(id uint) bool
 	Update(id uint, menu *models.Perm) error
@@ -27,18 +27,22 @@ type permService struct {
 
 //GetAll 查询所有数据
 //args 过滤条件 {"parent_id = ?" : 0}
-func (s *permService) GetAll(args map[string]interface{}, ispreload bool) []*models.Perm {
+func (s *permService) GetAll(args map[string]interface{}, ispreload bool) (int64, []*models.Perm) {
 	var meuns []*models.Perm
+	var count int64
+
 	db := s.gdb.Where(args)
 
 	if ispreload {
 		db = db.Preload("Child")
 	}
 
+	db.Find(&meuns).Count(&count)
+
 	if err := db.Find(&meuns).Error; err != nil {
 		panic(err)
 	}
-	return meuns
+	return count, meuns
 }
 
 func (s *permService) GetByID(id uint) (models.Perm, bool) {
