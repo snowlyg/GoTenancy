@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
@@ -8,6 +9,10 @@ import (
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
+
+type captchaId struct {
+	CaptchaId string
+}
 
 type AuthController struct {
 	Ctx     iris.Context
@@ -28,11 +33,6 @@ func (c *AuthController) logout() {
 	c.Session.Destroy()
 }
 
-var loginStaticView = mvc.View{
-	Name: "auth/login.html",
-	Data: iris.Map{"Title": "登陆"},
-}
-
 // GetLogin handles GET: http://localhost:8080/auth/login.
 func (c *AuthController) GetLogin() mvc.Result {
 	c.Ctx.ViewLayout(iris.NoLayout)
@@ -40,7 +40,11 @@ func (c *AuthController) GetLogin() mvc.Result {
 		c.logout()
 	}
 
-	return loginStaticView
+	return mvc.View{
+		Name: "auth/login.html",
+		Data: iris.Map{"CaptchaId": captcha.New()},
+	}
+
 }
 
 // PostLogin handles GET: http://localhost:8080/auth/login.

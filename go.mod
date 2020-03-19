@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/ajg/form v1.5.1 // indirect
+	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0

@@ -124,7 +124,7 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="username"></label>
-                    <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱"
+                    <input type="text" name="username" lay-verify="required|username" placeholder="用户名或者邮箱"
                            autocomplete="off" class="layui-input" value="username">
                 </div>
                 <div class="layui-form-item">
@@ -132,17 +132,20 @@
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码"
                            autocomplete="off" class="layui-input" value="password">
                 </div>
-                {{/*                <div class="layui-form-item">*/}}
-                {{/*                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>*/}}
-                {{/*                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码"*/}}
-                {{/*                           autocomplete="off" class="layui-input verification captcha" value="xszg">*/}}
-                {{/*                    <div class="captcha-img">*/}}
-                {{/*                        <img id="captchaPic" src="/public/images/captcha.jpg">*/}}
-                {{/*                    </div>*/}}
-                {{/*                </div>*/}}
-                {{/*                <div class="layui-form-item">*/}}
-                {{/*                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">*/}}
-                {{/*                </div>*/}}
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>
+                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码"
+                           autocomplete="off" class="layui-input verification captcha" value="xszg">
+                    <div class="captcha-img">
+                        <img id=captchaPic src="/captcha/{{.CaptchaId}}.png" alt="Captcha image" onclick="reload()">
+                        <input type=hidden name=captchaId value="{{.CaptchaId}}"><br>
+                    </div>
+
+
+                </div>
+                <div class="layui-form-item">
+                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
+                </div>
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn-fluid" lay-submit="login" lay-filter="login">登 入</button>
                 </div>
@@ -154,6 +157,20 @@
 <script src="/public/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="/public/lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
 <script>
+    function setSrcQuery(e, q) {
+        var src  = e.src;
+        var p = src.indexOf('?');
+        if (p >= 0) {
+            src = src.substr(0, p);
+        }
+        e.src = src + "?" + q
+    }
+
+    function reload() {
+        setSrcQuery(document.getElementById('captchaPic'), "reload=" + (new Date()).getTime());
+        return false;
+    }
+
     layui.use(['form'], function () {
         var form = layui.form,
             layer = layui.layer;
@@ -169,21 +186,33 @@
             });
         });
 
+
+        form.verify({
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+                if (value.length < 6 || value.length > 50) {
+                    return '用户名必须6到50位';
+                }
+            }
+
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , password: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+        });
         // 进行登录操作
         form.on('submit(login)', function (data) {
             data = data.field;
-            if (data.username == '') {
-                layer.msg('用户名不能为空');
-                return false;
-            }
-            if (data.password == '') {
-                layer.msg('密码不能为空');
-                return false;
-            }
-            // if (data.captcha == '') {
-            //     layer.msg('验证码不能为空');
-            //     return false;
-            // }
 
             $.ajax({
                 type: "POST",
@@ -192,7 +221,7 @@
                 dataType: "json",
                 success: function (res) {
                     if (res.status) {
-                        layer.msg(res.msg,{
+                        layer.msg(res.msg, {
                             icon: 1,
                             time: 500 //0.5秒关闭（如果不配置，默认是3秒）
                         }, function () {

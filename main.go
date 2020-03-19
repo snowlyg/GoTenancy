@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/snowlyg/go-tenancy/config"
@@ -34,6 +35,9 @@ func main() {
 	iris.RegisterOnInterrupt(func() {
 		_ = sysinit.Db.Close()
 	})
+
+	//验证码
+	app.Get("/captcha/{id:string}", iris.FromStd(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
 
 	//表格接口
 	init := mvc.New(app.Party("/init"))
