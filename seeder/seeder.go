@@ -145,7 +145,7 @@ func CreateAdminRoles() {
 	}
 
 	if err := sysinit.RoleService.Create(role, permIds); err != nil {
-		panic(fmt.Sprintf("管理员填充错误：%v", err))
+		panic(fmt.Sprintf("管理角色填充错误：%v", err))
 	}
 }
 
