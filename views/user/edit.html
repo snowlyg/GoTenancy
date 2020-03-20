@@ -37,13 +37,13 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">角色</label>
-        <div class="layui-input-block">
-            <select name="roles" lay-filter="aihao">
-                <option value="">选择角色</option>
-                {{  range .Roles }}
-                    <option value="{{.ID}}">{{.DisplayName}}</option>
-                {{end}}
-            </select>
+        <div class="layui-input-block" id="xmSelect">
+            {{/*            <select name="role_ids" lay-filter="aihao">*/}}
+            {{/*                <option value="">选择角色</option>*/}}
+            {{/*                {{  range .Roles }}*/}}
+            {{/*                    <option value="{{.ID}}">{{.DisplayName}}</option>*/}}
+            {{/*                {{end}}*/}}
+            {{/*            </select>*/}}
         </div>
     </div>
     <div class="layui-form-item">
@@ -53,11 +53,22 @@
     </div>
 </div>
 {{define "user/edit-footer"}}
+    <script src="/public/js/xmSelect/xmSelect.js" charset="utf-8"></script>
     <script>
         layui.use(['form'], function () {
             var form = layui.form,
                 layer = layui.layer,
                 $ = layui.$;
+
+            var xmS = xmSelect.render({
+                el: '#xmSelect',
+                data: [
+                    {name: '水果', value: 1},
+                    {name: '蔬菜', value: 2},
+                    {name: '桌子', value: 3},
+                    {name: '北京', value: 4},
+                ]
+            });
 
             form.verify({
                 username: function (value, item) { //value：表单的值、item：表单的DOM对象

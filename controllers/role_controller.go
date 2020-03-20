@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
+	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/go-tenancy/validatas"
 )
 
@@ -29,6 +30,15 @@ func (c *RoleController) GetTable() interface{} {
 	count, roles := sysinit.RoleService.GetAll(args, &pagination, false)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: roles}
+}
+
+// GetSelect handles GET: http://localhost:8080/role/select.
+func (c *RoleController) GetSelect() interface{} {
+
+	args := map[string]interface{}{}
+	_, roles := sysinit.RoleService.GetAll(args, nil, false)
+
+	return c.transformerSelectRoles(roles)
 }
 
 // Get handles GET: http://localhost:8080/role.
@@ -119,4 +129,19 @@ func (c *RoleController) PostDeletes() interface{} {
 	}
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
+}
+
+// transformerTableUsers 菜单表格接口数据转换
+func (c *RoleController) transformerSelectRoles(roles []*models.Role) []*transformer.RoleSelect {
+	var tableroles []*transformer.RoleSelect
+	for _, role := range roles {
+		tableuser := &transformer.RoleSelect{}
+		tableuser.Name = role.DisplayName
+		tableuser.Value = role.ID
+		tableuser.IsSelected = false
+
+		tableroles = append(tableroles, tableuser)
+	}
+
+	return tableroles
 }

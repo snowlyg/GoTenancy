@@ -9,7 +9,9 @@ import (
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
+	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/go-tenancy/validatas"
+	"github.com/snowlyg/gotransformer"
 )
 
 type UserController struct {
@@ -29,7 +31,7 @@ func (c *UserController) GetTable() interface{} {
 	args := map[string]interface{}{}
 	count, users := sysinit.UserService.GetAll(args, &pagination, false)
 
-	return common.Table{Code: 0, Msg: "", Count: count, Data: users}
+	return common.Table{Code: 0, Msg: "", Count: count, Data: c.transformerTableUsers(users)}
 }
 
 // Get handles GET: http://localhost:8080/user.
@@ -73,6 +75,8 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
+	fmt.Println(user)
+
 	if string(user.Password) == "" {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("密码不能为空")}
 	}
@@ -91,17 +95,19 @@ func (c *UserController) Post() interface{} {
 // Get handles Post: http://localhost:8080/user/id.
 func (c *UserController) PostBy(id uint) interface{} {
 
-	var user models.User
+	var user transformer.UserUpdate
 
 	if err := c.Ctx.ReadJSON(&user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
+	fmt.Println(user)
+
 	if err := validatas.Vaild(user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Update(id, &user); err != nil {
+	if err := c.Service.UpdateUser(id, &user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
 	}
 
@@ -130,4 +136,25 @@ func (c *UserController) PostDeletes() interface{} {
 	}
 
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
+}
+
+// transformerTableUsers 菜单表格接口数据转换
+func (c *UserController) transformerTableUsers(users []*models.User) []*transformer.UserTable {
+	var tableusers []*transformer.UserTable
+	for _, user := range users {
+		tableuser := &transformer.UserTable{}
+		g := gotransformer.NewTransform(tableuser, user, "")
+		_ = g.Transformer()
+
+		roles, err := c.Service.GetRolesByID(user.ID)
+		if err == nil {
+			for _, role := range roles {
+				tableuser.RoleNames += role.DisplayName + "|"
+			}
+		}
+
+		tableusers = append(tableusers, tableuser)
+	}
+
+	return tableusers
 }

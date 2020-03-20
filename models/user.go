@@ -11,10 +11,11 @@ type User struct {
 	gorm.Model
 	Name     string       `json:"name" validate:"gte=6,lte=50"  comment:"姓名" form:"name" gorm:"size:50"`
 	Username string       `json:"username" validate:"required,gte=6,lte=12" comment:"用户名" form:"username" gorm:"unique;not null;size:50"`
-	Email    string       `json:"email" form:"email" gorm:"unique" validate:"email"`
+	Email    string       `json:"email" validate:"email" comment:"邮箱" form:"email" gorm:"unique" `
 	Telphone string       `json:"telphone" form:"telphone" gorm:"unique;size:11"`
 	IsAdmin  sql.NullBool `json:"is_admin" gorm:"not null;default:0"`
-	Password []byte       `json:"password" validate:"gte=6"  comment:"密码" form:"-" gorm:"not null"`
+	Password []byte       `json:"password" validate:"required,gte=6 ,lte=14"  comment:"密码" form:"-" gorm:"not null"`
+	RoleIds  string       `json:"role_ids" form:"role_ids" validate:"required" gorm:"-"`
 }
 
 func (u User) IsValid() bool {

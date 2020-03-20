@@ -11,5 +11,5 @@ type MenuTable struct {
 	Icon        string `json:"icon"`
 	Target      string `json:"target"`
 	ParentId    int64  `json:"parent_id"`
-	CreatedAt   string
+	CreatedAt   string `json:"created_at"`
 }

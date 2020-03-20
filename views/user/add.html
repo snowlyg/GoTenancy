@@ -41,8 +41,8 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">角色</label>
-        <div class="layui-input-block">
-            <select name="roles" lay-filter="aihao">
+        <div class="layui-input-block" id="xm-select">
+            <select name="role_ids" lay-filter="aihao">
                 <option value="">选择角色</option>
                 {{  range .Roles }}
                     <option value="{{.ID}}">{{.DisplayName}}</option>
@@ -58,6 +58,7 @@
     </div>
 </div>
 {{define "user/add-footer"}}
+    <script src="/public/js/xmSelect/xmSelect.js" charset="utf-8"></script>
     <script>
         layui.use(['form'], function () {
             var form = layui.form,

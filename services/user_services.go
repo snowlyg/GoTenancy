@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/models"
+	"github.com/snowlyg/go-tenancy/transformer"
 )
 
 var NotAdmin = map[string]interface{}{"is_admin": 0}
@@ -21,11 +22,14 @@ type UserService interface {
 	DeleteByID(id uint) error
 	DeleteMnutil(userIds []common.Id) error
 
+	UpdateUser(id uint, userupdate *transformer.UserUpdate) error
 	Update(id uint, user *models.User) error
 	UpdatePassword(id uint, newPassword string) error
 	UpdateUsername(id uint, newUsername string) error
 
 	Create(userPassword string, user *models.User, roleIds []uint) error
+
+	GetRolesByID(id uint) ([]models.Role, error)
 }
 
 func NewUserService(gdb *gorm.DB, ce *casbin.Enforcer) UserService {
@@ -70,12 +74,60 @@ func (s *userService) GetByID(id uint) (models.User, bool) {
 	return user, true
 }
 
+func (s *userService) GetRolesByID(id uint) ([]models.Role, error) {
+	roleIds, err := s.ce.GetRolesForUser(strconv.FormatUint(uint64(id), 10))
+	if err != nil {
+		return nil, err
+	}
+
+	var roles []models.Role
+	if err := s.gdb.Where("id in (?)", roleIds).Find(&roles).Error; err != nil {
+		return nil, err
+	}
+
+	return roles, nil
+}
+
 func (s *userService) GetByUsername(username string) (*models.User, bool) {
 	user := &models.User{}
 	if notFound := s.gdb.Where("username = ?", username).Find(&user).RecordNotFound(); notFound {
 		return nil, false
 	}
 	return user, true
+}
+
+func (s *userService) UpdateUser(id uint, userupdate *transformer.UserUpdate) error {
+
+	usermap := map[string]interface{}{
+		"Name":     userupdate.Name,
+		"Username": userupdate.Username,
+		"Email":    userupdate.Email,
+		"Telphone": userupdate.Telphone,
+	}
+	user := models.User{Model: gorm.Model{ID: id}}
+	if config.Config.DB.Adapter != "mysql" {
+		if err := s.gdb.Model(user).Where(NotAdmin).Update(usermap).Error; err != nil {
+			return err
+		}
+		if err := s.addRoles([]uint{}, &user); err != nil {
+			return err
+		}
+		return nil
+	} else {
+		return s.gdb.Transaction(func(tx *gorm.DB) error {
+
+			if err := tx.Model(user).Where(NotAdmin).Update(usermap).Error; err != nil {
+				return err
+			}
+
+			if err := s.addRoles([]uint{}, &user); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
+
 }
 
 func (s *userService) Update(id uint, user *models.User) error {

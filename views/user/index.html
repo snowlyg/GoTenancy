@@ -72,12 +72,12 @@
                 }],
                 cols: [[
                     {type: "checkbox", width: 50, fixed: "left"},
-                    {field: 'ID', width: 80, title: 'ID', sort: true},
+                    {type: 'numbers', width: 80, title: 'ID', sort: true},
                     {field: 'username', width: 150, title: '用户名'},
                     {field: 'name', width: 150, title: '姓名'},
                     {field: 'email', width: 250, title: '邮箱'},
                     {field: 'telphone', title: '手机', width: 150},
-                    {field: 'rolename', title: '角色', width: 150},
+                    {field: 'role_names', title: '角色', width: 150},
                     {title: '操作', minWidth: 50, templet: '#currentTableBar', fixed: "right", align: "center"}
                 ]],
                 limits: [10, 15, 20, 25, 50, 100],
@@ -123,7 +123,7 @@
                     var checkStatus = table.checkStatus('currentTableId'), data = checkStatus.data;
                     var ids = [];
                     data.forEach(function (item, index) {
-                        ids.push({"Id": item.ID})
+                        ids.push({"Id": item.id})
                     });
 
                     $.ajax({
@@ -176,7 +176,7 @@
                         maxmin: true,
                         shadeClose: true,
                         area: ['100%', '100%'],
-                        content: '/user/' + data.ID,
+                        content: '/user/' + data.id,
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
@@ -186,7 +186,7 @@
                     layer.confirm('真的删除行么', function (index) {
                         $.ajax({
                             type: "DELETE",
-                            url: "/user/" + data.ID,
+                            url: "/user/" + data.id,
                             data: JSON.stringify(data.field),
                             dataType: "json",
                             success: function (res) {
