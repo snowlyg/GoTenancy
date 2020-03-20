@@ -41,8 +41,12 @@ func (c *UserController) Get() mvc.Result {
 
 // Get handles GET: http://localhost:8080/user/create.
 func (c *UserController) GetCreate() mvc.Result {
+	_, roles := c.RoleService.GetAll(map[string]interface{}{}, nil, false)
 	return mvc.View{
 		Name: "user/add.html",
+		Data: iris.Map{
+			"Roles": roles,
+		},
 	}
 }
 

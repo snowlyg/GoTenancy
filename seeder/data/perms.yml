@@ -51,8 +51,56 @@ perms:
             icon: ""
             target: "_self"
             checked: 0
-            ismenu: 1
+            ismenu: 0
             method: "GET"
+          - title: "用户添加"
+            ordernumber: 0
+            href: "/user/create"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "GET"
+          - title: "用户保存"
+            ordernumber: 0
+            href: "/user"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "POST"
+          - title: "用户编辑"
+            ordernumber: 0
+            href: "/user/:id"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "GET"
+          - title: "用户修改"
+            ordernumber: 0
+            href: "/user/:id"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "POST"
+          - title: "用户删除"
+            ordernumber: 0
+            href: "/user/:id"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "DELETE"
+          - title: "用户批量删除"
+            ordernumber: 0
+            href: "/user/deletes"
+            icon: ""
+            target: "_self"
+            checked: 0
+            ismenu: 0
+            method: "POST"
 
       - title: "角色管理"
         ordernumber: 3
@@ -69,7 +117,7 @@ perms:
             icon: ""
             target: "_self"
             checked: 0
-            ismenu: 1
+            ismenu: 0
             method: "GET"
 
       - title: "菜单管理"
@@ -87,5 +135,5 @@ perms:
             icon: ""
             target: "_self"
             checked: 0
-            ismenu: 1
+            ismenu: 0
             method: "GET"

@@ -45,7 +45,7 @@ func (s *userService) GetAll(args map[string]interface{}, pagination *common.Pag
 	var count int64
 
 	args["is_admin"] = 0
-	db := s.gdb.Where(args)
+	db := s.gdb.Where(args).Order("id desc")
 	if ispreload {
 		//db = db.Preload("Child")
 	}

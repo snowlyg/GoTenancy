@@ -43,12 +43,10 @@
         <label class="layui-form-label required">角色</label>
         <div class="layui-input-block">
             <select name="roles" lay-filter="aihao">
-                <option value=""></option>
-                <option value="0">写作</option>
-                <option value="1" selected="">阅读</option>
-                <option value="2">游戏</option>
-                <option value="3">音乐</option>
-                <option value="4">旅行</option>
+                <option value="">选择角色</option>
+                {{  range .Roles }}
+                    <option value="{{.ID}}">{{.DisplayName}}</option>
+                {{end}}
             </select>
         </div>
     </div>
