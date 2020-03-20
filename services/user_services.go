@@ -7,6 +7,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/models"
 )
 
@@ -103,8 +104,8 @@ func (s *userService) UpdateUsername(id uint, newUsername string) error {
 }
 
 func (s *userService) Create(userPassword string, user *models.User, roleIds []uint) error {
-	return s.gdb.Transaction(func(tx *gorm.DB) error {
 
+	if config.Config.DB.Adapter != "mysql" {
 		if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
 			return errors.New("unable to create this user")
 		}
@@ -115,7 +116,7 @@ func (s *userService) Create(userPassword string, user *models.User, roleIds []u
 			return err
 		}
 
-		if err = tx.Create(user).Error; err != nil {
+		if err = s.gdb.Create(user).Error; err != nil {
 			return err
 		}
 
@@ -123,10 +124,32 @@ func (s *userService) Create(userPassword string, user *models.User, roleIds []u
 			return err
 		}
 
-		// 返回 nil 提交事务
 		return nil
-	})
+	} else {
+		return s.gdb.Transaction(func(tx *gorm.DB) error {
 
+			if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
+				return errors.New("unable to create this user")
+			}
+
+			hashed, err := models.GeneratePassword(userPassword)
+			user.Password = hashed
+			if err != nil {
+				return err
+			}
+
+			if err = tx.Create(user).Error; err != nil {
+				return err
+			}
+
+			if err = s.addRoles(roleIds, user); err != nil {
+				return err
+			}
+
+			// 返回 nil 提交事务
+			return nil
+		})
+	}
 }
 
 func (s *userService) DeleteByID(id uint) error {

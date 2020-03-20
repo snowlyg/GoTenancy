@@ -7,6 +7,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/models"
 )
 
@@ -73,14 +74,14 @@ func (s *roleService) Update(id uint, role *models.Role) error {
 }
 
 func (s *roleService) Create(role *models.Role, permIds []uint) error {
-	return s.gdb.Transaction(func(tx *gorm.DB) error {
+	if config.Config.DB.Adapter != "mysql" {
 		var err error
 
 		if role.ID > 0 {
 			return errors.New("unable to create this role")
 		}
 
-		if err = tx.Create(role).Error; err != nil {
+		if err = s.gdb.Create(role).Error; err != nil {
 			return err
 		}
 
@@ -88,9 +89,28 @@ func (s *roleService) Create(role *models.Role, permIds []uint) error {
 			return err
 		}
 
-		// 返回 nil 提交事务
 		return nil
-	})
+	} else {
+		return s.gdb.Transaction(func(tx *gorm.DB) error {
+			var err error
+
+			if role.ID > 0 {
+				return errors.New("unable to create this role")
+			}
+
+			if err = tx.Create(role).Error; err != nil {
+				return err
+			}
+
+			if err = s.addPerms(permIds, role); err != nil {
+				return err
+			}
+
+			// 返回 nil 提交事务
+			return nil
+		})
+	}
+
 }
 
 func (s *roleService) DeleteByID(id uint) error {
