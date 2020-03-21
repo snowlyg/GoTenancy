@@ -151,6 +151,10 @@ func CreateAdminRoles() {
 
 // CreateAdminUsers 新建管理员
 func CreateAdminUsers() {
+	adminrole, found := sysinit.RoleService.GetAdmin()
+	if !found {
+		panic("管理角色不存在")
+	}
 	admin := &models.User{
 		Username: "username",
 		Name:     "超级管理员",
@@ -158,12 +162,10 @@ func CreateAdminUsers() {
 		Telphone: "13800138000",
 		IsAdmin:  sql.NullBool{Bool: true, Valid: true},
 		Model:    gorm.Model{CreatedAt: time.Now()},
+		RoleIds:  []uint{adminrole.ID},
 	}
-	adminrole, found := sysinit.RoleService.GetAdmin()
-	if !found {
-		panic("管理角色不存在")
-	}
-	if err := sysinit.UserService.Create("password", admin, []uint{adminrole.ID}); err != nil {
+
+	if err := sysinit.UserService.Create("password", admin); err != nil {
 		panic(fmt.Sprintf("管理员填充错误：%v", err))
 	}
 }
@@ -191,16 +193,17 @@ func CreateUsers() {
 	emailRegexp := regexp.MustCompile(".*(@.*)")
 	totalCount := 50
 	for i := 0; i < totalCount; i++ {
-		admin := &models.User{
+		user := &models.User{
 			Username: Fake.UserName(),
 			Name:     Fake.Name(),
 			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.UserName()), " ", "_", -1)+"@example.com"),
 			Telphone: lib.CreatePhoneNumber(),
 			IsAdmin:  sql.NullBool{Bool: false, Valid: true},
 			Model:    gorm.Model{CreatedAt: time.Now()},
+			RoleIds:  []uint{},
 		}
 
-		if err := sysinit.UserService.Create("password", admin, []uint{}); err != nil {
+		if err := sysinit.UserService.Create("password", user); err != nil {
 			panic(fmt.Sprintf("用户填充错误：%v", err))
 		}
 	}

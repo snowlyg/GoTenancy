@@ -22,9 +22,6 @@
 - [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
 - [github 地址](https://github.com/snowlyg/iris/wiki)
 
-> qor 文档地址
-- [中文地址](https://brendenaudrina6287.gitbook.io/qor-doc-zh/)
-- [原文地址](https://doc.getqor.com/)
 
 ---
 也欢迎加入 Iris-go 学习交流QQ群，一起交流学习心得 ：676717248 
