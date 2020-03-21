@@ -109,36 +109,25 @@
                         ids.push({"Id": item.ID})
                     });
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/role/deletes",
-                        data: JSON.stringify(ids),
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.status) {
-                                layer.msg(res.msg, {
-                                    icon: 1,
-                                    time: 500 //0.5秒关闭（如果不配置，默认是3秒）
-                                }, function () {
-                                    table.reload('currentTableId', {
-                                        page: {curr: 1}
-                                        , where: {}
-                                    }, 'data');
-                                    layer.close(index);
-                                });
-                            } else {
-                                layer.msg(res.msg, {
-                                    icon: 2,
-                                },);
-                            }
-                        },
-                        error: function (error) {
-                            layer.msg(error.msg, {
+                    common.post("/role/deletes", JSON.stringify(ids), true, function (res) {
+                        if (res.status) {
+                            layer.msg(res.msg, {
+                                icon: 1,
+                                time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                table.reload('currentTableId', {
+                                    page: {curr: 1}
+                                    , where: {}
+                                }, 'data');
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg(res.msg, {
                                 icon: 2,
-                                time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
                             },);
                         }
                     });
+                    return false;
                 }
             });
 
@@ -166,35 +155,27 @@
                     return false;
                 } else if (obj.event === 'delete') {
                     layer.confirm('真的删除行么', function (index) {
-                        $.ajax({
-                            type: "DELETE",
-                            url: "/role/" + data.ID,
-                            data: JSON.stringify(data.field),
-                            dataType: "json",
-                            success: function (res) {
-                                console.log(res);
-                                if (res.status) {
-                                    layer.msg(res.msg, {
-                                        icon: 1,
-                                        time: 500 //0.5秒关闭（如果不配置，默认是3秒）
-                                    }, function () {
-                                        obj.del();
-                                        layer.close(index);
-                                    });
-                                } else {
-                                    layer.msg(res.msg, {
-                                        icon: 2,
-                                    },);
-                                }
-                            },
-                            error: function (error) {
-                                layer.msg(error.msg, {
+                        common.delete("/role/" + data.id, function (res) {
+                            if (res.status) {
+                                layer.msg(res.msg, {
+                                    icon: 1,
+                                    time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    table.reload('currentTableId', {
+                                        page: {curr: 1}
+                                        , where: {}
+                                    }, 'data');
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg(res.msg, {
                                     icon: 2,
-                                    time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
                                 },);
                             }
                         });
                     });
+
+                    return false;
                 }
             });
         });

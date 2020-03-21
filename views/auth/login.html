@@ -153,6 +153,7 @@
 <script src="/public/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script src="/public/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="/public/lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
+<script src="/public/js/lay-config.js?v=2.0.0" charset="utf-8"></script>
 <script>
     function setSrcQuery(e, q) {
         var src  = e.src;
@@ -168,9 +169,10 @@
         return false;
     }
 
-    layui.use(['form'], function () {
+    layui.use(['form', 'common'], function () {
         var form = layui.form,
-            layer = layui.layer;
+            common = layui.common;
+        layer = layui.layer;
 
         // 登录过期的时候，跳出ifram框架
         if (top.location != self.location) top.location = self.location;
@@ -209,25 +211,18 @@
         // 进行登录操作
         form.on('submit(login)', function (data) {
             data = data.field;
-
-            $.ajax({
-                type: "POST",
-                url: "/auth/login",
-                data: data,
-                dataType: "json",
-                success: function (res) {
-                    if (res.status) {
-                        layer.msg(res.msg, {
-                            icon: 1,
-                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            window.location = '/';
-                        });
-                    } else {
-                        layer.msg(res.msg, {
-                            icon: 2,
-                        },);
-                    }
+            common.post("/auth/login", data, true, function (res) {
+                if (res.status) {
+                    layer.msg(res.msg, {
+                        icon: 1,
+                        time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.location = '/';
+                    });
+                } else {
+                    layer.msg(res.msg, {
+                        icon: 2,
+                    },);
                 }
             });
             return false;

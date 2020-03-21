@@ -77,35 +77,42 @@ layui.define(['jquery'], function (exports) {
         //url 请求地址
         //data 请求数据
         //isshow 是否显示返回 msg
-        post: function (url, data, isshow) {
+        post: function (url, data, isshow, cb) {
+            let callback = function (res) {
+                if (isshow) {
+                    if (res.status) {
+                        layer.msg(res.msg, {
+                            offset: '15px',
+                            icon: 1,
+                            time: 1000,
+                            id: 'Message',
+                        })
+                    } else {
+                        layer.msg(res.msg, {
+                            offset: '15px',
+                            icon: 2,
+                            time: 1000,
+                            id: 'Message',
+                        })
+                    }
+                }
+
+                resolve(res)
+            };
+
+            if (cb) {
+                callback = cb;
+            }
+
             return new Promise(async (resolve, reject) => {
+
                 let ajax_abort = $.ajax({
                     url: url,
                     type: 'POST',
                     data: data,
                     dataType: 'JSON',
                     timeout: 8000,
-                    success: function (res) {
-                        if (isshow) {
-                            if (res.status) {
-                                layer.msg(res.msg, {
-                                    offset: '15px',
-                                    icon: 1,
-                                    time: 1000,
-                                    id: 'Message',
-                                })
-                            } else {
-                                layer.msg(res.msg, {
-                                    offset: '15px',
-                                    icon: 2,
-                                    time: 1000,
-                                    id: 'Message',
-                                })
-                            }
-                        }
-
-                        resolve(res)
-                    },
+                    success: callback,
                     error: function (error) {
                         if (error.responseJSON) {
                             for (let i in error.responseJSON.errors) {
@@ -202,7 +209,28 @@ layui.define(['jquery'], function (exports) {
 
         //delete 请求
         //url 请求地址
-        delete: function (url) {
+        delete: function (url, cb) {
+            var callback = function (res) {
+                if (res.status) {
+                    layer.msg(res.msg, {
+                        offset: '15px',
+                        icon: 1,
+                        time: 2000,
+                        id: 'Message',
+                    })
+                } else {
+                    layer.msg(res.msg, {
+                        offset: '15px',
+                        icon: 2,
+                        time: 2000,
+                        id: 'Message',
+                    })
+                }
+                resolve(res)
+            };
+            if (cb) {
+                callback = cb;
+            }
             return new Promise(async (resolve, reject) => {
                 let ajax_abort = $.ajax({
                     url: url,
@@ -213,24 +241,7 @@ layui.define(['jquery'], function (exports) {
                     },
                     dataType: 'JSON',
                     timeout: 8000,
-                    success: function (res) {
-                        if (res.status) {
-                            layer.msg(res.msg, {
-                                offset: '15px',
-                                icon: 1,
-                                time: 2000,
-                                id: 'Message',
-                            })
-                        } else {
-                            layer.msg(res.msg, {
-                                offset: '15px',
-                                icon: 2,
-                                time: 2000,
-                                id: 'Message',
-                            })
-                        }
-                        resolve(res)
-                    },
+                    success: callback,
                     error: function (error) {
                         if (error.responseJSON) {
                             for (let i in error.responseJSON.errors) {

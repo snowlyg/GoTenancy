@@ -54,9 +54,10 @@
 </div>
 {{define "role/edit-footer"}}
     <script>
-        layui.use(['form'], function () {
+        layui.use(['form', 'common'], function () {
             var form = layui.form,
                 layer = layui.layer,
+                common = layui.common,
                 $ = layui.$;
 
             form.verify({
@@ -76,34 +77,20 @@
                 }
             });
 
-
             //监听提交
             form.on('submit(saveBtn)', function (data) {
-                $.ajax({
-                    type: "POST",
-                    url: "/role/" + {{.User.ID}},
-                    data: JSON.stringify(data.field),
-                    dataType: "json",
-                    success: function (res) {
-                        console.log(res);
-                        if (res.status) {
-                            layer.msg(res.msg, {
-                                icon: 1,
-                                time: 500 //0.5秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                var iframeIndex = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(iframeIndex);
-                            });
-                        } else {
-                            layer.msg(res.msg, {
-                                icon: 2,
-                            },);
-                        }
-                    },
-                    error: function (error) {
-                        layer.msg(error.msg, {
+                common.post("/role/" + {{.User.ID}}, JSON.stringify(data.field), true, function (res) {
+                    if (res.status) {
+                        layer.msg(res.msg, {
+                            icon: 1,
+                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            var iframeIndex = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(iframeIndex);
+                        });
+                    } else {
+                        layer.msg(res.msg, {
                             icon: 2,
-                            time: 2000 //0.5秒关闭（如果不配置，默认是3秒）
                         },);
                     }
                 });
