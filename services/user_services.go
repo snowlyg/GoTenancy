@@ -27,7 +27,7 @@ type UserService interface {
 	UpdatePassword(id uint, newPassword string) error
 	UpdateUsername(id uint, newUsername string) error
 
-	Create(userPassword string, user *models.User, roleIds []uint) error
+	Create(userPassword string, user *models.User) error
 
 	GetRolesByID(id uint) ([]models.Role, error)
 }
@@ -104,12 +104,13 @@ func (s *userService) UpdateUser(id uint, userupdate *transformer.UserUpdate) er
 		"Email":    userupdate.Email,
 		"Telphone": userupdate.Telphone,
 	}
+
 	user := models.User{Model: gorm.Model{ID: id}}
 	if config.Config.DB.Adapter != "mysql" {
 		if err := s.gdb.Model(user).Where(NotAdmin).Update(usermap).Error; err != nil {
 			return err
 		}
-		if err := s.addRoles([]uint{}, &user); err != nil {
+		if err := s.addRoles(userupdate.RoleIds, &user); err != nil {
 			return err
 		}
 		return nil
@@ -120,7 +121,7 @@ func (s *userService) UpdateUser(id uint, userupdate *transformer.UserUpdate) er
 				return err
 			}
 
-			if err := s.addRoles([]uint{}, &user); err != nil {
+			if err := s.addRoles(userupdate.RoleIds, &user); err != nil {
 				return err
 			}
 
@@ -155,7 +156,7 @@ func (s *userService) UpdateUsername(id uint, newUsername string) error {
 	})
 }
 
-func (s *userService) Create(userPassword string, user *models.User, roleIds []uint) error {
+func (s *userService) Create(userPassword string, user *models.User) error {
 
 	if config.Config.DB.Adapter != "mysql" {
 		if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
@@ -172,7 +173,7 @@ func (s *userService) Create(userPassword string, user *models.User, roleIds []u
 			return err
 		}
 
-		if err = s.addRoles(roleIds, user); err != nil {
+		if err = s.addRoles(user.RoleIds, user); err != nil {
 			return err
 		}
 
@@ -194,7 +195,7 @@ func (s *userService) Create(userPassword string, user *models.User, roleIds []u
 				return err
 			}
 
-			if err = s.addRoles(roleIds, user); err != nil {
+			if err = s.addRoles(user.RoleIds, user); err != nil {
 				return err
 			}
 

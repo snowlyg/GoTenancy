@@ -57,22 +57,22 @@ func (c *AuthController) PostLogin() interface{} {
 	)
 
 	if !captcha.VerifyString(captchaId, capId) {
-		return common.Response{Msg: "请输入正确验证码"}
+		return common.ActionResponse{Status: false, Msg: "请输入正确验证码"}
 	}
 
 	user, found := c.Service.GetByUsername(username)
 	if !found && user.ID > 0 {
-		return common.Response{Msg: "请输入正确用户名"}
+		return common.ActionResponse{Status: false, Msg: "请输入正确用户名"}
 	}
 
 	validatePassword, err := models.ValidatePassword(password, user.Password)
 	if !validatePassword {
-		return common.Response{Msg: fmt.Sprintf("密码错误 %v", err)}
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("密码错误 %v", err)}
 	}
 
 	c.Session.Set(sysinit.UserIDKey, user.ID)
 
-	return common.Response{Status: true, Msg: "登陆成功", Data: user}
+	return common.ActionResponse{Status: true, Msg: "登陆成功", Data: user}
 }
 
 // GetMe handles GET: http://localhost:8080/auth/me.
@@ -102,5 +102,5 @@ func (c *AuthController) AnyLogout() interface{} {
 		c.logout()
 	}
 
-	return common.Response{Status: true, Msg: "退出登录"}
+	return common.ActionResponse{Status: true, Msg: "退出登录"}
 }

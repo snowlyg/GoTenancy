@@ -43,24 +43,30 @@ func (c *UserController) Get() mvc.Result {
 
 // Get handles GET: http://localhost:8080/user/create.
 func (c *UserController) GetCreate() mvc.Result {
-	_, roles := c.RoleService.GetAll(map[string]interface{}{}, nil, false)
 	return mvc.View{
 		Name: "user/add.html",
-		Data: iris.Map{
-			"Roles": roles,
-		},
 	}
+}
+
+// GetRoletBy handles GET: http://localhost:8080/user/role/:id.
+func (c *UserController) GetRoleBy(id uint) interface{} {
+
+	user, _ := c.Service.GetByID(id)
+
+	args := map[string]interface{}{}
+	_, roles := sysinit.RoleService.GetAll(args, nil, false)
+
+	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectRoles(roles, user.ID)}
 }
 
 // Get handles GET: http://localhost:8080/user/id.
 func (c *UserController) GetBy(id uint) mvc.Result {
 	user, _ := c.Service.GetByID(id)
-	_, roles := c.RoleService.GetAll(map[string]interface{}{}, nil, false)
+
 	return mvc.View{
 		Name: "user/edit.html",
 		Data: iris.Map{
-			"User":  user,
-			"Roles": roles,
+			"User": user,
 		},
 	}
 }
@@ -75,9 +81,7 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	fmt.Println(user)
-
-	if string(user.Password) == "" {
+	if user.Password == "" {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("密码不能为空")}
 	}
 
@@ -85,7 +89,7 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(string(user.Password), &user, []uint{}); err != nil {
+	if err := c.Service.Create(user.Password, &user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户创建错误：%v", err)}
 	}
 
@@ -100,8 +104,6 @@ func (c *UserController) PostBy(id uint) interface{} {
 	if err := c.Ctx.ReadJSON(&user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
-
-	fmt.Println(user)
 
 	if err := validatas.Vaild(user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
@@ -149,7 +151,7 @@ func (c *UserController) transformerTableUsers(users []*models.User) []*transfor
 		roles, err := c.Service.GetRolesByID(user.ID)
 		if err == nil {
 			for _, role := range roles {
-				tableuser.RoleNames += role.DisplayName + "|"
+				tableuser.RoleNames += role.DisplayName + ";"
 			}
 		}
 
@@ -157,4 +159,28 @@ func (c *UserController) transformerTableUsers(users []*models.User) []*transfor
 	}
 
 	return tableusers
+}
+
+// transformerTableUsers 菜单表格接口数据转换
+func (c *UserController) transformerSelectRoles(roles []*models.Role, userId uint) []*transformer.RoleSelect {
+	var tableroles []*transformer.RoleSelect
+	userRoles, err := c.Service.GetRolesByID(userId)
+
+	if err == nil {
+		for _, role := range roles {
+			tableuser := &transformer.RoleSelect{}
+			tableuser.Name = role.DisplayName
+			tableuser.Value = role.ID
+
+			for _, userRole := range userRoles {
+				if userRole.ID == role.ID {
+					tableuser.Selected = true
+				}
+			}
+
+			tableroles = append(tableroles, tableuser)
+		}
+	}
+
+	return tableroles
 }

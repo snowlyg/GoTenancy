@@ -15,5 +15,5 @@ type UserUpdate struct {
 	Username string `json:"username" validate:"required,gte=6,lte=12" comment:"用户名" `
 	Email    string `json:"email" validate:"email" comment:"邮箱"`
 	Telphone string `json:"telphone" `
-	RoleIds  string `json:"role_ids" validate:"required"`
+	RoleIds  []uint `json:"role_ids" validate:"required"`
 }

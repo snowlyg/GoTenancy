@@ -14,21 +14,22 @@ type User struct {
 	Email    string       `json:"email" validate:"email" comment:"邮箱" form:"email" gorm:"unique" `
 	Telphone string       `json:"telphone" form:"telphone" gorm:"unique;size:11"`
 	IsAdmin  sql.NullBool `json:"is_admin" gorm:"not null;default:0"`
-	Password []byte       `json:"password" validate:"required,gte=6 ,lte=14"  comment:"密码" form:"-" gorm:"not null"`
-	RoleIds  string       `json:"role_ids" form:"role_ids" validate:"required" gorm:"-"`
+	Password string       `json:"password" validate:"required,gte=6 ,lte=14"  comment:"密码" form:"-" gorm:"not null"`
+	RoleIds  []uint       `json:"role_ids" form:"role_ids" validate:"required" gorm:"-"`
 }
 
 func (u User) IsValid() bool {
 	return u.ID > 0
 }
 
-func GeneratePassword(userPassword string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(userPassword), bcrypt.DefaultCost)
+func GeneratePassword(userPassword string) (string, error) {
+	password, err := bcrypt.GenerateFromPassword([]byte(userPassword), bcrypt.DefaultCost)
+	return string(password), err
 }
 
-func ValidatePassword(userPassword string, hashed []byte) (bool, error) {
+func ValidatePassword(userPassword string, hashed string) (bool, error) {
 
-	if err := bcrypt.CompareHashAndPassword(hashed, []byte(userPassword)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(userPassword)); err != nil {
 		return false, err
 	}
 

@@ -16,10 +16,3 @@ type Menus struct {
 
 	MenuInfo []*models.Perm `json:"menuInfo"`
 }
-
-// Response 接口响应数据
-type Response struct {
-	Status bool        `json:"status"`
-	Msg    string      `json:"msg"`
-	Data   interface{} `json:"data"`
-}

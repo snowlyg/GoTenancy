@@ -22,6 +22,13 @@ type Id struct {
 	Id int `json:"id"`
 }
 
+// Response 接口响应数据
+type Response struct {
+	Status bool        `json:"status"`
+	Msg    string      `json:"msg"`
+	Data   interface{} `json:"data"`
+}
+
 // 错误页面信息
 var ErrorStatus = map[int]map[string]interface{}{
 	500: {
