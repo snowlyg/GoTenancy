@@ -14,10 +14,11 @@ import (
 )
 
 var (
-	Db          *gorm.DB
-	UserService services.UserService
-	PermService services.PermService
-	RoleService services.RoleService
+	Db            *gorm.DB
+	UserService   services.UserService
+	PermService   services.PermService
+	RoleService   services.RoleService
+	TenantService services.TenantService
 )
 
 func init() {
@@ -43,5 +44,6 @@ func init() {
 	UserService = services.NewUserService(Db, Enforcer)
 	PermService = services.NewPermService(Db)
 	RoleService = services.NewRoleService(Db, Enforcer, PermService)
+	TenantService = services.NewTenantService(Db)
 
 }

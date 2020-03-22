@@ -70,6 +70,14 @@ func main() {
 	user.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	user.Handle(new(controllers.UserController))
 
+	tenant := mvc.New(app.Party("/tenant"))
+	tenant.Register(
+		sysinit.TenantService,
+		sysinit.UserService,
+	)
+	tenant.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
+	tenant.Handle(new(controllers.TenantController))
+
 	auth := mvc.New(app.Party("/auth"))
 	auth.Register(
 		sysinit.UserService,

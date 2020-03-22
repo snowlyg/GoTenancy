@@ -1,0 +1,98 @@
+{{define "tenant/edit-header"}}
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+{{end}}
+
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">全称</label>
+        <div class="layui-input-block">
+            <input type="text" name="full_name" lay-verify="required" lay-reqtext="全称不能为空" placeholder="请输入全称"
+                   value="{{.Tenant.Name}}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请输入姓名" value="{{.Tenant.Name}}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">手机</label>
+        <div class="layui-input-block">
+            <input type="number" name="telphone" lay-verify="phone" placeholder="请输入手机" value="{{.Tenant.Telphone}}"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-block">
+            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="{{.Tenant.Email}}"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="rmk" rows="3" cols="20"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+{{define "tenant/edit-footer"}}
+    <script>
+        layui.use(['form', 'common'], async function () {
+            var form = layui.form,
+                layer = layui.layer,
+                common = layui.common,
+                $ = layui.$;
+
+            form.verify({
+                phone: function (value, item) {
+                    if (value.length > 0) {
+                        if (!/^1[3|4|5|7|8]\d{9}$/.test(value)) {
+                            return "请输入正确的手机号码"
+                        }
+                    }
+                },
+                email: function (value, item) {
+                    if (value.length > 0) {
+                        if (!/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/.test(value)) {
+                            return "请输入正确的邮箱地址"
+                        }
+                    }
+                },
+            });
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                common.post("/tenant/" + {{.Tenant.ID}}, JSON.stringify(data.field), true, function (res) {
+                    if (res.status) {
+                        layer.msg(res.msg, {
+                            icon: 1,
+                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            var iframeIndex = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(iframeIndex);
+                        });
+                    } else {
+                        layer.msg(res.msg, {
+                            icon: 2,
+                        },);
+                    }
+                });
+                return false;
+            });
+
+        });
+    </script>
+{{end}}

@@ -15,6 +15,7 @@ type User struct {
 	Telphone string       `json:"telphone" form:"telphone" gorm:"unique;size:11"`
 	IsAdmin  sql.NullBool `json:"is_admin" gorm:"not null;default:0"`
 	Password string       `json:"password" validate:"required,gte=6 ,lte=14"  comment:"密码" form:"-" gorm:"not null"`
+	TenantId uint         `json:"tenant_id" form:"tenant_id"`
 	RoleIds  []uint       `json:"role_ids" form:"role_ids" validate:"required" gorm:"-"`
 }
 
