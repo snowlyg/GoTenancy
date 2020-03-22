@@ -49,12 +49,12 @@
                     {
                         field: 'is_menu', width: 80, align: 'center', templet: function (d) {
                             if (d.is_menu == 1) {
-                                return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                                return '<span class="layui-badge layui-bg-gray">菜单</span>';
                             }
                             if (d.parent_id == -1) {
                                 return '<span class="layui-badge layui-bg-blue">目录</span>';
                             } else {
-                                return '<span class="layui-badge-rim">菜单</span>';
+                                return '<span class="layui-badge-rim">按钮</span>';
                             }
                         }, title: '类型'
                     },
