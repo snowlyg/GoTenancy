@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -136,15 +137,18 @@ func CreateAdminRoles() {
 		Model:       gorm.Model{CreatedAt: time.Now()},
 	}
 
-	var permIds []uint
+	var permIds []string
 	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
 	for _, perm := range perms {
 		if len(perm.Href) > 0 {
-			permIds = append(permIds, perm.ID)
+			permId := strconv.FormatUint(uint64(perm.ID), 10)
+			permIds = append(permIds, permId)
 		}
 	}
 
-	if err := sysinit.RoleService.Create(role, permIds); err != nil {
+	role.PermIds = permIds
+
+	if err := sysinit.RoleService.Create(role); err != nil {
 		panic(fmt.Sprintf("管理角色填充错误：%v", err))
 	}
 }
@@ -181,7 +185,7 @@ func CreateRoles() {
 			Model:       gorm.Model{CreatedAt: time.Now()},
 		}
 
-		if err := sysinit.RoleService.Create(role, []uint{}); err != nil {
+		if err := sysinit.RoleService.Create(role); err != nil {
 			panic(fmt.Sprintf("角色填充错误：%v", err))
 		}
 	}
@@ -209,19 +213,40 @@ func CreateUsers() {
 	}
 }
 
+// CreateTenants 新建用户
+func CreateTenants() {
+	// 最新手机正则 ^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$
+	emailRegexp := regexp.MustCompile(".*(@.*)")
+	totalCount := 50
+	for i := 0; i < totalCount; i++ {
+		tenant := &models.Tenant{
+			FullName: Fake.UserName(),
+			Name:     Fake.Name(),
+			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.UserName()), " ", "_", -1)+"@example.com"),
+			Telphone: lib.CreatePhoneNumber(),
+			Model:    gorm.Model{CreatedAt: time.Now()},
+			Rmk:      Fake.Paragraph(10, true),
+		}
+
+		if err := sysinit.TenantService.Create(tenant); err != nil {
+			panic(fmt.Sprintf("商户填充错误：%v", err))
+		}
+	}
+}
+
 /*
 	AutoMigrates 重置数据表
-
 	sysinit.Db.DropTableIfExists 删除存在数据表
 	sysinit.Db.AutoMigrate 重建数据表
 */
 func AutoMigrates() {
-	sysinit.Db.DropTableIfExists("users", "perms", "roles", "casbin_rule")
+	sysinit.Db.DropTableIfExists("users", "perms", "roles", "tenants", "casbin_rule")
 
 	sysinit.Db.AutoMigrate(
 		&models.User{},
 		&models.Role{},
 		&models.Perm{},
+		&models.Tenant{},
 		&gormadapter.CasbinRule{},
 	)
 }
