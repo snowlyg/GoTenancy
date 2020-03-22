@@ -17,22 +17,25 @@ type RoleService interface {
 	DeleteByID(id uint) error
 	DeleteMnutil(ids []common.Id) error
 	Update(id uint, role *models.Role) error
-	Create(role *models.Role, permIds []uint) error
+	UpdateRole(id uint, role *models.Role) error
+	Create(role *models.Role) error
 	GetAdmin() (models.Role, bool)
 
 	GetPermsByID(id uint) ([]models.Perm, error)
 }
 
-func NewRoleService(gdb *gorm.DB, ce *casbin.Enforcer) RoleService {
+func NewRoleService(gdb *gorm.DB, ce *casbin.Enforcer, permService PermService) RoleService {
 	return &roleService{
-		gdb: gdb,
-		ce:  ce,
+		gdb:         gdb,
+		ce:          ce,
+		permService: permService,
 	}
 }
 
 type roleService struct {
-	gdb *gorm.DB
-	ce  *casbin.Enforcer
+	gdb         *gorm.DB
+	ce          *casbin.Enforcer
+	permService PermService
 }
 
 //GetAll 查询所有数据
@@ -69,13 +72,46 @@ func (s *roleService) GetByID(id uint) (models.Role, bool) {
 }
 
 func (s *roleService) GetPermsByID(id uint) ([]models.Perm, error) {
-	permIds := s.ce.GetPermissionsForUser(strconv.FormatUint(uint64(id), 10))
+	permDatas := s.ce.GetPermissionsForUser(strconv.FormatUint(uint64(id), 10))
+
 	var perms []models.Perm
-	if err := s.gdb.Where("id in (?)", permIds).Find(&perms).Error; err != nil {
-		return nil, err
+	for _, permdata := range permDatas {
+		if len(permdata) >= 3 && len(permdata[1]) > 0 && len(permdata[2]) > 0 {
+			perm, found := s.permService.GetPermissionByHrefMethod(permdata[1], permdata[2])
+			if found {
+				perms = append(perms, perm)
+			}
+		}
 	}
 
 	return perms, nil
+}
+
+func (s *roleService) UpdateRole(id uint, role *models.Role) error {
+
+	oldRole := &models.Role{Model: gorm.Model{ID: id}}
+	if config.Config.DB.Adapter != "mysql" {
+		if err := s.gdb.Model(oldRole).Where(NotAdmin).Update(role).Error; err != nil {
+			return err
+		}
+		if err := s.addPerms(role.PermIds, oldRole); err != nil {
+			return err
+		}
+		return nil
+	} else {
+		return s.gdb.Transaction(func(tx *gorm.DB) error {
+
+			if err := tx.Model(oldRole).Where(NotAdmin).Update(role).Error; err != nil {
+				return err
+			}
+			if err := s.addPerms(role.PermIds, oldRole); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
+
 }
 
 func (s *roleService) Update(id uint, role *models.Role) error {
@@ -85,7 +121,7 @@ func (s *roleService) Update(id uint, role *models.Role) error {
 	return nil
 }
 
-func (s *roleService) Create(role *models.Role, permIds []uint) error {
+func (s *roleService) Create(role *models.Role) error {
 	if config.Config.DB.Adapter != "mysql" {
 		var err error
 
@@ -97,7 +133,7 @@ func (s *roleService) Create(role *models.Role, permIds []uint) error {
 			return err
 		}
 
-		if err = s.addPerms(permIds, role); err != nil {
+		if err = s.addPerms(role.PermIds, role); err != nil {
 			return err
 		}
 
@@ -114,7 +150,7 @@ func (s *roleService) Create(role *models.Role, permIds []uint) error {
 				return err
 			}
 
-			if err = s.addPerms(permIds, role); err != nil {
+			if err = s.addPerms(role.PermIds, role); err != nil {
 				return err
 			}
 
@@ -153,7 +189,7 @@ func (s *roleService) GetAdmin() (models.Role, bool) {
 	return role, true
 }
 
-func (s *roleService) addPerms(permIds []uint, role *models.Role) error {
+func (s *roleService) addPerms(permIds []string, role *models.Role) error {
 	if len(permIds) > 0 {
 		roleId := strconv.FormatUint(uint64(role.ID), 10)
 		if _, err := s.ce.DeletePermissionsForUser(roleId); err != nil {
@@ -161,9 +197,12 @@ func (s *roleService) addPerms(permIds []uint, role *models.Role) error {
 		}
 		var perms []models.Perm
 		s.gdb.Where("id in (?)", permIds).Find(&perms)
+
 		for _, perm := range perms {
-			if _, err := s.ce.AddPolicy(roleId, perm.Href, perm.Method); err != nil {
-				return err
+			if len(perm.Href) > 0 && len(perm.Method) > 0 {
+				if _, err := s.ce.AddPolicy(roleId, perm.Href, perm.Method); err != nil {
+					return err
+				}
 			}
 		}
 	}

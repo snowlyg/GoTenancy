@@ -109,7 +109,7 @@
 
             //监听提交
             form.on('submit(saveBtn)', function (data) {
-                let roleIds = common.get_role_ids(xmS.getValue());
+                let roleIds = common.get_ids(xmS.getValue());
                 if (roleIds.length == 0) {
                     layer.msg("请选择角色", {
                         icon: 2,

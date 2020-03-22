@@ -7,37 +7,23 @@
 {{end}}
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">用户名</label>
+        <label class="layui-form-label required">标识</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required|username" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value=""
-                   class="layui-input">
-            <tip>填写自己管理账号的名称。</tip>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">密码</label>
-        <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required|password" lay-reqtext="密码不能为空" placeholder="请输入密码"
+            <input type="text" name="name" lay-verify="required|name" lay-reqtext="标识不能为空" placeholder="请输入标识"
                    value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">姓名</label>
+        <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" placeholder="请输入姓名" value="" class="layui-input">
+            <input type="text" name="display_name" placeholder="请输入名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">手机</label>
+        <label class="layui-form-label ">备注</label>
         <div class="layui-input-block">
-            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value=""
-                   class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">邮箱</label>
-        <div class="layui-input-block">
-            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="" class="layui-input">
+            <input type="number" name="rmk" placeholder="请输入备注"
+                   value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -54,17 +40,6 @@
             </button>
             <button type="button" class="layui-btn layui-btn-primary"
                     onclick="layui.common.closeAll('#LAY-auth-tree-index')">全部隐藏
-            </button>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-form-label">特殊操作</div>
-        <div class="layui-form-block">
-            <button type="button" class="layui-btn layui-btn-primary"
-                    onclick="layui.common.showDept('#LAY-auth-tree-index')">展开到某层
-            </button>
-            <button type="button" class="layui-btn layui-btn-primary"
-                    onclick="layui.common.closeDept('#LAY-auth-tree-index')">关闭某层后所有的层
             </button>
         </div>
     </div>
@@ -101,7 +76,7 @@
             });
             // 如果后台返回的不是树结构，请使用 authtree.listConvert 转换
             authtree.render('#LAY-auth-tree-index', trees, {
-                inputname: 'authids[]',
+                inputname: 'perm_ids[]',
                 layfilter: 'lay-check-auth',
                 autowidth: true,
             });
@@ -117,7 +92,7 @@
                     if (/^\d+\d+\d$/.test(value)) {
                         return '用户名不能全为数字';
                     }
-                    if (value.length<6 || value.length>50){
+                    if (value.length < 6 || value.length > 50) {
                         return '用户名必须6到50位';
                     }
                 }
@@ -132,6 +107,7 @@
 
             //监听提交
             form.on('submit(saveBtn)', function (data) {
+                data.field.perm_ids = authtree.getChecked('#LAY-auth-tree-index');
                 common.post("/role", JSON.stringify(data.field), true, function (res) {
                     if (res.status) {
                         layer.msg(res.msg, {

@@ -82,7 +82,7 @@ func (c *RoleController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(&role, []uint{}); err != nil {
+	if err := c.Service.Create(&role); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色创建错误：%v", err)}
 	}
 
@@ -102,7 +102,7 @@ func (c *RoleController) PostBy(id uint) interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Update(id, &role); err != nil {
+	if err := c.Service.UpdateRole(id, &role); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色更新错误：%v", err)}
 	}
 

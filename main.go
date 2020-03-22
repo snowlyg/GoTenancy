@@ -83,6 +83,6 @@ func main() {
 		iris.WithOptimizations,
 		iris.WithTimeFormat(time.RFC3339),
 	); err != nil {
-		fmt.Println("App is closed")
+		fmt.Println("应用已经关闭")
 	}
 }

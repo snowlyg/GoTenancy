@@ -42,6 +42,6 @@ func init() {
 	// 注册模型服务
 	UserService = services.NewUserService(Db, Enforcer)
 	PermService = services.NewPermService(Db)
-	RoleService = services.NewRoleService(Db, Enforcer)
+	RoleService = services.NewRoleService(Db, Enforcer, PermService)
 
 }

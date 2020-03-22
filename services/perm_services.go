@@ -11,6 +11,7 @@ type PermService interface {
 	GetAll(args map[string]interface{}, ispreload bool) (int64, []*models.Perm)
 	GetByID(id uint) (models.Perm, bool)
 	DeleteByID(id uint) bool
+	GetPermissionByHrefMethod(href, method string) (models.Perm, bool)
 	Update(id uint, menu *models.Perm) error
 	Create(menu *models.Perm) error
 }
@@ -43,6 +44,14 @@ func (s *permService) GetAll(args map[string]interface{}, ispreload bool) (int64
 		panic(err)
 	}
 	return count, meuns
+}
+
+func (s *permService) GetPermissionByHrefMethod(href, method string) (models.Perm, bool) {
+	var perm models.Perm
+	if notFound := s.gdb.Where("href = ?", href).Where("method = ?", method).Find(&perm).RecordNotFound(); notFound {
+		return perm, false
+	}
+	return perm, true
 }
 
 func (s *permService) GetByID(id uint) (models.Perm, bool) {

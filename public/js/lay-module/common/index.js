@@ -1,16 +1,16 @@
 layui.define(['jquery'], function (exports) {
     var $ = layui.jquery;
     var obj = {
-        // 格式化多选下拉角色id
-        get_role_ids: function (roles) {
-            var role_ids = [];
-            if (roles && roles.length > 0) {
-                for (x in roles) {
-                    role_ids.push(roles[x].value);
+        // 格式化多选下拉id
+        get_ids: function (items) {
+            var ids = [];
+            if (items && items.length > 0) {
+                for (x in items) {
+                    ids.push(parseInt(items[x].value));
                 }
             }
 
-            return role_ids;
+            return ids;
         },
 
         //authtree 方法start
@@ -113,7 +113,8 @@ layui.define(['jquery'], function (exports) {
                         reject(status)
                     },
                 })
-            })
+            }).catch((e) => {
+            });
         },
 
         //post 请求
@@ -139,8 +140,6 @@ layui.define(['jquery'], function (exports) {
                         })
                     }
                 }
-
-                resolve(res)
             };
 
             if (cb) {
@@ -148,7 +147,6 @@ layui.define(['jquery'], function (exports) {
             }
 
             return new Promise(async (resolve, reject) => {
-
                 let ajax_abort = $.ajax({
                     url: url,
                     type: 'POST',
@@ -184,7 +182,8 @@ layui.define(['jquery'], function (exports) {
                         reject(status)
                     },
                 })
-            })
+            }).catch((e) => {
+            });
         },
 
         //patch 请求
@@ -247,7 +246,8 @@ layui.define(['jquery'], function (exports) {
                         reject(status)
                     },
                 })
-            })
+            }).catch((e) => {
+            });
         },
 
         //delete 请求
@@ -269,7 +269,6 @@ layui.define(['jquery'], function (exports) {
                         id: 'Message',
                     })
                 }
-                resolve(res)
             };
             if (cb) {
                 callback = cb;
@@ -313,7 +312,8 @@ layui.define(['jquery'], function (exports) {
                         reject(status)
                     },
                 })
-            })
+            }).catch((e) => {
+            });
         }
     };
 
