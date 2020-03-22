@@ -30,7 +30,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">手机</label>
         <div class="layui-input-block">
-            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value="" class="layui-input">
+            <input type="number" name="telphone" lay-verify="phone|number" placeholder="请输入手机" value=""
+                   class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -40,16 +41,37 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">角色</label>
+        <div class="layui-form-label">普通操作</div>
+        <div class="layui-form-block">
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.checkAll('#LAY-auth-tree-index')">全选
+            </button>
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.uncheckAll('#LAY-auth-tree-index')">全不选
+            </button>
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.showAll('#LAY-auth-tree-index')">全部展开
+            </button>
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.closeAll('#LAY-auth-tree-index')">全部隐藏
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">特殊操作</div>
+        <div class="layui-form-block">
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.showDept('#LAY-auth-tree-index')">展开到某层
+            </button>
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="layui.common.closeDept('#LAY-auth-tree-index')">关闭某层后所有的层
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择权限</label>
         <div class="layui-input-block">
-            <select name="roles" lay-filter="aihao">
-                <option value=""></option>
-                <option value="0">写作</option>
-                <option value="1" selected="">阅读</option>
-                <option value="2">游戏</option>
-                <option value="3">音乐</option>
-                <option value="4">旅行</option>
-            </select>
+            <div id="LAY-auth-tree-index"></div>
         </div>
     </div>
 
@@ -61,21 +83,38 @@
 </div>
 {{define "role/add-footer"}}
     <script>
-        layui.use(['form', 'common'], function () {
+        layui.use(['form', 'common', 'authtree'], async function () {
             var form = layui.form,
                 layer = layui.layer,
+                authtree = layui.authtree,
                 common = layui.common,
                 $ = layui.$;
+
+            var roleSelects = await common.get("/role/perm/0", false);
+            var trees = authtree.listConvert(roleSelects.data.list, {
+                primaryKey: 'id'
+                , startPid: 0
+                , parentKey: 'pid'
+                , nameKey: 'name'
+                , valueKey: 'id'
+                , checkedKey: roleSelects.data.checkedId
+            });
+            // 如果后台返回的不是树结构，请使用 authtree.listConvert 转换
+            authtree.render('#LAY-auth-tree-index', trees, {
+                inputname: 'authids[]',
+                layfilter: 'lay-check-auth',
+                autowidth: true,
+            });
 
             form.verify({
                 username: function (value, item) { //value：表单的值、item：表单的DOM对象
                     if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
                         return '用户名不能有特殊字符';
                     }
-                    if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
                         return '用户名首尾不能出现下划线\'_\'';
                     }
-                    if(/^\d+\d+\d$/.test(value)){
+                    if (/^\d+\d+\d$/.test(value)) {
                         return '用户名不能全为数字';
                     }
                     if (value.length<6 || value.length>50){

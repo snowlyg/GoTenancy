@@ -1,5 +1,4 @@
 perms:
-  -
   - title: "首页"
     ordernumber: 0
     href: "/"
@@ -127,9 +126,9 @@ perms:
             checked: 0
             ismenu: 0
             method: "GET"
-          - title: "角色下拉数据"
+          - title: "角色权限"
             ordernumber: 0
-            href: "/role/select"
+            href: "/role/perm/{id:uint}"
             icon: ""
             target: "_self"
             checked: 0

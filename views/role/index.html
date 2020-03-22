@@ -38,9 +38,10 @@
 </div>
 {{ define "role/index-footer"}}
     <script>
-        layui.use(['form', 'table'], function () {
+        layui.use(['form', 'table', 'common'], function () {
             var $ = layui.jquery,
                 form = layui.form,
+                common = layui.common,
                 table = layui.table;
 
             table.render({
@@ -54,7 +55,7 @@
                 }],
                 cols: [[
                     {type: "checkbox", width: 50, fixed: "left"},
-                    {field: 'ID', width: 80, title: 'ID', sort: true},
+                    {type: 'numbers', width: 80, title: '序号', sort: true},
                     {field: 'name', width: 200, title: '标识'},
                     {field: 'display_name', width: 250, title: '名称'},
                     {field: 'rmk', width: 450, title: '描述'},

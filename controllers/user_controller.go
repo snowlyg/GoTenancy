@@ -8,7 +8,6 @@ import (
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/services"
-	"github.com/snowlyg/go-tenancy/sysinit"
 	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/go-tenancy/validatas"
 	"github.com/snowlyg/gotransformer"
@@ -29,7 +28,7 @@ func (c *UserController) GetTable() interface{} {
 	}
 
 	args := map[string]interface{}{}
-	count, users := sysinit.UserService.GetAll(args, &pagination, false)
+	count, users := c.Service.GetAll(args, &pagination, false)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: c.transformerTableUsers(users)}
 }
@@ -54,7 +53,7 @@ func (c *UserController) GetRoleBy(id uint) interface{} {
 	user, _ := c.Service.GetByID(id)
 
 	args := map[string]interface{}{}
-	_, roles := sysinit.RoleService.GetAll(args, nil, false)
+	_, roles := c.RoleService.GetAll(args, nil, false)
 
 	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectRoles(roles, user.ID)}
 }
@@ -151,7 +150,7 @@ func (c *UserController) transformerTableUsers(users []*models.User) []*transfor
 		roles, err := c.Service.GetRolesByID(user.ID)
 		if err == nil {
 			for _, role := range roles {
-				tableuser.RoleNames += role.DisplayName + ";"
+				tableuser.RoleNames += role.DisplayName + " ; "
 			}
 		}
 

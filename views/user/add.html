@@ -63,7 +63,7 @@
                 $ = layui.$;
 
 
-            var roleSelects = await common.get("/role/select", false);
+            var roleSelects = await common.get("/user/role/0", false);
             var xmS = xmSelect.render({
                 el: '#xmSelect',
                 data: roleSelects.data

@@ -13,8 +13,9 @@ import (
 )
 
 type RoleController struct {
-	Ctx     iris.Context
-	Service services.RoleService
+	Ctx         iris.Context
+	Service     services.RoleService
+	PermService services.PermService
 }
 
 // GetRoles handles GET: http://localhost:8080/role/table.
@@ -31,15 +32,6 @@ func (c *RoleController) GetTable() interface{} {
 	return common.Table{Code: 0, Msg: "", Count: count, Data: roles}
 }
 
-// GetSelect handles GET: http://localhost:8080/role/select.
-func (c *RoleController) GetSelect() interface{} {
-
-	args := map[string]interface{}{}
-	_, roles := c.Service.GetAll(args, nil, false)
-
-	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectRoles(roles)}
-}
-
 // Get handles GET: http://localhost:8080/role.
 func (c *RoleController) Get() mvc.Result {
 	return mvc.View{
@@ -52,6 +44,17 @@ func (c *RoleController) GetCreate() mvc.Result {
 	return mvc.View{
 		Name: "role/add.html",
 	}
+}
+
+// GetRoletBy handles GET: http://localhost:8080/role/perm/:id.
+func (c *RoleController) GetPermBy(id uint) interface{} {
+
+	role, _ := c.Service.GetByID(id)
+
+	args := map[string]interface{}{}
+	_, perms := c.PermService.GetAll(args, false)
+
+	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectPerms(perms, role.ID)}
 }
 
 // Get handles GET: http://localhost:8080/role/id.
@@ -130,17 +133,36 @@ func (c *RoleController) PostDeletes() interface{} {
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }
 
-// transformerTableUsers 菜单表格接口数据转换
-func (c *RoleController) transformerSelectRoles(roles []*models.Role) []*transformer.RoleSelect {
-	var tableroles []*transformer.RoleSelect
-	for _, role := range roles {
-		tableuser := &transformer.RoleSelect{}
-		tableuser.Name = role.DisplayName
-		tableuser.Value = role.ID
-		tableuser.Selected = false
+// transformerSelectPerms 角色权限下拉接口数据转换
+func (c *RoleController) transformerSelectPerms(perms []*models.Perm, roleId uint) *transformer.PermSelect {
 
-		tableroles = append(tableroles, tableuser)
+	tablePerm := &transformer.PermSelect{}
+	var checkedId []uint
+	var list []transformer.List
+
+	for _, perm := range perms {
+		var ll transformer.List
+		ll.Id = perm.ID
+		ll.Name = perm.Title
+		if len(perm.Href) > 0 {
+			ll.Name += " : " + perm.Href
+		}
+		ll.Pid = perm.ParentId.Int64
+
+		rolePerms, err := c.Service.GetPermsByID(roleId)
+		if err == nil {
+			for _, rolePerm := range rolePerms {
+				if rolePerm.ID == perm.ID {
+					checkedId = append(checkedId, perm.ID)
+				}
+			}
+		}
+
+		list = append(list, ll)
 	}
 
-	return tableroles
+	tablePerm.CheckedId = checkedId
+	tablePerm.List = list
+
+	return tablePerm
 }

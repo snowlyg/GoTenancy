@@ -58,7 +58,7 @@ func main() {
 	menu.Handle(new(controllers.MenuController))
 
 	role := mvc.New(app.Party("/role"))
-	role.Register(sysinit.RoleService)
+	role.Register(sysinit.RoleService, sysinit.PermService)
 	role.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	role.Handle(new(controllers.RoleController))
 

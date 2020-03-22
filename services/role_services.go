@@ -19,6 +19,8 @@ type RoleService interface {
 	Update(id uint, role *models.Role) error
 	Create(role *models.Role, permIds []uint) error
 	GetAdmin() (models.Role, bool)
+
+	GetPermsByID(id uint) ([]models.Perm, error)
 }
 
 func NewRoleService(gdb *gorm.DB, ce *casbin.Enforcer) RoleService {
@@ -64,6 +66,16 @@ func (s *roleService) GetByID(id uint) (models.Role, bool) {
 		return user, false
 	}
 	return user, true
+}
+
+func (s *roleService) GetPermsByID(id uint) ([]models.Perm, error) {
+	permIds := s.ce.GetPermissionsForUser(strconv.FormatUint(uint64(id), 10))
+	var perms []models.Perm
+	if err := s.gdb.Where("id in (?)", permIds).Find(&perms).Error; err != nil {
+		return nil, err
+	}
+
+	return perms, nil
 }
 
 func (s *roleService) Update(id uint, role *models.Role) error {

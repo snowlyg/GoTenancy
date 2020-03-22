@@ -13,3 +13,14 @@ type MenuTable struct {
 	ParentId    int64  `json:"parent_id"`
 	CreatedAt   string `json:"created_at"`
 }
+
+type PermSelect struct {
+	List      []List `json:"list"`
+	CheckedId []uint `json:"checkedId"`
+}
+
+type List struct {
+	Id   uint   `json:"id"`
+	Name string `json:"name"`
+	Pid  int64  `json:"pid"`
+}

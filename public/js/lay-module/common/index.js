@@ -13,6 +13,49 @@ layui.define(['jquery'], function (exports) {
             return role_ids;
         },
 
+        //authtree 方法start
+        // 全选样例
+        checkAll: function (dst) {
+            layui.use(['jquery', 'layer', 'authtree'], function () {
+                var layer = layui.layer;
+                var authtree = layui.authtree;
+
+                authtree.checkAll(dst);
+            });
+        },
+
+        // 全不选样例
+        uncheckAll: function (dst) {
+            layui.use(['jquery', 'layer', 'authtree'], function () {
+                var layer = layui.layer;
+                var authtree = layui.authtree;
+
+                authtree.uncheckAll(dst);
+            });
+        },
+
+        // 显示全部
+        showAll: function (dst) {
+            layui.use(['jquery', 'layer', 'authtree'], function () {
+                var layer = layui.layer;
+                var authtree = layui.authtree;
+
+                authtree.showAll(dst);
+            });
+        },
+
+        // 隐藏全部
+        closeAll: function (dst) {
+            layui.use(['jquery', 'layer', 'authtree'], function () {
+                var layer = layui.layer;
+                var authtree = layui.authtree;
+
+                authtree.closeAll(dst);
+            });
+        },
+
+        //authtree end
+
         // get 请求
         // url 请求地址
         //isshow 是否显示返回 msg
@@ -271,9 +314,7 @@ layui.define(['jquery'], function (exports) {
                     },
                 })
             })
-        },
-
-
+        }
     };
 
     //输出接口
