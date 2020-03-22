@@ -186,7 +186,7 @@ perms:
       - title: "商户管理"
         ordernumber: 3
         href: "/tenant"
-        icon: "fa fa-user-md"
+        icon: "fa fa-user-secret"
         target: "_self"
         checked: 0
         ismenu: 1

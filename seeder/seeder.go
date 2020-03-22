@@ -14,6 +14,7 @@ import (
 
 	"github.com/azumads/faker"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
+	"github.com/google/uuid"
 	"github.com/jinzhu/configor"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/lib"
@@ -219,13 +220,15 @@ func CreateTenants() {
 	emailRegexp := regexp.MustCompile(".*(@.*)")
 	totalCount := 50
 	for i := 0; i < totalCount; i++ {
+		newUUID := uuid.New()
 		tenant := &models.Tenant{
-			FullName: Fake.UserName(),
-			Name:     Fake.Name(),
-			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.UserName()), " ", "_", -1)+"@example.com"),
+			UId:      newUUID.ID(),
+			FullName: Fake.CompanyName(),
+			Name:     Fake.CompanyName(),
+			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.CompanyName()), " ", "_", -1)+"@example.com"),
 			Telphone: lib.CreatePhoneNumber(),
 			Model:    gorm.Model{CreatedAt: time.Now()},
-			Rmk:      Fake.Paragraph(10, true),
+			Rmk:      Fake.Paragraph(1, true),
 		}
 
 		if err := sysinit.TenantService.Create(tenant); err != nil {
