@@ -125,7 +125,7 @@
                     var checkStatus = table.checkStatus('currentTableId'), data = checkStatus.data;
                     var ids = [];
                     data.forEach(function (item, index) {
-                        ids.push({"Id": item.id})
+                        ids.push({"Id": item.ID})
                     });
 
                     common.post("/tenant/deletes", JSON.stringify(ids), true, function (res) {
@@ -165,7 +165,7 @@
                         maxmin: true,
                         shadeClose: true,
                         area: ['100%', '100%'],
-                        content: '/tenant/' + data.id,
+                        content: '/tenant/' + data.ID,
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
@@ -173,7 +173,7 @@
                     return false;
                 } else if (obj.event === 'delete') {
                     layer.confirm('真的删除行么', function (index) {
-                        common.delete("/tenant/" + data.id, function (res) {
+                        common.delete("/tenant/" + data.ID, function (res) {
                             if (res.status) {
                                 layer.msg(res.msg, {
                                     icon: 1,
