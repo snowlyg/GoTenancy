@@ -23,6 +23,8 @@ import (
 )
 
 var Fake *faker.Faker
+var GeneratePhoneNumber lib.GeneratePhoneNumber
+
 var Seeds = struct {
 	Perms []struct {
 		Type        int8   `json:"type"`
@@ -63,6 +65,7 @@ func init() {
 	Fake, _ = faker.New("en")
 	Fake.Rand = rand.New(rand.NewSource(42))
 	rand.Seed(time.Now().UnixNano())
+	GeneratePhoneNumber = lib.GeneratePhoneNumber{CacheData: []string{}}
 
 	filepaths, _ := filepath.Glob(filepath.Join("seeder", "data", "*.yml"))
 	if err := configor.Load(&Seeds, filepaths...); err != nil {
@@ -248,7 +251,7 @@ func CreateUsers() {
 			Username: Fake.UserName(),
 			Name:     Fake.Name(),
 			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.UserName()), " ", "_", -1)+"@example.com"),
-			Telphone: lib.CreatePhoneNumber(),
+			Telphone: GeneratePhoneNumber.CreateUniquePhoneNumber(),
 			IsAdmin:  sql.NullBool{Bool: false, Valid: true},
 			Model:    gorm.Model{CreatedAt: time.Now()},
 			RoleIds:  []uint{},
@@ -272,7 +275,7 @@ func CreateTenants() {
 			FullName: Fake.CompanyName(),
 			Name:     Fake.CompanyName(),
 			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.CompanyName()), " ", "_", -1)+"@example.com"),
-			Telphone: lib.CreatePhoneNumber(),
+			Telphone: GeneratePhoneNumber.CreateUniquePhoneNumber(),
 			Model:    gorm.Model{CreatedAt: time.Now()},
 			Rmk:      Fake.Paragraph(1, true),
 		}
@@ -281,6 +284,7 @@ func CreateTenants() {
 			panic(fmt.Sprintf("商户填充错误：%v", err))
 		}
 	}
+
 }
 
 /*
