@@ -15,7 +15,7 @@ func main() {
 	fmt.Println(fmt.Sprintf("权限填充完成！！"))
 
 	fmt.Println(fmt.Sprintf("管理角色填充开始！！"))
-	CreateAdminRoles()
+	CreateAdminRole()
 	fmt.Println(fmt.Sprintf("管理角色填充完成！！"))
 
 	fmt.Println(fmt.Sprintf("角色填充开始！！"))
@@ -23,8 +23,12 @@ func main() {
 	fmt.Println(fmt.Sprintf("角色填充完成！！"))
 
 	fmt.Println(fmt.Sprintf("管理员填充开始！！"))
-	CreateAdminUsers()
+	CreateAdminUser()
 	fmt.Println(fmt.Sprintf("管理员填充完成！！"))
+
+	fmt.Println(fmt.Sprintf("商户角色账号填充开始！！"))
+	CreateTenantRoleAndUser()
+	fmt.Println(fmt.Sprintf("商户角色账号填充完成！！"))
 
 	fmt.Println(fmt.Sprintf("用户填充开始！！"))
 	CreateUsers()

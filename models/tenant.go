@@ -12,4 +12,5 @@ type Tenant struct {
 	Email    string `json:"email" validate:"email" comment:"邮箱" form:"email" gorm:"unique" `
 	Telphone string `json:"telphone" form:"telphone" gorm:"unique;size:11"`
 	Rmk      string `json:"rmk" form:"rmk" gorm:"type(text)"`
+	User     User
 }

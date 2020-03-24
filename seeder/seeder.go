@@ -128,8 +128,8 @@ func CreatePerms() {
 
 }
 
-// CreateAdminRoles 新建管理角色
-func CreateAdminRoles() {
+// CreateAdminRole 新建管理角色
+func CreateAdminRole() {
 	role := &models.Role{
 		Name:        "超级管理员",
 		DisplayName: "超级管理员",
@@ -154,8 +154,8 @@ func CreateAdminRoles() {
 	}
 }
 
-// CreateAdminUsers 新建管理员
-func CreateAdminUsers() {
+// CreateAdminUser 新建管理员
+func CreateAdminUser() {
 	adminrole, found := sysinit.RoleService.GetAdmin()
 	if !found {
 		panic("管理角色不存在")
@@ -172,6 +172,46 @@ func CreateAdminUsers() {
 
 	if err := sysinit.UserService.Create("password", admin); err != nil {
 		panic(fmt.Sprintf("管理员填充错误：%v", err))
+	}
+}
+
+// CreateTenantRoleAndUser 新建商户角色账号
+func CreateTenantRoleAndUser() {
+	tenantrole := &models.Role{
+		Name:        "商户管理",
+		DisplayName: "商户管理",
+		Rmk:         "商户管理",
+		IsAdmin:     sql.NullBool{Bool: false, Valid: true},
+		Model:       gorm.Model{CreatedAt: time.Now()},
+	}
+
+	//var permIds []string
+	//_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
+	//for _, perm := range perms {
+	//	if len(perm.Href) > 0 {
+	//		permId := strconv.FormatUint(uint64(perm.ID), 10)
+	//		permIds = append(permIds, permId)
+	//	}
+	//}
+
+	//role.PermIds = permIds
+
+	if err := sysinit.RoleService.Create(tenantrole); err != nil {
+		panic(fmt.Sprintf("商户角色填充错误：%v", err))
+	}
+
+	tenantuser := &models.User{
+		Username: "tenantname",
+		Name:     "商户管理员",
+		Email:    "tenant@admin.com",
+		Telphone: "13800138001",
+		IsAdmin:  sql.NullBool{Bool: false, Valid: true},
+		Model:    gorm.Model{CreatedAt: time.Now()},
+		RoleIds:  []uint{tenantrole.ID},
+	}
+
+	if err := sysinit.UserService.Create("password", tenantuser); err != nil {
+		panic(fmt.Sprintf("商户账号填充错误：%v", err))
 	}
 }
 
