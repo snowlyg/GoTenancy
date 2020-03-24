@@ -1,5 +1,6 @@
 perms:
   - title: "首页"
+    type: 1
     ordernumber: 0
     href: "/"
     icon: ""
@@ -9,6 +10,7 @@ perms:
     method: "GET"
 
   - title: "工作台"
+    type: 1
     ordernumber: 0
     href: "/control"
     icon: ""
@@ -18,6 +20,7 @@ perms:
     method: "GET"
 
   - title: "菜单信息"
+    type: 1
     ordernumber: 0
     href: "/init/info"
     icon: ""
@@ -27,6 +30,7 @@ perms:
     method: "GET"
 
   - title: "站点管理"
+    type: 2
     ordernumber: 1
     href: ""
     icon: "fa fa-cogs"
@@ -36,6 +40,7 @@ perms:
     method: ""
     child:
       - title: "用户管理"
+        type: 2
         ordernumber: 2
         href: "/user"
         icon: "fa fa-users"
@@ -45,6 +50,7 @@ perms:
         method: "GET"
         child:
           - title: "用户表格"
+            type: 2
             ordernumber: 0
             href: "/user/table"
             icon: ""
@@ -53,6 +59,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "用户添加"
+            type: 2
             ordernumber: 0
             href: "/user/create"
             icon: ""
@@ -61,6 +68,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "用户角色"
+            type: 2
             ordernumber: 0
             href: "/user/role/{id:uint}"
             icon: ""
@@ -69,6 +77,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "用户保存"
+            type: 2
             ordernumber: 0
             href: "/user"
             icon: ""
@@ -77,6 +86,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "用户编辑"
+            type: 2
             ordernumber: 0
             href: "/user/{id:uint}"
             icon: ""
@@ -85,6 +95,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "用户修改"
+            type: 2
             ordernumber: 0
             href: "/user/{id:uint}"
             icon: ""
@@ -93,6 +104,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "用户删除"
+            type: 2
             ordernumber: 0
             href: "/user/{id:uint}"
             icon: ""
@@ -101,6 +113,7 @@ perms:
             ismenu: 0
             method: "DELETE"
           - title: "用户批量删除"
+            type: 2
             ordernumber: 0
             href: "/user/deletes"
             icon: ""
@@ -110,6 +123,7 @@ perms:
             method: "POST"
 
       - title: "角色管理"
+        type: 2
         ordernumber: 3
         href: "/role"
         icon: "fa fa-user-md"
@@ -119,6 +133,7 @@ perms:
         method: "GET"
         child:
           - title: "角色表格"
+            type: 2
             ordernumber: 0
             href: "/role/table"
             icon: ""
@@ -127,6 +142,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "角色权限"
+            type: 2
             ordernumber: 0
             href: "/role/perm/{id:uint}"
             icon: ""
@@ -135,6 +151,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "角色添加"
+            type: 2
             ordernumber: 0
             href: "/role/create"
             icon: ""
@@ -143,6 +160,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "角色保存"
+            type: 2
             ordernumber: 0
             href: "/role"
             icon: ""
@@ -151,6 +169,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "角色编辑"
+            type: 2
             ordernumber: 0
             href: "/role/{id:uint}"
             icon: ""
@@ -159,6 +178,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "角色修改"
+            type: 2
             ordernumber: 0
             href: "/role/{id:uint}"
             icon: ""
@@ -167,6 +187,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "角色删除"
+            type: 2
             ordernumber: 0
             href: "/role/{id:uint}"
             icon: ""
@@ -175,6 +196,7 @@ perms:
             ismenu: 0
             method: "DELETE"
           - title: "角色批量删除"
+            type: 2
             ordernumber: 0
             href: "/role/deletes"
             icon: ""
@@ -184,6 +206,7 @@ perms:
             method: "POST"
 
       - title: "商户管理"
+        type: 2
         ordernumber: 3
         href: "/tenant"
         icon: "fa fa-user-secret"
@@ -193,6 +216,7 @@ perms:
         method: "GET"
         child:
           - title: "商户表格"
+            type: 2
             ordernumber: 0
             href: "/tenant/table"
             icon: ""
@@ -201,6 +225,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "商户添加"
+            type: 2
             ordernumber: 0
             href: "/tenant/create"
             icon: ""
@@ -209,6 +234,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "商户保存"
+            type: 2
             ordernumber: 0
             href: "/tenant"
             icon: ""
@@ -217,6 +243,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "商户编辑"
+            type: 2
             ordernumber: 0
             href: "/tenant/{id:uint}"
             icon: ""
@@ -225,6 +252,7 @@ perms:
             ismenu: 0
             method: "GET"
           - title: "商户修改"
+            type: 2
             ordernumber: 0
             href: "/tenant/{id:uint}"
             icon: ""
@@ -233,6 +261,7 @@ perms:
             ismenu: 0
             method: "POST"
           - title: "商户删除"
+            type: 2
             ordernumber: 0
             href: "/tenant/{id:uint}"
             icon: ""
@@ -241,6 +270,7 @@ perms:
             ismenu: 0
             method: "DELETE"
           - title: "商户批量删除"
+            type: 2
             ordernumber: 0
             href: "/tenant/deletes"
             icon: ""
@@ -251,6 +281,7 @@ perms:
 
 
       - title: "菜单管理"
+        type: 2
         ordernumber: 4
         href: "/menu"
         icon: "fa fa-window-maximize"
@@ -260,6 +291,7 @@ perms:
         method: "GET"
         child:
           - title: "菜单表格"
+            type: 2
             ordernumber: 0
             href: "/menu/table"
             icon: ""

@@ -7,16 +7,14 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
+	"github.com/snowlyg/go-tenancy/sysinit"
 	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/go-tenancy/validatas"
 	"github.com/snowlyg/gotransformer"
 )
 
 type UserController struct {
-	Ctx         iris.Context
-	Service     services.UserService
-	RoleService services.RoleService
+	Ctx iris.Context
 }
 
 // GetUsers handles GET: http://localhost:8080/user/table.
@@ -28,7 +26,7 @@ func (c *UserController) GetTable() interface{} {
 	}
 
 	args := map[string]interface{}{}
-	count, users := c.Service.GetAll(args, &pagination, false)
+	count, users := sysinit.UserService.GetAll(args, &pagination, false)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: c.transformerTableUsers(users)}
 }
@@ -50,17 +48,17 @@ func (c *UserController) GetCreate() mvc.Result {
 // GetRoletBy handles GET: http://localhost:8080/user/role/:id.
 func (c *UserController) GetRoleBy(id uint) interface{} {
 
-	user, _ := c.Service.GetByID(id)
+	user, _ := sysinit.UserService.GetByID(id)
 
 	args := map[string]interface{}{}
-	_, roles := c.RoleService.GetAll(args, nil, false)
+	_, roles := sysinit.RoleService.GetAll(args, nil, false)
 
 	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectRoles(roles, user.ID)}
 }
 
 // Get handles GET: http://localhost:8080/user/id.
 func (c *UserController) GetBy(id uint) mvc.Result {
-	user, _ := c.Service.GetByID(id)
+	user, _ := sysinit.UserService.GetByID(id)
 
 	return mvc.View{
 		Name: "user/edit.html",
@@ -88,7 +86,7 @@ func (c *UserController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(user.Password, &user); err != nil {
+	if err := sysinit.UserService.Create(user.Password, &user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户创建错误：%v", err)}
 	}
 
@@ -108,7 +106,7 @@ func (c *UserController) PostBy(id uint) interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.UpdateUser(id, &user); err != nil {
+	if err := sysinit.UserService.UpdateUser(id, &user); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
 	}
 
@@ -117,7 +115,7 @@ func (c *UserController) PostBy(id uint) interface{} {
 
 // Get handles Post: http://localhost:8080/user/id.
 func (c *UserController) DeleteBy(id uint) interface{} {
-	if err := c.Service.DeleteByID(id); err != nil {
+	if err := sysinit.UserService.DeleteByID(id); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
 	}
 
@@ -132,7 +130,7 @@ func (c *UserController) PostDeletes() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	if err := c.Service.DeleteMnutil(userIds); err != nil {
+	if err := sysinit.UserService.DeleteMnutil(userIds); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
 	}
 
@@ -147,7 +145,7 @@ func (c *UserController) transformerTableUsers(users []*models.User) []*transfor
 		g := gotransformer.NewTransform(tableuser, user, "")
 		_ = g.Transformer()
 
-		roles, err := c.Service.GetRolesByID(user.ID)
+		roles, err := sysinit.UserService.GetRolesByID(user.ID)
 		if err == nil {
 			for _, role := range roles {
 				tableuser.RoleNames += role.DisplayName + " ; "
@@ -163,7 +161,7 @@ func (c *UserController) transformerTableUsers(users []*models.User) []*transfor
 // transformerTableUsers 菜单表格接口数据转换
 func (c *UserController) transformerSelectRoles(roles []*models.Role, userId uint) []*transformer.RoleSelect {
 	var tableroles []*transformer.RoleSelect
-	userRoles, err := c.Service.GetRolesByID(userId)
+	userRoles, err := sysinit.UserService.GetRolesByID(userId)
 
 	if err == nil {
 		for _, role := range roles {

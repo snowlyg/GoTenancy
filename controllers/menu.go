@@ -5,15 +5,13 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/gotransformer"
 )
 
 type MenuController struct {
-	Ctx     iris.Context
-	Service services.PermService
+	Ctx iris.Context
 }
 
 // Get handles GET: http://localhost:8080/menu.

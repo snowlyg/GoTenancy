@@ -7,15 +7,13 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
+	"github.com/snowlyg/go-tenancy/sysinit"
 	"github.com/snowlyg/go-tenancy/transformer"
 	"github.com/snowlyg/go-tenancy/validatas"
 )
 
 type RoleController struct {
-	Ctx         iris.Context
-	Service     services.RoleService
-	PermService services.PermService
+	Ctx iris.Context
 }
 
 // GetRoles handles GET: http://localhost:8080/role/table.
@@ -27,7 +25,7 @@ func (c *RoleController) GetTable() interface{} {
 	}
 
 	args := map[string]interface{}{}
-	count, roles := c.Service.GetAll(args, &pagination, false)
+	count, roles := sysinit.RoleService.GetAll(args, &pagination, false)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: roles}
 }
@@ -49,17 +47,17 @@ func (c *RoleController) GetCreate() mvc.Result {
 // GetRoletBy handles GET: http://localhost:8080/role/perm/:id.
 func (c *RoleController) GetPermBy(id uint) interface{} {
 
-	role, _ := c.Service.GetByID(id)
+	role, _ := sysinit.RoleService.GetByID(id)
 
 	args := map[string]interface{}{}
-	_, perms := c.PermService.GetAll(args, false)
+	_, perms := sysinit.PermService.GetAll(args, false)
 
 	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectPerms(perms, role.ID)}
 }
 
 // Get handles GET: http://localhost:8080/role/id.
 func (c *RoleController) GetBy(id uint) mvc.Result {
-	role, _ := c.Service.GetByID(id)
+	role, _ := sysinit.RoleService.GetByID(id)
 	return mvc.View{
 		Name: "role/edit.html",
 		Data: iris.Map{
@@ -82,7 +80,7 @@ func (c *RoleController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Create(&role); err != nil {
+	if err := sysinit.RoleService.Create(&role); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色创建错误：%v", err)}
 	}
 
@@ -102,7 +100,7 @@ func (c *RoleController) PostBy(id uint) interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.UpdateRole(id, &role); err != nil {
+	if err := sysinit.RoleService.UpdateRole(id, &role); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色更新错误：%v", err)}
 	}
 
@@ -111,7 +109,7 @@ func (c *RoleController) PostBy(id uint) interface{} {
 
 // Get handles Post: http://localhost:8080/role/id.
 func (c *RoleController) DeleteBy(id uint) interface{} {
-	if err := c.Service.DeleteByID(id); err != nil {
+	if err := sysinit.RoleService.DeleteByID(id); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色删除错误：%v", err)}
 	}
 
@@ -126,7 +124,7 @@ func (c *RoleController) PostDeletes() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	if err := c.Service.DeleteMnutil(ids); err != nil {
+	if err := sysinit.RoleService.DeleteMnutil(ids); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("角色删除错误：%v", err)}
 	}
 
@@ -149,7 +147,7 @@ func (c *RoleController) transformerSelectPerms(perms []*models.Perm, roleId uin
 		}
 		ll.Pid = perm.ParentId.Int64
 
-		rolePerms, err := c.Service.GetPermsByID(roleId)
+		rolePerms, err := sysinit.RoleService.GetPermsByID(roleId)
 		if err == nil {
 			for _, rolePerm := range rolePerms {
 				if rolePerm.ID == perm.ID {

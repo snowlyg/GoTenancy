@@ -25,6 +25,7 @@ import (
 var Fake *faker.Faker
 var Seeds = struct {
 	Perms []struct {
+		Type        int8   `json:"type"`
 		Title       string `json:"title"`
 		Href        string `json:"href"`
 		Icon        string `json:"icon"`
@@ -34,6 +35,7 @@ var Seeds = struct {
 		Checked     int8   `json:"checked"`
 		IsMenu      int8   `json:"is_menu"`
 		Child       []struct {
+			Type        int8   `json:"type"`
 			Title       string `json:"title"`
 			Href        string `json:"href"`
 			Icon        string `json:"icon"`
@@ -43,6 +45,7 @@ var Seeds = struct {
 			Checked     int8   `json:"checked"`
 			IsMenu      int8   `json:"is_menu"`
 			Child       []struct {
+				Type        int8   `json:"type"`
 				Title       string `json:"title"`
 				Href        string `json:"href"`
 				Icon        string `json:"icon"`
@@ -72,6 +75,7 @@ func CreatePerms() {
 	for _, m := range Seeds.Perms {
 		menu := &models.Perm{
 			Model:       gorm.Model{CreatedAt: time.Now()},
+			Type:        m.Type,
 			Title:       m.Title,
 			Href:        m.Href,
 			Icon:        m.Icon,
@@ -87,6 +91,7 @@ func CreatePerms() {
 			for _, mchild := range m.Child {
 				menuchild := &models.Perm{
 					Model:       gorm.Model{CreatedAt: time.Now()},
+					Type:        mchild.Type,
 					Title:       mchild.Title,
 					Href:        mchild.Href,
 					Icon:        mchild.Icon,
@@ -102,6 +107,7 @@ func CreatePerms() {
 					for _, mmchild := range mchild.Child {
 						mmenuchild := &models.Perm{
 							Model:       gorm.Model{CreatedAt: time.Now()},
+							Type:        mmchild.Type,
 							Title:       mmchild.Title,
 							Href:        mmchild.Href,
 							Icon:        mmchild.Icon,
@@ -139,7 +145,7 @@ func CreateAdminRole() {
 	}
 
 	var permIds []string
-	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{"type": 2}, false)
 	for _, perm := range perms {
 		if len(perm.Href) > 0 {
 			permId := strconv.FormatUint(uint64(perm.ID), 10)
@@ -185,16 +191,16 @@ func CreateTenantRoleAndUser() {
 		Model:       gorm.Model{CreatedAt: time.Now()},
 	}
 
-	//var permIds []string
-	//_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, false)
-	//for _, perm := range perms {
-	//	if len(perm.Href) > 0 {
-	//		permId := strconv.FormatUint(uint64(perm.ID), 10)
-	//		permIds = append(permIds, permId)
-	//	}
-	//}
+	var permIds []string
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{"type": 3}, false)
+	for _, perm := range perms {
+		if len(perm.Href) > 0 {
+			permId := strconv.FormatUint(uint64(perm.ID), 10)
+			permIds = append(permIds, permId)
+		}
+	}
 
-	//role.PermIds = permIds
+	tenantrole.PermIds = permIds
 
 	if err := sysinit.RoleService.Create(tenantrole); err != nil {
 		panic(fmt.Sprintf("商户角色填充错误：%v", err))

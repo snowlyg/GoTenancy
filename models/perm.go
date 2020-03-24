@@ -11,6 +11,7 @@ type Perm struct {
 
 	OrderNumber int64         `json:"order_number"`
 	Checked     int8          `json:"checked"`
+	Type        int8          `json:"type"` // 1：通用，2：admin ,3:tenant
 	IsMenu      int8          `json:"is_menu"`
 	Title       string        `json:"title" gorm:"not null;size:255"`
 	Href        string        `json:"href" gorm:"size:255"`

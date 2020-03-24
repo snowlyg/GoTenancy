@@ -9,7 +9,6 @@ import (
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
@@ -17,7 +16,6 @@ var captchaId = captcha.New()
 
 type AuthController struct {
 	Ctx     iris.Context
-	Service services.UserService
 	Session *sessions.Session
 }
 
@@ -60,7 +58,7 @@ func (c *AuthController) PostLogin() interface{} {
 		return common.ActionResponse{Status: false, Msg: "请输入正确验证码"}
 	}
 
-	user, found := c.Service.GetByUsername(username)
+	user, found := sysinit.UserService.GetByUsername(username)
 	if !found && user.ID > 0 {
 		return common.ActionResponse{Status: false, Msg: "请输入正确用户名"}
 	}
@@ -81,7 +79,7 @@ func (c *AuthController) GetMe() mvc.Result {
 		return mvc.Response{Path: "/user/login"}
 	}
 
-	u, found := c.Service.GetByID(c.getCurrentUserID())
+	u, found := sysinit.UserService.GetByID(c.getCurrentUserID())
 	if !found {
 		c.logout()
 		return c.GetMe()

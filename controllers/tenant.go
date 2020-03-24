@@ -7,15 +7,13 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
-	"github.com/snowlyg/go-tenancy/services"
+	"github.com/snowlyg/go-tenancy/sysinit"
 
 	"github.com/snowlyg/go-tenancy/validatas"
 )
 
 type TenantController struct {
-	Ctx         iris.Context
-	Service     services.TenantService
-	UserService services.UserService
+	Ctx iris.Context
 }
 
 // GetTenants handles GET: http://localhost:8080/tenant/table.
@@ -27,7 +25,7 @@ func (c *TenantController) GetTable() interface{} {
 	}
 
 	args := map[string]interface{}{}
-	count, tenants := c.Service.GetAll(args, &pagination, false)
+	count, tenants := sysinit.TenantService.GetAll(args, &pagination, false)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: tenants}
 }
@@ -48,7 +46,7 @@ func (c *TenantController) GetCreate() mvc.Result {
 
 // Get handles GET: http://localhost:8080/tenant/id.
 func (c *TenantController) GetBy(id uint) mvc.Result {
-	tenant, _ := c.Service.GetByID(id)
+	tenant, _ := sysinit.TenantService.GetByID(id)
 
 	return mvc.View{
 		Name: "tenant/edit.html",
@@ -88,7 +86,7 @@ func (c *TenantController) PostBy(id uint) interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
-	if err := c.Service.Update(id, &tenant); err != nil {
+	if err := sysinit.TenantService.Update(id, &tenant); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
 	}
 
@@ -97,7 +95,7 @@ func (c *TenantController) PostBy(id uint) interface{} {
 
 // Get handles Post: http://localhost:8080/tenant/id.
 func (c *TenantController) DeleteBy(id uint) interface{} {
-	if err := c.Service.DeleteByID(id); err != nil {
+	if err := sysinit.TenantService.DeleteByID(id); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
 	}
 
@@ -112,7 +110,7 @@ func (c *TenantController) PostDeletes() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	if err := c.Service.DeleteMnutil(tenantIds); err != nil {
+	if err := sysinit.TenantService.DeleteMnutil(tenantIds); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户删除错误：%v", err)}
 	}
 

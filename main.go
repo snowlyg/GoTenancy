@@ -42,10 +42,12 @@ func main() {
 	//表格接口
 	init := mvc.New(app.Party("/init"))
 	init.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
+	init.Register(sysinit.Sess.Start)
 	init.Handle(new(controllers.InitController))
 
 	home := mvc.New(app.Party("/"))
 	home.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
+	home.Register(sysinit.Sess.Start)
 	home.Handle(new(controllers.HomeController))
 
 	control := mvc.New(app.Party("/control"))
@@ -53,36 +55,24 @@ func main() {
 	control.Handle(new(controllers.ControlController))
 
 	menu := mvc.New(app.Party("/menu"))
-	menu.Register(sysinit.PermService)
 	menu.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	menu.Handle(new(controllers.MenuController))
 
 	role := mvc.New(app.Party("/role"))
-	role.Register(sysinit.RoleService, sysinit.PermService)
 	role.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	role.Handle(new(controllers.RoleController))
 
 	user := mvc.New(app.Party("/user"))
-	user.Register(
-		sysinit.UserService,
-		sysinit.RoleService,
-	)
+
 	user.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	user.Handle(new(controllers.UserController))
 
 	tenant := mvc.New(app.Party("/tenant"))
-	tenant.Register(
-		sysinit.TenantService,
-		sysinit.UserService,
-	)
 	tenant.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	tenant.Handle(new(controllers.TenantController))
 
 	auth := mvc.New(app.Party("/auth"))
-	auth.Register(
-		sysinit.UserService,
-		sysinit.Sess.Start,
-	)
+	auth.Register(sysinit.Sess.Start)
 	auth.Handle(new(controllers.AuthController))
 
 	if err := app.Run(
