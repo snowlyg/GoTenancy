@@ -145,7 +145,7 @@ func CreateAdminRole() {
 	}
 
 	var permIds []string
-	_, perms := sysinit.PermService.GetAll(map[string]interface{}{"type": 2}, false)
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, []string{"1", "2"}, false)
 	for _, perm := range perms {
 		if len(perm.Href) > 0 {
 			permId := strconv.FormatUint(uint64(perm.ID), 10)
@@ -192,7 +192,7 @@ func CreateTenantRoleAndUser() {
 	}
 
 	var permIds []string
-	_, perms := sysinit.PermService.GetAll(map[string]interface{}{"type": 3}, false)
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, []string{"1", "3"}, false)
 	for _, perm := range perms {
 		if len(perm.Href) > 0 {
 			permId := strconv.FormatUint(uint64(perm.ID), 10)

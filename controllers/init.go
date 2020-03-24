@@ -18,14 +18,14 @@ func (c *InitController) GetInfo() interface{} {
 	authUser := GetAuthUser(c.Session)
 	// 管理员 返回管理菜单 	filter["type"] = 2
 	// 商户 返回商户菜单 filter["type"] = 3
-	filter := map[string]interface{}{"is_menu": 1, "parent_id": 0}
-	if authUser.TenantId == 0 {
-		filter["type"] = 2
-	} else if authUser.TenantId > 0 {
-		filter["type"] = 3
+	typefilters := []string{"1"}
+	if authUser.IsAdmin.Bool {
+		typefilters = append(typefilters, "2")
+	} else {
+		typefilters = append(typefilters, "3")
 	}
 
-	_, perms := sysinit.PermService.GetAll(filter, true)
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{"is_menu": 1, "parent_id": 0}, typefilters, true)
 
 	return common.Menus{
 		HomeInfo: struct {

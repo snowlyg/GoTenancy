@@ -49,8 +49,7 @@ func (c *RoleController) GetPermBy(id uint) interface{} {
 
 	role, _ := sysinit.RoleService.GetByID(id)
 
-	args := map[string]interface{}{}
-	_, perms := sysinit.PermService.GetAll(args, false)
+	_, perms := sysinit.PermService.GetAll(map[string]interface{}{}, []string{}, false)
 
 	return common.ActionResponse{Status: true, Msg: "", Data: c.transformerSelectPerms(perms, role.ID)}
 }

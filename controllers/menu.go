@@ -24,7 +24,7 @@ func (c *MenuController) Get() mvc.Result {
 // Get handles GET: http://localhost:8080/menu/table.
 func (c *MenuController) GetTable() interface{} {
 	args := map[string]interface{}{}
-	count, perms := sysinit.PermService.GetAll(args, false)
+	count, perms := sysinit.PermService.GetAll(args, []string{}, false)
 	tablemenus := transformerTableMenus(perms)
 
 	return common.Table{Code: 0, Msg: "", Count: count, Data: tablemenus}

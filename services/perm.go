@@ -8,7 +8,7 @@ import (
 )
 
 type PermService interface {
-	GetAll(args map[string]interface{}, ispreload bool) (int64, []*models.Perm)
+	GetAll(args map[string]interface{}, typefilters []string, ispreload bool) (int64, []*models.Perm)
 	GetByID(id uint) (models.Perm, bool)
 	DeleteByID(id uint) bool
 	GetPermissionByHrefMethod(href, method string) (models.Perm, bool)
@@ -28,7 +28,7 @@ type permService struct {
 
 //GetAll 查询所有数据
 //args 过滤条件 {"parent_id = ?" : 0}
-func (s *permService) GetAll(args map[string]interface{}, ispreload bool) (int64, []*models.Perm) {
+func (s *permService) GetAll(args map[string]interface{}, typefilters []string, ispreload bool) (int64, []*models.Perm) {
 	var meuns []*models.Perm
 	var count int64
 
@@ -36,6 +36,10 @@ func (s *permService) GetAll(args map[string]interface{}, ispreload bool) (int64
 
 	if ispreload {
 		db = db.Preload("Child")
+	}
+
+	if len(typefilters) > 0 {
+		db = db.Where("type in (?)", typefilters)
 	}
 
 	db.Find(&meuns).Count(&count)
