@@ -11,7 +11,7 @@
         <label class="layui-form-label required">全称</label>
         <div class="layui-input-block">
             <input type="text" name="full_name" lay-verify="required" lay-reqtext="全称不能为空" placeholder="请输入全称"
-                   value="{{.Tenant.Name}}" class="layui-input">
+                   value="{{.Tenant.FullName}}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -37,7 +37,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-block">
-            <textarea  class="layui-input" name="rmk" rows="3" cols="20"></textarea>
+            <textarea  class="layui-input" name="rmk" rows="3" cols="20">{{.Tenant.Rmk}}</textarea>
         </div>
     </div>
 

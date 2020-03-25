@@ -8,10 +8,18 @@ import (
 )
 
 var Config = struct {
-	HTTPS bool   `default:"false" env:"HTTPS"`
-	Port  uint   `default:"7000" env:"PORT"`
-	Host  string `default:"localhost" env:"Host"`
-	DB    struct {
+	HTTPS  bool   `default:"false" env:"HTTPS"`
+	Port   uint   `default:"7000" env:"PORT"`
+	Host   string `default:"localhost" env:"Host"`
+	Tenant struct {
+		RoleName        string `env:"TenantRoleName" default:"tenant_role"`
+		RoleDisplayName string `env:"TenantRoleDisplayName" default:"超级管理员"`
+	}
+	Admin struct {
+		RoleName        string `env:"AdminRoleName" default:"superadmin_role"`
+		RoleDisplayName string `env:"TenantRoleDisplayName" default:"商户管理员"`
+	}
+	DB struct {
 		Name     string `env:"DBName" default:"qor_example"`
 		Adapter  string `env:"DBAdapter" default:"mysql"`
 		Host     string `env:"DBHost" default:"localhost"`

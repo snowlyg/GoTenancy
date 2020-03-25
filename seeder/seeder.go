@@ -17,6 +17,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/configor"
 	"github.com/jinzhu/gorm"
+	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/lib"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
@@ -140,9 +141,9 @@ func CreatePerms() {
 // CreateAdminRole 新建管理角色
 func CreateAdminRole() {
 	role := &models.Role{
-		Name:        "超级管理员",
-		DisplayName: "超级管理员",
-		Rmk:         "超级管理员",
+		Name:        config.Config.Admin.RoleName,
+		DisplayName: config.Config.Admin.RoleDisplayName,
+		Rmk:         config.Config.Admin.RoleDisplayName,
 		IsAdmin:     sql.NullBool{Bool: true, Valid: true},
 		Model:       gorm.Model{CreatedAt: time.Now()},
 	}
@@ -187,9 +188,9 @@ func CreateAdminUser() {
 // CreateTenantRoleAndUser 新建商户角色账号
 func CreateTenantRoleAndUser() {
 	tenantrole := &models.Role{
-		Name:        "商户管理",
-		DisplayName: "商户管理",
-		Rmk:         "商户管理",
+		Name:        config.Config.Tenant.RoleName,
+		DisplayName: config.Config.Tenant.RoleDisplayName,
+		Rmk:         config.Config.Tenant.RoleDisplayName,
 		IsAdmin:     sql.NullBool{Bool: false, Valid: true},
 		Model:       gorm.Model{CreatedAt: time.Now()},
 	}

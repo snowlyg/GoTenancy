@@ -14,6 +14,7 @@ import (
 type RoleService interface {
 	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.Role)
 	GetByID(id uint) (models.Role, bool)
+	GetByName(name string) (models.Role, bool)
 	DeleteByID(id uint) error
 	DeleteMnutil(ids []common.Id) error
 	Update(id uint, role *models.Role) error
@@ -66,6 +67,14 @@ func (s *roleService) GetAll(args map[string]interface{}, pagination *common.Pag
 func (s *roleService) GetByID(id uint) (models.Role, bool) {
 	user := models.Role{Model: gorm.Model{ID: id}}
 	if notFound := s.gdb.Find(&user).RecordNotFound(); notFound {
+		return user, false
+	}
+	return user, true
+}
+
+func (s *roleService) GetByName(name string) (models.Role, bool) {
+	user := models.Role{}
+	if notFound := s.gdb.Where("name = ?", name).Find(&user).RecordNotFound(); notFound {
 		return user, false
 	}
 	return user, true

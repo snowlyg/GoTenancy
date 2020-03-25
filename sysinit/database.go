@@ -44,6 +44,6 @@ func init() {
 	UserService = services.NewUserService(Db, Enforcer)
 	PermService = services.NewPermService(Db)
 	RoleService = services.NewRoleService(Db, Enforcer, PermService)
-	TenantService = services.NewTenantService(Db)
+	TenantService = services.NewTenantService(Db, UserService, RoleService)
 
 }

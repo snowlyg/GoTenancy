@@ -70,6 +70,10 @@ func (c *TenantController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
 	}
 
+	if err := sysinit.TenantService.Create(&tenant); err != nil {
+		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("商户创建错误：%v", err)}
+	}
+
 	return common.ActionResponse{Status: true, Msg: "操作成功"}
 }
 
