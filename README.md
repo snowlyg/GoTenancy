@@ -34,6 +34,13 @@ If you don't have a QQ account, you can into the [iris-go-tenancy/community](htt
 [![Gitter](https://badges.gitter.im/iris-go-tenancy/community.svg)](https://gitter.im/iris-go-tenancy/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) 
 
 
+#### 系统需求
+
+- go > 1.13.0+ 
+- redis 
+- mysql or gcc(sqllite)
+
+
 #### 配置
 
 ```shell script
@@ -42,7 +49,6 @@ If you don't have a QQ account, you can into the [iris-go-tenancy/community](htt
 
   # 修改 /config/config.go 文件的 24 行代码，将路径修改为你项目的路径
   var Root = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
-
 ```
  
 
