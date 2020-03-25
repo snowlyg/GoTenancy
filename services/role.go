@@ -98,22 +98,22 @@ func (s *roleService) GetPermsByID(id uint) ([]models.Perm, error) {
 
 func (s *roleService) UpdateRole(id uint, role *models.Role) error {
 
-	oldRole := &models.Role{Model: gorm.Model{ID: id}}
+	idRole := &models.Role{Model: gorm.Model{ID: id}}
 	if config.Config.DB.Adapter != "mysql" {
-		if err := s.gdb.Model(oldRole).Where(NotAdmin).Update(role).Error; err != nil {
+		if err := s.gdb.Model(idRole).Where(NotAdmin).Update(role).Error; err != nil {
 			return err
 		}
-		if err := s.addPerms(role.PermIds, oldRole); err != nil {
+		if err := s.addPerms(role.PermIds, idRole); err != nil {
 			return err
 		}
 		return nil
 	} else {
 		return s.gdb.Transaction(func(tx *gorm.DB) error {
 
-			if err := tx.Model(oldRole).Where(NotAdmin).Update(role).Error; err != nil {
+			if err := tx.Model(idRole).Where(NotAdmin).Update(role).Error; err != nil {
 				return err
 			}
-			if err := s.addPerms(role.PermIds, oldRole); err != nil {
+			if err := s.addPerms(role.PermIds, idRole); err != nil {
 				return err
 			}
 

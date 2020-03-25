@@ -270,9 +270,8 @@ func CreateTenants() {
 	emailRegexp := regexp.MustCompile(".*(@.*)")
 	totalCount := 50
 	for i := 0; i < totalCount; i++ {
-		newUUID := uuid.New()
 		tenant := &models.Tenant{
-			UId:      newUUID.ID(),
+			UId:      uuid.New().ID(),
 			FullName: Fake.CompanyName(),
 			Name:     Fake.CompanyName(),
 			Email:    emailRegexp.ReplaceAllString(Fake.Email(), strings.Replace(strings.ToLower(Fake.CompanyName()), " ", "_", -1)+"@example.com"),

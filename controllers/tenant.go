@@ -8,8 +8,6 @@ import (
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
-
-	"github.com/snowlyg/go-tenancy/validatas"
 )
 
 type TenantController struct {
@@ -66,10 +64,6 @@ func (c *TenantController) Post() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	if err := validatas.Vaild(tenant); err != nil {
-		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
-	}
-
 	if err := sysinit.TenantService.Create(&tenant); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("商户创建错误：%v", err)}
 	}
@@ -86,11 +80,7 @@ func (c *TenantController) PostBy(id uint) interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据获取错误：%v", err)}
 	}
 
-	if err := validatas.Vaild(tenant); err != nil {
-		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("数据验证错误：%v", err)}
-	}
-
-	if err := sysinit.TenantService.Update(id, &tenant); err != nil {
+	if err := sysinit.TenantService.UpdateTenant(id, &tenant); err != nil {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("用户更新错误：%v", err)}
 	}
 

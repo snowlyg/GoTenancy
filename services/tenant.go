@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/config"
@@ -15,6 +16,7 @@ type TenantService interface {
 	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.Tenant)
 	GetByID(id uint) (models.Tenant, bool)
 	DeleteByID(id uint) error
+	UpdateTenant(id uint, tenant *models.Tenant) error
 	Update(id uint, tenant *models.Tenant) error
 	Create(tenant *models.Tenant) error
 	DeleteMnutil(tenantIds []common.Id) error
@@ -68,16 +70,31 @@ func (s *tenantService) GetByID(id uint) (models.Tenant, bool) {
 
 func (s *tenantService) UpdateTenant(id uint, tenant *models.Tenant) error {
 
-	user := models.User{Model: gorm.Model{ID: id}}
+	usermap := map[string]interface{}{
+		"Name":     tenant.Name,
+		"Username": tenant.FullName,
+		"Email":    tenant.Email,
+		"Telphone": tenant.Telphone,
+	}
+
+	idTenant := models.Tenant{Model: gorm.Model{ID: id}}
 	if config.Config.DB.Adapter != "mysql" {
-		if err := s.gdb.Model(user).Where(NotAdmin).Update(tenant).Error; err != nil {
+		if err := s.gdb.Model(idTenant).Update(tenant).Error; err != nil {
+			return err
+		}
+
+		if err := s.gdb.Model(tenant.User).Where(NotAdmin).Update(usermap).Error; err != nil {
 			return err
 		}
 
 		return nil
 	} else {
 		return s.gdb.Transaction(func(tx *gorm.DB) error {
-			if err := tx.Model(user).Where(NotAdmin).Update(tenant).Error; err != nil {
+			if err := tx.Model(idTenant).Update(tenant).Error; err != nil {
+				return err
+			}
+
+			if err := s.gdb.Model(tenant.User).Where(NotAdmin).Update(usermap).Error; err != nil {
 				return err
 			}
 
@@ -89,7 +106,7 @@ func (s *tenantService) UpdateTenant(id uint, tenant *models.Tenant) error {
 
 func (s *tenantService) Update(id uint, tenant *models.Tenant) error {
 
-	if err := s.gdb.Where("id = ?", id).Where(NotAdmin).Update(tenant).Error; err != nil {
+	if err := s.gdb.Where("id = ?", id).Update(tenant).Error; err != nil {
 		return err
 	}
 	return nil
@@ -102,6 +119,7 @@ func (s *tenantService) Create(tenant *models.Tenant) error {
 		return errors.New("unable to create this tenant")
 	}
 
+	tenant.UId = uuid.New().ID()
 	if config.Config.DB.Adapter != "mysql" {
 		if err := s.gdb.Create(tenant).Error; err != nil {
 			return err
@@ -109,10 +127,10 @@ func (s *tenantService) Create(tenant *models.Tenant) error {
 
 		tenantrole, _ := s.RoleService.GetByName(config.Config.Tenant.RoleName)
 		tenantuser := &models.User{
-			Username: "tenantname",
-			Name:     "商户管理员",
-			Email:    "tenant@admin.com",
-			Telphone: "13800138001",
+			Username: tenant.Name,
+			Name:     tenant.FullName,
+			Email:    tenant.Email,
+			Telphone: tenant.Telphone,
 			IsAdmin:  sql.NullBool{Bool: false, Valid: true},
 			Model:    gorm.Model{CreatedAt: time.Now()},
 			RoleIds:  []uint{tenantrole.ID},
@@ -125,16 +143,16 @@ func (s *tenantService) Create(tenant *models.Tenant) error {
 		return nil
 	} else {
 		return s.gdb.Transaction(func(tx *gorm.DB) error {
-			if err := s.gdb.Create(tenant).Error; err != nil {
+			if err := tx.Create(tenant).Error; err != nil {
 				return err
 			}
 
 			tenantrole, _ := s.RoleService.GetByName(config.Config.Tenant.RoleName)
 			tenantuser := &models.User{
-				Username: "tenantname",
-				Name:     "商户管理员",
-				Email:    "tenant@admin.com",
-				Telphone: "13800138001",
+				Username: tenant.Name,
+				Name:     tenant.FullName,
+				Email:    tenant.Email,
+				Telphone: tenant.Telphone,
 				IsAdmin:  sql.NullBool{Bool: false, Valid: true},
 				Model:    gorm.Model{CreatedAt: time.Now()},
 				RoleIds:  []uint{tenantrole.ID},

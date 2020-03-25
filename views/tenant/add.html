@@ -9,26 +9,26 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">全称</label>
         <div class="layui-input-block">
-            <input type="text" name="full_name" lay-verify="required" lay-reqtext="全称不能为空" placeholder="请输入全称"
+            <input type="text" name="full_name" lay-verify="required|name" lay-reqtext="全称不能为空" placeholder="请输入全称"
                    class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">名称</label>
+        <label class="layui-form-label required">名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" placeholder="请输入名称" class="layui-input">
+            <input type="text" name="name" lay-verify="required|name" placeholder="请输入名称" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label ">手机</label>
+        <label class="layui-form-label required">手机</label>
         <div class="layui-input-block">
-            <input type="number" name="telphone" lay-verify="phone" placeholder="请输入手机" class="layui-input">
+            <input type="number" name="telphone" lay-verify="required|phone" placeholder="请输入手机" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">邮箱</label>
+        <label class="layui-form-label required">邮箱</label>
         <div class="layui-input-block">
-            <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" class="layui-input">
+            <input type="email" name="email" lay-verify="required|email" placeholder="请输入邮箱" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -53,12 +53,20 @@
                 $ = layui.$;
 
             form.verify({
-                //我们既支持上述函数式的方式，也支持下述数组的形式
-                //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
-                password: [
-                    /^[\S]{6,12}$/
-                    , '密码必须6到12位，且不能出现空格'
-                ],
+                name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '用户名首尾不能出现下划线\'_\'';
+                    }
+                    if (/^\d+\d+\d$/.test(value)) {
+                        return '用户名不能全为数字';
+                    }
+                    if (value.length < 6 || value.length > 50) {
+                        return '用户名必须6到50位';
+                    }
+                },
                 phone: function (value, item) {
                     if (value.length > 0) {
                         if (!/^1[3|4|5|7|8]\d{9}$/.test(value)) {
