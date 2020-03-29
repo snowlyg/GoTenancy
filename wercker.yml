@@ -12,7 +12,16 @@ box: golang
   # https://devcenter.wercker.com/administration/services/
   # services:
   # - postgres
-  # https://devcenter.wercker.com/administration/services/examples/postgresql/
+# https://devcenter.wercker.com/administration/services/examples/postgresql/
+
+services:
+  - name: mysql
+    id: mysql:latest
+    env:
+      MYSQL_DATABASE: gorm
+      MYSQL_USER: gorm
+      MYSQL_PASSWORD: gorm
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
 
 # - mongo
 # https://devcenter.wercker.com/administration/services/examples/mongodb/
@@ -43,3 +52,14 @@ build:
         name: go test
         code: |
           go test ./...
+
+    - script:
+        name: test mysql
+        code: |
+          GORM_DIALECT=mysql GORM_DSN="gorm:gorm@tcp(mysql:3306)/gorm?charset=utf8&parseTime=True" go test -race ./...
+
+    - script:
+        name: codecov
+        code: |
+          go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+          bash <(curl -s https://codecov.io/bash)

@@ -1,12 +1,59 @@
 package services
 
 import (
+	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
 	"github.com/jinzhu/gorm"
 	"github.com/snowlyg/go-tenancy/models"
 )
+
+var (
+	DB *gorm.DB
+)
+
+func init() {
+	var err error
+
+	if DB, err = OpenTestConnection(); err != nil {
+		panic(fmt.Sprintf("No error should happen when connecting to test database, but got err=%+v", err))
+	}
+
+	runMigration()
+}
+
+func runMigration() {
+	values := []interface{}{&models.Perm{}, &models.Tenant{}, &models.Role{}, &models.User{}}
+	for _, value := range values {
+		DB.DropTable(value)
+	}
+	if err := DB.AutoMigrate(values...).Error; err != nil {
+		panic(fmt.Sprintf("No error should happen when create table, but got %+v", err))
+	}
+}
+
+func OpenTestConnection() (db *gorm.DB, err error) {
+	dbDSN := os.Getenv("GORM_DSN")
+
+	if dbDSN == "" {
+		dbDSN = "gorm:gorm@tcp(localhost:9910)/gorm?charset=utf8&parseTime=True"
+	}
+	db, err = gorm.Open("mysql", dbDSN)
+
+	// db.SetLogger(Logger{log.New(os.Stdout, "\r\n", 0)})
+	// db.SetLogger(log.New(os.Stdout, "\r\n", 0))
+	if debug := os.Getenv("DEBUG"); debug == "true" {
+		db.LogMode(true)
+	} else if debug == "false" {
+		db.LogMode(false)
+	}
+
+	db.DB().SetMaxIdleConns(10)
+
+	return
+}
 
 func TestNewPermService(t *testing.T) {
 	type args struct {
