@@ -46,4 +46,17 @@ func init() {
 	RoleService = services.NewRoleService(Db, Enforcer, PermService)
 	TenantService = services.NewTenantService(Db, UserService, RoleService)
 
+	gorm.DefaultTableNameHandler = func(Db *gorm.DB, defaultTableName string) string {
+		return "gotenancy_" + defaultTableName
+	}
+
+	//Db.Callback().Create().Replace("gorm:update_tenant_id", updateTimeStampForCreateCallback)
+	//Db.Callback().Update().Replace("gorm:update_tenant_id", updateTimeStampForUpdateCallback)
+	//Db.Callback().Query().Replace("gorm:update_tenant_id", deleteCallback)
+	//Db.Callback().RowQuery().Replace("gorm:update_tenant_id", deleteCallback)
+	//Db.Callback().Delete().Replace("gorm:update_tenant_id", deleteCallback)
+
+	Db.DB().SetMaxIdleConns(10)
+	Db.DB().SetMaxOpenConns(100)
+
 }

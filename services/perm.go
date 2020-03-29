@@ -9,10 +9,10 @@ import (
 
 type PermService interface {
 	GetAll(args map[string]interface{}, typefilters []string, ispreload bool) (int64, []*models.Perm)
-	GetByID(id uint) (models.Perm, bool)
-	DeleteByID(id uint) bool
+	//GetByID(id uint) (models.Perm, bool)
+	//DeleteByID(id uint) bool
 	GetPermissionByHrefMethod(href, method string) (models.Perm, bool)
-	Update(id uint, menu *models.Perm) error
+	//Update(id uint, menu *models.Perm) error
 	Create(menu *models.Perm) error
 }
 
@@ -58,13 +58,13 @@ func (s *permService) GetPermissionByHrefMethod(href, method string) (models.Per
 	return perm, true
 }
 
-func (s *permService) GetByID(id uint) (models.Perm, bool) {
-	return models.Perm{}, true
-}
-
-func (s *permService) Update(id uint, menu *models.Perm) error {
-	return nil
-}
+//func (s *permService) GetByID(id uint) (models.Perm, bool) {
+//	return models.Perm{}, true
+//}
+//
+//func (s *permService) Update(id uint, menu *models.Perm) error {
+//	return nil
+//}
 
 func (s *permService) Create(menu *models.Perm) error {
 	var (
@@ -83,6 +83,6 @@ func (s *permService) Create(menu *models.Perm) error {
 	return nil
 }
 
-func (s *permService) DeleteByID(id uint) bool {
-	return true
-}
+//func (s *permService) DeleteByID(id uint) bool {
+//	return true
+//}
