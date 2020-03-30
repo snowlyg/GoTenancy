@@ -45,7 +45,7 @@ build:
     - script:
         name: cp config/application.yml
         code: |
-          cp config/application.yml.example cp config/application.yml
+          cp config/application.yml.example  config/applicat
 
     # Build the project
     - script:
