@@ -50,7 +50,7 @@ func OpenTestConnection() (db *gorm.DB, err error) {
 		db.LogMode(false)
 	}
 
-	db.DB().SetMaxIdleConns(10)
+	//db.DB().SetMaxIdleConns(10)
 
 	return
 }
