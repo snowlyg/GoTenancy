@@ -41,6 +41,12 @@ build:
         code: |
           go get
 
+    # Copy config file
+    - script:
+        name: cp config/application.yml
+        code: |
+          cp config/application.yml.example cp config/application.yml
+
     # Build the project
     - script:
         name: go build
