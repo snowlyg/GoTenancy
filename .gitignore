@@ -1,6 +1,5 @@
 # 编译对象文件， 动静态库(共享对像)
 .env
-Dockerfile
 *.sh
 *.o
 *.a
