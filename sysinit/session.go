@@ -1,6 +1,7 @@
 package sysinit
 
 import (
+	"github.com/snowlyg/go-tenancy/config"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -19,7 +20,7 @@ func init() {
 
 	Redis := redis.New(redis.Config{
 		Network:   "tcp",
-		Addr:      "127.0.0.1:6379",
+		Addr:      config.Config.Redis.Addr,
 		Timeout:   time.Duration(30) * time.Second,
 		MaxActive: 10,
 		Password:  "",

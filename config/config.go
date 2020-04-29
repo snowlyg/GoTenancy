@@ -27,6 +27,9 @@ var Config = struct {
 		User     string `env:"DBUser" default:"root"`
 		Password string `env:"DBPassword"`
 	}
+	Redis struct {
+		Addr string `env:"RedisAddr" default:"127.0.0.1:6379"`
+	}
 }{}
 
 var Root = os.Getenv("GOPATH") + "/src/github.com/snowlyg/go-tenancy"
