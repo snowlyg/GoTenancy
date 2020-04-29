@@ -52,7 +52,7 @@ func init() {
 
 	//Db.Callback().Create().Replace("gorm:update_tenant_id", updateTimeStampForCreateCallback)
 	//Db.Callback().Update().Replace("gorm:update_tenant_id", updateTimeStampForUpdateCallback)
-	//Db.Callback().Query().Replace("gorm:update_tenant_id", deleteCallback)
+	//Db.Callback().Query().Replace("gorm:query_with_tenant_id", queryWithTenatId)
 	//Db.Callback().RowQuery().Replace("gorm:update_tenant_id", deleteCallback)
 	//Db.Callback().Delete().Replace("gorm:update_tenant_id", deleteCallback)
 
@@ -60,3 +60,22 @@ func init() {
 	Db.DB().SetMaxOpenConns(100)
 
 }
+
+// queryWithTenatId will set `CreatedAt`, `UpdatedAt` when creating
+//func queryWithTenatId(scope *gorm.Scope) {
+//	if !scope.HasError() {
+//		now := scope.db.nowFunc()
+//
+//		if createdAtField, ok := scope.FieldByName("CreatedAt"); ok {
+//			if createdAtField.IsBlank {
+//				createdAtField.Set(now)
+//			}
+//		}
+//
+//		if updatedAtField, ok := scope.FieldByName("UpdatedAt"); ok {
+//			if updatedAtField.IsBlank {
+//				updatedAtField.Set(now)
+//			}
+//		}
+//	}
+//}

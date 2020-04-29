@@ -12,7 +12,10 @@ import (
 	"github.com/snowlyg/go-tenancy/transformer"
 )
 
+// 非管理员
 var NotAdmin = map[string]interface{}{"is_admin": 0}
+
+// 管理员
 var IsAdmin = map[string]interface{}{"is_admin": 1}
 
 type UserService interface {
