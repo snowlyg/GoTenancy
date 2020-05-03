@@ -21,7 +21,6 @@ type RoleService interface {
 	UpdateRole(id uint, role *models.Role) error
 	Create(role *models.Role) error
 	GetAdmin() (models.Role, bool)
-
 	GetPermsByID(id uint) ([]models.Perm, error)
 }
 

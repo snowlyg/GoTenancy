@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/kataras/iris/v12/sessions"
+	"github.com/snowlyg/go-authcode-1"
 	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/lib"
 	"github.com/snowlyg/go-tenancy/models"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
@@ -15,21 +15,17 @@ import (
 var captchaId = captcha.New()
 
 type AuthController struct {
-	Ctx     iris.Context
-	Session *sessions.Session
-}
-
-func (c *AuthController) getCurrentUserID() uint {
-	userID := c.Session.GetInt64Default(sysinit.UserIDKey, 0)
-	return uint(userID)
+	Ctx iris.Context
 }
 
 func (c *AuthController) isLoggedIn() bool {
-	return c.getCurrentUserID() > 0
+	return common.AuthUserId > 0
 }
 
 func (c *AuthController) logout() {
-	c.Session.Destroy()
+	c.Ctx.RemoveCookie(common.UserCookieName)
+	common.AuthUserId = 0
+	common.AuthUserTenantId = 0
 }
 
 // GetLogin handles GET: http://localhost:8080/auth/login.
@@ -68,7 +64,11 @@ func (c *AuthController) PostLogin() interface{} {
 		return common.ActionResponse{Status: false, Msg: fmt.Sprintf("密码错误 %v", err)}
 	}
 
-	c.Session.Set(sysinit.UserIDKey, user.ID)
+	roleIds := lib.UnitJoin(user.RoleIds, ",")
+	str := fmt.Sprintf("%d||%s||%d||%s", user.ID, lib.Sha1(user.Password), user.TenantId, roleIds)
+	encode := authcode.AuthCode(str, "ENCODE", common.AdminAuthKey, 0)
+
+	c.Ctx.SetCookieKV(common.UserCookieName, encode, iris.CookieEncode(sysinit.SC.Encode))
 
 	return common.ActionResponse{Status: true, Msg: "登陆成功", Data: user}
 }
@@ -79,7 +79,7 @@ func (c *AuthController) GetMe() mvc.Result {
 		return mvc.Response{Path: "/user/login"}
 	}
 
-	u, found := sysinit.UserService.GetByID(c.getCurrentUserID())
+	u, found := sysinit.UserService.GetByID(common.AuthUserId)
 	if !found {
 		c.logout()
 		return c.GetMe()

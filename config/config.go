@@ -26,6 +26,7 @@ var Config = struct {
 		Port     string `env:"DBPort" default:"3306"`
 		User     string `env:"DBUser" default:"root"`
 		Password string `env:"DBPassword"`
+		Prefix   string `env:"DBPrefix" default:"gotenancy_"`
 	}
 	Redis struct {
 		Addr string `env:"RedisAddr" default:"127.0.0.1:6379"`

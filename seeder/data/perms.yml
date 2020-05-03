@@ -205,79 +205,79 @@ perms:
             ismenu: 0
             method: "POST"
 
-      - title: "商户管理"
-        type: 2
-        ordernumber: 3
-        href: "/tenant"
-        icon: "fa fa-user-secret"
-        target: "_self"
-        checked: 0
-        ismenu: 1
-        method: "GET"
-        child:
-          - title: "商户表格"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/table"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "GET"
-          - title: "商户添加"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/create"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "GET"
-          - title: "商户保存"
-            type: 2
-            ordernumber: 0
-            href: "/tenant"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "POST"
-          - title: "商户编辑"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/{id:uint}"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "GET"
-          - title: "商户修改"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/{id:uint}"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "POST"
-          - title: "商户删除"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/{id:uint}"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "DELETE"
-          - title: "商户批量删除"
-            type: 2
-            ordernumber: 0
-            href: "/tenant/deletes"
-            icon: ""
-            target: "_self"
-            checked: 0
-            ismenu: 0
-            method: "POST"
+#      - title: "商户管理"
+#        type: 2
+#        ordernumber: 3
+#        href: "/tenant"
+#        icon: "fa fa-user-secret"
+#        target: "_self"
+#        checked: 0
+#        ismenu: 1
+#        method: "GET"
+#        child:
+#          - title: "商户表格"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/table"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "GET"
+#          - title: "商户添加"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/create"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "GET"
+#          - title: "商户保存"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "POST"
+#          - title: "商户编辑"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/{id:uint}"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "GET"
+#          - title: "商户修改"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/{id:uint}"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "POST"
+#          - title: "商户删除"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/{id:uint}"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "DELETE"
+#          - title: "商户批量删除"
+#            type: 2
+#            ordernumber: 0
+#            href: "/tenant/deletes"
+#            icon: ""
+#            target: "_self"
+#            checked: 0
+#            ismenu: 0
+#            method: "POST"
 
 
       - title: "菜单管理"

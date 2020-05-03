@@ -1,10 +1,12 @@
 https: false
 host: localhost
 port: 8080
+redis:
+  addr: 127.0.0.1:6379
 db:
   adapter: mysql # mysql postgres sqlite3
   host: 127.0.0.1
   port: 3306
   name: gotenancy
   user: root
-  password: password
+  prefix: gotenancy_

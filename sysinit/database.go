@@ -3,14 +3,13 @@ package sysinit
 import (
 	"errors"
 	"fmt"
-	"os"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/services"
+	"os"
 )
 
 var (
@@ -47,35 +46,10 @@ func init() {
 	TenantService = services.NewTenantService(Db, UserService, RoleService)
 
 	gorm.DefaultTableNameHandler = func(Db *gorm.DB, defaultTableName string) string {
-		return "gotenancy_" + defaultTableName
+		return config.Config.DB.Prefix + defaultTableName
 	}
-
-	//Db.Callback().Create().Replace("gorm:update_tenant_id", updateTimeStampForCreateCallback)
-	//Db.Callback().Update().Replace("gorm:update_tenant_id", updateTimeStampForUpdateCallback)
-	//Db.Callback().Query().Replace("gorm:query_with_tenant_id", queryWithTenatId)
-	//Db.Callback().RowQuery().Replace("gorm:update_tenant_id", deleteCallback)
-	//Db.Callback().Delete().Replace("gorm:update_tenant_id", deleteCallback)
 
 	Db.DB().SetMaxIdleConns(10)
 	Db.DB().SetMaxOpenConns(100)
 
 }
-
-// queryWithTenatId will set `CreatedAt`, `UpdatedAt` when creating
-//func queryWithTenatId(scope *gorm.Scope) {
-//	if !scope.HasError() {
-//		now := scope.db.nowFunc()
-//
-//		if createdAtField, ok := scope.FieldByName("CreatedAt"); ok {
-//			if createdAtField.IsBlank {
-//				createdAtField.Set(now)
-//			}
-//		}
-//
-//		if updatedAtField, ok := scope.FieldByName("UpdatedAt"); ok {
-//			if updatedAtField.IsBlank {
-//				updatedAtField.Set(now)
-//			}
-//		}
-//	}
-//}

@@ -2,9 +2,7 @@
 
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
 
@@ -34,8 +32,8 @@ func main() {
 	CreateUsers()
 	fmt.Println(fmt.Sprintf("用户填充完成！！"))
 
-	fmt.Println(fmt.Sprintf("商户填充开始！！"))
-	CreateTenants()
-	fmt.Println(fmt.Sprintf("商户填充完成！！"))
+	//fmt.Println(fmt.Sprintf("商户填充开始！！"))
+	//CreateTenants()
+	//fmt.Println(fmt.Sprintf("商户填充完成！！"))
 
 }

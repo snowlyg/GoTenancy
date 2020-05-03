@@ -12,26 +12,17 @@ import (
 	"github.com/snowlyg/go-tenancy/transformer"
 )
 
-// 非管理员
-var NotAdmin = map[string]interface{}{"is_admin": 0}
-
-// 管理员
-var IsAdmin = map[string]interface{}{"is_admin": 1}
-
 type UserService interface {
 	GetAll(args map[string]interface{}, pagination *common.Pagination, ispreload bool) (int64, []*models.User)
 	GetByID(id uint) (models.User, bool)
 	GetByUsername(username string) (*models.User, bool)
 	DeleteByID(id uint) error
 	DeleteMnutil(userIds []common.Id) error
-
 	UpdateUser(id uint, userupdate *transformer.UserUpdate) error
 	Update(id uint, user *models.User) error
 	UpdatePassword(id uint, newPassword string) error
 	UpdateUsername(id uint, newUsername string) error
-
 	Create(userPassword string, user *models.User) error
-
 	GetRolesByID(id uint) ([]models.Role, error)
 }
 
@@ -52,6 +43,10 @@ func (s *userService) GetAll(args map[string]interface{}, pagination *common.Pag
 	var count int64
 
 	args["is_admin"] = 0
+	if common.AuthUserTenantId > 0 {
+		args["tenant_id"] = common.AuthUserTenantId
+	}
+
 	db := s.gdb.Where(args).Order("id desc")
 	if ispreload {
 		//db = db.Preload("Child")
@@ -142,7 +137,6 @@ func (s *userService) Update(id uint, user *models.User) error {
 }
 
 func (s *userService) UpdatePassword(id uint, newPassword string) error {
-
 	hashed, err := models.GeneratePassword(newPassword)
 	if err != nil {
 		return err
@@ -160,7 +154,6 @@ func (s *userService) UpdateUsername(id uint, newUsername string) error {
 }
 
 func (s *userService) Create(userPassword string, user *models.User) error {
-
 	if config.Config.DB.Adapter != "mysql" {
 		if user.ID > 0 || userPassword == "" || user.Name == "" || user.Username == "" {
 			return errors.New("unable to create this user")
@@ -222,7 +215,6 @@ func (s *userService) DeleteMnutil(userIds []common.Id) error {
 				return err
 			}
 		}
-
 		// 返回 nil 提交事务
 		return nil
 	})

@@ -42,12 +42,10 @@ func main() {
 	//表格接口
 	init := mvc.New(app.Party("/init"))
 	init.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	init.Register(sysinit.Sess.Start)
 	init.Handle(new(controllers.InitController))
 
 	home := mvc.New(app.Party("/"))
 	home.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	home.Register(sysinit.Sess.Start)
 	home.Handle(new(controllers.HomeController))
 
 	control := mvc.New(app.Party("/control"))
@@ -67,12 +65,11 @@ func main() {
 	user.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
 	user.Handle(new(controllers.UserController))
 
-	tenant := mvc.New(app.Party("/tenant"))
-	tenant.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	tenant.Handle(new(controllers.TenantController))
+	//tenant := mvc.New(app.Party("/tenant"))
+	//tenant.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
+	//tenant.Handle(new(controllers.TenantController))
 
 	auth := mvc.New(app.Party("/auth"))
-	auth.Register(sysinit.Sess.Start)
 	auth.Handle(new(controllers.AuthController))
 
 	if err := app.Run(

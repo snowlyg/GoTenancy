@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"net/http"
-	"strconv"
-
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
+	"github.com/snowlyg/go-tenancy/common"
+	"github.com/snowlyg/go-tenancy/lib"
 	"github.com/snowlyg/go-tenancy/sysinit"
+	"net/http"
 
 	"github.com/casbin/casbin/v2"
 )
@@ -25,13 +26,20 @@ func New(e *casbin.Enforcer) *Casbin {
 
 // ServeHTTP 修改此方法，同时验证用户身份和授权pa
 func (c *Casbin) ServeHTTP(ctx context.Context) {
-	userId := sysinit.Sess.Start(ctx).GetInt64Default(sysinit.UserIDKey, 0)
-	if userId == 0 {
+	authCookie := ctx.GetCookie(common.UserCookieName, iris.CookieDecode(sysinit.SC.Decode))
+	if len(authCookie) == 0 {
 		ctx.Redirect("/auth/login")
 		return
 	}
 
-	if !c.Check(ctx.Request(), strconv.FormatInt(userId, 10)) {
+	common.GetAuthInfo(authCookie)
+
+	if common.AuthUserId == 0 {
+		ctx.Redirect("/auth/login")
+		return
+	}
+
+	if !c.Check(ctx.Request(), lib.UintToString(common.AuthUserId)) {
 		ctx.StatusCode(http.StatusForbidden) // Status Forbidden
 		ctx.StopExecution()
 		return

@@ -293,7 +293,7 @@ func CreateTenants() {
 	sysinit.Db.AutoMigrate 重建数据表
 */
 func AutoMigrates() {
-	sysinit.Db.DropTableIfExists("users", "perms", "roles", "tenants", "casbin_rule")
+	sysinit.Db.DropTableIfExists(config.Config.DB.Prefix+"users", config.Config.DB.Prefix+"perms", config.Config.DB.Prefix+"roles", config.Config.DB.Prefix+"tenants", "casbin_rule")
 
 	sysinit.Db.AutoMigrate(
 		&models.User{},

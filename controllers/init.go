@@ -2,20 +2,18 @@ package controllers
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/sessions"
 	"github.com/snowlyg/go-tenancy/common"
 	"github.com/snowlyg/go-tenancy/sysinit"
 )
 
 type InitController struct {
-	Ctx     iris.Context
-	Session *sessions.Session
+	Ctx iris.Context
 }
 
 // GetInfo handles GET: http://localhost:8080/user/table.
 func (c *InitController) GetInfo() interface{} {
 
-	authUser := GetAuthUser(c.Session)
+	authUser := GetAuthUser()
 	// 管理员 返回管理菜单 	filter["type"] = 2
 	// 商户 返回商户菜单 filter["type"] = 3
 	typefilters := []string{"1"}
