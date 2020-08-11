@@ -23,7 +23,6 @@
 #### 文档
 > 提供一个 iris'wiki 中文文档，方便大家学习 iris : 
 
-- [learnku.com 论坛地址](https://learnku.com/docs/iris-wiki/v12)
 - [github 地址](https://github.com/snowlyg/iris/wiki)
 
 
