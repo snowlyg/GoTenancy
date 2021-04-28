@@ -1,45 +1,9 @@
-# 编译对象文件， 动静态库(共享对像)
-.env
-*.sh
-*.o
-*.a
-*.so
-
-# 目录
-_obj
-_test
-/.idea/
-
-# 特定体系结构的扩展/前缀
-*.[568vq]
-[568vq].out
-
-*.cgo1.go
-*.cgo2.c
-_cgo_defun.c
-_cgo_gotypes.go
-_cgo_export.*
-
-_testmain.go
-
-*.db
-*.exe
-*.test
-*.prof
-go-tenancy
+# dirs
 
 
-node_modules/
-*.js.map
-*.css.map
-npm-debug.log
+# files
+go.sum
+air.toml
 
-config/*.yml
-!config/*.example
-
-vendor/*
-.DS_Store
-
-*_env
-
-
+# ext
+*.log

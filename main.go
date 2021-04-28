@@ -1,83 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
-	"github.com/dchest/captcha"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
-	"github.com/snowlyg/go-tenancy/common"
-	"github.com/snowlyg/go-tenancy/config"
-	"github.com/snowlyg/go-tenancy/controllers"
-	"github.com/snowlyg/go-tenancy/middleware"
-	"github.com/snowlyg/go-tenancy/sysinit"
+	"github.com/snowlyg/go-tenancy/core"
+	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/initialize"
 )
 
 func main() {
-
-	app := iris.New()
-	app.Logger().SetLevel("debug")
-
-	tmpl := iris.HTML("./views", ".html").
-		Layout("shared/layout.html").
-		Reload(true)
-	app.RegisterView(tmpl)
-	app.HandleDir("/public", "./public")
-
-	app.OnAnyErrorCode(func(ctx iris.Context) {
-		ctx.ViewData("Status", common.ErrorStatus[ctx.GetStatusCode()])
-		if err := ctx.View("shared/error.html"); err != nil {
-			panic(err)
-		}
-	})
-
-	iris.RegisterOnInterrupt(func() {
-		_ = sysinit.Db.Close()
-	})
-
-	//验证码
-	app.Get("/captcha/{id:string}", iris.FromStd(captcha.Server(captcha.StdWidth, captcha.StdHeight)))
-
-	//表格接口
-	init := mvc.New(app.Party("/init"))
-	init.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	init.Handle(new(controllers.InitController))
-
-	home := mvc.New(app.Party("/"))
-	home.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	home.Handle(new(controllers.HomeController))
-
-	control := mvc.New(app.Party("/control"))
-	control.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	control.Handle(new(controllers.ControlController))
-
-	menu := mvc.New(app.Party("/menu"))
-	menu.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	menu.Handle(new(controllers.MenuController))
-
-	role := mvc.New(app.Party("/role"))
-	role.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	role.Handle(new(controllers.RoleController))
-
-	user := mvc.New(app.Party("/user"))
-
-	user.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	user.Handle(new(controllers.UserController))
-
-	//tenant := mvc.New(app.Party("/tenant"))
-	//tenant.Router.Use(middleware.New(sysinit.Enforcer).ServeHTTP)
-	//tenant.Handle(new(controllers.TenantController))
-
-	auth := mvc.New(app.Party("/auth"))
-	auth.Handle(new(controllers.AuthController))
-
-	if err := app.Run(
-		iris.Addr(fmt.Sprintf("%s:%d", config.Config.Host, config.Config.Port)),
-		iris.WithoutServerError(iris.ErrServerClosed),
-		iris.WithOptimizations,
-		iris.WithTimeFormat(time.RFC3339),
-	); err != nil {
-		fmt.Println("应用已经关闭")
+	g.TENANCY_VP = core.Viper()      // 初始化Viper
+	g.TENANCY_LOG = core.Zap()       // 初始化zap日志库
+	g.TENANCY_DB = initialize.Gorm() // gorm连接数据库
+	// initialize.Timer()
+	if g.TENANCY_DB != nil {
+		initialize.MysqlTables(g.TENANCY_DB) // 初始化表
+		// 程序结束前关闭数据库链接
+		db, _ := g.TENANCY_DB.DB()
+		defer db.Close()
 	}
+	core.RunWindowsServer()
 }

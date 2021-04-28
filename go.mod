@@ -1,42 +1,32 @@
 module github.com/snowlyg/go-tenancy
 
-go 1.13
+go 1.16
 
 require (
-	github.com/ajg/form v1.5.1 // indirect
-	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
-	github.com/casbin/casbin/v2 v2.2.1
-	github.com/casbin/gorm-adapter/v2 v2.0.3
-	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
-	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
-	github.com/go-playground/locales v0.13.0
-	github.com/go-playground/universal-translator v0.17.0
-	github.com/go-playground/validator/v10 v10.2.0
-	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/google/uuid v1.1.1
-	github.com/gorilla/securecookie v1.1.1
-	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/jinzhu/configor v1.1.1
-	github.com/jinzhu/gorm v1.9.12
-	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
-	github.com/kataras/iris/v12 v12.1.8
-	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
-	github.com/mattn/go-colorable v0.1.6 // indirect
-	github.com/mattn/go-sqlite3 v2.0.3+incompatible
-	github.com/moul/http2curl v1.0.0 // indirect
-	github.com/nats-io/nats-server/v2 v2.1.4 // indirect
-	github.com/onsi/ginkgo v1.12.0 // indirect
-	github.com/onsi/gomega v1.9.0 // indirect
-	github.com/sergi/go-diff v1.1.0 // indirect
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/snowlyg/go-authcode-1 v0.0.0-20160905083007-5f3980da1775
-	github.com/snowlyg/gotransformer v0.1.1-0.20200317144311-3224738e5238
-	github.com/valyala/fasthttp v1.9.0 // indirect
-	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
-	github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0 // indirect
-	github.com/yudai/gojsondiff v1.0.0 // indirect
-	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
-	github.com/yudai/pp v2.0.1+incompatible // indirect
-	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
+	github.com/Joker/hpp v1.0.0 // indirect
+	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
+	github.com/casbin/casbin/v2 v2.28.4
+	github.com/casbin/gorm-adapter/v3 v3.2.9
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fsnotify/fsnotify v1.4.9
+	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
+	github.com/go-ole/go-ole v1.2.5 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
+	github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3
+	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
+	github.com/lestrrat-go/strftime v1.0.4 // indirect
+	github.com/onsi/ginkgo v1.16.1 // indirect
+	github.com/onsi/gomega v1.11.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1
+	github.com/satori/go.uuid v1.2.0
+	github.com/shirou/gopsutil v3.21.3+incompatible
+	github.com/spf13/viper v1.7.1
+	github.com/tklauser/go-sysconf v0.3.5 // indirect
+	go.uber.org/zap v1.16.0
+	golang.org/x/crypto v0.0.0-20210415154028-4f45737414dc // indirect
+	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d // indirect
+	gorm.io/driver/mysql v1.0.5
+	gorm.io/gorm v1.21.8
 )
