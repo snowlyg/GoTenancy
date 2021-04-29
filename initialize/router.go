@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
+	"github.com/snowlyg/go-tenancy/router"
 )
 
 // 初始化总路由
@@ -21,29 +22,23 @@ func Routers() *iris.Application {
 	// 方便统一添加路由组前缀 多服务器上线使用
 	PublicGroup := Router.Party("")
 	{
-		fmt.Println(PublicGroup)
-		// router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-		// router.InitInitRouter(PublicGroup) // 自动初始化相关
+		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+		router.InitInitRouter(PublicGroup) // 自动初始化相关
 	}
 	PrivateGroup := Router.Party("", middleware.JWTAuth(), middleware.CasbinHandler())
 	fmt.Println(PrivateGroup)
 	{
-		// router.InitApiRouter(PrivateGroup)                   // 注册功能api路由
-		// router.InitJwtRouter(PrivateGroup)                   // jwt相关路由
-		// router.InitUserRouter(PrivateGroup)                  // 注册用户路由
-		// router.InitMenuRouter(PrivateGroup)                  // 注册menu路由
-		// router.InitEmailRouter(PrivateGroup)                 // 邮件相关路由
-		// router.InitSystemRouter(PrivateGroup)                // system相关路由
-		// router.InitCasbinRouter(PrivateGroup)                // 权限相关路由
-		// router.InitCustomerRouter(PrivateGroup)              // 客户路由
-		// router.InitAutoCodeRouter(PrivateGroup)              // 创建自动化代码
-		// router.InitAuthorityRouter(PrivateGroup)             // 注册角色路由
-		// router.InitSimpleUploaderRouter(PrivateGroup)        // 断点续传（插件版）
-		// router.InitSysDictionaryRouter(PrivateGroup)         // 字典管理
-		// router.InitSysOperationRecordRouter(PrivateGroup)    // 操作记录
-		// router.InitSysDictionaryDetailRouter(PrivateGroup)   // 字典详情管理
-		// router.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
-		// router.InitExcelRouter(PrivateGroup)                 // 表格导入导出
+		router.InitApiRouter(PrivateGroup)                 // 注册功能api路由
+		router.InitJwtRouter(PrivateGroup)                 // jwt相关路由
+		router.InitUserRouter(PrivateGroup)                // 注册用户路由
+		router.InitMenuRouter(PrivateGroup)                // 注册menu路由
+		router.InitEmailRouter(PrivateGroup)               // 邮件相关路由
+		router.InitSystemRouter(PrivateGroup)              // system相关路由
+		router.InitCasbinRouter(PrivateGroup)              // 权限相关路由
+		router.InitAuthorityRouter(PrivateGroup)           // 注册角色路由
+		router.InitSysDictionaryRouter(PrivateGroup)       // 字典管理
+		router.InitSysOperationRecordRouter(PrivateGroup)  // 操作记录
+		router.InitSysDictionaryDetailRouter(PrivateGroup) // 字典详情管理
 	}
 	g.TENANCY_LOG.Info("router register success")
 	return Router

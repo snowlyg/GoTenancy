@@ -1,5 +1,6 @@
 # dirs
-
+log/
+cmd/
 
 # files
 go.sum
@@ -7,3 +8,4 @@ air.toml
 
 # ext
 *.log
+*.exe

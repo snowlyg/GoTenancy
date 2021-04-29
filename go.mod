@@ -17,6 +17,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
+	github.com/mojocn/base64Captcha v1.3.4
 	github.com/onsi/ginkgo v1.16.1 // indirect
 	github.com/onsi/gomega v1.11.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1
