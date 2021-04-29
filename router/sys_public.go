@@ -6,8 +6,8 @@ import (
 	"github.com/snowlyg/go-tenancy/middleware"
 )
 
-func InitBaseRouter(Router iris.Party) (R iris.Party) {
-	BaseRouter := Router.Party("/base", middleware.NeedInit())
+func InitPublicRouter(Router iris.Party) (R iris.Party) {
+	BaseRouter := Router.Party("/public", middleware.NeedInit())
 	{
 		BaseRouter.Post("/login", v1.Login)
 		BaseRouter.Post("/captcha", v1.Captcha)

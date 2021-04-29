@@ -8,6 +8,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/source"
 	"github.com/snowlyg/go-tenancy/utils"
 
 	"github.com/spf13/viper"
@@ -132,17 +133,14 @@ func InitDB(conf request.InitDB) error {
 		return err
 	}
 	err = initDB(
-	// source.Admin,
-	// source.Api,
-	// source.AuthorityMenu,
-	// source.Authority,
-	// source.AuthoritiesMenus,
-	// source.Casbin,
-	// source.DataAuthorities,
-	// source.Dictionary,
-	// source.DictionaryDetail,
-	// source.File,
-	// source.BaseMenu
+		source.Admin,
+		source.Api,
+		source.AuthorityMenu,
+		source.Authority,
+		source.AuthoritiesMenus,
+		source.Casbin,
+		source.DataAuthorities,
+		source.BaseMenu,
 	)
 	if err != nil {
 		_ = writeConfig(g.TENANCY_VP, BaseMysql)

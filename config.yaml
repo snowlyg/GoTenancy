@@ -13,7 +13,8 @@ email:
   secret: xxx
   nickname: test
 jwt:
-  signing-key: qmPlus
+  signing-key: rku1S6ybEHX5WnvfDHdE2TtpX2Mu2NjT
+  encing-key: DkLzJiLlPVKXKeFe2rPzNGUekz5HrYZ6
   expires-time: 604800
   buffer-time: 86400
 local:
@@ -33,10 +34,9 @@ redis:
   addr: 127.0.0.1:6379
   password: Chindeo
 system:
-  env: dev # dev pro
+  env: dev
   addr: 8089
   db-type: mysql
-  oss-type: local
   use-multipoint: false
 timer:
   start: false

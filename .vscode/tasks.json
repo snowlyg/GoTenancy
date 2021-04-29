@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "air",
             "type": "shell",
-            "command": "echo Hello"
+            "command": "air -c air.toml -d"
         }
     ]
 }

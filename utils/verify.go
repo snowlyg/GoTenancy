@@ -1,5 +1,7 @@
 package utils
 
+import "github.com/snowlyg/go-tenancy/g"
+
 var (
 	IdVerify               = Rules{"ID": {NotEmpty()}}
 	ApiVerify              = Rules{"Path": {NotEmpty()}, "Description": {NotEmpty()}, "ApiGroup": {NotEmpty()}, "Method": {NotEmpty()}}
@@ -16,3 +18,10 @@ var (
 	ChangePasswordVerify   = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"UUID": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
 )
+
+func GetLoginVerify() Rules {
+	if g.TENANCY_CONFIG.System.Env == "dev" {
+		return Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}}
+	}
+	return Rules{"CaptchaId": {NotEmpty()}, "Captcha": {NotEmpty()}, "Username": {NotEmpty()}, "Password": {NotEmpty()}}
+}

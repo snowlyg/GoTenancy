@@ -23,8 +23,8 @@ func Routers() *iris.Application {
 	// 方便统一添加路由组前缀 多服务器上线使用
 	PublicGroup := Router.Party("/")
 	{
-		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-		router.InitInitRouter(PublicGroup) // 自动初始化相关
+		router.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+		router.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
 	PrivateGroup := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler())
 	{

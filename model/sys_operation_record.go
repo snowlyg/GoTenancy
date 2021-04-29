@@ -1,4 +1,3 @@
-// 自动生成模板SysOperationRecord
 package model
 
 import (

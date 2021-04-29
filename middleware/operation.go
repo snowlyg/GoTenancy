@@ -60,7 +60,11 @@ func OperationRecord() iris.Handler {
 		ctx.Next()
 
 		latency := time.Since(now)
-		record.ErrorMessage = ctx.GetErr().Error()
+		errorMessage := ""
+		if ctx.GetErr() != nil {
+			errorMessage = ctx.GetErr().Error()
+		}
+		record.ErrorMessage = errorMessage
 		record.Status = ctx.GetStatusCode()
 		record.Latency = latency
 		record.Resp = writer.body.String()

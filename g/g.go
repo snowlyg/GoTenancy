@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/snowlyg/go-tenancy/config"
+	"github.com/snowlyg/go-tenancy/utils/timer"
 )
 
 var (
@@ -15,5 +16,5 @@ var (
 	TENANCY_CONFIG config.Server
 	TENANCY_VP     *viper.Viper
 	TENANCY_LOG    *zap.Logger
-	// TENANCY_Timer timer.Timer = timer.NewTimerTask()
+	TENANCY_Timer  timer.Timer = timer.NewTimerTask()
 )

@@ -6,7 +6,6 @@ import (
 	go_jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/model"
@@ -21,11 +20,13 @@ import (
 func Login(ctx iris.Context) {
 	var L request.Login
 	_ = ctx.ReadJSON(&L)
-	if err := utils.Verify(L, utils.LoginVerify); err != nil {
+
+	if err := utils.Verify(L, utils.GetLoginVerify()); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if store.Verify(L.CaptchaId, L.Captcha, true) {
+
+	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
 		if err, user := service.Login(U); err != nil {
 			g.TENANCY_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
@@ -60,12 +61,11 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.FailWithMessage("获取token失败", ctx)
 		return
 	}
-	expiresAt := jwt.GetVerifiedToken(ctx).StandardClaims.ExpiresAt().Unix() * 1000
 	if !g.TENANCY_CONFIG.System.UseMultipoint {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: expiresAt,
+			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
 		}, "登录成功", ctx)
 		return
 	}
@@ -78,7 +78,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: expiresAt,
+			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
 		}, "登录成功", ctx)
 	} else if err != nil {
 		g.TENANCY_LOG.Error("设置登录状态失败", zap.Any("err", err))
@@ -97,7 +97,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: expiresAt,
+			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
 		}, "登录成功", ctx)
 	}
 }
