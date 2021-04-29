@@ -7,9 +7,9 @@ import (
 )
 
 func InitCasbinRouter(Router iris.Party) {
-	CasbinRouter := Router.Party("casbin", middleware.OperationRecord())
+	CasbinRouter := Router.Party("/casbin", middleware.OperationRecord())
 	{
-		CasbinRouter.Post("updateCasbin", v1.UpdateCasbin)
-		CasbinRouter.Post("getPolicyPathByAuthorityId", v1.GetPolicyPathByAuthorityId)
+		CasbinRouter.Post("/updateCasbin", v1.UpdateCasbin)
+		CasbinRouter.Post("/getPolicyPathByAuthorityId", v1.GetPolicyPathByAuthorityId)
 	}
 }

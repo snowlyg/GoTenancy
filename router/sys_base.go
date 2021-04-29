@@ -7,10 +7,10 @@ import (
 )
 
 func InitBaseRouter(Router iris.Party) (R iris.Party) {
-	BaseRouter := Router.Party("base", middleware.NeedInit())
+	BaseRouter := Router.Party("/base", middleware.NeedInit())
 	{
-		BaseRouter.Post("login", v1.Login)
-		BaseRouter.Post("captcha", v1.Captcha)
+		BaseRouter.Post("/login", v1.Login)
+		BaseRouter.Post("/captcha", v1.Captcha)
 	}
 	return BaseRouter
 }

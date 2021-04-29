@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
@@ -15,18 +18,18 @@ import (
 func ErrorToEmail() iris.Handler {
 	return func(ctx iris.Context) {
 		var username string
-		claims := ctx.Values().Get("claims")
-		// if ok {
-		waitUse := claims.(*request.CustomClaims)
-		username = waitUse.Username
-		// } else {
-		// 	id, _ := strconv.Atoi(ctx.GetHeader("x-user-id"))
-		// 	err, user := service.FindUserById(id)
-		// 	if err != nil {
-		// 		username = "Unknown"
-		// 	}
-		// 	username = user.Username
-		// }
+		var waitUse request.CustomClaims
+		err := jwt.GetVerifiedToken(ctx).Claims(waitUse)
+		if err != nil {
+			username = waitUse.Username
+		} else {
+			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
+			err, user := service.FindUserById(id)
+			if err != nil {
+				username = "Unknown"
+			}
+			username = user.Username
+		}
 		body, _ := ctx.GetBody()
 		record := model.SysOperationRecord{
 			Ip:     ctx.RemoteAddr(),
@@ -39,9 +42,8 @@ func ErrorToEmail() iris.Handler {
 
 		ctx.Next()
 
-		latency := time.Now().Sub(now)
+		latency := time.Since(now)
 		status := ctx.GetStatusCode()
-		// record.ErrorMessage = ctx.Errors.ByType(iris.ErrorTypePrivate).String()
 		record.ErrorMessage = ctx.GetErr().Error()
 		str := "接收到的请求为" + record.Body + "\n" + "请求方式为" + record.Method + "\n" + "报错信息如下" + record.ErrorMessage + "\n" + "耗时" + latency.String() + "\n"
 		if status != 200 {

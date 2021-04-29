@@ -28,6 +28,6 @@ func RunWindowsServer() {
 	time.Sleep(10 * time.Microsecond)
 	g.TENANCY_LOG.Info("server run success on ", zap.String("address", address))
 
-	fmt.Printf(`默认监听地址:http://127.0.0.1%s\n`, address)
+	fmt.Printf("默认监听地址:http://127.0.0.1%s\n", address)
 	g.TENANCY_LOG.Error(s.ListenAndServe().Error())
 }

@@ -3,10 +3,12 @@ package middleware
 import (
 	"bytes"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
+	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -27,20 +29,19 @@ func OperationRecord() iris.Handler {
 				ctx.Recorder().SetBody(body)
 			}
 		}
-		claims := ctx.Values().Get("claims")
-		// if  {
-		waitUse := claims.(*request.CustomClaims)
-		userId = int(waitUse.ID)
-		// } else {
-		// 	id, err := strconv.Atoi(ctx.Request.Header.Get("x-user-id"))
-		// 	if err != nil {
-		// 		userId = 0
-		// 	}
-		// 	userId = id
-		// }
+		var waitUse request.CustomClaims
+		err := jwt.GetVerifiedToken(ctx).Claims(waitUse)
+		if err != nil {
+			userId = int(waitUse.ID)
+		} else {
+			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
+			if err != nil {
+				userId = 0
+			}
+			userId = id
+		}
 
 		record := model.SysOperationRecord{
-
 			Ip:     ctx.RemoteAddr(),
 			Method: ctx.Method(),
 			Path:   ctx.Path(),
@@ -48,25 +49,21 @@ func OperationRecord() iris.Handler {
 			Body:   string(body),
 			UserID: userId,
 		}
-		// 存在某些未知错误 TODO
-		//values := c.Request.Header.Values("content-type")
-		//if len(values) >0 && strings.Contains(values[0], "boundary") {
-		//	record.Body = "file"
-		//}
-		// writer := responseBodyWriter{
-		// 	ResponseWriter: ctx.Writer,
-		// 	body:           &bytes.Buffer{},
-		// }
-		// ctx.Writer = writer
+
+		writer := responseBodyWriter{
+			ResponseWriter: ctx.ResponseWriter().Clone(),
+			body:           &bytes.Buffer{},
+		}
+		ctx.ResetResponseWriter(writer)
 		now := time.Now()
 
 		ctx.Next()
 
-		latency := time.Now().Sub(now)
+		latency := time.Since(now)
 		record.ErrorMessage = ctx.GetErr().Error()
 		record.Status = ctx.GetStatusCode()
 		record.Latency = latency
-		// record.Resp = writer.body.String()
+		record.Resp = writer.body.String()
 
 		if err := service.CreateSysOperationRecord(record); err != nil {
 			g.TENANCY_LOG.Error("create operation record error:", zap.Any("err", err))

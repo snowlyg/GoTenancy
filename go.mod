@@ -13,6 +13,8 @@ require (
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d
+	github.com/iris-contrib/middleware/secure v0.0.0-20210110101738-6d0a4d799b5d
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible

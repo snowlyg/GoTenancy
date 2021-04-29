@@ -3,9 +3,10 @@ package v1
 import (
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	go_jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/model"
@@ -39,7 +40,6 @@ func Login(ctx iris.Context) {
 
 // tokenNext 登录以后签发jwt
 func tokenNext(ctx iris.Context, user model.SysUser) {
-	j := &middleware.JWT{SigningKey: []byte(g.TENANCY_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := request.CustomClaims{
 		UUID: user.UUID,
 		ID:   user.ID,
@@ -47,23 +47,25 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		BufferTime:  g.TENANCY_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
-		StandardClaims: jwt.StandardClaims{
+		StandardClaims: go_jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,                             // 签名生效时间
 			ExpiresAt: time.Now().Unix() + g.TENANCY_CONFIG.JWT.ExpiresTime, // 过期时间 7天  配置文件
 			Issuer:    "qmPlus",                                             // 签名的发行者
 		},
 	}
-	token, err := j.CreateToken(claims)
+
+	token, err := middleware.CreateToken(claims)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取token失败", zap.Any("err", err))
 		response.FailWithMessage("获取token失败", ctx)
 		return
 	}
+	expiresAt := jwt.GetVerifiedToken(ctx).StandardClaims.ExpiresAt().Unix() * 1000
 	if !g.TENANCY_CONFIG.System.UseMultipoint {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt,
 		}, "登录成功", ctx)
 		return
 	}
@@ -76,7 +78,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt,
 		}, "登录成功", ctx)
 	} else if err != nil {
 		g.TENANCY_LOG.Error("设置登录状态失败", zap.Any("err", err))
@@ -95,7 +97,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt,
 		}, "登录成功", ctx)
 	}
 }

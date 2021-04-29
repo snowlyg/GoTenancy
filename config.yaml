@@ -33,7 +33,7 @@ redis:
   addr: 127.0.0.1:6379
   password: Chindeo
 system:
-  env: public
+  env: dev # dev pro
   addr: 8089
   db-type: mysql
   oss-type: local

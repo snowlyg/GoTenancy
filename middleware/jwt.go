@@ -1,146 +1,91 @@
 package middleware
 
 import (
-	"errors"
-	"net/http"
-	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
-	"github.com/snowlyg/go-tenancy/model/response"
-	"github.com/snowlyg/go-tenancy/service"
-	"go.uber.org/zap"
 )
 
 func JWTAuth() iris.Handler {
-	return func(ctx iris.Context) {
-		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息 这里前端需要把token存储到cookie或者本地localStorage中
-		// 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
-		token := ctx.GetHeader("x-token")
-		if token == "" {
-			response.FailWithDetailed(iris.Map{"reload": true}, "未登录或非法访问", ctx)
-			ctx.StatusCode(http.StatusUnauthorized)
-			return
-		}
-		if service.IsBlacklist(token) {
-			response.FailWithDetailed(iris.Map{"reload": true}, "您的帐户异地登陆或令牌失效", ctx)
-			ctx.StatusCode(http.StatusUnauthorized)
-			return
-		}
-		j := NewJWT()
-		// parseToken 解析token包含的信息
-		claims, err := j.ParseToken(token)
-		if err != nil {
-			if err == TokenExpired {
-				response.FailWithDetailed(iris.Map{"reload": true}, "授权已过期", ctx)
-				ctx.StatusCode(http.StatusUnauthorized)
-				return
-			}
-			response.FailWithDetailed(iris.Map{"reload": true}, err.Error(), ctx)
-			ctx.StatusCode(http.StatusUnauthorized)
-			return
-		}
-		if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
-			_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: token})
-			response.FailWithDetailed(iris.Map{"reload": true}, err.Error(), ctx)
-			ctx.StatusCode(http.StatusUnauthorized)
-		}
-		if claims.ExpiresAt-time.Now().Unix() < claims.BufferTime {
-			claims.ExpiresAt = time.Now().Unix() + g.TENANCY_CONFIG.JWT.ExpiresTime
-			newToken, _ := j.CreateToken(*claims)
-			newClaims, _ := j.ParseToken(newToken)
-			ctx.Header("new-token", newToken)
-			ctx.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
-			if g.TENANCY_CONFIG.System.UseMultipoint {
-				err, RedisJwtToken := service.GetRedisJWT(newClaims.Username)
-				if err != nil {
-					g.TENANCY_LOG.Error("get redis jwt failed", zap.Any("err", err))
-				} else { // 当之前的取成功时才进行拉黑操作
-					_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: RedisJwtToken})
-				}
-				// 无论如何都要记录当前的活跃状态
-				_ = service.SetRedisJWT(newToken, newClaims.Username)
-			}
-		}
-		ctx.Values().Set("claims", claims)
-		ctx.Next()
+	verifier := jwt.NewVerifier(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey)
+	// Enable server-side token block feature (even before its expiration time):
+	verifier.WithDefaultBlocklist()
+	// Enable payload decryption with:
+	if g.TENANCY_CONFIG.JWT.EncKey != "" {
+		verifier.WithDecryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
 	}
+	return verifier.Verify(func() interface{} {
+		return new(request.CustomClaims)
+	})
 }
 
-type JWT struct {
-	SigningKey []byte
-}
-
-var (
-	TokenExpired     = errors.New("Token is expired")
-	TokenNotValidYet = errors.New("Token not active yet")
-	TokenMalformed   = errors.New("That's not even a token")
-	TokenInvalid     = errors.New("Couldn't handle this token:")
-)
-
-func NewJWT() *JWT {
-	return &JWT{
-		[]byte(g.TENANCY_CONFIG.JWT.SigningKey),
-	}
-}
+// var (
+// 	TokenExpired     = errors.New("Token is expired")
+// 	TokenNotValidYet = errors.New("Token not active yet")
+// 	TokenMalformed   = errors.New("That's not even a token")
+// 	TokenInvalid     = errors.New("Couldn't handle this token:")
+// )
 
 // 创建一个token
-func (j *JWT) CreateToken(claims request.CustomClaims) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(j.SigningKey)
+func CreateToken(claims request.CustomClaims) (string, error) {
+	signer := jwt.NewSigner(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, 10*time.Minute)
+	token, err := signer.Sign(claims)
+	if g.TENANCY_CONFIG.JWT.EncKey != "" {
+		signer.WithEncryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
+	}
+	return string(token), err
 }
 
-// 解析 token
-func (j *JWT) ParseToken(tokenString string) (*request.CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
-		return j.SigningKey, nil
-	})
-	if err != nil {
-		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-				return nil, TokenMalformed
-			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
-				// Token is expired
-				return nil, TokenExpired
-			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return nil, TokenNotValidYet
-			} else {
-				return nil, TokenInvalid
-			}
-		}
-	}
-	if token != nil {
-		if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
-			return claims, nil
-		}
-		return nil, TokenInvalid
+// // 解析 token
+// func (j *JWT) ParseToken(tokenString string) (*request.CustomClaims, error) {
+// 	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
+// 		return j.SigningKey, nil
+// 	})
+// 	if err != nil {
+// 		if ve, ok := err.(*jwt.ValidationError); ok {
+// 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+// 				return nil, TokenMalformed
+// 			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+// 				// Token is expired
+// 				return nil, TokenExpired
+// 			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+// 				return nil, TokenNotValidYet
+// 			} else {
+// 				return nil, TokenInvalid
+// 			}
+// 		}
+// 	}
+// 	if token != nil {
+// 		if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
+// 			return claims, nil
+// 		}
+// 		return nil, TokenInvalid
 
-	} else {
-		return nil, TokenInvalid
+// 	} else {
+// 		return nil, TokenInvalid
 
-	}
+// 	}
 
-}
+// }
 
-// RefreshToken 更新token
-func (j *JWT) RefreshToken(tokenString string) (string, error) {
-	jwt.TimeFunc = func() time.Time {
-		return time.Unix(0, 0)
-	}
-	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return j.SigningKey, nil
-	})
-	if err != nil {
-		return "", err
-	}
-	if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
-		jwt.TimeFunc = time.Now
-		claims.StandardClaims.ExpiresAt = time.Now().Unix() + 60*60*24*7
-		return j.CreateToken(*claims)
-	}
-	return "", TokenInvalid
-}
+// // RefreshToken 更新token
+// func (j *JWT) RefreshToken(tokenString string) (string, error) {
+// 	jwt.TimeFunc = func() time.Time {
+// 		return time.Unix(0, 0)
+// 	}
+// 	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+// 		return j.SigningKey, nil
+// 	})
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
+// 		jwt.TimeFunc = time.Now
+// 		claims.StandardClaims.ExpiresAt = time.Now().Unix() + 60*60*24*7
+// 		return j.CreateToken(*claims)
+// 	}
+// 	return "", TokenInvalid
+// }

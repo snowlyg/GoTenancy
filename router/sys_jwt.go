@@ -7,8 +7,8 @@ import (
 )
 
 func InitJwtRouter(Router iris.Party) {
-	ApiRouter := Router.Party("jwt", middleware.OperationRecord())
+	ApiRouter := Router.Party("/jwt", middleware.OperationRecord())
 	{
-		ApiRouter.Post("jsonInBlacklist", v1.JsonInBlacklist) // jwt加入黑名单
+		ApiRouter.Post("/jsonInBlacklist", v1.JsonInBlacklist) // jwt加入黑名单
 	}
 }

@@ -7,8 +7,8 @@ import (
 )
 
 func InitEmailRouter(Router iris.Party) {
-	UserRouter := Router.Party("email", middleware.OperationRecord())
+	UserRouter := Router.Party("/email", middleware.OperationRecord())
 	{
-		UserRouter.Post("emailTest", v1.EmailTest) // 发送测试邮件
+		UserRouter.Post("/emailTest", v1.EmailTest) // 发送测试邮件
 	}
 }
