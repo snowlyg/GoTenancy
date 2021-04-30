@@ -14,9 +14,9 @@ import (
 func CasbinHandler() iris.Handler {
 	return func(ctx iris.Context) {
 		waitUse := jwt.Get(ctx).(*request.CustomClaims)
-		obj := ctx.FullRequestURI() // 获取请求的URI
-		act := ctx.Method()         // 获取请求方法
-		sub := waitUse.AuthorityId  // 获取用户的角色
+		obj := ctx.Path()          // 获取请求的URI
+		act := ctx.Method()        // 获取请求方法
+		sub := waitUse.AuthorityId // 获取用户的角色
 		// 判断策略中是否存在
 		success, err := service.Casbin().Enforce(sub, obj, act)
 		if err != nil {

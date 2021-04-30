@@ -5,6 +5,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
+	"github.com/kataras/iris/v12/middleware/jwt/blocklist/redis"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model/request"
 )
@@ -14,7 +15,16 @@ const issuer = "GOTENANCY"
 func JWTAuth() iris.Handler {
 	verifier := jwt.NewVerifier(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, jwt.Expected{Issuer: issuer})
 	// Enable server-side token block feature (even before its expiration time):
-	verifier.WithDefaultBlocklist()
+	if g.TENANCY_REDIS == nil {
+		verifier.WithDefaultBlocklist()
+	} else {
+		blocklist := redis.NewBlocklist()
+		blocklist.Prefix = "gotenancy-"
+		blocklist.ClientOptions.DB = g.TENANCY_CONFIG.Redis.DB
+		blocklist.ClientOptions.Addr = g.TENANCY_CONFIG.Redis.Addr
+		blocklist.ClientOptions.Password = g.TENANCY_CONFIG.Redis.Password
+		verifier.Blocklist = blocklist
+	}
 	// Enable payload decryption with:
 	if g.TENANCY_CONFIG.JWT.EncKey != "" {
 		verifier.WithDecryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)

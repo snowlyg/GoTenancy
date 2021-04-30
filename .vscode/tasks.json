@@ -4,9 +4,23 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "air",
+            "label": "tidy",
             "type": "shell",
-            "command": "air -c air.toml -d"
-        }
+            "command": "go mod tidy"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "go build -o ./cmd/main.exe main.go"
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "dependsOn": [
+                "tidy",
+                "build",
+            ],
+            "command": "./cmd/main.exe"
+        },
     ]
 }
