@@ -7,9 +7,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/casbin/casbin/v2 v2.28.4
 	github.com/casbin/gorm-adapter/v3 v3.2.9
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9
-	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.6.0

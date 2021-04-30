@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"time"
+	"strconv"
 
-	go_jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/model"
@@ -42,20 +42,14 @@ func Login(ctx iris.Context) {
 // tokenNext 登录以后签发jwt
 func tokenNext(ctx iris.Context, user model.SysUser) {
 	claims := request.CustomClaims{
-		UUID: user.UUID,
-		ID:   user.ID,
-		// NickName:    user.NickName,
+		UUID:        user.UUID,
+		ID:          strconv.FormatUint(uint64(user.ID), 10),
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		BufferTime:  g.TENANCY_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
-		StandardClaims: go_jwt.StandardClaims{
-			NotBefore: time.Now().Unix() - 1000,                             // 签名生效时间
-			ExpiresAt: time.Now().Unix() + g.TENANCY_CONFIG.JWT.ExpiresTime, // 过期时间 7天  配置文件
-			Issuer:    "qmPlus",                                             // 签名的发行者
-		},
 	}
 
-	token, err := middleware.CreateToken(claims)
+	token, expiresAt, err := middleware.CreateToken(claims)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取token失败", zap.Any("err", err))
 		response.FailWithMessage("获取token失败", ctx)
@@ -65,7 +59,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt * 1000,
 		}, "登录成功", ctx)
 		return
 	}
@@ -78,7 +72,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt * 1000,
 		}, "登录成功", ctx)
 	} else if err != nil {
 		g.TENANCY_LOG.Error("设置登录状态失败", zap.Any("err", err))
@@ -97,7 +91,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			ExpiresAt: expiresAt * 1000,
 		}, "登录成功", ctx)
 	}
 }
@@ -182,7 +176,7 @@ func DeleteUser(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	jwtId := getUserID(ctx)
+	jwtId := ctx.GetID()
 	if jwtId == uint(reqId.Id) {
 		response.FailWithMessage("删除失败, 自杀失败", ctx)
 		return
@@ -211,35 +205,41 @@ func SetUserInfo(ctx iris.Context) {
 	}
 }
 
-// getUserID 从Context中获取从jwt解析出来的用户ID
-func getUserID(ctx iris.Context) uint {
-	if claims := ctx.Values().Get("claims"); claims == nil {
+// GetClaims returns the current authorized client claims.
+func GetClaims(ctx iris.Context) *request.CustomClaims {
+	claims := jwt.Get(ctx).(*request.CustomClaims)
+	if claims == nil {
 		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
-		return 0
+	}
+	return claims
+}
+
+// getUserID 从Context中获取从jwt解析出来的用户ID
+func getUserID(ctx iris.Context) string {
+	if claims := GetClaims(ctx); claims == nil {
+		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
+		return ""
 	} else {
-		waitUse := claims.(*request.CustomClaims)
-		return waitUse.ID
+		return claims.ID
 	}
 }
 
 // getUserUuid 从Context中获取从jwt解析出来的用户UUID
 func getUserUuid(ctx iris.Context) string {
-	if claims := ctx.Values().Get("claims"); claims == nil {
+	if claims := GetClaims(ctx); claims == nil {
 		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
 		return ""
 	} else {
-		waitUse := claims.(*request.CustomClaims)
-		return waitUse.UUID.String()
+		return claims.UUID.String()
 	}
 }
 
 // getUserAuthorityId 从Context中获取从jwt解析出来的用户角色id
 func getUserAuthorityId(ctx iris.Context) string {
-	if claims := ctx.Values().Get("claims"); claims == nil {
+	if claims := GetClaims(ctx); claims == nil {
 		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
 		return ""
 	} else {
-		waitUse := claims.(*request.CustomClaims)
-		return waitUse.AuthorityId
+		return claims.AuthorityId
 	}
 }

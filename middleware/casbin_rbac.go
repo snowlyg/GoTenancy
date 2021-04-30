@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kataras/iris/v12"
@@ -14,13 +15,7 @@ import (
 // 拦截器
 func CasbinHandler() iris.Handler {
 	return func(ctx iris.Context) {
-		var waitUse request.CustomClaims
-		err := jwt.GetVerifiedToken(ctx).Claims(waitUse)
-		if err != nil {
-			response.FailWithDetailed(iris.Map{}, "权限不足", ctx)
-			ctx.StatusCode(http.StatusForbidden)
-			return
-		}
+		waitUse := jwt.Get(ctx).(*request.CustomClaims)
 		// 获取请求的URI
 		obj := ctx.FullRequestURI()
 		// 获取请求方法
@@ -30,6 +25,7 @@ func CasbinHandler() iris.Handler {
 		e := service.Casbin()
 		// 判断策略中是否存在
 		success, _ := e.Enforce(sub, obj, act)
+		fmt.Printf("%s : %t", g.TENANCY_CONFIG.System.Env, success)
 		if g.TENANCY_CONFIG.System.Env == "dev" || success {
 			ctx.Next()
 		} else {

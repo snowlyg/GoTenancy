@@ -1,17 +1,34 @@
 package request
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"fmt"
+
+	"github.com/kataras/iris/v12/middleware/jwt"
 	uuid "github.com/satori/go.uuid"
 )
 
 // Custom claims structure
 type CustomClaims struct {
 	UUID        uuid.UUID
-	ID          uint
+	ID          string
 	Username    string
 	NickName    string
 	AuthorityId string
 	BufferTime  int64
-	jwt.StandardClaims
+}
+
+func (c *CustomClaims) Validate() error {
+	if c.ID == "" {
+		return fmt.Errorf("%w: %s", jwt.ErrMissingKey, "user_id")
+	}
+
+	return nil
+}
+
+func (c *CustomClaims) GetID() string {
+	return c.ID
+}
+
+func (c *CustomClaims) GetAuthorityId() string {
+	return c.ID
 }

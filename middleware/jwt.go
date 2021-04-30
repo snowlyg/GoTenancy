@@ -9,14 +9,17 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 )
 
+const issuer = "GOTENANCY"
+
 func JWTAuth() iris.Handler {
-	verifier := jwt.NewVerifier(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey)
+	verifier := jwt.NewVerifier(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, jwt.Expected{Issuer: issuer})
 	// Enable server-side token block feature (even before its expiration time):
 	verifier.WithDefaultBlocklist()
 	// Enable payload decryption with:
 	if g.TENANCY_CONFIG.JWT.EncKey != "" {
 		verifier.WithDecryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
 	}
+	verifier.Extractors = []jwt.TokenExtractor{jwt.FromHeader} // extract token only from Authorization: Bearer $token
 	return verifier.Verify(func() interface{} {
 		return new(request.CustomClaims)
 	})
@@ -30,13 +33,17 @@ func JWTAuth() iris.Handler {
 // )
 
 // 创建一个token
-func CreateToken(claims request.CustomClaims) (string, error) {
+func CreateToken(claims request.CustomClaims) (string, int64, error) {
 	signer := jwt.NewSigner(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, 10*time.Minute)
-	token, err := signer.Sign(claims)
+	token, err := signer.Sign(claims, jwt.Claims{
+		ID:     claims.UUID.String(),
+		Issuer: issuer,
+	})
 	if g.TENANCY_CONFIG.JWT.EncKey != "" {
 		signer.WithEncryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
 	}
-	return string(token), err
+
+	return string(token), signer.MaxAge.Milliseconds(), err
 }
 
 // // 解析 token

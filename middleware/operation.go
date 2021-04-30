@@ -8,10 +8,8 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
-	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
-	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/service"
 	"go.uber.org/zap"
 )
@@ -29,10 +27,14 @@ func OperationRecord() iris.Handler {
 				ctx.Recorder().SetBody(body)
 			}
 		}
-		var waitUse request.CustomClaims
-		err := jwt.GetVerifiedToken(ctx).Claims(waitUse)
+		user := ctx.User()
+		id, err := user.GetID()
 		if err != nil {
-			userId = int(waitUse.ID)
+			id, err := strconv.Atoi(id)
+			if err != nil {
+				userId = 0
+			}
+			userId = id
 		} else {
 			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
 			if err != nil {
