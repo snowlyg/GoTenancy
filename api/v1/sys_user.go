@@ -3,7 +3,6 @@ package v1
 import (
 	"strconv"
 
-	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
@@ -55,45 +54,12 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		response.FailWithMessage("获取token失败", ctx)
 		return
 	}
-	if !g.TENANCY_CONFIG.System.UseMultipoint {
-		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
-			Token:     token,
-			ExpiresAt: expiresAt * 1000,
-		}, "登录成功", ctx)
-		return
-	}
-	if err, jwtStr := service.GetRedisJWT(user.Username); err == redis.Nil {
-		if err := service.SetRedisJWT(token, user.Username); err != nil {
-			g.TENANCY_LOG.Error("设置登录状态失败", zap.Any("err", err))
-			response.FailWithMessage("设置登录状态失败", ctx)
-			return
-		}
-		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
-			Token:     token,
-			ExpiresAt: expiresAt * 1000,
-		}, "登录成功", ctx)
-	} else if err != nil {
-		g.TENANCY_LOG.Error("设置登录状态失败", zap.Any("err", err))
-		response.FailWithMessage("设置登录状态失败", ctx)
-	} else {
-		var blackJWT model.JwtBlacklist
-		blackJWT.Jwt = jwtStr
-		if err := service.JsonInBlacklist(blackJWT); err != nil {
-			response.FailWithMessage("jwt作废失败", ctx)
-			return
-		}
-		if err := service.SetRedisJWT(token, user.Username); err != nil {
-			response.FailWithMessage("设置登录状态失败", ctx)
-			return
-		}
-		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
-			Token:     token,
-			ExpiresAt: expiresAt * 1000,
-		}, "登录成功", ctx)
-	}
+	response.OkWithDetailed(response.LoginResponse{
+		User:      user,
+		Token:     token,
+		ExpiresAt: expiresAt * 1000,
+	}, "登录成功", ctx)
+	return
 }
 
 // Register 用户注册账号

@@ -37,7 +37,7 @@ system:
   env: dev
   addr: 8089
   db-type: mysql
-  use-multipoint: true
+  use-multipoint: false
 timer:
   start: false
   spec: '@daily'

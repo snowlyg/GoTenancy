@@ -123,7 +123,6 @@ func InitDB(conf request.InitDB) error {
 		model.SysApi{},
 		model.SysBaseMenu{},
 		model.SysBaseMenuParameter{},
-		model.JwtBlacklist{},
 		model.SysDictionary{},
 		model.SysDictionaryDetail{},
 		model.SysOperationRecord{},

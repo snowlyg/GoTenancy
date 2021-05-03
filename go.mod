@@ -12,6 +12,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gookit/color v1.4.2
+	github.com/iris-contrib/httpexpect/v2 v2.0.5
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d
 	github.com/iris-contrib/middleware/secure v0.0.0-20210110101738-6d0a4d799b5d
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
@@ -24,6 +25,7 @@ require (
 	github.com/shirou/gopsutil v3.21.3+incompatible
 	github.com/spf13/viper v1.7.1
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
+	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.uber.org/zap v1.16.0
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
