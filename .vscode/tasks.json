@@ -14,6 +14,11 @@
             "command": "go build -o ./cmd/main.exe main.go"
         },
         {
+            "label": "git push gitee",
+            "type": "shell",
+            "command": "git push gitee master"
+        },
+        {
             "label": "run",
             "type": "shell",
             "dependsOn": [
