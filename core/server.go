@@ -10,8 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func RunWindowsServer() {
-
+func RunServer() {
 	Router := initialize.Routers()
 	// Router.Static("/form-generator", "./resource/page")
 	address := fmt.Sprintf(":%d", g.TENANCY_CONFIG.System.Addr)
