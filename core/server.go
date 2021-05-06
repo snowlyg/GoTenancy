@@ -11,10 +11,7 @@ import (
 )
 
 func RunWindowsServer() {
-	if g.TENANCY_CONFIG.System.UseMultipoint {
-		// 初始化redis服务
-		initialize.Redis()
-	}
+
 	Router := initialize.Routers()
 	// Router.Static("/form-generator", "./resource/page")
 	address := fmt.Sprintf(":%d", g.TENANCY_CONFIG.System.Addr)

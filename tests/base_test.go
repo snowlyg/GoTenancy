@@ -21,6 +21,10 @@ func TestMain(m *testing.M) {
 		// 程序结束前关闭数据库链接
 		g.TENANCY_DB.DB()
 	}
+	if g.TENANCY_CONFIG.System.CacheType == "redis" {
+		// 初始化redis服务
+		initialize.Redis()
+	}
 
 	// call flag.Parse() here if TestMain uses flags
 	// 如果 TestMain 使用了 flags，这里应该加上 flag.Parse()

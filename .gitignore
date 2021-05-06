@@ -5,6 +5,8 @@ cmd/
 # files
 go.sum
 air.toml
+config.yaml
+tests/config.yaml
 
 # ext
 *.log

@@ -9,12 +9,15 @@ import (
 
 // Custom claims structure
 type CustomClaims struct {
-	UUID        uuid.UUID
-	ID          string
-	Username    string
-	NickName    string
-	AuthorityId string
-	BufferTime  int64
+	UUID         uuid.UUID
+	ID           string
+	Username     string
+	Nickname     string
+	AuthorityId  string
+	LoginType    int
+	AuthType     int
+	CreationDate int64
+	ExpiresIn    int
 }
 
 func (c *CustomClaims) Validate() error {

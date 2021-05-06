@@ -14,6 +14,8 @@ type casbin struct{}
 
 var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: "888", V1: "/v1/user/register", V2: "POST"},
+	{Ptype: "p", V0: "888", V1: "/v1/user/logout", V2: "GET"},
+	{Ptype: "p", V0: "888", V1: "/v1/user/clean", V2: "GET"},
 	{Ptype: "p", V0: "888", V1: "/v1/api/createApi", V2: "POST"},
 	{Ptype: "p", V0: "888", V1: "/v1/api/getApiList", V2: "POST"},
 	{Ptype: "p", V0: "888", V1: "/v1/api/getApiById", V2: "POST"},

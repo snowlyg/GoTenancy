@@ -45,7 +45,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		ID:          strconv.FormatUint(uint64(user.ID), 10),
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
-		BufferTime:  g.TENANCY_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
+		// BufferTime:  g.TENANCY_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
 	}
 
 	token, expiresAt, err := middleware.CreateToken(claims)
@@ -59,7 +59,38 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		Token:     token,
 		ExpiresAt: expiresAt * 1000,
 	}, "登录成功", ctx)
-	return
+}
+
+// Logout 退出登录
+func Logout(ctx iris.Context) {
+	token := jwt.GetVerifiedToken(ctx)
+	if token == nil {
+		response.FailWithMessage("退出登录失败", ctx)
+		return
+	}
+	err := middleware.DelToken(string(token.Token))
+	if err != nil {
+		g.TENANCY_LOG.Error("退出登录失败", zap.Any("err", err))
+		response.FailWithMessage("退出登录失败", ctx)
+		return
+	}
+	response.OkWithMessage("退出登录", ctx)
+}
+
+// Clean 清空 token
+func Clean(ctx iris.Context) {
+	waitUse := jwt.Get(ctx).(*request.CustomClaims)
+	if waitUse == nil {
+		response.FailWithMessage("清空TOKEN失败", ctx)
+		return
+	}
+	err := middleware.CleanToken(waitUse.GetID())
+	if err != nil {
+		g.TENANCY_LOG.Error("清空TOKEN失败", zap.Any("err", err))
+		response.FailWithMessage("清空TOKEN失败", ctx)
+		return
+	}
+	response.OkWithMessage("清空TOKEN", ctx)
 }
 
 // Register 用户注册账号

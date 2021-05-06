@@ -9,7 +9,7 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.2.9
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-ole/go-ole v1.2.5 // indirect
-	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/go-redis/redis/v8 v8.5.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gookit/color v1.4.2
 	github.com/iris-contrib/httpexpect/v2 v2.0.5
@@ -20,6 +20,8 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
 	github.com/mojocn/base64Captcha v1.3.4
+	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil v3.21.3+incompatible

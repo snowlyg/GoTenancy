@@ -1,30 +1,50 @@
 package middleware
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
-	"github.com/kataras/iris/v12/middleware/jwt/blocklist/redis"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/service/sys_auth"
+	"go.uber.org/zap"
 )
 
 const issuer = "GOTENANCY"
 
+var (
+	TokenExpired     = errors.New("Token is expired")
+	TokenNotValidYet = errors.New("Token not active yet")
+	TokenMalformed   = errors.New("That's not even a token")
+	TokenInvalid     = errors.New("Couldn't handle this token:")
+)
+
+type tokenValidator struct {
+}
+
+func (v tokenValidator) ValidateToken(token []byte, claims jwt.Claims, err error) error {
+	if err != nil {
+		return err
+	}
+	g.TENANCY_LOG.Info("jwt token", zap.Any("", string(token)))
+	authDriver := sys_auth.NewAuthDriver()
+	// defer authDriver.Close()
+	rcc, err := authDriver.GetCustomClaims(string(token))
+	if err != nil {
+		authDriver.DelUserTokenCache(string(token))
+		return err
+	}
+	if rcc == nil {
+		return TokenInvalid
+	}
+	return nil
+}
+
 func JWTAuth() iris.Handler {
 	verifier := jwt.NewVerifier(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, jwt.Expected{Issuer: issuer})
-	// Enable server-side token block feature (even before its expiration time):
-	if g.TENANCY_REDIS == nil {
-		verifier.WithDefaultBlocklist()
-	} else {
-		blocklist := redis.NewBlocklist()
-		blocklist.Prefix = "gotenancy-"
-		blocklist.ClientOptions.DB = g.TENANCY_CONFIG.Redis.DB
-		blocklist.ClientOptions.Addr = g.TENANCY_CONFIG.Redis.Addr
-		blocklist.ClientOptions.Password = g.TENANCY_CONFIG.Redis.Password
-		verifier.Blocklist = blocklist
-	}
 	// Enable payload decryption with:
 	if g.TENANCY_CONFIG.JWT.EncKey != "" {
 		verifier.WithDecryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
@@ -32,77 +52,62 @@ func JWTAuth() iris.Handler {
 	verifier.Extractors = []jwt.TokenExtractor{jwt.FromHeader} // extract token only from Authorization: Bearer $token
 	return verifier.Verify(func() interface{} {
 		return new(request.CustomClaims)
-	})
+	}, tokenValidator{})
 }
 
-// var (
-// 	TokenExpired     = errors.New("Token is expired")
-// 	TokenNotValidYet = errors.New("Token not active yet")
-// 	TokenMalformed   = errors.New("That's not even a token")
-// 	TokenInvalid     = errors.New("Couldn't handle this token:")
-// )
-
-// 创建一个token
+// CreateToken 创建token
 func CreateToken(claims request.CustomClaims) (string, int64, error) {
+	authDriver := sys_auth.NewAuthDriver()
+	// defer authDriver.Close()
+
+	if authDriver.IsUserTokenOver(claims.ID) {
+		return "", 0, errors.New("以达到同时登录设备上限")
+	}
+
 	signer := jwt.NewSigner(jwt.HS256, g.TENANCY_CONFIG.JWT.SigningKey, 10*time.Minute)
 	token, err := signer.Sign(claims, jwt.Claims{
 		ID:     claims.UUID.String(),
 		Issuer: issuer,
 	})
+	if err != nil {
+		return "", 0, err
+	}
+
 	if g.TENANCY_CONFIG.JWT.EncKey != "" {
 		signer.WithEncryption([]byte(g.TENANCY_CONFIG.JWT.EncKey), nil)
+	}
+
+	err = authDriver.ToCache(string(token), &claims)
+	if err != nil {
+		return "", 0, err
+	}
+	if err = authDriver.SyncUserTokenCache(string(token)); err != nil {
+		return "", 0, err
 	}
 
 	return string(token), signer.MaxAge.Milliseconds(), err
 }
 
-// // 解析 token
-// func (j *JWT) ParseToken(tokenString string) (*request.CustomClaims, error) {
-// 	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
-// 		return j.SigningKey, nil
-// 	})
-// 	if err != nil {
-// 		if ve, ok := err.(*jwt.ValidationError); ok {
-// 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-// 				return nil, TokenMalformed
-// 			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
-// 				// Token is expired
-// 				return nil, TokenExpired
-// 			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-// 				return nil, TokenNotValidYet
-// 			} else {
-// 				return nil, TokenInvalid
-// 			}
-// 		}
-// 	}
-// 	if token != nil {
-// 		if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
-// 			return claims, nil
-// 		}
-// 		return nil, TokenInvalid
+// DelToken 删除token
+func DelToken(token string) error {
+	authDriver := sys_auth.NewAuthDriver()
+	// defer authDriver.Close()
+	err := authDriver.DelUserTokenCache(token)
+	if err != nil {
+		g.TENANCY_LOG.Error("del token", zap.Any("err", err))
+		return fmt.Errorf("del token %w", err)
+	}
+	return nil
+}
 
-// 	} else {
-// 		return nil, TokenInvalid
-
-// 	}
-
-// }
-
-// // RefreshToken 更新token
-// func (j *JWT) RefreshToken(tokenString string) (string, error) {
-// 	jwt.TimeFunc = func() time.Time {
-// 		return time.Unix(0, 0)
-// 	}
-// 	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-// 		return j.SigningKey, nil
-// 	})
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
-// 		jwt.TimeFunc = time.Now
-// 		claims.StandardClaims.ExpiresAt = time.Now().Unix() + 60*60*24*7
-// 		return j.CreateToken(*claims)
-// 	}
-// 	return "", TokenInvalid
-// }
+// CleanToken 清空 token
+func CleanToken(userId string) error {
+	authDriver := sys_auth.NewAuthDriver()
+	// defer authDriver.Close()
+	err := authDriver.CleanUserTokenCache(userId)
+	if err != nil {
+		g.TENANCY_LOG.Error("clean token", zap.Any("err", err))
+		return fmt.Errorf("clean token %w", err)
+	}
+	return nil
+}

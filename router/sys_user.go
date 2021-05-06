@@ -9,6 +9,8 @@ import (
 func InitUserRouter(Router iris.Party) {
 	UserRouter := Router.Party("/user", middleware.OperationRecord())
 	{
+		UserRouter.Get("/logout", v1.Logout)
+		UserRouter.Get("/clean", v1.Clean)
 		UserRouter.Post("/register", v1.Register)
 		UserRouter.Post("/changePassword", v1.ChangePassword)     // 修改密码
 		UserRouter.Post("/getUserList", v1.GetUserList)           // 分页获取用户列表

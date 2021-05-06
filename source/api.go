@@ -38,6 +38,8 @@ var apis = []model.SysApi{
 	{g.TENANCY_MODEL{ID: 21, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/changePassword", "修改密码", "user", "POST"},
 	{g.TENANCY_MODEL{ID: 23, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/getUserList", "获取用户列表", "user", "POST"},
 	{g.TENANCY_MODEL{ID: 24, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/setUserAuthority", "修改用户角色", "user", "POST"},
+	{g.TENANCY_MODEL{ID: 25, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/logout", "退出", "user", "GET"},
+	{g.TENANCY_MODEL{ID: 26, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/clean", "清空", "user", "GET"},
 	{g.TENANCY_MODEL{ID: 27, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/casbin/updateCasbin", "更改角色api权限", "casbin", "POST"},
 	{g.TENANCY_MODEL{ID: 28, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/casbin/getPolicyPathByAuthorityId", "获取权限列表", "casbin", "POST"},
 	{g.TENANCY_MODEL{ID: 31, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/authority/setDataAuthority", "设置角色资源权限", "authority", "POST"},

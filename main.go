@@ -4,6 +4,7 @@ import (
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -16,6 +17,11 @@ func main() {
 		// 程序结束前关闭数据库链接
 		db, _ := g.TENANCY_DB.DB()
 		defer db.Close()
+	}
+	g.TENANCY_LOG.Info("cache type is ", zap.String("", g.TENANCY_CONFIG.System.CacheType))
+	if g.TENANCY_CONFIG.System.CacheType == "redis" {
+		// 初始化redis服务
+		initialize.Redis()
 	}
 	core.RunWindowsServer()
 }
