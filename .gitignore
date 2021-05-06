@@ -1,12 +1,14 @@
 # dirs
 log/
 cmd/
+tmp/
 
 # files
 go.sum
 air.toml
 config.yaml
 tests/config.yaml
+latest_log
 
 # ext
 *.log
