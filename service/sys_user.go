@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 
-	uuid "github.com/satori/go.uuid"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -19,7 +18,6 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	}
 	// 否则 附加uuid 密码md5简单加密 注册
 	u.Password = utils.MD5V([]byte(u.Password))
-	u.UUID = uuid.NewV4()
 	err = g.TENANCY_DB.Create(&u).Error
 	return err, u
 }

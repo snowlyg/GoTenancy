@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/model"
@@ -52,30 +51,28 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		ExpiresIn:    multi.RedisSessionTimeoutWeb.Milliseconds(),
 	}
 
-	token, expiresAt, err := middleware.CreateToken(claims)
+	token, _, err := middleware.CreateToken(claims)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取token失败", zap.Any("err", err))
 		response.FailWithMessage("获取token失败", ctx)
 		return
 	}
 	response.OkWithDetailed(response.LoginResponse{
-		User:      user,
-		Token:     token,
-		ExpiresAt: expiresAt * 1000,
+		Token: token,
 	}, "登录成功", ctx)
 }
 
 // Logout 退出登录
 func Logout(ctx iris.Context) {
-	token := jwt.GetVerifiedToken(ctx)
+	token := multi.GetVerifiedToken(ctx)
 	if token == nil {
-		response.FailWithMessage("退出登录失败", ctx)
+		response.FailWithMessage("授权凭证为空", ctx)
 		return
 	}
-	err := middleware.DelToken(string(token.Token))
+	err := middleware.DelToken(string(token))
 	if err != nil {
-		g.TENANCY_LOG.Error("退出登录失败", zap.Any("err", err))
-		response.FailWithMessage("退出登录失败", ctx)
+		g.TENANCY_LOG.Error("del token", zap.Any("err", err))
+		response.FailWithMessage("退出失败", ctx)
 		return
 	}
 	response.OkWithMessage("退出登录", ctx)
@@ -94,7 +91,7 @@ func Clean(ctx iris.Context) {
 		response.FailWithMessage("清空TOKEN失败", ctx)
 		return
 	}
-	response.OkWithMessage("清空TOKEN", ctx)
+	response.OkWithMessage("TOKEN清空", ctx)
 }
 
 // Register 用户注册账号
@@ -210,25 +207,25 @@ func SetUserInfo(ctx iris.Context) {
 func GetClaims(ctx iris.Context) *multi.CustomClaims {
 	waitUse := multi.Get(ctx).(*multi.CustomClaims)
 	if waitUse == nil {
-		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
+		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
 	}
 	return waitUse
 }
 
-// getUserID 从Context中获取从jwt解析出来的用户ID
+// getUserID 从Context中获取用户ID
 func getUserID(ctx iris.Context) string {
 	if claims := GetClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
+		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
 		return ""
 	} else {
 		return claims.ID
 	}
 }
 
-// getUserAuthorityId 从Context中获取从jwt解析出来的用户角色id
+// getUserAuthorityId 从Context中获取用户角色id
 func getUserAuthorityId(ctx iris.Context) string {
 	if claims := GetClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
+		g.TENANCY_LOG.Error("从Context中获取用户UUID失败, 请检查路由是否使用multi中间件")
 		return ""
 	} else {
 		return claims.AuthorityId

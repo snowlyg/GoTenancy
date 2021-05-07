@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/iris-contrib/httpexpect/v2"
+	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
@@ -48,4 +49,31 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 			httpexpect.NewDebugPrinter(t, true),
 		},
 	})
+
+}
+
+func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
+	e := baseTester(t)
+	obj := e.POST("/public/login").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456"}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("登录成功")
+	data := obj.Value("data").Object()
+	data.Value("AccessToken").NotNull()
+
+	token := data.Value("AccessToken").String().Raw()
+	return e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+token)
+	})
+}
+
+func baseLogOut(auth *httpexpect.Expect) {
+	obj := auth.GET("/v1/user/logout").
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("退出登录")
 }

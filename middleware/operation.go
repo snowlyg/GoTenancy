@@ -24,8 +24,6 @@ func OperationRecord() iris.Handler {
 			body, err = ctx.GetBody()
 			if err != nil {
 				g.TENANCY_LOG.Error("read body from request error:", zap.Any("err", err))
-			} else {
-				ctx.Recorder().SetBody(body)
 			}
 		}
 		waitUse := multi.Get(ctx).(*multi.CustomClaims)

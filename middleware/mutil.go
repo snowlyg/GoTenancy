@@ -10,15 +10,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const issuer = "GOTENANCY"
-
-var (
-	TokenExpired     = errors.New("Token is expired")
-	TokenNotValidYet = errors.New("Token not active yet")
-	TokenMalformed   = errors.New("That's not even a token")
-	TokenInvalid     = errors.New("Couldn't handle this token:")
-)
-
 func JWTAuth() iris.Handler {
 	verifier := multi.NewVerifier()
 	verifier.Extractors = []multi.TokenExtractor{multi.FromHeader} // extract token only from Authorization: Bearer $token
@@ -28,7 +19,7 @@ func JWTAuth() iris.Handler {
 // CreateToken 创建token
 func CreateToken(claims *multi.CustomClaims) (string, int64, error) {
 	if g.TENANCY_AUTH.IsUserTokenOver(claims.ID) {
-		return "", 0, errors.New("以达到同时登录设备上限")
+		return "", 0, errors.New("已达到同时登录设备上限")
 	}
 	token, err := multi.GetToken()
 	if err != nil {

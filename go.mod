@@ -21,9 +21,8 @@ require (
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
 	github.com/mojocn/base64Captcha v1.3.4
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil v3.21.3+incompatible
-	github.com/snowlyg/multi v0.0.0
+	github.com/snowlyg/multi v0.0.0-20210507091306-d822ab086640
 	github.com/spf13/viper v1.7.1
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
@@ -31,5 +30,3 @@ require (
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
 )
-
-replace github.com/snowlyg/multi v0.0.0 => D:\go\src\github.com\snowlyg\multi

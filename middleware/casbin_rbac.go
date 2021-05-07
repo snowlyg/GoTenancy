@@ -20,10 +20,10 @@ func CasbinHandler() iris.Handler {
 			ctx.StatusCode(http.StatusForbidden)
 			return
 		}
-		g.TENANCY_LOG.Info("get waitUse ", zap.Any("AuthorityId", waitUse.AuthorityId))
 		obj := ctx.Path()          // 获取请求的URI
 		act := ctx.Method()        // 获取请求方法
 		sub := waitUse.AuthorityId // 获取用户的角色
+
 		// 判断策略中是否存在
 		casbin, err := service.Casbin()
 		if err != nil {

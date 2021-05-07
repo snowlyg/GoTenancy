@@ -17,14 +17,6 @@
             "label": "git push gitee",
             "type": "shell",
             "command": "git push gitee master"
-        },
-        {
-            "label": "air",
-            "type": "shell",
-            "dependsOn": [
-                "tidy",
-            ],
-            "command": "air -c air.toml"
-        },
+        }
     ]
 }

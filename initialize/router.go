@@ -1,7 +1,9 @@
 package initialize
 
 import (
+	stdContext "context"
 	"os"
+	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/accesslog"
@@ -15,8 +17,18 @@ import (
 
 // 初始化总路由
 
+var IdleConnsClosed = make(chan struct{})
+
 func Routers() *iris.Application {
 	Router := iris.New()
+	iris.RegisterOnInterrupt(func() {
+		timeout := 10 * time.Second
+		ctx, cancel := stdContext.WithTimeout(stdContext.Background(), timeout)
+		defer cancel()
+		// close all hosts
+		Router.Shutdown(ctx)
+		close(IdleConnsClosed)
+	})
 	// Set default log level.
 	Router.Logger().SetLevel("error")
 	Router.Logger().Debugf(`Log level set to "debug"`)

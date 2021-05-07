@@ -2,11 +2,11 @@ package request
 
 // User register structure
 type Register struct {
-	Username    string `json:"userName"`
-	Password    string `json:"passWord"`
-	NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
-	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
-	AuthorityId string `json:"authorityId" gorm:"default:888"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	// NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
+	// HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
+	AuthorityId string `json:"authority_id" gorm:"default:888"`
 }
 
 // User login structure
@@ -21,11 +21,11 @@ type Login struct {
 type ChangePasswordStruct struct {
 	Username    string `json:"username"`
 	Password    string `json:"password"`
-	NewPassword string `json:"newPassword"`
+	NewPassword string `json:"new_password"`
 }
 
 // Modify  user's auth structure
 type SetUserAuth struct {
 	Id          float64 `json:"id" form:"id"`
-	AuthorityId string  `json:"authorityId"`
+	AuthorityId string  `json:"authority_id"`
 }

@@ -5,7 +5,7 @@ tmp/
 
 # files
 go.sum
-air.toml
+air.*
 config.yaml
 tests/config.yaml
 latest_log

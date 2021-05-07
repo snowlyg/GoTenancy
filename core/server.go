@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
 
@@ -18,8 +19,6 @@ func RunServer() {
 	time.Sleep(10 * time.Microsecond)
 	g.TENANCY_LOG.Info("server run success on ", zap.String("address", address))
 	fmt.Printf("默认监听地址:http://127.0.0.1%s\n", address)
-	err := Router.Listen(address)
-	if err != nil {
-		g.TENANCY_LOG.Error(err.Error())
-	}
+	Router.Listen(address, iris.WithoutInterruptHandler, iris.WithoutServerError(iris.ErrServerClosed))
+	<-initialize.IdleConnsClosed
 }
