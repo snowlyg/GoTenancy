@@ -2,6 +2,7 @@ package v1
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
@@ -12,6 +13,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -40,12 +42,14 @@ func Login(ctx iris.Context) {
 
 // tokenNext 登录以后签发jwt
 func tokenNext(ctx iris.Context, user model.SysUser) {
-	claims := request.CustomClaims{
-		UUID:        user.UUID,
-		ID:          strconv.FormatUint(uint64(user.ID), 10),
-		Username:    user.Username,
-		AuthorityId: user.AuthorityId,
-		// BufferTime:  g.TENANCY_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
+	claims := &multi.CustomClaims{
+		ID:           strconv.FormatUint(uint64(user.ID), 10),
+		Username:     user.Username,
+		AuthorityId:  user.AuthorityId,
+		LoginType:    multi.LoginTypeWeb,
+		AuthType:     multi.AuthPwd,
+		CreationDate: time.Now().Local().Unix(),
+		ExpiresIn:    multi.RedisSessionTimeoutWeb.Milliseconds(),
 	}
 
 	token, expiresAt, err := middleware.CreateToken(claims)
@@ -79,12 +83,12 @@ func Logout(ctx iris.Context) {
 
 // Clean 清空 token
 func Clean(ctx iris.Context) {
-	waitUse := jwt.Get(ctx).(*request.CustomClaims)
+	waitUse := multi.Get(ctx).(*multi.CustomClaims)
 	if waitUse == nil {
 		response.FailWithMessage("清空TOKEN失败", ctx)
 		return
 	}
-	err := middleware.CleanToken(waitUse.GetID())
+	err := middleware.CleanToken(waitUse.ID)
 	if err != nil {
 		g.TENANCY_LOG.Error("清空TOKEN失败", zap.Any("err", err))
 		response.FailWithMessage("清空TOKEN失败", ctx)
@@ -157,7 +161,7 @@ func SetUserAuthority(ctx iris.Context) {
 		response.FailWithMessage(UserVerifyErr.Error(), ctx)
 		return
 	}
-	if err := service.SetUserAuthority(sua.UUID, sua.AuthorityId); err != nil {
+	if err := service.SetUserAuthority(sua.Id, sua.AuthorityId); err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
 		response.FailWithMessage("修改失败", ctx)
 	} else {
@@ -203,12 +207,12 @@ func SetUserInfo(ctx iris.Context) {
 }
 
 // GetClaims returns the current authorized client claims.
-func GetClaims(ctx iris.Context) *request.CustomClaims {
-	claims := jwt.Get(ctx).(*request.CustomClaims)
-	if claims == nil {
+func GetClaims(ctx iris.Context) *multi.CustomClaims {
+	waitUse := multi.Get(ctx).(*multi.CustomClaims)
+	if waitUse == nil {
 		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
 	}
-	return claims
+	return waitUse
 }
 
 // getUserID 从Context中获取从jwt解析出来的用户ID
@@ -218,16 +222,6 @@ func getUserID(ctx iris.Context) string {
 		return ""
 	} else {
 		return claims.ID
-	}
-}
-
-// getUserUuid 从Context中获取从jwt解析出来的用户UUID
-func getUserUuid(ctx iris.Context) string {
-	if claims := GetClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
-		return ""
-	} else {
-		return claims.UUID.String()
 	}
 }
 

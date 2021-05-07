@@ -12,11 +12,6 @@ email:
   is-ssl: true
   secret: xxx
   nickname: test
-jwt:
-  signing-key: rku1S6ybEHX5WnvfDHdE2TtpX2Mu2NjT
-  encing-key: ""
-  expires-time: 604800
-  buffer-time: 86400
 local:
   path: uploads/file
 mysql:

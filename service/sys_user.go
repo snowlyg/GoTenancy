@@ -52,8 +52,8 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 }
 
 // SetUserAuthority  设置一个用户的权限
-func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
-	err = g.TENANCY_DB.Where("uuid = ?", uuid).First(&model.SysUser{}).Update("authority_id", authorityId).Error
+func SetUserAuthority(id float64, authorityId string) (err error) {
+	err = g.TENANCY_DB.Where("id = ?", id).First(&model.SysUser{}).Update("authority_id", authorityId).Error
 	return err
 }
 

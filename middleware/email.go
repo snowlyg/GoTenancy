@@ -5,12 +5,11 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/middleware/jwt"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
-	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -18,17 +17,20 @@ import (
 func ErrorToEmail() iris.Handler {
 	return func(ctx iris.Context) {
 		var username string
-		var waitUse request.CustomClaims
-		err := jwt.GetVerifiedToken(ctx).Claims(waitUse)
-		if err != nil {
+		waitUse := multi.Get(ctx).(*multi.CustomClaims)
+		if waitUse != nil {
 			username = waitUse.Username
 		} else {
-			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
-			err, user := service.FindUserById(id)
-			if err != nil {
+			if id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID")); err != nil {
 				username = "Unknown"
+			} else {
+				err, user := service.FindUserById(id)
+				if err != nil {
+					username = "Unknown"
+				}
+				username = user.Username
 			}
-			username = user.Username
+
 		}
 		body, _ := ctx.GetBody()
 		record := model.SysOperationRecord{

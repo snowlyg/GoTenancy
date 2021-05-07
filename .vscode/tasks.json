@@ -19,13 +19,12 @@
             "command": "git push gitee master"
         },
         {
-            "label": "run",
+            "label": "air",
             "type": "shell",
             "dependsOn": [
                 "tidy",
-                "build",
             ],
-            "command": "./cmd/main.exe"
+            "command": "air -c air.toml"
         },
     ]
 }

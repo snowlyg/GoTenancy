@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 	}
 	if g.TENANCY_CONFIG.System.CacheType == "redis" {
 		// 初始化redis服务
-		initialize.Redis()
+		initialize.Auth()
 	}
 
 	// call flag.Parse() here if TestMain uses flags
@@ -32,6 +32,7 @@ func TestMain(m *testing.M) {
 
 	db, _ := g.TENANCY_DB.DB()
 	db.Close()
+	g.TENANCY_AUTH.Close()
 }
 
 func baseTester(t *testing.T) *httpexpect.Expect {
