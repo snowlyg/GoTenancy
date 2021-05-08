@@ -14,7 +14,7 @@ import (
 // 拦截器
 func CasbinHandler() iris.Handler {
 	return func(ctx iris.Context) {
-		waitUse := multi.Get(ctx).(*multi.CustomClaims)
+		waitUse := multi.Get(ctx)
 		if waitUse == nil {
 			response.FailWithDetailed(iris.Map{}, "权限服务验证失败", ctx)
 			ctx.StatusCode(http.StatusForbidden)
@@ -23,6 +23,8 @@ func CasbinHandler() iris.Handler {
 		obj := ctx.Path()          // 获取请求的URI
 		act := ctx.Method()        // 获取请求方法
 		sub := waitUse.AuthorityId // 获取用户的角色
+
+		g.TENANCY_LOG.Debug("route path", zap.String("string", obj))
 
 		// 判断策略中是否存在
 		casbin, err := service.Casbin()

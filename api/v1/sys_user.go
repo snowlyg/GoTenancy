@@ -42,13 +42,14 @@ func Login(ctx iris.Context) {
 // tokenNext 登录以后签发jwt
 func tokenNext(ctx iris.Context, user model.SysUser) {
 	claims := &multi.CustomClaims{
-		ID:           strconv.FormatUint(uint64(user.ID), 10),
-		Username:     user.Username,
-		AuthorityId:  user.AuthorityId,
-		LoginType:    multi.LoginTypeWeb,
-		AuthType:     multi.AuthPwd,
-		CreationDate: time.Now().Local().Unix(),
-		ExpiresIn:    multi.RedisSessionTimeoutWeb.Milliseconds(),
+		ID:            strconv.FormatUint(uint64(user.ID), 10),
+		Username:      user.Username,
+		AuthorityId:   user.AuthorityId,
+		AuthorityType: user.Authority.AuthorityType,
+		LoginType:     multi.LoginTypeWeb,
+		AuthType:      multi.AuthPwd,
+		CreationDate:  time.Now().Local().Unix(),
+		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
 	}
 
 	token, _, err := middleware.CreateToken(claims)
@@ -80,7 +81,7 @@ func Logout(ctx iris.Context) {
 
 // Clean 清空 token
 func Clean(ctx iris.Context) {
-	waitUse := multi.Get(ctx).(*multi.CustomClaims)
+	waitUse := multi.Get(ctx)
 	if waitUse == nil {
 		response.FailWithMessage("清空TOKEN失败", ctx)
 		return
@@ -189,23 +190,61 @@ func DeleteUser(ctx iris.Context) {
 
 // SetUserInfo 设置用户信息
 func SetUserInfo(ctx iris.Context) {
-	var user model.SysUser
-	_ = ctx.ReadJSON(&user)
-	if err := utils.Verify(user, utils.IdVerify); err != nil {
+	userId := ctx.Params().GetIntDefault("user_id", 0)
+	err, user := service.FindUserById(userId)
+	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, ReqUser := service.SetUserInfo(user); err != nil {
-		g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
-		response.FailWithMessage("设置失败", ctx)
+
+	if user.IsAdmin() {
+		var admin model.SysAdminInfo
+		_ = ctx.ReadJSON(&admin)
+		if err := utils.Verify(admin, utils.IdVerify); err != nil {
+			response.FailWithMessage(err.Error(), ctx)
+			return
+		}
+		if err, ReqUser := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
+			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+			response.FailWithMessage("设置失败", ctx)
+		} else {
+			response.OkWithDetailed(iris.Map{"adminInfo": ReqUser}, "设置成功", ctx)
+		}
+	} else if user.IsTenancy() {
+		var tenancy model.SysTenancyInfo
+		_ = ctx.ReadJSON(&tenancy)
+		if err := utils.Verify(tenancy, utils.IdVerify); err != nil {
+			response.FailWithMessage(err.Error(), ctx)
+			return
+		}
+		if err, ReqUser := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
+			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+			response.FailWithMessage("设置失败", ctx)
+		} else {
+			response.OkWithDetailed(iris.Map{"tenancyInfo": ReqUser}, "设置成功", ctx)
+		}
+	} else if user.IsGeneral() {
+		var general model.SysGeneralInfo
+		_ = ctx.ReadJSON(&general)
+		if err := utils.Verify(general, utils.IdVerify); err != nil {
+			response.FailWithMessage(err.Error(), ctx)
+			return
+		}
+		if err, ReqUser := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
+			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+			response.FailWithMessage("设置失败", ctx)
+		} else {
+			response.OkWithDetailed(iris.Map{"generalInfo": ReqUser}, "设置成功", ctx)
+		}
 	} else {
-		response.OkWithDetailed(iris.Map{"userInfo": ReqUser}, "设置成功", ctx)
+		g.TENANCY_LOG.Error("未知角色", zap.Any("err", user.AuthorityType()))
+		response.FailWithMessage("未知角色", ctx)
 	}
 }
 
 // GetClaims returns the current authorized client claims.
 func GetClaims(ctx iris.Context) *multi.CustomClaims {
-	waitUse := multi.Get(ctx).(*multi.CustomClaims)
+	waitUse := multi.Get(ctx)
 	if waitUse == nil {
 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
 	}

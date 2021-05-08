@@ -22,10 +22,8 @@ func TestMain(m *testing.M) {
 		// 程序结束前关闭数据库链接
 		g.TENANCY_DB.DB()
 	}
-	if g.TENANCY_CONFIG.System.CacheType == "redis" {
-		// 初始化redis服务
-		initialize.Auth()
-	}
+	// 初始化认证服务
+	initialize.Auth()
 
 	// call flag.Parse() here if TestMain uses flags
 	// 如果 TestMain 使用了 flags，这里应该加上 flag.Parse()
@@ -49,7 +47,6 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 			httpexpect.NewDebugPrinter(t, true),
 		},
 	})
-
 }
 
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {

@@ -17,7 +17,7 @@ import (
 func ErrorToEmail() iris.Handler {
 	return func(ctx iris.Context) {
 		var username string
-		waitUse := multi.Get(ctx).(*multi.CustomClaims)
+		waitUse := multi.Get(ctx)
 		if waitUse != nil {
 			username = waitUse.Username
 		} else {

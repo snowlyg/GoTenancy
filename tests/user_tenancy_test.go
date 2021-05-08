@@ -1,13 +1,15 @@
 package tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/kataras/iris/v12/httptest"
+	"github.com/snowlyg/go-tenancy/source"
 	"github.com/snowlyg/multi"
 )
 
-func TestUserList(t *testing.T) {
+func TestTenancyUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/user/getUserList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
@@ -30,10 +32,10 @@ func TestUserList(t *testing.T) {
 	baseLogOut(auth)
 }
 
-func TestUserRegister(t *testing.T) {
+func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": multi.AdminAuthority}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -43,7 +45,7 @@ func TestUserRegister(t *testing.T) {
 	// user.Keys().ContainsOnly("ID")
 	user.Value("ID").Number().Ge(0)
 	user.Value("userName").String().Equal("chindeo")
-	user.Value("authorityId").String().Equal(multi.AdminAuthority)
+	user.Value("authorityId").String().Equal(source.TenancyAuthorityId)
 	userId := user.Value("ID").Number().Raw()
 
 	// changePassword error
@@ -64,15 +66,15 @@ func TestUserRegister(t *testing.T) {
 
 	// setUserAuthority
 	obj = auth.POST("/v1/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.AdminAuthority}).
+		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("修改成功")
 
-	// setUserInfo
-	obj = auth.PUT("/v1/user/setUserInfo").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.AdminAuthority}).
+	// setTenancyInfo
+	obj = auth.PUT(fmt.Sprintf("/v1/user/setTenancyInfo/%f", userId)).
+		WithJSON(map[string]interface{}{"id": 1, "email": "tenancy@master.com", "phone": "13800138001"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -89,10 +91,10 @@ func TestUserRegister(t *testing.T) {
 	baseLogOut(auth)
 }
 
-func TestUserRegisterError(t *testing.T) {
+func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authority_id": multi.AdminAuthority}).
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)

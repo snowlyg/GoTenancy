@@ -11,7 +11,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "go build -o ./cmd/main.exe main.go"
+            "command": "go build -o ./tmp/main.exe main.go"
         },
         {
             "label": "git push gitee",

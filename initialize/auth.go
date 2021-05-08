@@ -3,6 +3,7 @@ package initialize
 import (
 	"context"
 	"net"
+	"os"
 	"strings"
 	"time"
 
@@ -13,7 +14,6 @@ import (
 )
 
 func Auth() {
-
 	redisCfg := g.TENANCY_CONFIG.Redis
 	err := multi.InitDriver(&multi.Config{
 		DrvierType: g.TENANCY_CONFIG.System.CacheType,
@@ -35,6 +35,11 @@ func Auth() {
 		}})
 	if err != nil {
 		g.TENANCY_LOG.Error("new auth diver err:", zap.Any("err", err))
+	}
+
+	if multi.AuthDriver == nil {
+		g.TENANCY_LOG.Error("new auth diver failed")
+		os.Exit(0)
 	}
 	g.TENANCY_AUTH = multi.AuthDriver
 }

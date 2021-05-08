@@ -19,10 +19,8 @@ func main() {
 		defer db.Close()
 	}
 	g.TENANCY_LOG.Info("cache type is ", zap.String("", g.TENANCY_CONFIG.System.CacheType))
-	if g.TENANCY_CONFIG.System.CacheType == "redis" {
-		// 初始化redis服务
-		initialize.Auth()
-		defer g.TENANCY_AUTH.Close()
-	}
+	// 初始化认证服务
+	initialize.Auth()
+	defer g.TENANCY_AUTH.Close()
 	core.RunServer()
 }

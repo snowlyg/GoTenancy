@@ -3,7 +3,7 @@ captcha:
   img-width: 240
   img-height: 80
 casbin:
-  model-path: ./resource/rbac_model.conf
+  model-path: D:/go/src/github.com/snowlyg/go-tenancy/resource/rbac_model.conf
 email:
   to: xxx@qq.com
   port: 465
@@ -29,6 +29,7 @@ redis:
   addr: 127.0.0.1:6379
   password: 
 system:
+  level: error
   env: dev
   addr: 8089
   db-type: mysql

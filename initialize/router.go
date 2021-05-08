@@ -30,8 +30,7 @@ func Routers() *iris.Application {
 		close(IdleConnsClosed)
 	})
 	// Set default log level.
-	Router.Logger().SetLevel("error")
-	Router.Logger().Debugf(`Log level set to "debug"`)
+	Router.Logger().SetLevel(g.TENANCY_CONFIG.System.Level)
 
 	// Register the accesslog middleware.
 	logFile, err := os.OpenFile("./access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)

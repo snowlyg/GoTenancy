@@ -16,8 +16,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// writeConfig 回写配置
-func writeConfig(viper *viper.Viper, mysql config.Mysql) error {
+// WriteConfig 回写配置
+func WriteConfig(viper *viper.Viper, mysql config.Mysql) error {
 	g.TENANCY_CONFIG.Mysql = mysql
 	cs := utils.StructToMap(g.TENANCY_CONFIG)
 	for k, v := range cs {
@@ -87,7 +87,7 @@ func InitDB(conf request.InitDB) error {
 		Config:   "charset=utf8mb4&parseTime=True&loc=Local",
 	}
 
-	if err := writeConfig(g.TENANCY_VP, MysqlConfig); err != nil {
+	if err := WriteConfig(g.TENANCY_VP, MysqlConfig); err != nil {
 		return err
 	}
 	m := g.TENANCY_CONFIG.Mysql
@@ -108,7 +108,7 @@ func InitDB(conf request.InitDB) error {
 		//g.TENANCY_LOG.Error("MySQL启动异常", zap.Any("err", err))
 		//os.Exit(0)
 		//return nil
-		_ = writeConfig(g.TENANCY_VP, BaseMysql)
+		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
 		return nil
 	} else {
 		sqlDB, _ := db.DB()
@@ -119,6 +119,9 @@ func InitDB(conf request.InitDB) error {
 
 	err := g.TENANCY_DB.AutoMigrate(
 		model.SysUser{},
+		model.SysAdminInfo{},
+		model.SysTenancyInfo{},
+		model.SysGeneralInfo{},
 		model.SysAuthority{},
 		model.SysApi{},
 		model.SysBaseMenu{},
@@ -128,7 +131,7 @@ func InitDB(conf request.InitDB) error {
 		model.SysOperationRecord{},
 	)
 	if err != nil {
-		_ = writeConfig(g.TENANCY_VP, BaseMysql)
+		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
 		return err
 	}
 	err = initDB(
@@ -142,7 +145,7 @@ func InitDB(conf request.InitDB) error {
 		source.BaseMenu,
 	)
 	if err != nil {
-		_ = writeConfig(g.TENANCY_VP, BaseMysql)
+		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
 		return err
 	}
 	return nil

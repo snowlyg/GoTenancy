@@ -8,7 +8,7 @@ import (
 func InitInitRouter(Router iris.Party) {
 	ApiRouter := Router.Party("/init")
 	{
-		ApiRouter.Post("/initdb", v1.InitDB)   // 创建Api
-		ApiRouter.Post("/checkdb", v1.CheckDB) // 创建Api
+		ApiRouter.Post("/initdb", v1.InitDB)  // 创建Api
+		ApiRouter.Get("/checkdb", v1.CheckDB) // 创建Api
 	}
 }

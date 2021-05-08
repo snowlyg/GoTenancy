@@ -17,17 +17,17 @@ type DataAuthority struct {
 }
 
 var infos = []DataAuthority{
-	{"888", "888"},
-	{"888", "8881"},
-	{"888", "9528"},
-	{"9528", "8881"},
-	{"9528", "9528"},
+	{AdminAuthorityId, AdminAuthorityId},
+	{AdminAuthorityId, GeneralAuthorityId},
+	{AdminAuthorityId, TenancyAuthorityId},
+	{TenancyAuthorityId, GeneralAuthorityId},
+	{TenancyAuthorityId, TenancyAuthorityId},
 }
 
 //Init sys_data_authority_id 表数据初始化
 func (d *dataAuthorities) Init() error {
 	return g.TENANCY_DB.Table("sys_data_authority_id").Transaction(func(tx *gorm.DB) error {
-		if tx.Where("sys_authority_authority_id IN ('888', '9528') ").Find(&[]DataAuthority{}).RowsAffected == 5 {
+		if tx.Where("sys_authority_authority_id IN ('"+AdminAuthorityId+"', '"+TenancyAuthorityId+"') ").Find(&[]DataAuthority{}).RowsAffected == 5 {
 			color.Danger.Println("\n[Mysql] --> sys_data_authority_id 表初始数据已存在!")
 			return nil
 		}

@@ -45,7 +45,7 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 	db := g.TENANCY_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("AdminInfo").Preload("TenancyInfo").Preload("GeneralInfo").Find(&userList).Error
 	return err, userList, total
 }
 
@@ -62,24 +62,39 @@ func DeleteUser(id float64) (err error) {
 	return err
 }
 
-// SetUserInfo 设置用户信息
-func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
-	err = g.TENANCY_DB.Updates(&reqUser).Error
+// SetUserAdminInfo 设置admin信息
+func SetUserAdminInfo(reqUser model.SysAdminInfo, update bool) (err error, user model.SysAdminInfo) {
+	if update {
+		err = g.TENANCY_DB.Updates(&reqUser).Error
+	} else {
+		err = g.TENANCY_DB.Create(&reqUser).Error
+	}
+	return err, reqUser
+}
+
+// SetUserTenancyInfo 设置商户信息
+func SetUserTenancyInfo(reqUser model.SysTenancyInfo, update bool) (err error, user model.SysTenancyInfo) {
+	if update {
+		err = g.TENANCY_DB.Updates(&reqUser).Error
+	} else {
+		err = g.TENANCY_DB.Create(&reqUser).Error
+	}
+	return err, reqUser
+}
+
+// SetUserGeneralInfo 设置普通用户信息
+func SetUserGeneralInfo(reqUser model.SysGeneralInfo, update bool) (err error, user model.SysGeneralInfo) {
+	if update {
+		err = g.TENANCY_DB.Updates(&reqUser).Error
+	} else {
+		err = g.TENANCY_DB.Create(&reqUser).Error
+	}
 	return err, reqUser
 }
 
 // FindUserById 通过id获取用户信息
 func FindUserById(id int) (err error, user *model.SysUser) {
 	var u model.SysUser
-	err = g.TENANCY_DB.Where("`id` = ?", id).First(&u).Error
+	err = g.TENANCY_DB.Where("`id` = ?", id).Preload("Authority").Preload("AdminInfo").Preload("TenancyInfo").Preload("GeneralInfo").First(&u).Error
 	return err, &u
-}
-
-// FindUserByUuid 通过uuid获取用户信息
-func FindUserByUuid(uuid string) (err error, user *model.SysUser) {
-	var u model.SysUser
-	if err = g.TENANCY_DB.Where("`uuid` = ?", uuid).First(&u).Error; err != nil {
-		return errors.New("用户不存在"), &u
-	}
-	return nil, &u
 }
