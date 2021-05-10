@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
@@ -38,14 +39,61 @@ func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter 
 	return err, u
 }
 
-// GetUserInfoList 分页获取数据
-func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+// GetAdminInfoList 分页获取数据
+func GetAdminInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+	var userList []model.SysUser
+	var adminAuthorityIds []int
+	err = g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.AdminAuthority).Select("authority_id").Find(&adminAuthorityIds).Error
+	if err != nil {
+		return err, userList, total
+	}
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.SysUser{})
-	var userList []model.SysUser
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", adminAuthorityIds)
+
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("AdminInfo").Preload("TenancyInfo").Preload("GeneralInfo").Find(&userList).Error
+	if err != nil {
+		return err, userList, total
+	}
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("AdminInfo").Find(&userList).Error
+	return err, userList, total
+}
+
+// GetTenancyInfoList 分页获取数据
+func GetTenancyInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+	var userList []model.SysUser
+	var tenancyAuthorityIds []int
+	err = g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.TenancyAuthority).Select("authority_id").Find(&tenancyAuthorityIds).Error
+	if err != nil {
+		return err, userList, total
+	}
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", tenancyAuthorityIds)
+	err = db.Count(&total).Error
+	if err != nil {
+		return err, userList, total
+	}
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("TenancyInfo").Find(&userList).Error
+	return err, userList, total
+}
+
+// GetGeneralInfoList 分页获取数据
+func GetGeneralInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+	var userList []model.SysUser
+	var generalAuthorityIds []int
+	err = g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.GeneralAuthority).Select("authority_id").Find(&generalAuthorityIds).Error
+	if err != nil {
+		return err, userList, total
+	}
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", generalAuthorityIds)
+	err = db.Count(&total).Error
+	if err != nil {
+		return err, userList, total
+	}
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("GeneralInfo").Find(&userList).Error
 	return err, userList, total
 }
 

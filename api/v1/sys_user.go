@@ -130,15 +130,57 @@ func ChangePassword(ctx iris.Context) {
 	}
 }
 
-// GetUserList 分页获取用户列表
-func GetUserList(ctx iris.Context) {
+// GetAdminList 分页获取用户列表
+func GetAdminList(ctx iris.Context) {
 	var pageInfo request.PageInfo
 	_ = ctx.ReadJSON(&pageInfo)
 	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetUserInfoList(pageInfo); err != nil {
+	if err, list, total := service.GetAdminInfoList(pageInfo); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败", ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}
+
+// GetATenancyList 分页获取用户列表
+func GetTenancyList(ctx iris.Context) {
+	var pageInfo request.PageInfo
+	_ = ctx.ReadJSON(&pageInfo)
+	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	if err, list, total := service.GetTenancyInfoList(pageInfo); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败", ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}
+
+// GetGeneralList 分页获取用户列表
+func GetGeneralList(ctx iris.Context) {
+	var pageInfo request.PageInfo
+	_ = ctx.ReadJSON(&pageInfo)
+	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	if err, list, total := service.GetGeneralInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

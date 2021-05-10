@@ -5,7 +5,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// 处理跨域请求,支持options访问
+// Cors 处理跨域请求,支持options访问
 func Cors() iris.Handler {
 	return cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.

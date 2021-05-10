@@ -16,7 +16,7 @@ func CasbinHandler() iris.Handler {
 	return func(ctx iris.Context) {
 		waitUse := multi.Get(ctx)
 		if waitUse == nil {
-			response.FailWithDetailed(iris.Map{}, "权限服务验证失败", ctx)
+			response.FailWithMessage("权限服务验证失败：token empty", ctx)
 			ctx.StatusCode(http.StatusForbidden)
 			return
 		}
@@ -30,18 +30,18 @@ func CasbinHandler() iris.Handler {
 		casbin, err := service.Casbin()
 		if err != nil {
 			g.TENANCY_LOG.Error("get casbin err", zap.Error(err))
-			response.FailWithDetailed(iris.Map{}, "权限服务验证失败", ctx)
+			response.FailWithMessage("权限服务验证失败：casbin error", ctx)
 			ctx.StatusCode(http.StatusForbidden)
 			return
 		}
 		success, err := casbin.Enforce(sub, obj, act)
 		if err != nil {
-			response.FailWithDetailed(iris.Map{}, "权限服务验证失败", ctx)
+			response.FailWithMessage("权限服务验证失败：verfiy failed", ctx)
 			ctx.StatusCode(http.StatusForbidden)
 			return
 		}
 		if !success {
-			response.FailWithDetailed(iris.Map{}, "权限不足", ctx)
+			response.FailWithMessage("无此操作权限", ctx)
 			ctx.StatusCode(http.StatusForbidden)
 			return
 		}

@@ -6,7 +6,6 @@ import (
 )
 
 // 用https把这个中间件在router里面use一下就好
-
 func LoadTls() iris.Handler {
 	return secure.New(secure.Options{
 		AllowedHosts:            []string{"ssl.example.com"},                                                                                                                         // AllowedHosts is a list of fully qualified domain names that are allowed. Default is empty list, which allows any and all host names.

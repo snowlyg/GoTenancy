@@ -69,7 +69,7 @@ func Routers() *iris.Application {
 		router.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
 		router.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
-	PrivateGroup := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler())
+	PrivateGroup := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.IsAdmin())
 	{
 		router.InitApiRouter(PrivateGroup)                 // 注册功能api路由
 		router.InitUserRouter(PrivateGroup)                // 注册用户路由

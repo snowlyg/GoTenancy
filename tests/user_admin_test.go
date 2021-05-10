@@ -11,7 +11,7 @@ import (
 
 func TestAdminUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/user/getUserList").
+	obj := auth.POST("/v1/user/getAdminList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -22,7 +22,7 @@ func TestAdminUserList(t *testing.T) {
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Ge(0)
+	data.Value("total").Number().Equal(1)
 	data.Value("list").Array().Length().Ge(0)
 
 	user := data.Value("list").Array().First().Object()

@@ -6,7 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 )
 
-// NeedInit 处理跨域请求,支持options访问
+// NeedInit
 func NeedInit() iris.Handler {
 	return func(ctx iris.Context) {
 		if g.TENANCY_DB == nil {
