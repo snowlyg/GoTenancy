@@ -51,7 +51,7 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("/public/login").
+	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
@@ -68,7 +68,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 }
 
 func baseLogOut(auth *httpexpect.Expect) {
-	obj := auth.GET("/v1/user/logout").
+	obj := auth.GET("/v1/admin/user/logout").
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

@@ -11,7 +11,7 @@ import (
 
 func TestTenancyUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/user/getTenancyList").
+	obj := auth.POST("/v1/admin/user/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -34,8 +34,8 @@ func TestTenancyUserList(t *testing.T) {
 
 func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": multi.TenancyAuthority}).
+	obj := auth.POST("/v1/admin/user/register").
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -49,7 +49,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	userId := user.Value("ID").Number().Raw()
 
 	// changePassword error
-	obj = auth.POST("/v1/user/changePassword").
+	obj = auth.POST("/v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -57,7 +57,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("msg").String().Equal("修改成功")
 
 	// changePassword error
-	obj = auth.POST("/v1/user/changePassword").
+	obj = auth.POST("/v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -65,7 +65,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("msg").String().Equal("修改失败，原密码与当前账户不符")
 
 	// setUserAuthority
-	obj = auth.POST("/v1/user/setUserAuthority").
+	obj = auth.POST("/v1/admin/user/setUserAuthority").
 		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -73,7 +73,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("msg").String().Equal("修改成功")
 
 	// setTenancyInfo
-	obj = auth.PUT(fmt.Sprintf("/v1/user/setTenancyInfo/%f", userId)).
+	obj = auth.PUT(fmt.Sprintf("/v1/user/setUserInfo/%f", userId)).
 		WithJSON(map[string]interface{}{"id": 1, "email": "tenancy@master.com", "phone": "13800138001"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -81,7 +81,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("msg").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/user/deleteUser").
+	obj = auth.DELETE("/v1/admin/user/deleteUser").
 		WithJSON(map[string]interface{}{"id": userId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -93,12 +93,24 @@ func TestTenancyUserProcess(t *testing.T) {
 
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": multi.TenancyAuthority}).
+	obj := auth.POST("/v1/admin/user/register").
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
 	obj.Value("msg").String().Equal("注册失败")
+
+	baseLogOut(auth)
+}
+
+func TestTenancyUserRegisterAuthorityIdNotEmpty(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	obj := auth.POST("/v1/admin/user/register").
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": 0}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(7)
+	obj.Value("msg").String().Equal("AuthorityId值不能为空")
 
 	baseLogOut(auth)
 }

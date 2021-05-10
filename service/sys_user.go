@@ -106,8 +106,7 @@ func SetUserAuthority(id float64, authorityId string) (err error) {
 // DeleteUser 删除用户
 func DeleteUser(id float64) (err error) {
 	var user model.SysUser
-	err = g.TENANCY_DB.Where("id = ?", id).Delete(&user).Error
-	return err
+	return g.TENANCY_DB.Where("id = ?", id).Delete(&user).Error
 }
 
 // SetUserAdminInfo 设置admin信息

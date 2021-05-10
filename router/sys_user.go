@@ -3,11 +3,10 @@ package router
 import (
 	"github.com/kataras/iris/v12"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
-	"github.com/snowlyg/go-tenancy/middleware"
 )
 
 func InitUserRouter(Router iris.Party) {
-	UserRouter := Router.Party("/user", middleware.OperationRecord())
+	UserRouter := Router.Party("/user")
 	{
 		UserRouter.Get("/logout", v1.Logout)                         // 退出
 		UserRouter.Get("/clean", v1.Clean)                           //清空授权

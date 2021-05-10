@@ -8,7 +8,7 @@ import (
 
 func TestLoginWithErrorUsername(t *testing.T) {
 	e := baseTester(t)
-	obj := e.POST("/public/login").
+	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "123456"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
@@ -20,7 +20,7 @@ func TestLoginWithErrorUsername(t *testing.T) {
 
 func TestLoginWithErrorPassword(t *testing.T) {
 	e := baseTester(t)
-	obj := e.POST("/public/login").
+	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "error_pwd"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
@@ -32,7 +32,7 @@ func TestLoginWithErrorPassword(t *testing.T) {
 
 func TestLoginWithErrorUsernameAndPassword(t *testing.T) {
 	e := baseTester(t)
-	obj := e.POST("/public/login").
+	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "error_pwd"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 

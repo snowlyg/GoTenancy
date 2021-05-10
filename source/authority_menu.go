@@ -10,7 +10,6 @@ var AuthorityMenu = new(authorityMenu)
 
 type authorityMenu struct{}
 
-//@author: [SliverHorn](https://github.com/SliverHorn)
 //@description: authority_menu 视图数据初始化
 func (a *authorityMenu) Init() error {
 	if g.TENANCY_DB.Find(&[]model.SysMenu{}).RowsAffected > 0 {

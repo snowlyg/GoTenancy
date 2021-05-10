@@ -3,11 +3,10 @@ package router
 import (
 	"github.com/kataras/iris/v12"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
-	"github.com/snowlyg/go-tenancy/middleware"
 )
 
 func InitApiRouter(Router iris.Party) {
-	ApiRouter := Router.Party("/api", middleware.OperationRecord())
+	ApiRouter := Router.Party("/api")
 	{
 		ApiRouter.Post("/createApi", v1.CreateApi)               // 创建Api
 		ApiRouter.Post("/deleteApi", v1.DeleteApi)               // 删除Api

@@ -151,7 +151,7 @@ func GetAdminList(ctx iris.Context) {
 	}
 }
 
-// GetATenancyList 分页获取用户列表
+// GetTenancyList 分页获取用户列表
 func GetTenancyList(ctx iris.Context) {
 	var pageInfo request.PageInfo
 	_ = ctx.ReadJSON(&pageInfo)
@@ -306,7 +306,7 @@ func getUserID(ctx iris.Context) string {
 // getUserAuthorityId 从Context中获取用户角色id
 func getUserAuthorityId(ctx iris.Context) string {
 	if claims := GetClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取用户UUID失败, 请检查路由是否使用multi中间件")
+		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
 		return ""
 	} else {
 		return claims.AuthorityId

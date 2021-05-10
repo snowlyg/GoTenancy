@@ -28,7 +28,6 @@ var authorities = []model.SysAuthority{
 	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "9528", AuthorityName: "测试角色", ParentId: "0", DefaultRouter: "dashboard"},
 }
 
-//@author: [SliverHorn](https://github.com/SliverHorn)
 //@description: sys_authorities 表数据初始化
 func (a *authority) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {

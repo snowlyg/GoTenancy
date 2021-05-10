@@ -60,7 +60,6 @@ var authorityMenus = []AuthorityMenus{
 	{TenancyAuthorityId, 17},
 }
 
-//@author: [SliverHorn](https://github.com/SliverHorn)
 //@description: sys_authority_menus 表数据初始化
 func (a *authoritiesMenus) Init() error {
 	return g.TENANCY_DB.Table("sys_authority_menus").Transaction(func(tx *gorm.DB) error {

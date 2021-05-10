@@ -3,11 +3,10 @@ package router
 import (
 	"github.com/kataras/iris/v12"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
-	"github.com/snowlyg/go-tenancy/middleware"
 )
 
 func InitMenuRouter(Router iris.Party) (R iris.Party) {
-	MenuRouter := Router.Party("/menu", middleware.OperationRecord())
+	MenuRouter := Router.Party("/menu")
 	{
 		MenuRouter.Post("/getMenu", v1.GetMenu)                   // 获取菜单树
 		MenuRouter.Post("/getMenuList", v1.GetMenuList)           // 分页获取基础menu列表

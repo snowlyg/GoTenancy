@@ -86,7 +86,7 @@ func GetApiById(ctx iris.Context) {
 	}
 }
 
-// UpdateApi 创建基础api
+// UpdateApi 更新基础api
 func UpdateApi(ctx iris.Context) {
 	var api model.SysApi
 	_ = ctx.ReadJSON(&api)

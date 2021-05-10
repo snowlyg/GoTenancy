@@ -65,7 +65,6 @@ var apis = []model.SysApi{
 	{g.TENANCY_MODEL{ID: 85, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/api/deleteApisByIds", "批量删除api", "api", "DELETE"},
 }
 
-//@author: [SliverHorn](https://github.com/SliverHorn)
 //@description: sys_apis 表数据初始化
 func (a *api) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {

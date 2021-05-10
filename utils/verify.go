@@ -17,6 +17,8 @@ var (
 	OldAuthorityVerify     = Rules{"OldAuthorityId": {NotEmpty()}}
 	ChangePasswordVerify   = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"ID": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
+	CreateTenancyVerify    = Rules{}
+	UpdateTenancyVerify    = Rules{"ID": {NotEmpty()}}
 )
 
 func GetLoginVerify() Rules {

@@ -3,11 +3,10 @@ package router
 import (
 	"github.com/kataras/iris/v12"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
-	"github.com/snowlyg/go-tenancy/middleware"
 )
 
 func InitSysOperationRecordRouter(Router iris.Party) {
-	SysOperationRecordRouter := Router.Party("/sysOperationRecord", middleware.OperationRecord())
+	SysOperationRecordRouter := Router.Party("/sysOperationRecord")
 	{
 		SysOperationRecordRouter.Post("/createSysOperationRecord", v1.CreateSysOperationRecord)             // 新建SysOperationRecord
 		SysOperationRecordRouter.Delete("/deleteSysOperationRecord", v1.DeleteSysOperationRecord)           // 删除SysOperationRecord
