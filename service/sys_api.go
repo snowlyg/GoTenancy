@@ -11,7 +11,7 @@ import (
 )
 
 // CreateApi 新增基础api
-func CreateApi(api model.SysApi) (err error) {
+func CreateApi(api model.SysApi) error {
 	if !errors.Is(g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同api")
 	}
@@ -19,14 +19,14 @@ func CreateApi(api model.SysApi) (err error) {
 }
 
 // DeleteApi 删除基础api
-func DeleteApi(api model.SysApi) (err error) {
-	err = g.TENANCY_DB.Delete(&api).Error
+func DeleteApi(api model.SysApi) error {
+	err := g.TENANCY_DB.Delete(&api).Error
 	ClearCasbin(1, api.Path, api.Method)
 	return err
 }
 
 // GetAPIInfoList 分页获取数据
-func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc bool) (err error, list interface{}, total int64) {
+func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc bool) ([]model.SysApi, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysApi{})
@@ -47,11 +47,11 @@ func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc 
 	if api.ApiGroup != "" {
 		db = db.Where("api_group = ?", api.ApiGroup)
 	}
-
-	err = db.Count(&total).Error
+	var total int64
+	err := db.Count(&total).Error
 
 	if err != nil {
-		return err, apiList, total
+		return apiList, total, err
 	} else {
 		db = db.Limit(limit).Offset(offset)
 		if order != "" {
@@ -66,25 +66,27 @@ func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc 
 			err = db.Order("api_group").Find(&apiList).Error
 		}
 	}
-	return err, apiList, total
+	return apiList, total, err
 }
 
 // GetAllApis 获取所有的api
-func GetAllApis() (err error, apis []model.SysApi) {
-	err = g.TENANCY_DB.Find(&apis).Error
-	return
+func GetAllApis() ([]model.SysApi, error) {
+	var apis []model.SysApi
+	err := g.TENANCY_DB.Find(&apis).Error
+	return apis, err
 }
 
 // GetApiById 根据id获取api
-func GetApiById(id float64) (err error, api model.SysApi) {
-	err = g.TENANCY_DB.Where("id = ?", id).First(&api).Error
-	return
+func GetApiById(id float64) (model.SysApi, error) {
+	var api model.SysApi
+	err := g.TENANCY_DB.Where("id = ?", id).First(&api).Error
+	return api, err
 }
 
 // UpdateApi 根据id更新api
-func UpdateApi(api model.SysApi) (err error) {
+func UpdateApi(api model.SysApi) error {
 	var oldA model.SysApi
-	err = g.TENANCY_DB.Where("id = ?", api.ID).First(&oldA).Error
+	err := g.TENANCY_DB.Where("id = ?", api.ID).First(&oldA).Error
 	if oldA.Path != api.Path || oldA.Method != api.Method {
 		if !errors.Is(g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error, gorm.ErrRecordNotFound) {
 			return errors.New("存在相同api路径")
@@ -104,7 +106,6 @@ func UpdateApi(api model.SysApi) (err error) {
 }
 
 // DeleteApisByIds 删除选中API
-func DeleteApisByIds(ids request.IdsReq) (err error) {
-	err = g.TENANCY_DB.Delete(&[]model.SysApi{}, "id in ?", ids.Ids).Error
-	return err
+func DeleteApisByIds(ids request.IdsReq) error {
+	return g.TENANCY_DB.Delete(&[]model.SysApi{}, "id in ?", ids.Ids).Error
 }

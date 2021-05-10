@@ -45,9 +45,9 @@ func createTable(dsn string, driver string, createSql string) error {
 	return err
 }
 
-func initDB(InitDBFunctions ...model.InitDBFunc) (err error) {
+func initDB(InitDBFunctions ...model.InitDBFunc) error {
 	for _, v := range InitDBFunctions {
-		err = v.Init()
+		err := v.Init()
 		if err != nil {
 			return err
 		}

@@ -7,31 +7,29 @@ import (
 )
 
 // CreateSysOperationRecord 创建记录
-func CreateSysOperationRecord(sysOperationRecord model.SysOperationRecord) (err error) {
-	err = g.TENANCY_DB.Create(&sysOperationRecord).Error
-	return err
+func CreateSysOperationRecord(sysOperationRecord model.SysOperationRecord) error {
+	return g.TENANCY_DB.Create(&sysOperationRecord).Error
 }
 
 // DeleteSysOperationRecordByIds 批量删除记录
-func DeleteSysOperationRecordByIds(ids request.IdsReq) (err error) {
-	err = g.TENANCY_DB.Delete(&[]model.SysOperationRecord{}, "id in (?)", ids.Ids).Error
-	return err
+func DeleteSysOperationRecordByIds(ids request.IdsReq) error {
+	return g.TENANCY_DB.Delete(&[]model.SysOperationRecord{}, "id in (?)", ids.Ids).Error
 }
 
 // DeleteSysOperationRecord 删除操作记录
-func DeleteSysOperationRecord(sysOperationRecord model.SysOperationRecord) (err error) {
-	err = g.TENANCY_DB.Delete(&sysOperationRecord).Error
-	return err
+func DeleteSysOperationRecord(sysOperationRecord model.SysOperationRecord) error {
+	return g.TENANCY_DB.Delete(&sysOperationRecord).Error
 }
 
 // GetSysOperationRecord 根据id获取单条操作记录
-func GetSysOperationRecord(id uint) (err error, sysOperationRecord model.SysOperationRecord) {
-	err = g.TENANCY_DB.Where("id = ?", id).First(&sysOperationRecord).Error
-	return
+func GetSysOperationRecord(id uint) (model.SysOperationRecord, error) {
+	var sysOperationRecord model.SysOperationRecord
+	err := g.TENANCY_DB.Where("id = ?", id).First(&sysOperationRecord).Error
+	return sysOperationRecord, err
 }
 
 // GetSysOperationRecordInfoList 分页获取操作记录列表
-func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch) (err error, list interface{}, total int64) {
+func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch) ([]model.SysOperationRecord, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -47,7 +45,11 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch) (err e
 	if info.Status != 0 {
 		db = db.Where("status = ?", info.Status)
 	}
-	err = db.Count(&total).Error
+	var total int64
+	err := db.Count(&total).Error
+	if err != nil {
+		return nil, total, err
+	}
 	err = db.Order("id desc").Limit(limit).Offset(offset).Preload("User").Find(&sysOperationRecords).Error
-	return err, sysOperationRecords, total
+	return sysOperationRecords, total, err
 }

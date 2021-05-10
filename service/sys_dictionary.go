@@ -10,22 +10,21 @@ import (
 )
 
 // CreateSysDictionary 创建字典数据
-func CreateSysDictionary(sysDictionary model.SysDictionary) (err error) {
+func CreateSysDictionary(sysDictionary model.SysDictionary) error {
 	if (!errors.Is(g.TENANCY_DB.First(&model.SysDictionary{}, "type = ?", sysDictionary.Type).Error, gorm.ErrRecordNotFound)) {
 		return errors.New("存在相同的type，不允许创建")
 	}
-	err = g.TENANCY_DB.Create(&sysDictionary).Error
-	return err
+	return g.TENANCY_DB.Create(&sysDictionary).Error
 }
 
 // DeleteSysDictionary 删除字典数据
-func DeleteSysDictionary(sysDictionary model.SysDictionary) (err error) {
-	err = g.TENANCY_DB.Delete(&sysDictionary).Delete(&sysDictionary.SysDictionaryDetails).Error
-	return err
+func DeleteSysDictionary(sysDictionary model.SysDictionary) error {
+	return g.TENANCY_DB.Delete(&sysDictionary).Delete(&sysDictionary.SysDictionaryDetails).Error
 }
 
 // UpdateSysDictionary 更新字典数据
-func UpdateSysDictionary(sysDictionary *model.SysDictionary) (err error) {
+func UpdateSysDictionary(sysDictionary *model.SysDictionary) error {
+	var err error
 	var dict model.SysDictionary
 	sysDictionaryMap := map[string]interface{}{
 		"Name":   sysDictionary.Name,
@@ -47,13 +46,14 @@ func UpdateSysDictionary(sysDictionary *model.SysDictionary) (err error) {
 }
 
 // GetSysDictionary 根据id或者type获取字典单条数据
-func GetSysDictionary(Type string, Id uint) (err error, sysDictionary model.SysDictionary) {
-	err = g.TENANCY_DB.Where("type = ? OR id = ?", Type, Id).Preload("SysDictionaryDetails").First(&sysDictionary).Error
-	return
+func GetSysDictionary(Type string, Id uint) (model.SysDictionary, error) {
+	var sysDictionary model.SysDictionary
+	err := g.TENANCY_DB.Where("type = ? OR id = ?", Type, Id).Preload("SysDictionaryDetails").First(&sysDictionary).Error
+	return sysDictionary, err
 }
 
 // GetSysDictionaryInfoList 分页获取字典列表
-func GetSysDictionaryInfoList(info request.SysDictionarySearch) (err error, list interface{}, total int64) {
+func GetSysDictionaryInfoList(info request.SysDictionarySearch) ([]model.SysDictionary, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -72,7 +72,11 @@ func GetSysDictionaryInfoList(info request.SysDictionarySearch) (err error, list
 	if info.Desc != "" {
 		db = db.Where("`desc` LIKE ?", "%"+info.Desc+"%")
 	}
-	err = db.Count(&total).Error
+	var total int64
+	err := db.Count(&total).Error
+	if err != nil {
+		return sysDictionarys, total, err
+	}
 	err = db.Limit(limit).Offset(offset).Find(&sysDictionarys).Error
-	return err, sysDictionarys, total
+	return sysDictionarys, total, err
 }

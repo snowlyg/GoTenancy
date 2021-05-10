@@ -12,23 +12,26 @@ import (
 )
 
 // CreateAuthority 创建一个角色
-func CreateAuthority(auth model.SysAuthority) (err error, authority model.SysAuthority) {
+func CreateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
 	var authorityBox model.SysAuthority
 	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&authorityBox).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同角色id"), auth
+		return auth, errors.New("存在相同角色id")
 	}
-	err = g.TENANCY_DB.Create(&auth).Error
-	return err, auth
+	err := g.TENANCY_DB.Create(&auth).Error
+	return auth, err
 }
 
 // CopyAuthority 复制一个角色
-func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (err error, authority model.SysAuthority) {
+func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (model.SysAuthority, error) {
 	var authorityBox model.SysAuthority
 	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", copyInfo.Authority.AuthorityId).First(&authorityBox).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同角色id"), authority
+		return authorityBox, errors.New("存在相同角色id")
 	}
 	copyInfo.Authority.Children = []model.SysAuthority{}
 	err, menus := GetMenuAuthority(&request.GetAuthorityId{AuthorityId: copyInfo.OldAuthorityId})
+	if err != nil {
+		return copyInfo.Authority, err
+	}
 	var baseMenu []model.SysBaseMenu
 	for _, v := range menus {
 		intNum, _ := strconv.Atoi(v.MenuId)
@@ -37,23 +40,26 @@ func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (err error, autho
 	}
 	copyInfo.Authority.SysBaseMenus = baseMenu
 	err = g.TENANCY_DB.Create(&copyInfo.Authority).Error
+	if err != nil {
+		return copyInfo.Authority, err
+	}
 
 	paths := GetPolicyPathByAuthorityId(copyInfo.OldAuthorityId)
 	err = UpdateCasbin(copyInfo.Authority.AuthorityId, paths)
 	if err != nil {
 		_ = DeleteAuthority(&copyInfo.Authority)
 	}
-	return err, copyInfo.Authority
+	return copyInfo.Authority, err
 }
 
 // UpdateAuthority 更改一个角色
-func UpdateAuthority(auth model.SysAuthority) (err error, authority model.SysAuthority) {
-	err = g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysAuthority{}).Updates(&auth).Error
-	return err, auth
+func UpdateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
+	err := g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysAuthority{}).Updates(&auth).Error
+	return auth, err
 }
 
 // DeleteAuthority 删除角色
-func DeleteAuthority(auth *model.SysAuthority) (err error) {
+func DeleteAuthority(auth *model.SysAuthority) error {
 	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysUser{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("此角色有用户正在使用禁止删除")
 	}
@@ -61,7 +67,10 @@ func DeleteAuthority(auth *model.SysAuthority) (err error) {
 		return errors.New("此角色存在子角色不允许删除")
 	}
 	db := g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", auth.AuthorityId).First(auth)
-	err = db.Unscoped().Delete(auth).Error
+	err := db.Unscoped().Delete(auth).Error
+	if err != nil {
+		return err
+	}
 	if len(auth.SysBaseMenus) > 0 {
 		err = g.TENANCY_DB.Model(auth).Association("SysBaseMenus").Delete(auth.SysBaseMenus)
 		//err = db.Association("SysBaseMenus").Delete(&auth)
@@ -73,24 +82,27 @@ func DeleteAuthority(auth *model.SysAuthority) (err error) {
 }
 
 // GetAuthorityInfoList 分页获取数据
-func GetAuthorityInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+func GetAuthorityInfoList(info request.PageInfo) ([]model.SysAuthority, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB
+	var total int64
+	db.Count(&total)
 	var authority []model.SysAuthority
-	err = db.Limit(limit).Offset(offset).Preload("DataAuthorityId").Where("parent_id = 0").Find(&authority).Error
+	err := db.Limit(limit).Offset(offset).Preload("DataAuthorityId").Where("parent_id = 0").Find(&authority).Error
 	if len(authority) > 0 {
 		for k := range authority {
 			err = findChildrenAuthority(&authority[k])
 		}
 	}
-	return err, authority, total
+	return authority, total, err
 }
 
 // GetAuthorityInfo 获取所有角色信息
-func GetAuthorityInfo(auth model.SysAuthority) (err error, sa model.SysAuthority) {
-	err = g.TENANCY_DB.Preload("DataAuthorityId").Where("authority_id = ?", auth.AuthorityId).First(&sa).Error
-	return err, sa
+func GetAuthorityInfo(auth model.SysAuthority) (model.SysAuthority, error) {
+	var sa model.SysAuthority
+	err := g.TENANCY_DB.Preload("DataAuthorityId").Where("authority_id = ?", auth.AuthorityId).First(&sa).Error
+	return sa, err
 }
 
 // SetDataAuthority 设置角色资源权限
@@ -110,8 +122,8 @@ func SetMenuAuthority(auth *model.SysAuthority) error {
 }
 
 // findChildrenAuthority 查询子角色
-func findChildrenAuthority(authority *model.SysAuthority) (err error) {
-	err = g.TENANCY_DB.Preload("DataAuthorityId").Where("parent_id = ?", authority.AuthorityId).Find(&authority.Children).Error
+func findChildrenAuthority(authority *model.SysAuthority) error {
+	err := g.TENANCY_DB.Preload("DataAuthorityId").Where("parent_id = ?", authority.AuthorityId).Find(&authority.Children).Error
 	if len(authority.Children) > 0 {
 		for k := range authority.Children {
 			err = findChildrenAuthority(&authority.Children[k])

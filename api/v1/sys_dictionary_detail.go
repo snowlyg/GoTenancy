@@ -60,7 +60,7 @@ func FindSysDictionaryDetail(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, resysDictionaryDetail := service.GetSysDictionaryDetail(detail.ID); err != nil {
+	if resysDictionaryDetail, err := service.GetSysDictionaryDetail(detail.ID); err != nil {
 		g.TENANCY_LOG.Error("查询失败!", zap.Any("err", err))
 		response.FailWithMessage("查询失败", ctx)
 	} else {
@@ -72,7 +72,7 @@ func FindSysDictionaryDetail(ctx iris.Context) {
 func GetSysDictionaryDetailList(ctx iris.Context) {
 	var pageInfo request.SysDictionaryDetailSearch
 	_ = ctx.ReadQuery(&pageInfo)
-	if err, list, total := service.GetSysDictionaryDetailInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetSysDictionaryDetailInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

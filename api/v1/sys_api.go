@@ -56,7 +56,7 @@ func GetApiList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetAPIInfoList(pageInfo.SysApi, pageInfo.PageInfo, pageInfo.OrderKey, pageInfo.Desc); err != nil {
+	if list, total, err := service.GetAPIInfoList(pageInfo.SysApi, pageInfo.PageInfo, pageInfo.OrderKey, pageInfo.Desc); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -77,7 +77,7 @@ func GetApiById(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	err, api := service.GetApiById(idInfo.Id)
+	api, err := service.GetApiById(idInfo.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
@@ -104,7 +104,7 @@ func UpdateApi(ctx iris.Context) {
 
 // GetAllApis 获取所有的Api 不分页
 func GetAllApis(ctx iris.Context) {
-	if err, apis := service.GetAllApis(); err != nil {
+	if apis, err := service.GetAllApis(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

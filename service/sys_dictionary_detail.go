@@ -7,31 +7,29 @@ import (
 )
 
 // CreateSysDictionaryDetail 创建字典详情数据
-func CreateSysDictionaryDetail(sysDictionaryDetail model.SysDictionaryDetail) (err error) {
-	err = g.TENANCY_DB.Create(&sysDictionaryDetail).Error
-	return err
+func CreateSysDictionaryDetail(sysDictionaryDetail model.SysDictionaryDetail) error {
+	return g.TENANCY_DB.Create(&sysDictionaryDetail).Error
 }
 
 // DeleteSysDictionaryDetail 删除字典详情数据
-func DeleteSysDictionaryDetail(sysDictionaryDetail model.SysDictionaryDetail) (err error) {
-	err = g.TENANCY_DB.Delete(&sysDictionaryDetail).Error
-	return err
+func DeleteSysDictionaryDetail(sysDictionaryDetail model.SysDictionaryDetail) error {
+	return g.TENANCY_DB.Delete(&sysDictionaryDetail).Error
 }
 
 //UpdateSysDictionaryDetail 更新字典详情数据
-func UpdateSysDictionaryDetail(sysDictionaryDetail *model.SysDictionaryDetail) (err error) {
-	err = g.TENANCY_DB.Save(sysDictionaryDetail).Error
-	return err
+func UpdateSysDictionaryDetail(sysDictionaryDetail *model.SysDictionaryDetail) error {
+	return g.TENANCY_DB.Save(sysDictionaryDetail).Error
 }
 
 // GetSysDictionaryDetail 根据id获取字典详情单条数据
-func GetSysDictionaryDetail(id uint) (err error, sysDictionaryDetail model.SysDictionaryDetail) {
-	err = g.TENANCY_DB.Where("id = ?", id).First(&sysDictionaryDetail).Error
-	return
+func GetSysDictionaryDetail(id uint) (model.SysDictionaryDetail, error) {
+	var sysDictionaryDetail model.SysDictionaryDetail
+	err := g.TENANCY_DB.Where("id = ?", id).First(&sysDictionaryDetail).Error
+	return sysDictionaryDetail, err
 }
 
 //GetSysDictionaryDetailInfoList 分页获取字典详情列表
-func GetSysDictionaryDetailInfoList(info request.SysDictionaryDetailSearch) (err error, list interface{}, total int64) {
+func GetSysDictionaryDetailInfoList(info request.SysDictionaryDetailSearch) ([]model.SysDictionaryDetail, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -50,7 +48,11 @@ func GetSysDictionaryDetailInfoList(info request.SysDictionaryDetailSearch) (err
 	if info.SysDictionaryID != 0 {
 		db = db.Where("sys_dictionary_id = ?", info.SysDictionaryID)
 	}
-	err = db.Count(&total).Error
+	var total int64
+	err := db.Count(&total).Error
+	if err != nil {
+		return sysDictionaryDetails, total, err
+	}
 	err = db.Limit(limit).Offset(offset).Find(&sysDictionaryDetails).Error
-	return err, sysDictionaryDetails, total
+	return sysDictionaryDetails, total, err
 }

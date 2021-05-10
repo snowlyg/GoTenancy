@@ -5,9 +5,8 @@ import (
 )
 
 // EmailTest 发送邮件测试
-func EmailTest() (err error) {
+func EmailTest() error {
 	subject := "test"
 	body := "test"
-	err = utils.EmailTest(subject, body)
-	return err
+	return utils.EmailTest(subject, body)
 }

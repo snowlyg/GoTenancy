@@ -55,7 +55,7 @@ func FindSysOperationRecord(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, resysOperationRecord := service.GetSysOperationRecord(sysOperationRecord.ID); err != nil {
+	if resysOperationRecord, err := service.GetSysOperationRecord(sysOperationRecord.ID); err != nil {
 		g.TENANCY_LOG.Error("查询失败!", zap.Any("err", err))
 		response.FailWithMessage("查询失败", ctx)
 	} else {
@@ -67,7 +67,7 @@ func FindSysOperationRecord(ctx iris.Context) {
 func GetSysOperationRecordList(ctx iris.Context) {
 	var pageInfo request.SysOperationRecordSearch
 	_ = ctx.ReadQuery(&pageInfo)
-	if err, list, total := service.GetSysOperationRecordInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetSysOperationRecordInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

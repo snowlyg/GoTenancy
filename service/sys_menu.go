@@ -11,44 +11,50 @@ import (
 )
 
 // getMenuTreeMap 获取路由总树map
-func getMenuTreeMap(authorityId string) (err error, treeMap map[string][]model.SysMenu) {
+func getMenuTreeMap(authorityId string) (map[string][]model.SysMenu, error) {
 	var allMenus []model.SysMenu
-	treeMap = make(map[string][]model.SysMenu)
-	err = g.TENANCY_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+	treeMap := make(map[string][]model.SysMenu)
+	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+	if err != nil {
+		return nil, err
+	}
 	for _, v := range allMenus {
 		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
 	}
-	return err, treeMap
+	return treeMap, err
 }
 
 // GetMenuTree 获取动态菜单树
-func GetMenuTree(authorityId string) (err error, menus []model.SysMenu) {
-	err, menuTree := getMenuTreeMap(authorityId)
-	menus = menuTree["0"]
+func GetMenuTree(authorityId string) ([]model.SysMenu, error) {
+	menuTree, err := getMenuTreeMap(authorityId)
+	menus := menuTree["0"]
 	for i := 0; i < len(menus); i++ {
 		err = getChildrenList(&menus[i], menuTree)
 	}
-	return err, menus
+	return menus, err
 }
 
 // getChildrenList 获取子菜单
-func getChildrenList(menu *model.SysMenu, treeMap map[string][]model.SysMenu) (err error) {
+func getChildrenList(menu *model.SysMenu, treeMap map[string][]model.SysMenu) error {
 	menu.Children = treeMap[menu.MenuId]
 	for i := 0; i < len(menu.Children); i++ {
-		err = getChildrenList(&menu.Children[i], treeMap)
+		err := getChildrenList(&menu.Children[i], treeMap)
+		if err != nil {
+			return err
+		}
 	}
-	return err
+	return nil
 }
 
 // GetInfoList 获取路由分页
-func GetInfoList() (err error, list interface{}, total int64) {
+func GetInfoList() ([]model.SysBaseMenu, error) {
 	var menuList []model.SysBaseMenu
-	err, treeMap := getBaseMenuTreeMap()
+	treeMap, err := getBaseMenuTreeMap()
 	menuList = treeMap["0"]
 	for i := 0; i < len(menuList); i++ {
 		err = getBaseChildrenList(&menuList[i], treeMap)
 	}
-	return err, menuList, total
+	return menuList, err
 }
 
 // getBaseChildrenList 获取菜单的子菜单
@@ -69,33 +75,35 @@ func AddBaseMenu(menu model.SysBaseMenu) error {
 }
 
 // getBaseMenuTreeMap 获取路由总树map
-func getBaseMenuTreeMap() (err error, treeMap map[string][]model.SysBaseMenu) {
+func getBaseMenuTreeMap() (map[string][]model.SysBaseMenu, error) {
 	var allMenus []model.SysBaseMenu
-	treeMap = make(map[string][]model.SysBaseMenu)
-	err = g.TENANCY_DB.Order("sort").Preload("Parameters").Find(&allMenus).Error
+	treeMap := make(map[string][]model.SysBaseMenu)
+	err := g.TENANCY_DB.Order("sort").Preload("Parameters").Find(&allMenus).Error
 	for _, v := range allMenus {
 		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
 	}
-	return err, treeMap
+	return treeMap, err
 }
 
 // GetBaseMenuTree 获取基础路由树
-func GetBaseMenuTree() (err error, menus []model.SysBaseMenu) {
-	err, treeMap := getBaseMenuTreeMap()
-	menus = treeMap["0"]
+func GetBaseMenuTree() ([]model.SysBaseMenu, error) {
+	treeMap, err := getBaseMenuTreeMap()
+	if err != nil {
+		return nil, err
+	}
+	menus := treeMap["0"]
 	for i := 0; i < len(menus); i++ {
 		err = getBaseChildrenList(&menus[i], treeMap)
 	}
-	return err, menus
+	return menus, err
 }
 
 // AddMenuAuthority 为角色增加menu树
-func AddMenuAuthority(menus []model.SysBaseMenu, authorityId string) (err error) {
+func AddMenuAuthority(menus []model.SysBaseMenu, authorityId string) error {
 	var auth model.SysAuthority
 	auth.AuthorityId = authorityId
 	auth.SysBaseMenus = menus
-	err = SetMenuAuthority(&auth)
-	return err
+	return SetMenuAuthority(&auth)
 }
 
 // GetMenuAuthority 查看当前角色树

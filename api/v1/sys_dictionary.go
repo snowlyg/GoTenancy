@@ -51,7 +51,7 @@ func UpdateSysDictionary(ctx iris.Context) {
 func FindSysDictionary(ctx iris.Context) {
 	var dictionary model.SysDictionary
 	_ = ctx.ReadQuery(&dictionary)
-	if err, sysDictionary := service.GetSysDictionary(dictionary.Type, dictionary.ID); err != nil {
+	if sysDictionary, err := service.GetSysDictionary(dictionary.Type, dictionary.ID); err != nil {
 		g.TENANCY_LOG.Error("查询失败!", zap.Any("err", err))
 		response.FailWithMessage("查询失败", ctx)
 	} else {
@@ -67,7 +67,7 @@ func GetSysDictionaryList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetSysDictionaryInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetSysDictionaryInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

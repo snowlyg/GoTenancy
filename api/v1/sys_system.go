@@ -17,12 +17,7 @@ import (
 
 // GetSystemConfig 获取配置文件内容
 func GetSystemConfig(ctx iris.Context) {
-	if err, config := service.GetSystemConfig(); err != nil {
-		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
-	} else {
-		response.OkWithDetailed(response.SysConfigResponse{Config: config}, "获取成功", ctx)
-	}
+	response.OkWithDetailed(response.SysConfigResponse{Config: service.GetSystemConfig()}, "获取成功", ctx)
 }
 
 // SetSystemConfig 设置配置文件内容
@@ -52,7 +47,6 @@ func ReloadSystem(ctx iris.Context) {
 		return
 	}
 	response.OkWithMessage("重启系统成功", ctx)
-	return
 }
 
 // GetServerInfo 获取服务器信息

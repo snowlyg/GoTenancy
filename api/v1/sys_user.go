@@ -28,7 +28,7 @@ func Login(ctx iris.Context) {
 
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
-		if err, user := service.Login(U); err != nil {
+		if user, err := service.Login(U); err != nil {
 			g.TENANCY_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
 			response.FailWithMessage("用户名不存在或者密码错误", ctx)
 		} else {
@@ -104,7 +104,7 @@ func Register(ctx iris.Context) {
 		return
 	}
 	user := &model.SysUser{Username: R.Username, Password: R.Password, AuthorityId: R.AuthorityId}
-	err, userReturn := service.Register(*user)
+	userReturn, err := service.Register(*user)
 	if err != nil {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "注册失败", ctx)
@@ -138,7 +138,7 @@ func GetAdminList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetAdminInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetAdminInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -159,7 +159,7 @@ func GetTenancyList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetTenancyInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetTenancyInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -180,7 +180,7 @@ func GetGeneralList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetGeneralInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetGeneralInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -233,7 +233,7 @@ func DeleteUser(ctx iris.Context) {
 // SetUserInfo 设置用户信息
 func SetUserInfo(ctx iris.Context) {
 	userId := ctx.Params().GetIntDefault("user_id", 0)
-	err, user := service.FindUserById(userId)
+	user, err := service.FindUserById(userId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -246,7 +246,7 @@ func SetUserInfo(ctx iris.Context) {
 			response.FailWithMessage(err.Error(), ctx)
 			return
 		}
-		if err, ReqUser := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
+		if ReqUser, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
@@ -259,7 +259,7 @@ func SetUserInfo(ctx iris.Context) {
 			response.FailWithMessage(err.Error(), ctx)
 			return
 		}
-		if err, ReqUser := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
+		if ReqUser, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
@@ -272,7 +272,7 @@ func SetUserInfo(ctx iris.Context) {
 			response.FailWithMessage(err.Error(), ctx)
 			return
 		}
-		if err, ReqUser := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
+		if ReqUser, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
@@ -294,14 +294,14 @@ func GetClaims(ctx iris.Context) *multi.CustomClaims {
 }
 
 // getUserID 从Context中获取用户ID
-func getUserID(ctx iris.Context) string {
-	if claims := GetClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
-		return ""
-	} else {
-		return claims.ID
-	}
-}
+// func getUserID(ctx iris.Context) string {
+// 	if claims := GetClaims(ctx); claims == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
+// 		return ""
+// 	} else {
+// 		return claims.ID
+// 	}
+// }
 
 // getUserAuthorityId 从Context中获取用户角色id
 func getUserAuthorityId(ctx iris.Context) string {

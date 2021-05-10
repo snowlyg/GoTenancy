@@ -24,7 +24,7 @@ func ErrorToEmail() iris.Handler {
 			if id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID")); err != nil {
 				username = "Unknown"
 			} else {
-				err, user := service.FindUserById(id)
+				user, err := service.FindUserById(id)
 				if err != nil {
 					username = "Unknown"
 				}

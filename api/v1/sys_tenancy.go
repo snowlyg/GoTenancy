@@ -17,7 +17,7 @@ func CreateTenancy(ctx iris.Context) {
 	if err := utils.Verify(tenancy, utils.CreateTenancyVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if err, tenancy := service.CreateTenancy(tenancy); err != nil {
+	if tenancy, err := service.CreateTenancy(tenancy); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
@@ -33,7 +33,7 @@ func GetTenancyById(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	err, tenancy := service.GetTenancyByID(reqId.Id)
+	tenancy, err := service.GetTenancyByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
@@ -49,7 +49,7 @@ func UpdateTenancy(ctx iris.Context) {
 	if err := utils.Verify(tenancy, utils.UpdateTenancyVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if err, tenancy := service.UpdateTenany(tenancy); err != nil {
+	if tenancy, err := service.UpdateTenany(tenancy); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
@@ -81,7 +81,7 @@ func GetTenanciesList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, list, total := service.GetTenanciesInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetTenanciesInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

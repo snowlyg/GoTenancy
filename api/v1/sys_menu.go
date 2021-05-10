@@ -13,7 +13,7 @@ import (
 
 // GetMenu 获取用户动态路由
 func GetMenu(ctx iris.Context) {
-	if err, menus := service.GetMenuTree(getUserAuthorityId(ctx)); err != nil {
+	if menus, err := service.GetMenuTree(getUserAuthorityId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -23,7 +23,7 @@ func GetMenu(ctx iris.Context) {
 
 // GetBaseMenuTree 获取用户动态路由
 func GetBaseMenuTree(ctx iris.Context) {
-	if err, menus := service.GetBaseMenuTree(); err != nil {
+	if menus, err := service.GetBaseMenuTree(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -128,7 +128,7 @@ func GetBaseMenuById(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, menu := service.GetBaseMenuById(idInfo.Id); err != nil {
+	if menu, err := service.GetBaseMenuById(idInfo.Id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -144,13 +144,13 @@ func GetMenuList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if err, menuList, total := service.GetInfoList(); err != nil {
+	if menuList, err := service.GetInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     menuList,
-			Total:    total,
+			Total:    0,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", ctx)

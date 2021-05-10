@@ -11,29 +11,29 @@ import (
 )
 
 // CreateTenancy
-func CreateTenancy(t model.SysTenancy) (error, model.SysTenancy) {
+func CreateTenancy(t model.SysTenancy) (model.SysTenancy, error) {
 	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("商户名称已被注冊"), t
+		return t, errors.New("商户名称已被注冊")
 	}
 	t.UUID = uuid.NewV4()
 	err := g.TENANCY_DB.Create(&t).Error
-	return err, t
+	return t, err
 }
 
 // GetTenancyByID
-func GetTenancyByID(id float64) (error, model.SysTenancy) {
+func GetTenancyByID(id float64) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
 	err := g.TENANCY_DB.Where("id = ?", id).First(&tenancy).Error
-	return err, tenancy
+	return tenancy, err
 }
 
 // UpdateTenany
-func UpdateTenany(t model.SysTenancy) (error, model.SysTenancy) {
+func UpdateTenany(t model.SysTenancy) (model.SysTenancy, error) {
 	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Where("id != ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("商户名称已被注冊"), t
+		return t, errors.New("商户名称已被注冊")
 	}
 	err := g.TENANCY_DB.Updates(&t).Error
-	return err, t
+	return t, err
 }
 
 // DeleteTenancy
@@ -43,22 +43,23 @@ func DeleteTenancy(id float64) error {
 }
 
 // GetTenanciesInfoList
-func GetTenanciesInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+func GetTenanciesInfoList(info request.PageInfo) ([]model.SysTenancy, int64, error) {
 	var tenancyList []model.SysTenancy
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysTenancy{})
-	err = db.Count(&total).Error
+	var total int64
+	err := db.Count(&total).Error
 	if err != nil {
-		return err, tenancyList, total
+		return tenancyList, total, err
 	}
 	err = db.Limit(limit).Offset(offset).Find(&tenancyList).Error
-	return err, tenancyList, total
+	return tenancyList, total, err
 }
 
 // GetTenanciesByRegion
-func GetTenanciesByRegion(p_code int) (error, []model.SysTenancy) {
+func GetTenanciesByRegion(p_code int) ([]model.SysTenancy, error) {
 	var tenancyList []model.SysTenancy
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("sys_region_code = ?", p_code).Find(&tenancyList).Error
-	return err, tenancyList
+	return tenancyList, err
 }

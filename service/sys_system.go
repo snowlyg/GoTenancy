@@ -9,23 +9,23 @@ import (
 )
 
 // GetSystemConfig 读取配置文件
-func GetSystemConfig() (err error, conf config.Server) {
-	return nil, g.TENANCY_CONFIG
+func GetSystemConfig() config.Server {
+	return g.TENANCY_CONFIG
 }
 
 // SetSystemConfig 设置配置文件
-func SetSystemConfig(system model.System) (err error) {
+func SetSystemConfig(system model.System) error {
 	cs := utils.StructToMap(system.Config)
 	for k, v := range cs {
 		g.TENANCY_VP.Set(k, v)
 	}
-	err = g.TENANCY_VP.WriteConfig()
-	return err
+	return g.TENANCY_VP.WriteConfig()
 }
 
 // GetServerInfo 获取服务器信息
-func GetServerInfo() (server *utils.Server, err error) {
+func GetServerInfo() (*utils.Server, error) {
 	var s utils.Server
+	var err error
 	s.Os = utils.InitOS()
 	if s.Cpu, err = utils.InitCPU(); err != nil {
 		g.TENANCY_LOG.Error("func utils.InitCPU() Failed!", zap.String("err", err.Error()))
