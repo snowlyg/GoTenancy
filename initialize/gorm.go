@@ -30,7 +30,6 @@ func MysqlTables(db *gorm.DB) {
 		model.SysAdminInfo{},
 		model.SysTenancyInfo{},
 		model.SysGeneralInfo{},
-		model.SysTenancy{},
 		model.SysAuthority{},
 		model.SysApi{},
 		model.SysBaseMenu{},
@@ -38,6 +37,8 @@ func MysqlTables(db *gorm.DB) {
 		model.SysDictionary{},
 		model.SysDictionaryDetail{},
 		model.SysOperationRecord{},
+		model.SysTenancy{},
+		model.SysRegion{},
 	)
 	if err != nil {
 		g.TENANCY_LOG.Error("register table failed", zap.Any("err", err))

@@ -35,7 +35,7 @@ func TestTenancyProcess(t *testing.T) {
 		"tele":            "0755-23568911",
 		"address":         "xxx街道666号",
 		"business_hours":  "08:30-17:30",
-		"sys_region_code": 0}
+		"sys_region_code": 1}
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).
@@ -95,7 +95,7 @@ func TestTenancyRegisterError(t *testing.T) {
 		"tele":            "0755-23568911",
 		"address":         "xxx街道666号",
 		"business_hours":  "08:30-17:30",
-		"sys_region_code": 0}
+		"sys_region_code": 1}
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).

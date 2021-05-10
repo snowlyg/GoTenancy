@@ -130,6 +130,7 @@ func InitDB(conf request.InitDB) error {
 		model.SysDictionaryDetail{},
 		model.SysOperationRecord{},
 		model.SysTenancy{},
+		model.SysRegion{},
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
