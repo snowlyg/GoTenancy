@@ -55,3 +55,10 @@ func GetTenanciesInfoList(info request.PageInfo) (err error, list interface{}, t
 	err = db.Limit(limit).Offset(offset).Find(&tenancyList).Error
 	return err, tenancyList, total
 }
+
+// GetTenanciesByRegion
+func GetTenanciesByRegion(p_code int) (error, []model.SysTenancy) {
+	var tenancyList []model.SysTenancy
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("sys_region_code = ?", p_code).Find(&tenancyList).Error
+	return err, tenancyList
+}

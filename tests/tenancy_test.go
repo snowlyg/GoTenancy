@@ -29,6 +29,19 @@ func TestTenancyList(t *testing.T) {
 	baseLogOut(auth)
 }
 
+func TestTenancyByRegion(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	obj := auth.GET("/v1/admin/tenancy/getTenancies/0").
+		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("获取成功")
+	obj.Value("data").Array().Length().Equal(1)
+
+	baseLogOut(auth)
+}
+
 func TestTenancyProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"name":            "宝安妇女儿童医院",

@@ -13,5 +13,5 @@ type SysTenancy struct {
 	Address       string    `json:"address" form:"address" gorm:"column:address;comment:商户详细地址"`
 	BusinessTime  string    `json:"business_hours" form:"business_hours" gorm:"column:business_hours;comment:商户营业时间"`
 	Region        SysRegion `json:"region" gorm:"foreignKey:SysRegionCode;references:code;comment:所属区域"`
-	SysRegionCode int       `json:"sys_region_code" form:"sys_region_code" gorm:"column:code;comment:商户所属区域code"`
+	SysRegionCode int       `json:"sys_region_code" form:"sys_region_code" gorm:"column:sys_region_code;comment:商户所属区域code"`
 }

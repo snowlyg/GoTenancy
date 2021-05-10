@@ -93,3 +93,14 @@ func GetTenanciesList(ctx iris.Context) {
 		}, "获取成功", ctx)
 	}
 }
+
+// GetTenanciesByRegion 根据区域获取商户列表，不分页
+func GetTenanciesByRegion(ctx iris.Context) {
+	code := ctx.Params().GetIntDefault("code", -1)
+	if err, tenancies := service.GetTenanciesByRegion(code); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", ctx)
+	} else {
+		response.OkWithDetailed(tenancies, "获取成功", ctx)
+	}
+}
