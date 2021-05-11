@@ -18,11 +18,12 @@ func CreateMini(ctx iris.Context) {
 	if err := utils.Verify(mini, utils.CreateMiniVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if mini, err := service.CreateMini(mini); err != nil {
+	if returnMini, err := service.CreateMini(mini); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		response.OkWithDetailed(mini, "创建成功", ctx)
+		data := iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
+		response.OkWithDetailed(data, "创建成功", ctx)
 	}
 }
 
@@ -33,11 +34,12 @@ func UpdateMini(ctx iris.Context) {
 	if err := utils.Verify(mini, utils.UpdateMiniVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if mini, err := service.UpdateMini(mini); err != nil {
+	if returnMini, err := service.UpdateMini(mini); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		response.OkWithDetailed(mini, "更新成功", ctx)
+		data := iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
+		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }
 

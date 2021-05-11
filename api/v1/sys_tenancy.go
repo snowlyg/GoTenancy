@@ -22,7 +22,7 @@ func CreateTenancy(ctx iris.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+		data := iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 		response.OkWithDetailed(data, "创建成功", ctx)
 	}
 }
@@ -55,7 +55,7 @@ func UpdateTenancy(ctx iris.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+		data := iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }

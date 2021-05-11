@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"gorm.io/gorm"
 )
 
@@ -43,8 +44,8 @@ func DeleteMini(id float64) error {
 }
 
 // GetMiniInfoList
-func GetMiniInfoList(info request.PageInfo) ([]model.SysMini, int64, error) {
-	var miniList []model.SysMini
+func GetMiniInfoList(info request.PageInfo) ([]response.SysMini, int64, error) {
+	var miniList []response.SysMini
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysMini{})

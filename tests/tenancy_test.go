@@ -60,6 +60,7 @@ func TestTenancyProcess(t *testing.T) {
 
 	tenancy := obj.Value("data").Object()
 	tenancy.Value("id").Number().Ge(0)
+	tenancy.Value("uuid").String().NotEmpty()
 	tenancy.Value("name").String().Equal(data["name"].(string))
 	tenancy.Value("tele").String().Equal(data["tele"].(string))
 	tenancy.Value("address").String().Equal(data["address"].(string))
@@ -85,6 +86,7 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy = obj.Value("data").Object()
 
 	tenancy.Value("id").Number().Ge(0)
+	tenancy.Value("uuid").String().NotEmpty()
 	tenancy.Value("name").String().Equal(update["name"].(string))
 	tenancy.Value("tele").String().Equal(update["tele"].(string))
 	tenancy.Value("address").String().Equal(update["address"].(string))
