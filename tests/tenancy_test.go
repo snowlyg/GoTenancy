@@ -32,7 +32,6 @@ func TestTenancyList(t *testing.T) {
 func TestTenancyByRegion(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.GET("/v1/admin/tenancy/getTenancies/0").
-		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

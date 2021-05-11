@@ -8,7 +8,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/accesslog"
 	"github.com/kataras/iris/v12/middleware/recover"
-	"github.com/kataras/iris/v12/middleware/requestid"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/router"
@@ -50,8 +49,8 @@ func Routers() *iris.Application {
 
 	// Register the requestid middleware
 	// before recover so current Context.GetID() contains the info on panic logs.
-	Router.UseRouter(requestid.New())
-	Router.Logger().Debugf("Using <UUID4> to identify requests")
+	// Router.UseRouter(requestid.New())
+	// Router.Logger().Debugf("Using <UUID4> to identify requests")
 
 	// Register the recovery, after accesslog and recover,
 	// before end-developer's middleware.
@@ -93,6 +92,7 @@ func Routers() *iris.Application {
 	// {
 
 	// }
+
 	err = Router.Build()
 	if err != nil {
 		g.TENANCY_LOG.Error("router build", zap.Any("err", err))

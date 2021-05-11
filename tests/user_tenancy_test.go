@@ -6,7 +6,6 @@ import (
 
 	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/source"
-	"github.com/snowlyg/multi"
 )
 
 func TestTenancyUserList(t *testing.T) {
@@ -66,15 +65,15 @@ func TestTenancyUserProcess(t *testing.T) {
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.TenancyAuthority}).
+		WithJSON(map[string]interface{}{"id": userId, "authority_id": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("修改成功")
 
 	// setTenancyInfo
-	obj = auth.PUT(fmt.Sprintf("/v1/user/setUserInfo/%f", userId)).
-		WithJSON(map[string]interface{}{"id": 1, "email": "tenancy@master.com", "phone": "13800138001"}).
+	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
+		WithJSON(map[string]interface{}{"email": "tenancy@master.com", "phone": "13800138001"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -94,7 +93,7 @@ func TestTenancyUserProcess(t *testing.T) {
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authority_id": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)

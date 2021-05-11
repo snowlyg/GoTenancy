@@ -122,7 +122,7 @@ func ChangePassword(ctx iris.Context) {
 		return
 	}
 	U := &model.SysUser{Username: user.Username, Password: user.Password}
-	if err, _ := service.ChangePassword(U, user.NewPassword); err != nil {
+	if _, err := service.ChangePassword(U, user.NewPassword); err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
 		response.FailWithMessage("修改失败，原密码与当前账户不符", ctx)
 	} else {
@@ -242,10 +242,7 @@ func SetUserInfo(ctx iris.Context) {
 	if user.IsAdmin() {
 		var admin model.SysAdminInfo
 		_ = ctx.ReadJSON(&admin)
-		if err := utils.Verify(admin, utils.IdVerify); err != nil {
-			response.FailWithMessage(err.Error(), ctx)
-			return
-		}
+		admin.ID = user.AdminInfo.ID
 		if ReqUser, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
@@ -255,10 +252,7 @@ func SetUserInfo(ctx iris.Context) {
 	} else if user.IsTenancy() {
 		var tenancy model.SysTenancyInfo
 		_ = ctx.ReadJSON(&tenancy)
-		if err := utils.Verify(tenancy, utils.IdVerify); err != nil {
-			response.FailWithMessage(err.Error(), ctx)
-			return
-		}
+		tenancy.ID = user.TenancyInfo.ID
 		if ReqUser, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
@@ -268,10 +262,7 @@ func SetUserInfo(ctx iris.Context) {
 	} else if user.IsGeneral() {
 		var general model.SysGeneralInfo
 		_ = ctx.ReadJSON(&general)
-		if err := utils.Verify(general, utils.IdVerify); err != nil {
-			response.FailWithMessage(err.Error(), ctx)
-			return
-		}
+		general.ID = user.GeneralInfo.ID
 		if ReqUser, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
@@ -292,16 +283,6 @@ func GetClaims(ctx iris.Context) *multi.CustomClaims {
 	}
 	return waitUse
 }
-
-// getUserID 从Context中获取用户ID
-// func getUserID(ctx iris.Context) string {
-// 	if claims := GetClaims(ctx); claims == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
-// 		return ""
-// 	} else {
-// 		return claims.ID
-// 	}
-// }
 
 // getUserAuthorityId 从Context中获取用户角色id
 func getUserAuthorityId(ctx iris.Context) string {

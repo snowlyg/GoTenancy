@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// CreateTenancy
 func CreateTenancy(ctx iris.Context) {
 	var tenancy model.SysTenancy
 	_ = ctx.ReadJSON(&tenancy)
@@ -97,7 +98,7 @@ func GetTenanciesList(ctx iris.Context) {
 // GetTenanciesByRegion 根据区域获取商户列表，不分页
 func GetTenanciesByRegion(ctx iris.Context) {
 	code := ctx.Params().GetIntDefault("code", -1)
-	if err, tenancies := service.GetTenanciesByRegion(code); err != nil {
+	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

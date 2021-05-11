@@ -6,7 +6,6 @@ import (
 
 	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/source"
-	"github.com/snowlyg/multi"
 )
 
 func TestAdminUserList(t *testing.T) {
@@ -66,15 +65,15 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": multi.AdminAuthority}).
+		WithJSON(map[string]interface{}{"id": userId, "authority_id": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("修改成功")
 
 	// setAdminInfo
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%f", userId)).
-		WithJSON(map[string]interface{}{"id": 1, "email": "admin@master.com", "phone": "13800138001"}).
+	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
+		WithJSON(map[string]interface{}{"email": "admin@master.com", "phone": "13800138001"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
