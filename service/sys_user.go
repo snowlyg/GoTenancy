@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
@@ -40,8 +41,8 @@ func ChangePassword(u *model.SysUser, newPassword string) (*model.SysUser, error
 }
 
 // GetAdminInfoList 分页获取数据
-func GetAdminInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
-	var userList []model.SysUser
+func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, error) {
+	var userList []response.SysAdminUser
 	var adminAuthorityIds []int
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.AdminAuthority).Select("authority_id").Find(&adminAuthorityIds).Error
 	if err != nil {
@@ -49,20 +50,24 @@ func GetAdminInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
 	}
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", adminAuthorityIds)
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", adminAuthorityIds)
 
 	var total int64
 	err = db.Count(&total).Error
 	if err != nil {
 		return userList, total, err
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("AdminInfo").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).
+		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
+		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		Find(&userList).Error
 	return userList, total, err
 }
 
 // GetTenancyInfoList 分页获取数据
-func GetTenancyInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
-	var userList []model.SysUser
+func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64, error) {
+	var userList []response.SysTenancyUser
 	var tenancyAuthorityIds []int
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.TenancyAuthority).Select("authority_id").Find(&tenancyAuthorityIds).Error
 	if err != nil {
@@ -70,20 +75,25 @@ func GetTenancyInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
 	}
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", tenancyAuthorityIds)
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", tenancyAuthorityIds)
 
 	var total int64
 	err = db.Count(&total).Error
 	if err != nil {
 		return userList, total, err
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("TenancyInfo").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).
+		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
+		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
+		Find(&userList).Error
 	return userList, total, err
 }
 
 // GetGeneralInfoList 分页获取数据
-func GetGeneralInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
-	var userList []model.SysUser
+func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64, error) {
+	var userList []response.SysGeneralUser
 	var generalAuthorityIds []int
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.GeneralAuthority).Select("authority_id").Find(&generalAuthorityIds).Error
 	if err != nil {
@@ -91,14 +101,19 @@ func GetGeneralInfoList(info request.PageInfo) ([]model.SysUser, int64, error) {
 	}
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("authority_id IN (?)", generalAuthorityIds)
+	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", generalAuthorityIds)
 
 	var total int64
 	err = db.Count(&total).Error
 	if err != nil {
 		return userList, total, err
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Preload("GeneralInfo").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).
+		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
+		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		Joins("left join sys_tenancies on sys_general_infos.sys_tenancy_id = sys_tenancies.id").
+		Find(&userList).Error
 	return userList, total, err
 }
 

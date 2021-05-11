@@ -18,11 +18,12 @@ func CreateTenancy(ctx iris.Context) {
 	if err := utils.Verify(tenancy, utils.CreateTenancyVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if tenancy, err := service.CreateTenancy(tenancy); err != nil {
+	if returnTenancy, err := service.CreateTenancy(tenancy); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		response.OkWithDetailed(tenancy, "创建成功", ctx)
+		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+		response.OkWithDetailed(data, "创建成功", ctx)
 	}
 }
 
@@ -50,11 +51,12 @@ func UpdateTenancy(ctx iris.Context) {
 	if err := utils.Verify(tenancy, utils.UpdateTenancyVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	}
-	if tenancy, err := service.UpdateTenany(tenancy); err != nil {
+	if returnTenancy, err := service.UpdateTenany(tenancy); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		response.OkWithDetailed(tenancy, "更新成功", ctx)
+		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }
 

@@ -22,11 +22,12 @@ func TestAdminUserList(t *testing.T) {
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
 	data.Value("total").Number().Equal(1)
-	data.Value("list").Array().Length().Ge(0)
 
-	user := data.Value("list").Array().First().Object()
-	// user.Keys().ContainsOnly("ID")
-	user.Value("ID").Number().Ge(0)
+	list := data.Value("list").Array()
+	list.Length().Ge(0)
+	first := list.First().Object()
+	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "createdAt", "updatedAt")
+	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
 }
@@ -34,22 +35,21 @@ func TestAdminUserList(t *testing.T) {
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": source.AdminAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("注册成功")
 
-	user := obj.Value("data").Object().Value("user").Object()
-	// user.Keys().ContainsOnly("ID")
-	user.Value("ID").Number().Ge(0)
+	user := obj.Value("data").Object()
+	user.Value("id").Number().Ge(0)
 	user.Value("userName").String().Equal("chindeo")
 	user.Value("authorityId").String().Equal(source.AdminAuthorityId)
-	userId := user.Value("ID").Number().Raw()
+	userId := user.Value("id").Number().Raw()
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -57,7 +57,7 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -65,7 +65,7 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": source.AdminAuthorityId}).
+		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -93,7 +93,7 @@ func TestAdminUserProcess(t *testing.T) {
 func TestAdminUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authority_id": source.AdminAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -105,7 +105,7 @@ func TestAdminUserRegisterError(t *testing.T) {
 func TestAdminUserRegisterAuthorityIdNotEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authority_id": 0}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": 0}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)

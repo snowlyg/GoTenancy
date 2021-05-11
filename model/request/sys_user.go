@@ -5,7 +5,7 @@ type Register struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 
-	AuthorityId string `json:"authority_id" gorm:"default:888"`
+	AuthorityId string `json:"authorityId" gorm:"default:888"`
 }
 
 // User login structure
@@ -20,13 +20,13 @@ type Login struct {
 type ChangePasswordStruct struct {
 	Username    string `json:"username"`
 	Password    string `json:"password"`
-	NewPassword string `json:"new_password"`
+	NewPassword string `json:"newPassword"`
 }
 
 // Modify  user's auth structure
 type SetUserAuth struct {
 	Id          float64 `json:"id" form:"id"`
-	AuthorityId string  `json:"authority_id"`
+	AuthorityId string  `json:"authorityId"`
 }
 
 // Modify  user's auth structure

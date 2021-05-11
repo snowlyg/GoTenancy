@@ -39,29 +39,29 @@ func (su *SysUser) AuthorityType() int {
 
 type SysAdminInfo struct {
 	g.TENANCY_MODEL
-	Email     string `json:"email" gorm:"default:'';comment:员工邮箱" `
+	Email     string `json:"email" gorm:"default:'';comment:员工邮箱"`
 	Phone     string `json:"phone" gorm:"default:'';comment:员工手机号" `
-	Name      string `json:"name" gorm:"default:'员工姓名';comment:员工姓名" `
+	NickName  string `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
 	HeaderImg string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID int    `json:"sys_user_id" form:"sys_user_id" gorm:"column:sys_user_id;comment:关联标记"`
+	SysUserID int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }
 
 type SysTenancyInfo struct {
 	g.TENANCY_MODEL
-	Email        string `json:"email" gorm:"default:'';comment:员工邮箱" `
+	Email        string `json:"email" gorm:"default:'';comment:员工邮箱"`
 	Phone        string `json:"phone" gorm:"default:'';comment:员工手机号" `
-	Name         string `json:"name" gorm:"default:'员工姓名';comment:员工姓名" `
+	NickName     string `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
 	HeaderImg    string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID    int    `json:"sys_user_id" form:"sys_user_id" gorm:"column:sys_user_id;comment:关联标记"`
-	SysTenancyID int    `json:"sys_tenancy_id" form:"sys_tenancy_id" gorm:"column:sys_tenancy_id;comment:关联标记"`
+	SysUserID    int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
 }
 
 type SysGeneralInfo struct {
 	g.TENANCY_MODEL
-	Email        string `json:"email" gorm:"default:'';comment:员工邮箱" `
+	Email        string `json:"email" gorm:"default:'';comment:员工邮箱"`
 	Phone        string `json:"phone" gorm:"default:'';comment:员工手机号" `
-	Name         string `json:"name" gorm:"default:'员工姓名';comment:员工姓名" `
+	NickName     string `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
 	HeaderImg    string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID    int    `json:"sys_user_id" form:"sys_user_id" gorm:"column:sys_user_id;comment:关联标记"`
-	SysTenancyID int    `json:"sys_tenancy_id" form:"sys_tenancy_id" gorm:"column:sys_tenancy_id;comment:关联标记"`
+	SysUserID    int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
 }

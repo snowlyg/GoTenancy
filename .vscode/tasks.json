@@ -4,6 +4,11 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "init db",
+            "type": "shell",
+            "command": "go test -timeout 30s -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
+        },
+        {
             "label": "tidy",
             "type": "shell",
             "command": "go mod tidy"
@@ -18,5 +23,6 @@
             "type": "shell",
             "command": "git push gitee master"
         }
+
     ]
 }

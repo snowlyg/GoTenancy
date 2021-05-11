@@ -5,9 +5,9 @@ import (
 )
 
 type SysAuthority struct {
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	DeletedAt       *time.Time     `sql:"index"`
+	CreatedAt       time.Time      `json:"createdAt"`
+	UpdatedAt       time.Time      `json:"updatedAt"`
+	DeletedAt       *time.Time     `json:"-" sql:"index"`
 	AuthorityId     string         `json:"authorityId" gorm:"not null;unique;primary_key;comment:角色ID;size:90"`
 	AuthorityName   string         `json:"authorityName" gorm:"comment:角色名"`
 	AuthorityType   int            `json:"authorityType" gorm:"comment:角色类型"`

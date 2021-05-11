@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +30,7 @@ func GetTenancyByID(id float64) (model.SysTenancy, error) {
 
 // UpdateTenany
 func UpdateTenany(t model.SysTenancy) (model.SysTenancy, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Where("id != ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
+	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Where("id <> ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
 		return t, errors.New("商户名称已被注冊")
 	}
 	err := g.TENANCY_DB.Updates(&t).Error
@@ -43,8 +44,8 @@ func DeleteTenancy(id float64) error {
 }
 
 // GetTenanciesInfoList
-func GetTenanciesInfoList(info request.PageInfo) ([]model.SysTenancy, int64, error) {
-	var tenancyList []model.SysTenancy
+func GetTenanciesInfoList(info request.PageInfo) ([]response.SysTenancy, int64, error) {
+	var tenancyList []response.SysTenancy
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysTenancy{})
@@ -58,8 +59,8 @@ func GetTenanciesInfoList(info request.PageInfo) ([]model.SysTenancy, int64, err
 }
 
 // GetTenanciesByRegion
-func GetTenanciesByRegion(p_code int) ([]model.SysTenancy, error) {
-	var tenancyList []model.SysTenancy
+func GetTenanciesByRegion(p_code int) ([]response.SysTenancy, error) {
+	var tenancyList []response.SysTenancy
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("sys_region_code = ?", p_code).Find(&tenancyList).Error
 	return tenancyList, err
 }

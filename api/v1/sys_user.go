@@ -107,9 +107,9 @@ func Register(ctx iris.Context) {
 	userReturn, err := service.Register(*user)
 	if err != nil {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
-		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "注册失败", ctx)
+		response.FailWithMessage("注册失败", ctx)
 	} else {
-		response.OkWithDetailed(response.SysUserResponse{User: userReturn}, "注册成功", ctx)
+		response.OkWithDetailed(iris.Map{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
 	}
 }
 
@@ -243,31 +243,31 @@ func SetUserInfo(ctx iris.Context) {
 		var admin model.SysAdminInfo
 		_ = ctx.ReadJSON(&admin)
 		admin.ID = user.AdminInfo.ID
-		if ReqUser, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
+		if _, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
-			response.OkWithDetailed(iris.Map{"adminInfo": ReqUser}, "设置成功", ctx)
+			response.OkWithMessage("设置成功", ctx)
 		}
 	} else if user.IsTenancy() {
 		var tenancy model.SysTenancyInfo
 		_ = ctx.ReadJSON(&tenancy)
 		tenancy.ID = user.TenancyInfo.ID
-		if ReqUser, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
+		if _, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
-			response.OkWithDetailed(iris.Map{"tenancyInfo": ReqUser}, "设置成功", ctx)
+			response.OkWithMessage("设置成功", ctx)
 		}
 	} else if user.IsGeneral() {
 		var general model.SysGeneralInfo
 		_ = ctx.ReadJSON(&general)
 		general.ID = user.GeneralInfo.ID
-		if ReqUser, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
+		if _, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
-			response.OkWithDetailed(iris.Map{"generalInfo": ReqUser}, "设置成功", ctx)
+			response.OkWithMessage("设置成功", ctx)
 		}
 	} else {
 		g.TENANCY_LOG.Error("未知角色", zap.Any("err", user.AuthorityType()))

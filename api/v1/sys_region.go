@@ -9,8 +9,8 @@ import (
 )
 
 func Region(ctx iris.Context) {
-	p_code := ctx.Params().GetIntDefault("p_code", -1)
-	if err, regions := service.GetRegion(p_code); err != nil {
+	pCode := ctx.Params().GetIntDefault("p_code", -1)
+	if regions, err := service.GetRegion(pCode); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {

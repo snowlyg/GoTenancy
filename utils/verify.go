@@ -17,8 +17,12 @@ var (
 	OldAuthorityVerify     = Rules{"OldAuthorityId": {NotEmpty()}}
 	ChangePasswordVerify   = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"ID": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
-	CreateTenancyVerify    = Rules{}
-	UpdateTenancyVerify    = Rules{"ID": {NotEmpty()}}
+
+	CreateTenancyVerify = Rules{"Name": {NotEmpty()}, "SysRegionCode": {Ge("0")}}
+	UpdateTenancyVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "SysRegionCode": {Ge("0")}}
+
+	CreateMiniVerify = Rules{"Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}
+	UpdateMiniVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}
 )
 
 func GetLoginVerify() Rules {

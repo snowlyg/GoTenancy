@@ -11,6 +11,7 @@ require (
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-redis/redis/v8 v8.8.2
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/gookit/color v1.4.2
 	github.com/iris-contrib/httpexpect/v2 v2.0.5
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d

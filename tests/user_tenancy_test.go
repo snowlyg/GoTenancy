@@ -24,9 +24,11 @@ func TestTenancyUserList(t *testing.T) {
 	data.Value("total").Number().Equal(1)
 	data.Value("list").Array().Length().Ge(0)
 
-	user := data.Value("list").Array().First().Object()
-	// user.Keys().ContainsOnly("ID")
-	user.Value("ID").Number().Ge(0)
+	list := data.Value("list").Array()
+	list.Length().Ge(0)
+	first := list.First().Object()
+	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "tenancyName", "createdAt", "updatedAt")
+	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
 }
@@ -34,22 +36,21 @@ func TestTenancyUserList(t *testing.T) {
 func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authority_id": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("注册成功")
 
-	user := obj.Value("data").Object().Value("user").Object()
-	// user.Keys().ContainsOnly("ID")
-	user.Value("ID").Number().Ge(0)
+	user := obj.Value("data").Object()
+	user.Value("id").Number().Ge(0)
 	user.Value("userName").String().Equal("chindeo")
 	user.Value("authorityId").String().Equal(source.TenancyAuthorityId)
-	userId := user.Value("ID").Number().Raw()
+	userId := user.Value("id").Number().Raw()
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -57,7 +58,7 @@ func TestTenancyUserProcess(t *testing.T) {
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "new_password": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -65,7 +66,7 @@ func TestTenancyUserProcess(t *testing.T) {
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authority_id": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -93,7 +94,7 @@ func TestTenancyUserProcess(t *testing.T) {
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authority_id": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -105,7 +106,7 @@ func TestTenancyUserRegisterError(t *testing.T) {
 func TestTenancyUserRegisterAuthorityIdNotEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authority_id": 0}).
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": 0}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
