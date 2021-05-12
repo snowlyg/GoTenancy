@@ -9,6 +9,11 @@
             "command": "go test -timeout 30s -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
         },
         {
+            "label": "test all",
+            "type": "shell",
+            "command": "go test -timeout 30s -run [^TestInitDB$] github.com/snowlyg/go-tenancy/tests"
+        },
+        {
             "label": "tidy",
             "type": "shell",
             "command": "go mod tidy"

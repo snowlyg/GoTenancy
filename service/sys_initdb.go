@@ -148,6 +148,7 @@ func InitDB(conf request.InitDB) error {
 		source.BaseMenu,
 		source.Tenancy,
 		source.Region,
+		source.Mini,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
