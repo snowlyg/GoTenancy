@@ -25,18 +25,22 @@ func Register(u model.SysUser) (model.SysUser, error) {
 }
 
 // Login 用户登录
-func Login(u *model.SysUser) (*model.SysUser, error) {
-	var user model.SysUser
+func Login(u *model.SysUser) (*response.SysAdminUser, error) {
+	var admin response.SysAdminUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err := g.TENANCY_DB.Where("username = ? AND password = ?", u.Username, u.Password).Preload("Authority").First(&user).Error
-	return &user, err
+	err := g.TENANCY_DB.Model(&model.SysUser{}).Where("username = ? AND password = ?", u.Username, u.Password).
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&admin).Error
+	return &admin, err
 }
 
 // ChangePassword 修改用户密码
 func ChangePassword(u *model.SysUser, newPassword string) (*model.SysUser, error) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err := g.TENANCY_DB.Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Update("password", utils.MD5V([]byte(newPassword))).Error
+	err := g.TENANCY_DB.Model(&model.SysUser{}).Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Update("password", utils.MD5V([]byte(newPassword))).Error
 	return u, err
 }
 
@@ -58,7 +62,7 @@ func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, er
 		return userList, total, err
 	}
 	err = db.Limit(limit).Offset(offset).
-		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
 		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Find(&userList).Error
@@ -83,7 +87,7 @@ func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64
 		return userList, total, err
 	}
 	err = db.Limit(limit).Offset(offset).
-		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
 		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
@@ -109,7 +113,7 @@ func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64
 		return userList, total, err
 	}
 	err = db.Limit(limit).Offset(offset).
-		Select("sys_users.id,sys_users.username,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Joins("left join sys_tenancies on sys_general_infos.sys_tenancy_id = sys_tenancies.id").

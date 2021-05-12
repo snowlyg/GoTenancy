@@ -29,6 +29,9 @@ func Login(ctx iris.Context) {
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
 		if user, err := service.Login(U); err != nil {
+			g.TENANCY_LOG.Error("登陆失败! 系统错误", zap.Any("err", err))
+			response.FailWithMessage("系统错误", ctx)
+		} else if user == nil || user.ID == 0 {
 			g.TENANCY_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
 			response.FailWithMessage("用户名不存在或者密码错误", ctx)
 		} else {
@@ -40,12 +43,12 @@ func Login(ctx iris.Context) {
 }
 
 // tokenNext 登录以后签发jwt
-func tokenNext(ctx iris.Context, user model.SysUser) {
+func tokenNext(ctx iris.Context, user response.SysAdminUser) {
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(user.ID), 10),
 		Username:      user.Username,
 		AuthorityId:   user.AuthorityId,
-		AuthorityType: user.Authority.AuthorityType,
+		AuthorityType: user.AuthorityType,
 		LoginType:     multi.LoginTypeWeb,
 		AuthType:      multi.AuthPwd,
 		CreationDate:  time.Now().Local().Unix(),
@@ -59,6 +62,7 @@ func tokenNext(ctx iris.Context, user model.SysUser) {
 		return
 	}
 	response.OkWithDetailed(response.LoginResponse{
+		User:  user,
 		Token: token,
 	}, "登录成功", ctx)
 }

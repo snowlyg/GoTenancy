@@ -1,7 +1,8 @@
 package response
 
 type LoginResponse struct {
-	Token string `json:"AccessToken"`
+	User  SysAdminUser `json:"user"`
+	Token string       `json:"AccessToken"`
 }
 
 type SysAdminUser struct {
@@ -13,6 +14,8 @@ type SysAdminUser struct {
 	HeaderImg     string `json:"headerImg"`
 	AuthorityName string `json:"authorityName"`
 	AuthorityType int    `json:"authorityType"`
+	AuthorityId   string `json:"authorityId"`
+	DefaultRouter string `json:"defaultRouter"`
 }
 
 type SysTenancyUser struct {
@@ -25,6 +28,7 @@ type SysTenancyUser struct {
 	AuthorityName string `json:"authorityName"`
 	AuthorityType int    `json:"authorityType"`
 	TenancyName   string `json:"tenancyName"`
+	DefaultRouter string `json:"defaultRouter"`
 }
 
 type SysGeneralUser struct {
