@@ -52,7 +52,7 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456"}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": 1}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")

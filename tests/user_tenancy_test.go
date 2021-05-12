@@ -6,6 +6,7 @@ import (
 
 	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/source"
+	"github.com/snowlyg/multi"
 )
 
 func TestTenancyUserList(t *testing.T) {
@@ -27,7 +28,7 @@ func TestTenancyUserList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "tenancyName", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "authorityId", "tenancyName", "defaultRouter", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
@@ -36,7 +37,7 @@ func TestTenancyUserList(t *testing.T) {
 func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -44,13 +45,13 @@ func TestTenancyUserProcess(t *testing.T) {
 
 	user := obj.Value("data").Object()
 	user.Value("id").Number().Ge(0)
-	user.Value("userName").String().Equal("chindeo")
+	user.Value("userName").String().Equal("admin")
 	user.Value("authorityId").String().Equal(source.TenancyAuthorityId)
 	userId := user.Value("id").Number().Raw()
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -58,7 +59,7 @@ func TestTenancyUserProcess(t *testing.T) {
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -94,7 +95,7 @@ func TestTenancyUserProcess(t *testing.T) {
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -103,14 +104,26 @@ func TestTenancyUserRegisterError(t *testing.T) {
 	baseLogOut(auth)
 }
 
-func TestTenancyUserRegisterAuthorityIdNotEmpty(t *testing.T) {
+func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": 0}).
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": 0, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
 	obj.Value("msg").String().Equal("AuthorityId值不能为空")
+
+	baseLogOut(auth)
+}
+
+func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	obj := auth.POST("/v1/admin/user/register").
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": 0}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(7)
+	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 
 	baseLogOut(auth)
 }

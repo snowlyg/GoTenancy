@@ -13,9 +13,13 @@ import (
 )
 
 // Register 用户注册
-func Register(u model.SysUser) (model.SysUser, error) {
+func Register(u model.SysUser, authorityType int) (model.SysUser, error) {
 	var user model.SysUser
-	if !errors.Is(g.TENANCY_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+	if !errors.Is(g.TENANCY_DB.
+		Where("sys_users.username = ?", u.Username).
+		Where("sys_authorities.authority_type = ?", authorityType).
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
 		return user, errors.New("用户名已注册")
 	}
 	// 否则 附加uuid 密码md5简单加密 注册
@@ -25,23 +29,42 @@ func Register(u model.SysUser) (model.SysUser, error) {
 }
 
 // Login 用户登录
-func Login(u *model.SysUser) (*response.SysAdminUser, error) {
+func Login(u *model.SysUser, authorityType int) (*response.SysAdminUser, error) {
 	var admin response.SysAdminUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err := g.TENANCY_DB.Model(&model.SysUser{}).Where("username = ? AND password = ?", u.Username, u.Password).
+	err := g.TENANCY_DB.Model(&model.SysUser{}).
+		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
+		Where("sys_authorities.authority_type = ?", authorityType).
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&admin).Error
-	return &admin, err
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return &admin, err
+	}
+	return &admin, nil
 }
 
 // ChangePassword 修改用户密码
-func ChangePassword(u *model.SysUser, newPassword string) (*model.SysUser, error) {
+func ChangePassword(u *model.SysUser, newPassword string, authorityType int) (*model.SysUser, error) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err := g.TENANCY_DB.Model(&model.SysUser{}).Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Update("password", utils.MD5V([]byte(newPassword))).Error
-	return u, err
+	err := g.TENANCY_DB.Model(&model.SysUser{}).
+		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
+		Where("sys_authorities.authority_type = ?", authorityType).
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&user).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return &user, err
+	}
+	if user.ID == 0 {
+		return &user, nil
+	}
+	err = g.TENANCY_DB.Model(&model.SysUser{}).Where("id = ?", user.ID).Update("password", utils.MD5V([]byte(newPassword))).Error
+	if err != nil {
+		return &user, err
+	}
+	return &user, nil
 }
 
 // GetAdminInfoList 分页获取数据

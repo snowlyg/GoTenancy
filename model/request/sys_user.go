@@ -2,25 +2,27 @@ package request
 
 // User register structure
 type Register struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-
-	AuthorityId string `json:"authorityId" gorm:"default:888"`
+	Username      string `json:"username"`
+	Password      string `json:"password"`
+	AuthorityId   string `json:"authorityId" gorm:"default:888"`
+	AuthorityType int    `json:"authorityType"`
 }
 
 // User login structure
 type Login struct {
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	Captcha   string `json:"captcha"`
-	CaptchaId string `json:"captchaId"`
+	Username      string `json:"username"`
+	Password      string `json:"password"`
+	Captcha       string `json:"captcha"`
+	CaptchaId     string `json:"captchaId"`
+	AuthorityType int    `json:"authorityType"`
 }
 
 // Modify password structure
 type ChangePasswordStruct struct {
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-	NewPassword string `json:"newPassword"`
+	Username      string `json:"username"`
+	Password      string `json:"password"`
+	NewPassword   string `json:"newPassword"`
+	AuthorityType int    `json:"authorityType"`
 }
 
 // Modify  user's auth structure

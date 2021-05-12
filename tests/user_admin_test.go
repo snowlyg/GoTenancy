@@ -6,6 +6,7 @@ import (
 
 	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/source"
+	"github.com/snowlyg/multi"
 )
 
 func TestAdminUserList(t *testing.T) {
@@ -26,7 +27,7 @@ func TestAdminUserList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "authorityId", "defaultRouter", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
@@ -35,7 +36,7 @@ func TestAdminUserList(t *testing.T) {
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -49,7 +50,7 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -57,11 +58,19 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789"}).
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
 	obj.Value("msg").String().Equal("修改失败，原密码与当前账户不符")
+
+	// changePassword error
+	obj = auth.POST("/v1/admin/user/changePassword").
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": 0}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(7)
+	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
@@ -93,7 +102,7 @@ func TestAdminUserProcess(t *testing.T) {
 func TestAdminUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)
@@ -102,10 +111,22 @@ func TestAdminUserRegisterError(t *testing.T) {
 	baseLogOut(auth)
 }
 
-func TestAdminUserRegisterAuthorityIdNotEmpty(t *testing.T) {
+func TestAdminUserRegisterAuthorityTypeEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": 0}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": 0}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(7)
+	obj.Value("msg").String().Equal("AuthorityType值不能为空")
+
+	baseLogOut(auth)
+}
+
+func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	obj := auth.POST("/v1/admin/user/register").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": 0, "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(7)

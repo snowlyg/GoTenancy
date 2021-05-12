@@ -28,10 +28,10 @@ func Login(ctx iris.Context) {
 
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
-		if user, err := service.Login(U); err != nil {
+		if user, err := service.Login(U, L.AuthorityType); err != nil {
 			g.TENANCY_LOG.Error("登陆失败! 系统错误", zap.Any("err", err))
 			response.FailWithMessage("系统错误", ctx)
-		} else if user == nil || user.ID == 0 {
+		} else if user.ID == 0 {
 			g.TENANCY_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
 			response.FailWithMessage("用户名不存在或者密码错误", ctx)
 		} else {
@@ -108,7 +108,7 @@ func Register(ctx iris.Context) {
 		return
 	}
 	user := &model.SysUser{Username: R.Username, Password: R.Password, AuthorityId: R.AuthorityId}
-	userReturn, err := service.Register(*user)
+	userReturn, err := service.Register(*user, R.AuthorityType)
 	if err != nil {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithMessage("注册失败", ctx)
@@ -126,8 +126,12 @@ func ChangePassword(ctx iris.Context) {
 		return
 	}
 	U := &model.SysUser{Username: user.Username, Password: user.Password}
-	if _, err := service.ChangePassword(U, user.NewPassword); err != nil {
+	returnUser, err := service.ChangePassword(U, user.NewPassword, user.AuthorityType)
+	if err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
+		response.FailWithMessage("修改失败，系统错误", ctx)
+	} else if returnUser.ID == 0 {
+		g.TENANCY_LOG.Error("修改失败", zap.String("msg", "修改失败，原密码与当前账户不符"))
 		response.FailWithMessage("修改失败，原密码与当前账户不符", ctx)
 	} else {
 		response.OkWithMessage("修改成功", ctx)

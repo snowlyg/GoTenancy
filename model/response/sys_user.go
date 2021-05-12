@@ -27,6 +27,7 @@ type SysTenancyUser struct {
 	HeaderImg     string `json:"headerImg"`
 	AuthorityName string `json:"authorityName"`
 	AuthorityType int    `json:"authorityType"`
+	AuthorityId   string `json:"authorityId"`
 	TenancyName   string `json:"tenancyName"`
 	DefaultRouter string `json:"defaultRouter"`
 }
@@ -40,5 +41,6 @@ type SysGeneralUser struct {
 	HeaderImg     string `json:"headerImg"`
 	AuthorityName string `json:"authorityName"`
 	AuthorityType int    `json:"authorityType"`
+	AuthorityId   string `json:"authorityId"`
 	TenancyName   string `json:"tenancyName"`
 }
