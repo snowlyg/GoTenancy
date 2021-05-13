@@ -12,8 +12,8 @@ import (
 func IsTenancy() iris.Handler {
 	return func(ctx iris.Context) {
 		if !multi.IsTenancy(ctx) {
-			response.FailWithMessage("无此操作权限", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			response.ForbiddenFailWithMessage("无此操作权限", ctx)
 			return
 		}
 		ctx.Next()

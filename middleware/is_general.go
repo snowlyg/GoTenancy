@@ -12,8 +12,8 @@ import (
 func IsGeneral() iris.Handler {
 	return func(ctx iris.Context) {
 		if !multi.IsGeneral(ctx) {
-			response.FailWithMessage("无此操作权限", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			response.ForbiddenFailWithMessage("无此操作权限", ctx)
 			return
 		}
 		ctx.Next()

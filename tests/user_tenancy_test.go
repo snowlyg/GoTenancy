@@ -62,7 +62,7 @@ func TestTenancyUserProcess(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("修改失败，原密码与当前账户不符")
 
 	// setUserAuthority
@@ -98,7 +98,7 @@ func TestTenancyUserRegisterError(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("注册失败")
 
 	baseLogOut(auth)
@@ -110,7 +110,7 @@ func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": 0, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityId值不能为空")
 
 	baseLogOut(auth)
@@ -122,7 +122,7 @@ func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": 0}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 
 	baseLogOut(auth)

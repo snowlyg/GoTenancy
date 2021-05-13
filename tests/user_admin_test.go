@@ -61,7 +61,7 @@ func TestAdminUserProcess(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("修改失败，原密码与当前账户不符")
 
 	// changePassword error
@@ -69,7 +69,7 @@ func TestAdminUserProcess(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": 0}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 
 	// setUserAuthority
@@ -105,7 +105,7 @@ func TestAdminUserRegisterError(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("注册失败")
 
 	baseLogOut(auth)
@@ -117,7 +117,7 @@ func TestAdminUserRegisterAuthorityTypeEmpty(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": 0}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 
 	baseLogOut(auth)
@@ -129,7 +129,7 @@ func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": 0, "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityId值不能为空")
 
 	baseLogOut(auth)

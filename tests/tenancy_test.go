@@ -116,7 +116,7 @@ func TestTenancyRegisterError(t *testing.T) {
 		WithJSON(data).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("创建失败")
 
 	baseLogOut(auth)

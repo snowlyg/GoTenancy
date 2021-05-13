@@ -11,8 +11,10 @@ type Response struct {
 }
 
 const (
-	ERROR   = 7
-	SUCCESS = 0
+	SUCCESS                    = 0
+	BAD_REQUEST_ERROR          = 4000
+	UNAUTHORIZED_REQUEST_ERROR = 4001
+	FORBIDDEN_REQUEST_ERROR    = 4003
 )
 
 func Result(code int, data interface{}, msg string, ctx iris.Context) {
@@ -41,13 +43,21 @@ func OkWithDetailed(data interface{}, message string, ctx iris.Context) {
 }
 
 func Fail(ctx iris.Context) {
-	Result(ERROR, map[string]interface{}{}, "操作失败", ctx)
+	Result(BAD_REQUEST_ERROR, map[string]interface{}{}, "操作失败", ctx)
+}
+
+func UnauthorizedFailWithMessage(message string, ctx iris.Context) {
+	Result(UNAUTHORIZED_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
+}
+
+func ForbiddenFailWithMessage(message string, ctx iris.Context) {
+	Result(UNAUTHORIZED_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
 func FailWithMessage(message string, ctx iris.Context) {
-	Result(ERROR, map[string]interface{}{}, message, ctx)
+	Result(BAD_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
 func FailWithDetailed(data interface{}, message string, ctx iris.Context) {
-	Result(ERROR, data, message, ctx)
+	Result(BAD_REQUEST_ERROR, data, message, ctx)
 }

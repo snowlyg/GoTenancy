@@ -16,8 +16,8 @@ func CasbinHandler() iris.Handler {
 	return func(ctx iris.Context) {
 		waitUse := multi.Get(ctx)
 		if waitUse == nil {
-			response.FailWithMessage("权限服务验证失败：token empty", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			response.ForbiddenFailWithMessage("权限服务验证失败：token empty", ctx)
 			return
 		}
 		obj := ctx.Path()          // 获取请求的URI
@@ -25,24 +25,30 @@ func CasbinHandler() iris.Handler {
 		sub := waitUse.AuthorityId // 获取用户的角色
 
 		g.TENANCY_LOG.Debug("route path", zap.String("string", obj))
+		if sub == "" {
+			ctx.StatusCode(http.StatusUnauthorized)
+			g.TENANCY_LOG.Info("user authorityId is empty")
+			response.UnauthorizedFailWithMessage("auth token 已经过期", ctx)
+			return
+		}
 
 		// 判断策略中是否存在
 		casbin, err := service.Casbin()
 		if err != nil {
-			g.TENANCY_LOG.Error("get casbin err", zap.Error(err))
-			response.FailWithMessage("权限服务验证失败：casbin error", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			g.TENANCY_LOG.Error("get casbin err", zap.Error(err))
+			response.ForbiddenFailWithMessage("权限服务验证失败：casbin error", ctx)
 			return
 		}
 		success, err := casbin.Enforce(sub, obj, act)
 		if err != nil {
-			response.FailWithMessage("权限服务验证失败：verfiy failed", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			response.ForbiddenFailWithMessage("权限服务验证失败：verfiy failed", ctx)
 			return
 		}
 		if !success {
-			response.FailWithMessage("无此操作权限", ctx)
 			ctx.StatusCode(http.StatusForbidden)
+			response.ForbiddenFailWithMessage("无此操作权限", ctx)
 			return
 		}
 		ctx.Next()

@@ -13,7 +13,7 @@ func TestLoginWithErrorUsername(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名不存在或者密码错误")
 	obj.Value("data").Object().Empty()
 }
@@ -25,7 +25,7 @@ func TestLoginWithErrorPassword(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名不存在或者密码错误")
 	obj.Value("data").Object().Empty()
 }
@@ -37,7 +37,7 @@ func TestLoginWithErrorUsernameAndPassword(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名不存在或者密码错误")
 	obj.Value("data").Object().Empty()
 }
@@ -49,7 +49,7 @@ func TestLoginWithErrorAuthorityType(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名不存在或者密码错误")
 	obj.Value("data").Object().Empty()
 }
@@ -61,7 +61,7 @@ func TestLoginWithEmptyAuthorityType(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(7)
+	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("AuthorityType值不能为空")
 	obj.Value("data").Object().Empty()
 }
