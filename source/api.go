@@ -70,6 +70,10 @@ var apis = []model.SysApi{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 48, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/mini/updateMini", Description: "更新小程序", ApiGroup: "mini", Method: "PUT"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 49, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/mini/deleteMini", Description: "删除小程序", ApiGroup: "mini", Method: "DELETE"},
 
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 50, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/authority/getAdminAuthorityList", Description: "获取员工角色列表", ApiGroup: "authority", Method: "POST"},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 51, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/authority/getTenancyAuthorityList", Description: "获取商户角色列表", ApiGroup: "authority", Method: "POST"},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 52, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/authority/getGeneralAuthorityList", Description: "获取普通用户角色列表", ApiGroup: "authority", Method: "POST"},
+
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 54, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/sysOperationRecord/createSysOperationRecord", Description: "新增操作记录", ApiGroup: "sysOperationRecord", Method: "POST"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 55, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/sysOperationRecord/deleteSysOperationRecord", Description: "删除操作记录", ApiGroup: "sysOperationRecord", Method: "DELETE"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 56, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录", ApiGroup: "sysOperationRecord", Method: "GET"},

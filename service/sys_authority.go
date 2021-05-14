@@ -82,14 +82,17 @@ func DeleteAuthority(auth *model.SysAuthority) error {
 }
 
 // GetAuthorityInfoList 分页获取数据
-func GetAuthorityInfoList(info request.PageInfo) ([]model.SysAuthority, int64, error) {
+func GetAuthorityInfoList(info request.PageInfo, authorityType int) ([]model.SysAuthority, int64, error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB
+	db := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("parent_id = 0")
+	if authorityType > 0 {
+		db = db.Where("authority_type = ?", authorityType)
+	}
 	var total int64
 	db.Count(&total)
 	var authority []model.SysAuthority
-	err := db.Limit(limit).Offset(offset).Preload("DataAuthorityId").Where("parent_id = 0").Find(&authority).Error
+	err := db.Limit(limit).Offset(offset).Preload("DataAuthorityId").Find(&authority).Error
 	if len(authority) > 0 {
 		for k := range authority {
 			err = findChildrenAuthority(&authority[k])

@@ -4,6 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 
 	"github.com/snowlyg/go-tenancy/utils"
 
@@ -84,6 +85,69 @@ func UpdateAuthority(ctx iris.Context) {
 	}
 }
 
+// GetAdminAuthorityList 分页获取角色列表
+func GetAdminAuthorityList(ctx iris.Context) {
+	var pageInfo request.PageInfo
+	_ = ctx.ReadJSON(&pageInfo)
+	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.AdminAuthority); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}
+
+// GetTenancyAuthorityList 分页获取角色列表
+func GetTenancyAuthorityList(ctx iris.Context) {
+	var pageInfo request.PageInfo
+	_ = ctx.ReadJSON(&pageInfo)
+	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.TenancyAuthority); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}
+
+// GetGeneralAuthorityList 分页获取角色列表
+func GetGeneralAuthorityList(ctx iris.Context) {
+	var pageInfo request.PageInfo
+	_ = ctx.ReadJSON(&pageInfo)
+	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.GeneralAuthority); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}
+
 // GetAuthorityList 分页获取角色列表
 func GetAuthorityList(ctx iris.Context) {
 	var pageInfo request.PageInfo
@@ -92,7 +156,7 @@ func GetAuthorityList(ctx iris.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetAuthorityInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.NoneAuthority); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败"+err.Error(), ctx)
 	} else {

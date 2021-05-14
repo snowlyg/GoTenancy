@@ -33,7 +33,9 @@ var menus = []model.SysBaseMenu{
 
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 10, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "3", Path: "tenancy", Name: "tenancy", Component: "view/superAdmin/tenancy/index.vue", Sort: 7, Meta: model.Meta{Title: "商户管理", Icon: "coordinate"}},
 
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 16, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 8, Meta: model.Meta{Title: "个人信息", Icon: "message-solid"}},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 11, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "3", Path: "mini", Name: "mini", Component: "view/superAdmin/mini/index.vue", Sort: 8, Meta: model.Meta{Title: "小程序管理", Icon: "coordinate"}},
+
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 16, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 9, Meta: model.Meta{Title: "个人信息", Icon: "message-solid"}},
 
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 17, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "14", Path: "system", Name: "system", Component: "view/systemTools/system/system.vue", Sort: 3, Meta: model.Meta{Title: "系统配置", Icon: "s-operation"}},
 

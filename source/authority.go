@@ -25,7 +25,7 @@ var authorities = []model.SysAuthority{
 	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: TenancyAuthorityId, AuthorityType: multi.TenancyAuthority, AuthorityName: "商户管理员", ParentId: "0", DefaultRouter: "dashboard"},
 	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: GeneralAuthorityId, AuthorityType: multi.GeneralAuthority, AuthorityName: "C端用户", ParentId: "0", DefaultRouter: "dashboard"},
 	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "8881", AuthorityName: "普通用户子角色", ParentId: AdminAuthorityId, DefaultRouter: "dashboard"},
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "9528", AuthorityName: "测试角色", ParentId: "0", DefaultRouter: "dashboard"},
+	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "9528", AuthorityType: multi.GeneralAuthority, AuthorityName: "测试角色", ParentId: "0", DefaultRouter: "dashboard"},
 }
 
 //@description: sys_authorities 表数据初始化
