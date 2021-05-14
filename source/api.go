@@ -15,7 +15,6 @@ var Api = new(api)
 type api struct{}
 
 var apis = []model.SysApi{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/base/login", Description: "用户登录", ApiGroup: "base", Method: "POST"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/user/register", Description: "用户注册", ApiGroup: "user", Method: "POST"},
 
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/api/createApi", Description: "创建api", ApiGroup: "api", Method: "POST"},

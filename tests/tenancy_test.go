@@ -24,7 +24,7 @@ func TestTenancyList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "sysRegionCode", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
@@ -93,7 +93,8 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
 	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
 
-	obj = auth.PUT("/v1/admin/tenancy/setTenancyRegion").
+	// setTenancyRegion
+	obj = auth.POST("/v1/admin/tenancy/setTenancyRegion").
 		WithJSON(map[string]interface{}{
 			"id":            tenancyId,
 			"sysRegionCode": 2,
@@ -101,7 +102,7 @@ func TestTenancyProcess(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("更新成功")
+	obj.Value("msg").String().Equal("设置成功")
 
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/tenancy/deleteTenancy").

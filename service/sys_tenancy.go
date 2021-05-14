@@ -35,7 +35,7 @@ func SetTenancyRegionByID(id float64, sysRegionCode int) error {
 
 // UpdateTenany
 func UpdateTenany(t model.SysTenancy) (model.SysTenancy, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Where("id <> ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
+	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Not("id = ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
 		return t, errors.New("商户名称已被注冊")
 	}
 	err := g.TENANCY_DB.Updates(&t).Error
