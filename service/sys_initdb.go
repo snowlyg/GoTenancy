@@ -126,8 +126,6 @@ func InitDB(conf request.InitDB) error {
 		model.SysApi{},
 		model.SysBaseMenu{},
 		model.SysBaseMenuParameter{},
-		model.SysDictionary{},
-		model.SysDictionaryDetail{},
 		model.SysOperationRecord{},
 		model.SysTenancy{},
 		model.SysRegion{},

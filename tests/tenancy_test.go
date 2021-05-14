@@ -74,7 +74,7 @@ func TestTenancyProcess(t *testing.T) {
 		"tele":          "0755-235689111",
 		"address":       "xxx街道667号",
 		"businessTime":  "08:30-17:40",
-		"sysRegionCode": 0,
+		"sysRegionCode": 1,
 	}
 
 	obj = auth.PUT("/v1/admin/tenancy/updateTenancy").
@@ -92,6 +92,16 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("address").String().Equal(update["address"].(string))
 	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
 	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
+
+	obj = auth.PUT("/v1/admin/tenancy/setTenancyRegion").
+		WithJSON(map[string]interface{}{
+			"id":            tenancyId,
+			"sysRegionCode": 2,
+		}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("更新成功")
 
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/tenancy/deleteTenancy").

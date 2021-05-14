@@ -20,6 +20,7 @@ var (
 
 	CreateTenancyVerify = Rules{"Name": {NotEmpty()}, "SysRegionCode": {NotEmpty()}}
 	UpdateTenancyVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "SysRegionCode": {NotEmpty()}}
+	SetRegionCodeVerify = Rules{"ID": {NotEmpty()}, "SysRegionCode": {NotEmpty()}}
 
 	CreateMiniVerify = Rules{"Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}
 	UpdateMiniVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}

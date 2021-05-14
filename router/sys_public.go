@@ -12,6 +12,7 @@ func InitPublicRouter(Router iris.Party) (R iris.Party) {
 		BaseRouter.Post("/login", v1.Login)
 		BaseRouter.Post("/captcha", v1.Captcha)
 		BaseRouter.Get("/region/{p_code:int}", v1.Region)
+		BaseRouter.Get("/getRegionList", v1.RegionList)
 	}
 	return BaseRouter
 }

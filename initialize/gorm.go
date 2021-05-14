@@ -34,8 +34,6 @@ func MysqlTables(db *gorm.DB) {
 		model.SysApi{},
 		model.SysBaseMenu{},
 		model.SysBaseMenuParameter{},
-		model.SysDictionary{},
-		model.SysDictionaryDetail{},
 		model.SysOperationRecord{},
 		model.SysTenancy{},
 		model.SysRegion{},

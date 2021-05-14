@@ -28,6 +28,11 @@ func GetTenancyByID(id float64) (model.SysTenancy, error) {
 	return tenancy, err
 }
 
+// SetTenancyRegionByID
+func SetTenancyRegionByID(id float64, sysRegionCode int) error {
+	return g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", id).Update("sys_region_code", sysRegionCode).Error
+}
+
 // UpdateTenany
 func UpdateTenany(t model.SysTenancy) (model.SysTenancy, error) {
 	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Where("id <> ?", t.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {

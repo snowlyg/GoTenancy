@@ -146,7 +146,7 @@ func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64
 
 // SetUserAuthority  设置一个用户的权限
 func SetUserAuthority(id float64, authorityId string) error {
-	return g.TENANCY_DB.Where("id = ?", id).First(&model.SysUser{}).Update("authority_id", authorityId).Error
+	return g.TENANCY_DB.Model(&model.SysUser{}).Where("id = ?", id).Update("authority_id", authorityId).Error
 }
 
 // DeleteUser 删除用户

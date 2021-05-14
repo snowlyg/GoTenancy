@@ -17,6 +17,7 @@ func CreateTenancy(ctx iris.Context) {
 	_ = ctx.ReadJSON(&tenancy)
 	if err := utils.Verify(tenancy, utils.CreateTenancyVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
+		return
 	}
 	if returnTenancy, err := service.CreateTenancy(tenancy); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
@@ -41,6 +42,23 @@ func GetTenancyById(ctx iris.Context) {
 		response.FailWithMessage("获取失败", ctx)
 	} else {
 		response.OkWithData(tenancy, ctx)
+	}
+}
+
+// SetTenancyRegion
+func SetTenancyRegion(ctx iris.Context) {
+	var regionCode request.SetRegionCode
+	_ = ctx.ReadJSON(&regionCode)
+	if err := utils.Verify(regionCode, utils.SetRegionCodeVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	err := service.SetTenancyRegionByID(regionCode.Id, regionCode.SysRegionCode)
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
 	}
 }
 
