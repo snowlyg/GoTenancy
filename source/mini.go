@@ -20,14 +20,14 @@ var minis = []model.SysMini{
 
 func (m *mini) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
-		if tx.Where("id IN ?", []int{1}).Find(&[]model.SysTenancy{}).RowsAffected == 1 {
-			color.Danger.Println("\n[Mysql] --> sys_tenancies 表的初始数据已存在!")
+		if tx.Where("id IN ?", []int{1}).Find(&[]model.SysMini{}).RowsAffected == 1 {
+			color.Danger.Println("\n[Mysql] --> sys_minis 表的初始数据已存在!")
 			return nil
 		}
 		if err := tx.Create(&minis).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
-		color.Info.Println("\n[Mysql] --> sys_tenancies 表初始数据成功!")
+		color.Info.Println("\n[Mysql] --> sys_minis 表初始数据成功!")
 		return nil
 	})
 }
