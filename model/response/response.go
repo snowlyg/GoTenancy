@@ -51,7 +51,7 @@ func UnauthorizedFailWithMessage(message string, ctx iris.Context) {
 }
 
 func ForbiddenFailWithMessage(message string, ctx iris.Context) {
-	Result(UNAUTHORIZED_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
+	Result(FORBIDDEN_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
 func FailWithMessage(message string, ctx iris.Context) {

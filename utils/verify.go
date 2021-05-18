@@ -24,6 +24,10 @@ var (
 
 	CreateMiniVerify = Rules{"Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}
 	UpdateMiniVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "AppID": {NotEmpty()}, "AppSecret": {NotEmpty()}}
+
+	GetConfigVerify    = Rules{"Name": {NotEmpty()}, "Type": {NotEmpty()}}
+	CreateConfigVerify = Rules{"Name": {NotEmpty()}, "Value": {NotEmpty()}, "Type": {NotEmpty()}}
+	UpdateConfigVerify = Rules{"ID": {NotEmpty()}, "Name": {NotEmpty()}, "Value": {NotEmpty()}, "Type": {NotEmpty()}}
 )
 
 func GetLoginVerify() Rules {

@@ -130,6 +130,7 @@ func InitDB(conf request.InitDB) error {
 		model.SysTenancy{},
 		model.SysRegion{},
 		model.SysMini{},
+		model.SysConfig{},
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
@@ -147,6 +148,7 @@ func InitDB(conf request.InitDB) error {
 		source.Tenancy,
 		source.Region,
 		source.Mini,
+		source.Config,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)
