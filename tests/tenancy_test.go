@@ -93,6 +93,22 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
 	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
 
+	obj = auth.POST("/v1/admin/tenancy/getTenancyById").
+		WithJSON(map[string]interface{}{"id": tenancyId}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("操作成功")
+	tenancy = obj.Value("data").Object()
+
+	tenancy.Value("id").Number().Ge(0)
+	tenancy.Value("uuid").String().NotEmpty()
+	tenancy.Value("name").String().Equal(update["name"].(string))
+	tenancy.Value("tele").String().Equal(update["tele"].(string))
+	tenancy.Value("address").String().Equal(update["address"].(string))
+	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
+	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
+
 	// setTenancyRegion
 	obj = auth.POST("/v1/admin/tenancy/setTenancyRegion").
 		WithJSON(map[string]interface{}{

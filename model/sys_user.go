@@ -72,7 +72,6 @@ type SysGeneralInfo struct {
 	Phone     string    `json:"phone" gorm:"default:'';comment:员工手机号" `
 	NickName  string    `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
 	AvatarUrl string    `json:"avatarUrl" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID int       `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 	Sex       Sex       `json:"sex" form:"sex" gorm:"column:sex;comment:性别 1:男，2：女"`
 	Subscribe int       `json:"subscribe" form:"subscribe" gorm:"column:subscribe;comment:是否订阅"`
 	OpenId    string    `json:"openId" form:"openId" gorm:"column:open_id;comment:openid"`
@@ -84,4 +83,6 @@ type SysGeneralInfo struct {
 	IsAuth    int       `json:"isAuth" form:"isAuth" gorm:"column:is_auth;comment:是否实名认证"`
 	RealName  string    `json:"realName" form:"realName" gorm:"column:real_name;comment:真实IP"`
 	Birthday  time.Time `json:"birthday" form:"birthday" gorm:"column:birthday;comment:生日"`
+
+	SysUserID int `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }

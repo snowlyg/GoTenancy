@@ -71,6 +71,23 @@ func TestConfigProcess(t *testing.T) {
 	config.Value("type").String().Equal(update["type"].(string))
 	config.Value("value").String().Equal(update["value"].(string))
 
+	getByName := map[string]interface{}{
+		"name": "YJ3s1abt7MAfT6gWVKoDjnhjsfsd",
+		"type": "YJ3s1abt7MAfT6gWVKoDjnhjsfsd",
+	}
+	obj = auth.POST("/v1/admin/config/getConfigByName").
+		WithJSON(getByName).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("操作成功")
+	config = obj.Value("data").Object()
+
+	config.Value("id").Number().Ge(0)
+	config.Value("name").String().Equal(update["name"].(string))
+	config.Value("type").String().Equal(update["type"].(string))
+	config.Value("value").String().Equal(update["value"].(string))
+
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/config/deleteConfig").
 		WithJSON(map[string]interface{}{"id": configId}).

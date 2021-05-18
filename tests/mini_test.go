@@ -77,6 +77,21 @@ func TestMiniProcess(t *testing.T) {
 	mini.Value("appSecret").String().Equal(update["appSecret"].(string))
 	mini.Value("remark").String().Equal(update["remark"].(string))
 
+	obj = auth.POST("/v1/admin/mini/getMiniById").
+		WithJSON(map[string]interface{}{"id": miniId}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("操作成功")
+	mini = obj.Value("data").Object()
+
+	mini.Value("id").Number().Ge(0)
+	mini.Value("uuid").String().NotEmpty()
+	mini.Value("name").String().Equal(update["name"].(string))
+	mini.Value("appId").String().Equal(update["appId"].(string))
+	mini.Value("appSecret").String().Equal(update["appSecret"].(string))
+	mini.Value("remark").String().Equal(update["remark"].(string))
+
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/mini/deleteMini").
 		WithJSON(map[string]interface{}{"id": miniId}).
