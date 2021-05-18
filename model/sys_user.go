@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/multi"
 )
@@ -56,12 +58,30 @@ type SysTenancyInfo struct {
 	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
 }
 
+type Sex int
+
+const (
+	UnknownSex = iota
+	Male
+	Female
+)
+
 type SysGeneralInfo struct {
 	g.TENANCY_MODEL
-	Email        string `json:"email" gorm:"default:'';comment:员工邮箱"`
-	Phone        string `json:"phone" gorm:"default:'';comment:员工手机号" `
-	NickName     string `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
-	HeaderImg    string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID    int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
-	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
+	Email     string    `json:"email" gorm:"default:'';comment:员工邮箱"`
+	Phone     string    `json:"phone" gorm:"default:'';comment:员工手机号" `
+	NickName  string    `json:"nickName" gorm:"default:'员工姓名';comment:员工姓名" `
+	AvatarUrl string    `json:"avatarUrl" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
+	SysUserID int       `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	Sex       Sex       `json:"sex" form:"sex" gorm:"column:sex;comment:性别 1:男，2：女"`
+	Subscribe int       `json:"subscribe" form:"subscribe" gorm:"column:subscribe;comment:是否订阅"`
+	OpenId    string    `json:"openId" form:"openId" gorm:"column:open_id;comment:openid"`
+	UnionId   string    `json:"unionId" form:"unionId" gorm:"column:union_id;comment:unionId"`
+	Country   string    `json:"country" form:"country" gorm:"column:country;comment:国家"`
+	Province  string    `json:"provice" form:"provice" gorm:"column:provice;comment:省份"`
+	City      string    `json:"city" form:"city" gorm:"column:city;comment:城市"`
+	IdCard    string    `json:"idCard" form:"idCard" gorm:"column:id_card;comment:身份证号"`
+	IsAuth    int       `json:"isAuth" form:"isAuth" gorm:"column:is_auth;comment:是否实名认证"`
+	RealName  string    `json:"realName" form:"realName" gorm:"column:real_name;comment:真实IP"`
+	Birthday  time.Time `json:"birthday" form:"birthday" gorm:"column:birthday;comment:生日"`
 }
