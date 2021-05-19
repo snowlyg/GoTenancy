@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -11,46 +10,46 @@ import (
 	"go.uber.org/zap"
 )
 
-// CreateConfig
-func CreateConfig(ctx iris.Context) {
-	var config model.SysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&config)); errs != nil {
+// CreateAddress
+func CreateAddress(ctx iris.Context) {
+	var address request.CreateAddress
+	if errs := utils.Verify(ctx.ReadJSON(&address)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnConfig, err := service.CreateConfig(config); err != nil {
+	if returnAddress, err := service.CreateAddress(address); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		data := iris.Map{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
+		data := iris.Map{"id": returnAddress.ID}
 		response.OkWithDetailed(data, "创建成功", ctx)
 	}
 }
 
-// UpdateConfig
-func UpdateConfig(ctx iris.Context) {
-	var config model.SysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&config)); errs != nil {
+// UpdateAddress
+func UpdateAddress(ctx iris.Context) {
+	var address request.UpdateAddress
+	if errs := utils.Verify(ctx.ReadJSON(&address)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnConfig, err := service.UpdateConfig(config); err != nil {
+	if returnAddress, err := service.UpdateAddress(address); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
+		data := iris.Map{"id": returnAddress.ID}
 		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }
 
-// GetConfigList
-func GetConfigList(ctx iris.Context) {
+// GetAddressList
+func GetAddressList(ctx iris.Context) {
 	var pageInfo request.PageInfo
 	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetConfigInfoList(pageInfo); err != nil {
+	if list, total, err := service.GetAddressInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -63,30 +62,30 @@ func GetConfigList(ctx iris.Context) {
 	}
 }
 
-// GetConfigByName
-func GetConfigByName(ctx iris.Context) {
-	var req request.GetSysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&req)); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	config, err := service.GetConfigByName(req.Name, req.Type)
-	if err != nil {
-		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
-	} else {
-		response.OkWithData(config, ctx)
-	}
-}
-
-// DeleteConfig
-func DeleteConfig(ctx iris.Context) {
+// GetAddressById
+func GetAddressById(ctx iris.Context) {
 	var reqId request.GetById
 	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteConfig(reqId.Id); err != nil {
+	address, err := service.GetAddressByID(reqId.Id)
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", ctx)
+	} else {
+		response.OkWithData(address, ctx)
+	}
+}
+
+// DeleteAddress
+func DeleteAddress(ctx iris.Context) {
+	var reqId request.GetById
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteAddress(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", ctx)
 	} else {

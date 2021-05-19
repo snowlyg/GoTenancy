@@ -12,7 +12,7 @@ type SysUser struct {
 	Username    string       `json:"userName" gorm:"comment:用户登录名"`
 	Password    string       `json:"-"  gorm:"comment:用户登录密码"`
 	Authority   SysAuthority `json:"authority" gorm:"foreignKey:AuthorityId;references:AuthorityId;comment:用户角色"`
-	AuthorityId string       `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
+	AuthorityId string       `json:"authorityId" gorm:"comment:用户角色ID"`
 
 	AdminInfo   SysAdminInfo   `json:"adminInfo" gorm:"foreignKey:SysUserID;references:ID;comment:管理员信息"`
 	TenancyInfo SysTenancyInfo `json:"tenancyInfo" gorm:"foreignKey:SysUserID;references:ID;comment:商户信息"`
@@ -61,9 +61,9 @@ type SysTenancyInfo struct {
 type Sex int
 
 const (
-	UnknownSex = iota
+	Female = iota
 	Male
-	Female
+	Unknown
 )
 
 type SysGeneralInfo struct {

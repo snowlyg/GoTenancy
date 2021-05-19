@@ -99,7 +99,7 @@ func TestTenancyUserRegisterError(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("注册失败")
+	obj.Value("msg").String().Equal("用户名已注册")
 
 	baseLogOut(auth)
 }
@@ -107,11 +107,11 @@ func TestTenancyUserRegisterError(t *testing.T) {
 func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": 0, "authorityType": multi.TenancyAuthority}).
+		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": "", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityId值不能为空")
+	obj.Value("msg").String().Equal("Key: 'Register.AuthorityId' Error:Field validation for 'AuthorityId' failed on the 'required' tag")
 
 	baseLogOut(auth)
 }
@@ -123,7 +123,7 @@ func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityType值不能为空")
+	obj.Value("msg").String().Equal("Key: 'Register.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 
 	baseLogOut(auth)
 }

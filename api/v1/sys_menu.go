@@ -34,9 +34,8 @@ func GetBaseMenuTree(ctx iris.Context) {
 // AddMenuAuthority 增加menu和角色关联关系
 func AddMenuAuthority(ctx iris.Context) {
 	var authorityMenu request.AddMenuAuthorityInfo
-	_ = ctx.ReadJSON(&authorityMenu)
-	if err := utils.Verify(authorityMenu, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&authorityMenu)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.AddMenuAuthority(authorityMenu.Menus, authorityMenu.AuthorityId); err != nil {
@@ -50,9 +49,8 @@ func AddMenuAuthority(ctx iris.Context) {
 // GetMenuAuthority 获取指定角色menu
 func GetMenuAuthority(ctx iris.Context) {
 	var param request.GetAuthorityId
-	_ = ctx.ReadJSON(&param)
-	if err := utils.Verify(param, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&param)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err, menus := service.GetMenuAuthority(&param); err != nil {
@@ -66,13 +64,8 @@ func GetMenuAuthority(ctx iris.Context) {
 // AddBaseMenu 新增菜单
 func AddBaseMenu(ctx iris.Context) {
 	var menu model.SysBaseMenu
-	_ = ctx.ReadJSON(&menu)
-	if err := utils.Verify(menu, utils.MenuVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
-		return
-	}
-	if err := utils.Verify(menu.Meta, utils.MenuMetaVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.AddBaseMenu(menu); err != nil {
@@ -87,9 +80,8 @@ func AddBaseMenu(ctx iris.Context) {
 // DeleteBaseMenu 删除菜单
 func DeleteBaseMenu(ctx iris.Context) {
 	var menu request.GetById
-	_ = ctx.ReadJSON(&menu)
-	if err := utils.Verify(menu, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.DeleteBaseMenu(menu.Id); err != nil {
@@ -103,13 +95,8 @@ func DeleteBaseMenu(ctx iris.Context) {
 // UpdateBaseMenu 更新菜单
 func UpdateBaseMenu(ctx iris.Context) {
 	var menu model.SysBaseMenu
-	_ = ctx.ReadJSON(&menu)
-	if err := utils.Verify(menu, utils.MenuVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
-		return
-	}
-	if err := utils.Verify(menu.Meta, utils.MenuMetaVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.UpdateBaseMenu(menu); err != nil {
@@ -123,9 +110,8 @@ func UpdateBaseMenu(ctx iris.Context) {
 // GetBaseMenuById 根据id获取菜单
 func GetBaseMenuById(ctx iris.Context) {
 	var idInfo request.GetById
-	_ = ctx.ReadJSON(&idInfo)
-	if err := utils.Verify(idInfo, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&idInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if menu, err := service.GetBaseMenuById(idInfo.Id); err != nil {
@@ -139,9 +125,8 @@ func GetBaseMenuById(ctx iris.Context) {
 // GetMenuList 分页获取基础menu列表
 func GetMenuList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if menuList, err := service.GetInfoList(); err != nil {

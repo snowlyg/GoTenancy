@@ -70,7 +70,7 @@ func TestAdminUserProcess(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityType值不能为空")
+	obj.Value("msg").String().Equal("Key: 'ChangePasswordStruct.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
@@ -106,7 +106,7 @@ func TestAdminUserRegisterError(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("注册失败")
+	obj.Value("msg").String().Equal("用户名已注册")
 
 	baseLogOut(auth)
 }
@@ -118,7 +118,7 @@ func TestAdminUserRegisterAuthorityTypeEmpty(t *testing.T) {
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityType值不能为空")
+	obj.Value("msg").String().Equal("Key: 'Register.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 
 	baseLogOut(auth)
 }
@@ -126,11 +126,11 @@ func TestAdminUserRegisterAuthorityTypeEmpty(t *testing.T) {
 func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": 0, "authorityType": multi.AdminAuthority}).
+		WithJSON(map[string]interface{}{"username": "admin_authrity_id_empty", "password": "123456", "authorityId": "", "authorityType": multi.AdminAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityId值不能为空")
+	obj.Value("msg").String().Equal("Key: 'Register.AuthorityId' Error:Field validation for 'AuthorityId' failed on the 'required' tag")
 
 	baseLogOut(auth)
 }

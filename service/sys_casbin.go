@@ -30,7 +30,7 @@ func UpdateCasbin(authorityId string, casbinInfos []request.CasbinInfo) error {
 	}
 	e, _ := Casbin()
 	success, _ := e.AddPolicies(rules)
-	if success == false {
+	if !success {
 		return errors.New("存在相同api,添加失败,请联系管理员")
 	}
 	return nil
@@ -63,7 +63,6 @@ func ClearCasbin(v int, p ...string) bool {
 	e, _ := Casbin()
 	success, _ := e.RemoveFilteredPolicy(v, p...)
 	return success
-
 }
 
 // Casbin 持久化到数据库  引入自定义规则

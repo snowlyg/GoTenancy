@@ -20,9 +20,8 @@ import (
 // CreateAuthority 创建角色
 func CreateAuthority(ctx iris.Context) {
 	var authority model.SysAuthority
-	_ = ctx.ReadJSON(&authority)
-	if err := utils.Verify(authority, utils.AuthorityVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&authority)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if authBack, err := service.CreateAuthority(authority); err != nil {
@@ -36,13 +35,12 @@ func CreateAuthority(ctx iris.Context) {
 // CopyAuthority 拷贝角色
 func CopyAuthority(ctx iris.Context) {
 	var copyInfo response.SysAuthorityCopyResponse
-	_ = ctx.ReadJSON(&copyInfo)
-	if err := utils.Verify(copyInfo, utils.OldAuthorityVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&copyInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := utils.Verify(copyInfo.Authority, utils.AuthorityVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&copyInfo.Authority)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if authBack, err := service.CopyAuthority(copyInfo); err != nil {
@@ -55,10 +53,9 @@ func CopyAuthority(ctx iris.Context) {
 
 // DeleteAuthority 删除角色
 func DeleteAuthority(ctx iris.Context) {
-	var authority model.SysAuthority
-	_ = ctx.ReadJSON(&authority)
-	if err := utils.Verify(authority, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var authority request.DeleteAuthority
+	if errs := utils.Verify(ctx.ReadJSON(&authority)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.DeleteAuthority(&authority); err != nil { // 删除角色之前需要判断是否有用户正在使用此角色
@@ -72,9 +69,8 @@ func DeleteAuthority(ctx iris.Context) {
 // UpdateAuthority 更新角色信息
 func UpdateAuthority(ctx iris.Context) {
 	var auth model.SysAuthority
-	_ = ctx.ReadJSON(&auth)
-	if err := utils.Verify(auth, utils.AuthorityVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&auth)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if authority, err := service.UpdateAuthority(auth); err != nil {
@@ -88,9 +84,8 @@ func UpdateAuthority(ctx iris.Context) {
 // GetAdminAuthorityList 分页获取角色列表
 func GetAdminAuthorityList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.AdminAuthority); err != nil {
@@ -109,9 +104,8 @@ func GetAdminAuthorityList(ctx iris.Context) {
 // GetTenancyAuthorityList 分页获取角色列表
 func GetTenancyAuthorityList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.TenancyAuthority); err != nil {
@@ -130,9 +124,8 @@ func GetTenancyAuthorityList(ctx iris.Context) {
 // GetGeneralAuthorityList 分页获取角色列表
 func GetGeneralAuthorityList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.GeneralAuthority); err != nil {
@@ -151,9 +144,8 @@ func GetGeneralAuthorityList(ctx iris.Context) {
 // GetAuthorityList 分页获取角色列表
 func GetAuthorityList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAuthorityInfoList(pageInfo, multi.NoneAuthority); err != nil {
@@ -171,10 +163,9 @@ func GetAuthorityList(ctx iris.Context) {
 
 // SetDataAuthority 设置角色资源权限
 func SetDataAuthority(ctx iris.Context) {
-	var auth model.SysAuthority
-	_ = ctx.ReadJSON(&auth)
-	if err := utils.Verify(auth, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var auth request.SetDataAuthority
+	if errs := utils.Verify(ctx.ReadJSON(&auth)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.SetDataAuthority(auth); err != nil {

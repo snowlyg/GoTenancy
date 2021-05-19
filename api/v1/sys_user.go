@@ -19,10 +19,8 @@ import (
 // Login 用户登录
 func Login(ctx iris.Context) {
 	var L request.Login
-	_ = ctx.ReadJSON(&L)
-
-	if err := utils.Verify(L, utils.GetLoginVerify()); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&L)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
@@ -58,7 +56,7 @@ func tokenNext(ctx iris.Context, user response.SysAdminUser) {
 	token, _, err := middleware.CreateToken(claims)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取token失败", zap.Any("err", err))
-		response.FailWithMessage("获取token失败", ctx)
+		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
 	response.OkWithDetailed(response.LoginResponse{
@@ -102,16 +100,15 @@ func Clean(ctx iris.Context) {
 // Register 用户注册账号
 func Register(ctx iris.Context) {
 	var R request.Register
-	_ = ctx.ReadJSON(&R)
-	if err := utils.Verify(R, utils.RegisterVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&R)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	user := &model.SysUser{Username: R.Username, Password: R.Password, AuthorityId: R.AuthorityId}
 	userReturn, err := service.Register(*user, R.AuthorityType)
 	if err != nil {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
-		response.FailWithMessage("注册失败", ctx)
+		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(iris.Map{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
 	}
@@ -120,9 +117,8 @@ func Register(ctx iris.Context) {
 // ChangePassword 用户修改密码
 func ChangePassword(ctx iris.Context) {
 	var user request.ChangePasswordStruct
-	_ = ctx.ReadJSON(&user)
-	if err := utils.Verify(user, utils.ChangePasswordVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&user)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	U := &model.SysUser{Username: user.Username, Password: user.Password}
@@ -141,9 +137,8 @@ func ChangePassword(ctx iris.Context) {
 // GetAdminList 分页获取用户列表
 func GetAdminList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAdminInfoList(pageInfo); err != nil {
@@ -162,9 +157,8 @@ func GetAdminList(ctx iris.Context) {
 // GetTenancyList 分页获取用户列表
 func GetTenancyList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetTenancyInfoList(pageInfo); err != nil {
@@ -183,9 +177,8 @@ func GetTenancyList(ctx iris.Context) {
 // GetGeneralList 分页获取用户列表
 func GetGeneralList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetGeneralInfoList(pageInfo); err != nil {
@@ -204,9 +197,8 @@ func GetGeneralList(ctx iris.Context) {
 // SetUserAuthority 设置用户权限
 func SetUserAuthority(ctx iris.Context) {
 	var sua request.SetUserAuth
-	_ = ctx.ReadJSON(&sua)
-	if UserVerifyErr := utils.Verify(sua, utils.SetUserAuthorityVerify); UserVerifyErr != nil {
-		response.FailWithMessage(UserVerifyErr.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&sua)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.SetUserAuthority(sua.Id, sua.AuthorityId); err != nil {
@@ -220,9 +212,8 @@ func SetUserAuthority(ctx iris.Context) {
 // DeleteUser 删除用户
 func DeleteUser(ctx iris.Context) {
 	var reqId request.GetById
-	_ = ctx.ReadJSON(&reqId)
-	if err := utils.Verify(reqId, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	jwtId := ctx.GetID()

@@ -62,6 +62,6 @@ func TestLoginWithEmptyAuthorityType(t *testing.T) {
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("AuthorityType值不能为空")
+	obj.Value("msg").String().Equal("Key: 'Login.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 	obj.Value("data").Object().Empty()
 }

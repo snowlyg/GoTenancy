@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -13,10 +12,10 @@ import (
 
 // CreateMini
 func CreateMini(ctx iris.Context) {
-	var mini model.SysMini
-	_ = ctx.ReadJSON(&mini)
-	if err := utils.Verify(mini, utils.CreateMiniVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var mini request.CreateSysMini
+	if errs := utils.Verify(ctx.ReadJSON(&mini)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
 	}
 	if returnMini, err := service.CreateMini(mini); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
@@ -29,10 +28,10 @@ func CreateMini(ctx iris.Context) {
 
 // UpdateMini
 func UpdateMini(ctx iris.Context) {
-	var mini model.SysMini
-	_ = ctx.ReadJSON(&mini)
-	if err := utils.Verify(mini, utils.UpdateMiniVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var mini request.UpdateSysMini
+	if errs := utils.Verify(ctx.ReadJSON(&mini)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
 	}
 	if returnMini, err := service.UpdateMini(mini); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
@@ -46,9 +45,8 @@ func UpdateMini(ctx iris.Context) {
 // GetMiniList
 func GetMiniList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetMiniInfoList(pageInfo); err != nil {
@@ -67,9 +65,8 @@ func GetMiniList(ctx iris.Context) {
 // GetMiniById
 func GetMiniById(ctx iris.Context) {
 	var reqId request.GetById
-	_ = ctx.ReadJSON(&reqId)
-	if err := utils.Verify(reqId, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	mini, err := service.GetMiniByID(reqId.Id)
@@ -84,9 +81,8 @@ func GetMiniById(ctx iris.Context) {
 // DeleteMini
 func DeleteMini(ctx iris.Context) {
 	var reqId request.GetById
-	_ = ctx.ReadJSON(&reqId)
-	if err := utils.Verify(reqId, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.DeleteMini(reqId.Id); err != nil {

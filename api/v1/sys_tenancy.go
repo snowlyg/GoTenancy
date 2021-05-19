@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -13,10 +12,9 @@ import (
 
 // CreateTenancy
 func CreateTenancy(ctx iris.Context) {
-	var tenancy model.SysTenancy
-	_ = ctx.ReadJSON(&tenancy)
-	if err := utils.Verify(tenancy, utils.CreateTenancyVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var tenancy request.CreateSysTenancy
+	if errs := utils.Verify(ctx.ReadJSON(&tenancy)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if returnTenancy, err := service.CreateTenancy(tenancy); err != nil {
@@ -31,9 +29,8 @@ func CreateTenancy(ctx iris.Context) {
 // GetTenancyById
 func GetTenancyById(ctx iris.Context) {
 	var reqId request.GetById
-	_ = ctx.ReadJSON(&reqId)
-	if err := utils.Verify(reqId, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	tenancy, err := service.GetTenancyByID(reqId.Id)
@@ -48,9 +45,8 @@ func GetTenancyById(ctx iris.Context) {
 // SetTenancyRegion
 func SetTenancyRegion(ctx iris.Context) {
 	var regionCode request.SetRegionCode
-	_ = ctx.ReadJSON(&regionCode)
-	if err := utils.Verify(regionCode, utils.SetRegionCodeVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&regionCode)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	err := service.SetTenancyRegionByID(regionCode.Id, regionCode.SysRegionCode)
@@ -64,16 +60,16 @@ func SetTenancyRegion(ctx iris.Context) {
 
 // UpdateTenancy
 func UpdateTenancy(ctx iris.Context) {
-	var tenancy model.SysTenancy
-	_ = ctx.ReadJSON(&tenancy)
-	if err := utils.Verify(tenancy, utils.UpdateTenancyVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	var tenancy request.UpdateSysTenancy
+	if errs := utils.Verify(ctx.ReadJSON(&tenancy)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
 	}
 	if returnTenancy, err := service.UpdateTenany(tenancy); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }
@@ -81,9 +77,8 @@ func UpdateTenancy(ctx iris.Context) {
 // DeleteTenancy
 func DeleteTenancy(ctx iris.Context) {
 	var reqId request.GetById
-	_ = ctx.ReadJSON(&reqId)
-	if err := utils.Verify(reqId, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.DeleteTenancy(reqId.Id); err != nil {
@@ -97,9 +92,8 @@ func DeleteTenancy(ctx iris.Context) {
 // GetTenanciesList 分页获取商户列表
 func GetTenanciesList(ctx iris.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetTenanciesInfoList(pageInfo); err != nil {

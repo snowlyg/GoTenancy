@@ -2,7 +2,7 @@ package response
 
 type SysConfig struct {
 	TenancyResponse
-	Type  string `json:"type"`
-	Name  string `json:"name"`
-	Value string `json:"value"`
+	Type  string `json:"type" validate:"required"`
+	Name  string `json:"name" validate:"required"`
+	Value string `json:"value" validate:"required"`
 }

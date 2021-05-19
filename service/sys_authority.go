@@ -47,7 +47,9 @@ func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (model.SysAuthori
 	paths := GetPolicyPathByAuthorityId(copyInfo.OldAuthorityId)
 	err = UpdateCasbin(copyInfo.Authority.AuthorityId, paths)
 	if err != nil {
-		_ = DeleteAuthority(&copyInfo.Authority)
+		var authority request.DeleteAuthority
+		authority.AuthorityId = copyInfo.Authority.AuthorityId
+		_ = DeleteAuthority(&authority)
 	}
 	return copyInfo.Authority, err
 }
@@ -59,7 +61,7 @@ func UpdateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
 }
 
 // DeleteAuthority 删除角色
-func DeleteAuthority(auth *model.SysAuthority) error {
+func DeleteAuthority(auth *request.DeleteAuthority) error {
 	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysUser{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("此角色有用户正在使用禁止删除")
 	}
@@ -109,7 +111,7 @@ func GetAuthorityInfo(auth model.SysAuthority) (model.SysAuthority, error) {
 }
 
 // SetDataAuthority 设置角色资源权限
-func SetDataAuthority(auth model.SysAuthority) error {
+func SetDataAuthority(auth request.SetDataAuthority) error {
 	var s model.SysAuthority
 	g.TENANCY_DB.Preload("DataAuthorityId").First(&s, "authority_id = ?", auth.AuthorityId)
 	err := g.TENANCY_DB.Model(&s).Association("DataAuthorityId").Replace(&auth.DataAuthorityId)

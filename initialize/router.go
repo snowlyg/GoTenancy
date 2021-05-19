@@ -5,12 +5,14 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/accesslog"
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/router"
+	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
@@ -20,6 +22,12 @@ var IdleConnsClosed = make(chan struct{})
 
 func Routers() *iris.Application {
 	Router := iris.New()
+
+	// 注册结构体验证
+	validate := validator.New()
+	utils.RegisterValidation(validate)
+	Router.Validator = validate
+
 	iris.RegisterOnInterrupt(func() {
 		timeout := 10 * time.Second
 		ctx, cancel := stdContext.WithTimeout(stdContext.Background(), timeout)
@@ -68,30 +76,34 @@ func Routers() *iris.Application {
 		router.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
 		router.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
-	AdminGroup := Router.Party("/v1/admin", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord(), middleware.IsAdmin())
+
+	V1Group := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord())
 	{
-		router.InitApiRouter(AdminGroup)                // 注册功能api路由
-		router.InitUserRouter(AdminGroup)               // 注册用户路由
-		router.InitTenancyRouter(AdminGroup)            // 注册商户路由
-		router.InitMiniRouter(AdminGroup)               // 注册小程序路由
-		router.InitConfigRouter(AdminGroup)             // 注册系统配置路由
-		router.InitMenuRouter(AdminGroup)               // 注册menu路由
-		router.InitEmailRouter(AdminGroup)              // 邮件相关路由
-		router.InitSystemRouter(AdminGroup)             // system相关路由
-		router.InitCasbinRouter(AdminGroup)             // 权限相关路由
-		router.InitAuthorityRouter(AdminGroup)          // 注册角色路由
-		router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
+		AdminGroup := V1Group.Party("/admin", middleware.IsAdmin())
+		{
+			router.InitApiRouter(AdminGroup)                // 注册功能api路由
+			router.InitUserRouter(AdminGroup)               // 注册用户路由
+			router.InitTenancyRouter(AdminGroup)            // 注册商户路由
+			router.InitMiniRouter(AdminGroup)               // 注册小程序路由
+			router.InitConfigRouter(AdminGroup)             // 注册系统配置路由
+			router.InitMenuRouter(AdminGroup)               // 注册menu路由
+			router.InitEmailRouter(AdminGroup)              // 邮件相关路由
+			router.InitSystemRouter(AdminGroup)             // system相关路由
+			router.InitCasbinRouter(AdminGroup)             // 权限相关路由
+			router.InitAuthorityRouter(AdminGroup)          // 注册角色路由
+			router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
+		}
+
+		// TenancyGroup := Router.Party("/admin", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord(), middleware.IsTenancy())
+		// {
+
+		// }
+
+		GeneralGroup := V1Group.Party("/general", middleware.IsGeneral())
+		{
+			router.InitAddressRouter(GeneralGroup) //
+		}
 	}
-
-	// TenancyGroup := Router.Party("/admin", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord(), middleware.IsTenancy())
-	// {
-
-	// }
-
-	// GeneralGroup := Router.Party("/admin", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord(), middleware.IsGeneral())
-	// {
-
-	// }
 
 	err = Router.Build()
 	if err != nil {

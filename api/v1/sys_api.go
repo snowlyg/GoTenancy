@@ -19,9 +19,8 @@ import (
 // CreateApi 创建基础api
 func CreateApi(ctx iris.Context) {
 	var api model.SysApi
-	_ = ctx.ReadJSON(&api)
-	if err := utils.Verify(api, utils.ApiVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.CreateApi(api); err != nil {
@@ -35,9 +34,8 @@ func CreateApi(ctx iris.Context) {
 // DeleteApi 删除api
 func DeleteApi(ctx iris.Context) {
 	var api model.SysApi
-	_ = ctx.ReadJSON(&api)
-	if err := utils.Verify(api.TENANCY_MODEL, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.DeleteApi(api); err != nil {
@@ -51,9 +49,8 @@ func DeleteApi(ctx iris.Context) {
 // GetApiList 分页获取API列表
 func GetApiList(ctx iris.Context) {
 	var pageInfo request.SearchApiParams
-	_ = ctx.ReadJSON(&pageInfo)
-	if err := utils.Verify(pageInfo.PageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if list, total, err := service.GetAPIInfoList(pageInfo.SysApi, pageInfo.PageInfo, pageInfo.OrderKey, pageInfo.Desc); err != nil {
@@ -72,9 +69,8 @@ func GetApiList(ctx iris.Context) {
 // GetApiById 根据id获取api
 func GetApiById(ctx iris.Context) {
 	var idInfo request.GetById
-	_ = ctx.ReadJSON(&idInfo)
-	if err := utils.Verify(idInfo, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&idInfo)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	api, err := service.GetApiById(idInfo.Id)
@@ -89,9 +85,8 @@ func GetApiById(ctx iris.Context) {
 // UpdateApi 更新基础api
 func UpdateApi(ctx iris.Context) {
 	var api model.SysApi
-	_ = ctx.ReadJSON(&api)
-	if err := utils.Verify(api, utils.ApiVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.UpdateApi(api); err != nil {

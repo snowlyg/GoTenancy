@@ -17,9 +17,8 @@ import (
 // UpdateCasbin 更新角色api权限
 func UpdateCasbin(ctx iris.Context) {
 	var cmr request.CasbinInReceive
-	_ = ctx.ReadJSON(&cmr)
-	if err := utils.Verify(cmr, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&cmr)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if err := service.UpdateCasbin(cmr.AuthorityId, cmr.CasbinInfos); err != nil {
@@ -33,9 +32,8 @@ func UpdateCasbin(ctx iris.Context) {
 // GetPolicyPathByAuthorityId 获取权限列表
 func GetPolicyPathByAuthorityId(ctx iris.Context) {
 	var casbin request.CasbinInReceive
-	_ = ctx.ReadJSON(&casbin)
-	if err := utils.Verify(casbin, utils.AuthorityIdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&casbin)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	paths := service.GetPolicyPathByAuthorityId(casbin.AuthorityId)

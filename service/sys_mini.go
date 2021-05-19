@@ -12,13 +12,18 @@ import (
 )
 
 // CreateMini
-func CreateMini(m model.SysMini) (model.SysMini, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).First(&model.SysMini{}).Error, gorm.ErrRecordNotFound) {
-		return m, errors.New("商户名称已被注冊")
+func CreateMini(m request.CreateSysMini) (model.SysMini, error) {
+	var mini model.SysMini
+	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).First(&mini).Error, gorm.ErrRecordNotFound) {
+		return mini, errors.New("商户名称已被注冊")
 	}
-	m.UUID = uuid.NewV4()
-	err := g.TENANCY_DB.Create(&m).Error
-	return m, err
+	mini.UUID = uuid.NewV4()
+	mini.Name = m.Name
+	mini.AppID = m.AppID
+	mini.AppSecret = m.AppSecret
+	mini.Remark = m.Remark
+	err := g.TENANCY_DB.Create(&mini).Error
+	return mini, err
 }
 
 // GetMiniByID
@@ -29,12 +34,18 @@ func GetMiniByID(id float64) (model.SysMini, error) {
 }
 
 // UpdateMini
-func UpdateMini(m model.SysMini) (model.SysMini, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).Where("id <> ?", m.ID).First(&model.SysTenancy{}).Error, gorm.ErrRecordNotFound) {
-		return m, errors.New("商户名称已被注冊")
+func UpdateMini(m request.UpdateSysMini) (model.SysMini, error) {
+	var mini model.SysMini
+	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).Where("id <> ?", m.Id).First(&mini).Error, gorm.ErrRecordNotFound) {
+		return mini, errors.New("商户名称已被注冊")
 	}
-	err := g.TENANCY_DB.Updates(&m).Error
-	return m, err
+	mini.ID = m.Id
+	mini.Name = m.Name
+	mini.AppID = m.AppID
+	mini.AppSecret = m.AppSecret
+	mini.Remark = m.Remark
+	err := g.TENANCY_DB.Updates(&mini).Error
+	return mini, err
 }
 
 // DeleteMini

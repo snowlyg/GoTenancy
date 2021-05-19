@@ -50,9 +50,8 @@ func DeleteSysOperationRecordByIds(ctx iris.Context) {
 // FindSysOperationRecord 用id查询SysOperationRecord
 func FindSysOperationRecord(ctx iris.Context) {
 	var sysOperationRecord model.SysOperationRecord
-	_ = ctx.ReadQuery(&sysOperationRecord)
-	if err := utils.Verify(sysOperationRecord, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	if errs := utils.Verify(ctx.ReadJSON(&sysOperationRecord)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	if resysOperationRecord, err := service.GetSysOperationRecord(sysOperationRecord.ID); err != nil {

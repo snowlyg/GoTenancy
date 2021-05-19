@@ -9,6 +9,7 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.2.9
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-ole/go-ole v1.2.5 // indirect
+	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.8.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gookit/color v1.4.2
@@ -34,3 +35,5 @@ require (
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
 )
+
+// replace github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3 => D:\go\src\github.com\snowlyg\iris
