@@ -1,12 +1,8 @@
 package v1
 
 import (
-	"strconv"
-	"time"
-
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
@@ -26,43 +22,15 @@ func Login(ctx iris.Context) {
 
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
-		if user, err := service.Login(U, L.AuthorityType); err != nil {
-			g.TENANCY_LOG.Error("登陆失败! 系统错误", zap.Any("err", err))
-			response.FailWithMessage("系统错误", ctx)
-		} else if user.ID == 0 {
-			g.TENANCY_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
-			response.FailWithMessage("用户名不存在或者密码错误", ctx)
+		if loginResponse, err := service.Login(U, L.AuthorityType); err != nil {
+			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
+			response.FailWithMessage(err.Error(), ctx)
 		} else {
-			tokenNext(ctx, *user)
+			response.OkWithDetailed(loginResponse, "登录成功", ctx)
 		}
 	} else {
 		response.FailWithMessage("验证码错误", ctx)
 	}
-}
-
-// tokenNext 登录以后签发jwt
-func tokenNext(ctx iris.Context, user response.SysAdminUser) {
-	claims := &multi.CustomClaims{
-		ID:            strconv.FormatUint(uint64(user.ID), 10),
-		Username:      user.Username,
-		AuthorityId:   user.AuthorityId,
-		AuthorityType: user.AuthorityType,
-		LoginType:     multi.LoginTypeWeb,
-		AuthType:      multi.AuthPwd,
-		CreationDate:  time.Now().Local().Unix(),
-		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
-	}
-
-	token, _, err := middleware.CreateToken(claims)
-	if err != nil {
-		g.TENANCY_LOG.Error("获取token失败", zap.Any("err", err))
-		response.FailWithMessage(err.Error(), ctx)
-		return
-	}
-	response.OkWithDetailed(response.LoginResponse{
-		User:  user,
-		Token: token,
-	}, "登录成功", ctx)
 }
 
 // Logout 退出登录
@@ -72,7 +40,7 @@ func Logout(ctx iris.Context) {
 		response.FailWithMessage("授权凭证为空", ctx)
 		return
 	}
-	err := middleware.DelToken(string(token))
+	err := service.DelToken(string(token))
 	if err != nil {
 		g.TENANCY_LOG.Error("del token", zap.Any("err", err))
 		response.FailWithMessage("退出失败", ctx)
@@ -88,7 +56,7 @@ func Clean(ctx iris.Context) {
 		response.FailWithMessage("清空TOKEN失败", ctx)
 		return
 	}
-	err := middleware.CleanToken(waitUse.ID)
+	err := service.CleanToken(waitUse.ID)
 	if err != nil {
 		g.TENANCY_LOG.Error("清空TOKEN失败", zap.Any("err", err))
 		response.FailWithMessage("清空TOKEN失败", ctx)
@@ -122,13 +90,10 @@ func ChangePassword(ctx iris.Context) {
 		return
 	}
 	U := &model.SysUser{Username: user.Username, Password: user.Password}
-	returnUser, err := service.ChangePassword(U, user.NewPassword, user.AuthorityType)
+	err := service.ChangePassword(U, user.NewPassword, user.AuthorityType)
 	if err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
-		response.FailWithMessage("修改失败，系统错误", ctx)
-	} else if returnUser.ID == 0 {
-		g.TENANCY_LOG.Error("修改失败", zap.String("msg", "修改失败，原密码与当前账户不符"))
-		response.FailWithMessage("修改失败，原密码与当前账户不符", ctx)
+		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithMessage("修改成功", ctx)
 	}

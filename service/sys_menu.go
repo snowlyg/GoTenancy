@@ -68,7 +68,8 @@ func getBaseChildrenList(menu *model.SysBaseMenu, treeMap map[string][]model.Sys
 
 // AddBaseMenu 添加基础路由
 func AddBaseMenu(menu model.SysBaseMenu) error {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", menu.Name).First(&model.SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("name = ?", menu.Name).First(&model.SysBaseMenu{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("存在重复name，请修改name")
 	}
 	return g.TENANCY_DB.Create(&menu).Error

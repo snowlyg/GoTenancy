@@ -14,7 +14,8 @@ import (
 // CreateTenancy
 func CreateTenancy(t request.CreateSysTenancy) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).First(&tenancy).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("name = ?", t.Name).First(&tenancy).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return tenancy, errors.New("商户名称已被注冊")
 	}
 	tenancy.UUID = uuid.NewV4()
@@ -23,7 +24,7 @@ func CreateTenancy(t request.CreateSysTenancy) (model.SysTenancy, error) {
 	tenancy.Name = t.Name
 	tenancy.BusinessTime = t.BusinessTime
 	tenancy.SysRegionCode = t.SysRegionCode
-	err := g.TENANCY_DB.Create(&tenancy).Error
+	err = g.TENANCY_DB.Create(&tenancy).Error
 	return tenancy, err
 }
 
@@ -42,7 +43,8 @@ func SetTenancyRegionByID(id float64, sysRegionCode int) error {
 // UpdateTenany
 func UpdateTenany(t request.UpdateSysTenancy) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", t.Name).Not("id = ?", t.Id).First(&tenancy).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("name = ?", t.Name).Not("id = ?", t.Id).First(&tenancy).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return tenancy, errors.New("商户名称已被注冊")
 	}
 
@@ -52,7 +54,7 @@ func UpdateTenany(t request.UpdateSysTenancy) (model.SysTenancy, error) {
 	tenancy.Name = t.Name
 	tenancy.BusinessTime = t.BusinessTime
 	tenancy.SysRegionCode = t.SysRegionCode
-	err := g.TENANCY_DB.Updates(&tenancy).Error
+	err = g.TENANCY_DB.Updates(&tenancy).Error
 	return tenancy, err
 }
 

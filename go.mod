@@ -35,5 +35,3 @@ require (
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
 )
-
-// replace github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3 => D:\go\src\github.com\snowlyg\iris

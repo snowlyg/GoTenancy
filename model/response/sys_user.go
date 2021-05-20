@@ -7,8 +7,8 @@ import (
 )
 
 type LoginResponse struct {
-	User  SysAdminUser `json:"user"`
-	Token string       `json:"AccessToken"`
+	User  interface{} `json:"user"`
+	Token string      `json:"AccessToken"`
 }
 
 type SysAdminUser struct {

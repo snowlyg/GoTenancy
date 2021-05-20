@@ -14,17 +14,19 @@ import (
 // CreateAuthority 创建一个角色
 func CreateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
 	var authorityBox model.SysAuthority
-	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&authorityBox).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&authorityBox).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return auth, errors.New("存在相同角色id")
 	}
-	err := g.TENANCY_DB.Create(&auth).Error
+	err = g.TENANCY_DB.Create(&auth).Error
 	return auth, err
 }
 
 // CopyAuthority 复制一个角色
 func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (model.SysAuthority, error) {
 	var authorityBox model.SysAuthority
-	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", copyInfo.Authority.AuthorityId).First(&authorityBox).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("authority_id = ?", copyInfo.Authority.AuthorityId).First(&authorityBox).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return authorityBox, errors.New("存在相同角色id")
 	}
 	copyInfo.Authority.Children = []model.SysAuthority{}
@@ -62,14 +64,16 @@ func UpdateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
 
 // DeleteAuthority 删除角色
 func DeleteAuthority(auth *request.DeleteAuthority) error {
-	if !errors.Is(g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysUser{}).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysUser{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("此角色有用户正在使用禁止删除")
 	}
-	if !errors.Is(g.TENANCY_DB.Where("parent_id = ?", auth.AuthorityId).First(&model.SysAuthority{}).Error, gorm.ErrRecordNotFound) {
+	err = g.TENANCY_DB.Where("parent_id = ?", auth.AuthorityId).First(&model.SysAuthority{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("此角色存在子角色不允许删除")
 	}
 	db := g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", auth.AuthorityId).First(auth)
-	err := db.Unscoped().Delete(auth).Error
+	err = db.Unscoped().Delete(auth).Error
 	if err != nil {
 		return err
 	}

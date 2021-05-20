@@ -2,6 +2,9 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -9,6 +12,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -29,24 +33,176 @@ func Register(u model.SysUser, authorityType int) (model.SysUser, error) {
 }
 
 // Login 用户登录
-func Login(u *model.SysUser, authorityType int) (*response.SysAdminUser, error) {
+func Login(u *model.SysUser, authorityType int) (response.LoginResponse, error) {
+	switch {
+	case authorityType == multi.AdminAuthority:
+		return adminLogin(u)
+	case authorityType == multi.TenancyAuthority:
+		return tenancyLogin(u)
+	case authorityType == multi.GeneralAuthority:
+		return generalLogin(u)
+	default:
+		return response.LoginResponse{
+			User:  nil,
+			Token: "",
+		}, errors.New("用户名不存在或者密码错误")
+	}
+}
+
+// adminLogin
+func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 	var admin response.SysAdminUser
+	var token string
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
-		Where("sys_authorities.authority_type = ?", authorityType).
+		Where("sys_authorities.authority_type = ?", multi.AdminAuthority).
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&admin).Error
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return &admin, err
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return response.LoginResponse{
+			User:  admin,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
 	}
-	return &admin, nil
+	claims := &multi.CustomClaims{
+		ID:            strconv.FormatUint(uint64(admin.ID), 10),
+		Username:      admin.Username,
+		AuthorityId:   admin.AuthorityId,
+		AuthorityType: admin.AuthorityType,
+		LoginType:     multi.LoginTypeWeb,
+		AuthType:      multi.AuthPwd,
+		CreationDate:  time.Now().Local().Unix(),
+		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+	}
+
+	if admin.ID == 0 {
+		return response.LoginResponse{
+			User:  admin,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
+	}
+
+	token, _, err = createToken(claims)
+	if err != nil {
+		return response.LoginResponse{
+			User:  admin,
+			Token: token,
+		}, err
+	}
+
+	println(token)
+
+	return response.LoginResponse{
+		User:  admin,
+		Token: token,
+	}, nil
+}
+
+// tenancyLogin
+func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
+	var tenancy response.SysAdminUser
+	var token string
+	u.Password = utils.MD5V([]byte(u.Password))
+	err := g.TENANCY_DB.Model(&model.SysUser{}).
+		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
+		Where("sys_authorities.authority_type = ?", multi.AdminAuthority).
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&tenancy).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return response.LoginResponse{
+			User:  tenancy,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
+	}
+	claims := &multi.CustomClaims{
+		ID:            strconv.FormatUint(uint64(tenancy.ID), 10),
+		Username:      tenancy.Username,
+		AuthorityId:   tenancy.AuthorityId,
+		AuthorityType: tenancy.AuthorityType,
+		LoginType:     multi.LoginTypeWeb,
+		AuthType:      multi.AuthPwd,
+		CreationDate:  time.Now().Local().Unix(),
+		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+	}
+
+	if tenancy.ID == 0 {
+		return response.LoginResponse{
+			User:  tenancy,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
+	}
+
+	token, _, err = createToken(claims)
+	if err != nil {
+		return response.LoginResponse{
+			User:  tenancy,
+			Token: token,
+		}, err
+	}
+
+	return response.LoginResponse{
+		User:  tenancy,
+		Token: token,
+	}, nil
+}
+
+// generalLogin
+func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
+	var general response.SysAdminUser
+	var token string
+	u.Password = utils.MD5V([]byte(u.Password))
+	err := g.TENANCY_DB.Model(&model.SysUser{}).
+		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
+		Where("sys_authorities.authority_type = ?", multi.GeneralAuthority).
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.avatar_url,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&general).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return response.LoginResponse{
+			User:  general,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
+	}
+	claims := &multi.CustomClaims{
+		ID:            strconv.FormatUint(uint64(general.ID), 10),
+		Username:      general.Username,
+		AuthorityId:   general.AuthorityId,
+		AuthorityType: general.AuthorityType,
+		LoginType:     multi.LoginTypeWeb,
+		AuthType:      multi.AuthPwd,
+		CreationDate:  time.Now().Local().Unix(),
+		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+	}
+
+	if general.ID == 0 {
+		return response.LoginResponse{
+			User:  general,
+			Token: token,
+		}, errors.New("用户名不存在或者密码错误")
+	}
+
+	token, _, err = createToken(claims)
+	if err != nil {
+		return response.LoginResponse{
+			User:  general,
+			Token: token,
+		}, err
+	}
+
+	return response.LoginResponse{
+		User:  general,
+		Token: token,
+	}, nil
 }
 
 // ChangePassword 修改用户密码
-func ChangePassword(u *model.SysUser, newPassword string, authorityType int) (*model.SysUser, error) {
+func ChangePassword(u *model.SysUser, newPassword string, authorityType int) error {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
@@ -54,17 +210,17 @@ func ChangePassword(u *model.SysUser, newPassword string, authorityType int) (*m
 		Where("sys_authorities.authority_type = ?", authorityType).
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&user).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return &user, err
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return errors.New("修改失败，原密码与当前账户不符")
 	}
 	if user.ID == 0 {
-		return &user, nil
+		return errors.New("修改失败，原密码与当前账户不符")
 	}
 	err = g.TENANCY_DB.Model(&model.SysUser{}).Where("id = ?", user.ID).Update("password", utils.MD5V([]byte(newPassword))).Error
 	if err != nil {
-		return &user, err
+		return err
 	}
-	return &user, nil
+	return nil
 }
 
 // GetAdminInfoList 分页获取数据
@@ -207,4 +363,44 @@ func FindUserById(id int) (*model.SysUser, error) {
 	var u model.SysUser
 	err := g.TENANCY_DB.Where("`id` = ?", id).Preload("Authority").Preload("AdminInfo").Preload("TenancyInfo").Preload("GeneralInfo").First(&u).Error
 	return &u, err
+}
+
+// createToken 创建token
+func createToken(claims *multi.CustomClaims) (string, int64, error) {
+	if g.TENANCY_AUTH.IsUserTokenOver(claims.ID) {
+		return "", 0, errors.New("已达到同时登录设备上限")
+	}
+	token, err := multi.GetToken()
+	if err != nil {
+		return "", 0, err
+	}
+	err = g.TENANCY_AUTH.ToCache(token, claims)
+	if err != nil {
+		return "", 0, err
+	}
+	if err = g.TENANCY_AUTH.SyncUserTokenCache(token); err != nil {
+		return "", 0, err
+	}
+
+	return token, int64(claims.ExpiresIn), err
+}
+
+// DelToken 删除token
+func DelToken(token string) error {
+	err := g.TENANCY_AUTH.DelUserTokenCache(token)
+	if err != nil {
+		g.TENANCY_LOG.Error("del token", zap.Any("err", err))
+		return fmt.Errorf("del token %w", err)
+	}
+	return nil
+}
+
+// CleanToken 清空 token
+func CleanToken(userId string) error {
+	err := g.TENANCY_AUTH.CleanUserTokenCache(userId)
+	if err != nil {
+		g.TENANCY_LOG.Error("clean token", zap.Any("err", err))
+		return fmt.Errorf("clean token %w", err)
+	}
+	return nil
 }

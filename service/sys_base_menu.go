@@ -47,7 +47,8 @@ func UpdateBaseMenu(menu model.SysBaseMenu) error {
 	err := g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
 		db := tx.Where("id = ?", menu.ID).Find(&oldMenu)
 		if oldMenu.Name != menu.Name {
-			if !errors.Is(tx.Where("id <> ? AND name = ?", menu.ID, menu.Name).First(&model.SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+			err := tx.Where("id <> ? AND name = ?", menu.ID, menu.Name).First(&model.SysBaseMenu{}).Error
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				g.TENANCY_LOG.Debug("存在相同name修改失败")
 				return errors.New("存在相同name修改失败")
 			}

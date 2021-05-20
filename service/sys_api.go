@@ -12,7 +12,8 @@ import (
 
 // CreateApi 新增基础api
 func CreateApi(api model.SysApi) error {
-	if !errors.Is(g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同api")
 	}
 	return g.TENANCY_DB.Create(&api).Error
@@ -88,7 +89,8 @@ func UpdateApi(api model.SysApi) error {
 	var oldA model.SysApi
 	err := g.TENANCY_DB.Where("id = ?", api.ID).First(&oldA).Error
 	if oldA.Path != api.Path || oldA.Method != api.Method {
-		if !errors.Is(g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error, gorm.ErrRecordNotFound) {
+		err := g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("存在相同api路径")
 		}
 	}

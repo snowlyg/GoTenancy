@@ -12,10 +12,11 @@ import (
 
 // CreateConfig
 func CreateConfig(m model.SysConfig) (model.SysConfig, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).Where("type = ?", m.Type).First(&model.SysConfig{}).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("name = ?", m.Name).Where("type = ?", m.Type).First(&model.SysConfig{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return m, errors.New("设置名称已经使用")
 	}
-	err := g.TENANCY_DB.Create(&m).Error
+	err = g.TENANCY_DB.Create(&m).Error
 	return m, err
 }
 
@@ -43,10 +44,11 @@ func GetConfigInfoList(info request.PageInfo) ([]response.SysConfig, int64, erro
 
 // UpdateConfig
 func UpdateConfig(m model.SysConfig) (model.SysConfig, error) {
-	if !errors.Is(g.TENANCY_DB.Where("name = ?", m.Name).Where("id <> ?", m.ID).Where("type = ?", m.Type).First(&model.SysConfig{}).Error, gorm.ErrRecordNotFound) {
+	err := g.TENANCY_DB.Where("name = ?", m.Name).Where("id <> ?", m.ID).Where("type = ?", m.Type).First(&model.SysConfig{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return m, errors.New("设置名称已经使用")
 	}
-	err := g.TENANCY_DB.Updates(&m).Error
+	err = g.TENANCY_DB.Updates(&m).Error
 	return m, err
 }
 
