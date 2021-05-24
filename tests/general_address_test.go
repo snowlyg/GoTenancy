@@ -39,7 +39,7 @@ func TestAddressProcess(t *testing.T) {
 		"province":     "广东省",
 		"city":         "东莞市",
 		"district":     "寮步镇",
-		"isDefault":    1,
+		"isDefault":    true,
 		"detail":       "松山湖阿里产业园",
 		"postcode":     "413514",
 		"age":          32,
@@ -68,7 +68,7 @@ func TestAddressProcess(t *testing.T) {
 	address.Value("district").String().Equal(data["district"].(string))
 	address.Value("detail").String().Equal(data["detail"].(string))
 	address.Value("postcode").String().Equal(data["postcode"].(string))
-	address.Value("isDefault").Number().Equal(data["isDefault"].(int))
+	address.Value("isDefault").Boolean().Equal(data["isDefault"].(bool))
 	address.Value("age").Number().Equal(data["age"].(int))
 	address.Value("hospitalName").String().Equal(data["hospitalName"].(string))
 	address.Value("locName").String().Equal(data["locName"].(string))
@@ -81,15 +81,15 @@ func TestAddressProcess(t *testing.T) {
 		"id":           addressId,
 		"name":         "八两金1",
 		"phone":        "138456874191",
-		"sex":          2,
+		"sex":          1,
 		"country":      "中国1",
 		"province":     "广东省1",
 		"city":         "东莞市1",
 		"district":     "寮步镇1",
-		"isDefault":    1,
+		"isDefault":    false,
 		"detail":       "松山湖阿里产业园1",
 		"postcode":     "4135141",
-		"age":          32,
+		"age":          321,
 		"hospitalName": "深圳宝安中心人民医院1",
 		"locName":      "泌尿科一区1",
 		"bedNum":       "151",
@@ -115,7 +115,7 @@ func TestAddressProcess(t *testing.T) {
 	address.Value("district").String().Equal(data["district"].(string))
 	address.Value("detail").String().Equal(data["detail"].(string))
 	address.Value("postcode").String().Equal(data["postcode"].(string))
-	address.Value("isDefault").Number().Equal(data["isDefault"].(int))
+	address.Value("isDefault").Boolean().Equal(data["isDefault"].(bool))
 	address.Value("age").Number().Equal(data["age"].(int))
 	address.Value("hospitalName").String().Equal(data["hospitalName"].(string))
 	address.Value("locName").String().Equal(data["locName"].(string))
@@ -132,11 +132,22 @@ func TestAddressProcess(t *testing.T) {
 	address = obj.Value("data").Object()
 
 	address.Value("id").Number().Ge(0)
-	address.Value("uuid").String().NotEmpty()
-	address.Value("name").String().Equal(update["name"].(string))
-	address.Value("appId").String().Equal(update["appId"].(string))
-	address.Value("appSecret").String().Equal(update["appSecret"].(string))
-	address.Value("remark").String().Equal(update["remark"].(string))
+	address.Value("name").String().Equal(data["name"].(string))
+	address.Value("phone").String().Equal(data["phone"].(string))
+	address.Value("sex").Number().Equal(data["sex"].(int))
+	address.Value("country").String().Equal(data["country"].(string))
+	address.Value("province").String().Equal(data["province"].(string))
+	address.Value("city").String().Equal(data["city"].(string))
+	address.Value("district").String().Equal(data["district"].(string))
+	address.Value("detail").String().Equal(data["detail"].(string))
+	address.Value("postcode").String().Equal(data["postcode"].(string))
+	address.Value("isDefault").Boolean().Equal(data["isDefault"].(bool))
+	address.Value("age").Number().Equal(data["age"].(int))
+	address.Value("hospitalName").String().Equal(data["hospitalName"].(string))
+	address.Value("locName").String().Equal(data["locName"].(string))
+	address.Value("bedNum").String().Equal(data["bedNum"].(string))
+	address.Value("hospitalNo").String().Equal(data["hospitalNo"].(string))
+	address.Value("disease").String().Equal(data["disease"].(string))
 
 	// setUserAuthority
 	obj = auth.DELETE("/v1/general/address/deleteAddress").

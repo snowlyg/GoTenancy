@@ -11,7 +11,7 @@ type GeneralAddress struct {
 	Province     string    `json:"province"`
 	City         string    `json:"city"`
 	District     string    `json:"district"`
-	IsDefault    int       `json:"isDefault"`
+	IsDefault    bool      `json:"isDefault"`
 	Detail       string    `json:"detail"`
 	Postcode     string    `json:"postcode"`
 	Age          int       `json:"age"`

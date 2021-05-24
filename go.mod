@@ -31,7 +31,8 @@ require (
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
 )
+
+// replace github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3 => D:\go\src\github.com\snowlyg\iris

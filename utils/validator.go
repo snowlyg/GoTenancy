@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"database/sql"
+	"database/sql/driver"
 	"errors"
+	"reflect"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -9,7 +12,18 @@ import (
 )
 
 func RegisterValidation(validate *validator.Validate) {
+	validate.RegisterCustomTypeFunc(ValidateValuer, sql.NullString{}, sql.NullInt64{}, sql.NullBool{}, sql.NullFloat64{})
 	validate.RegisterValidation("dev-required", ValidateDevRequired)
+}
+
+func ValidateValuer(field reflect.Value) interface{} {
+	if valuer, ok := field.Interface().(driver.Valuer); ok {
+		val, err := valuer.Value()
+		if err == nil {
+			return val
+		}
+	}
+	return nil
 }
 
 func ValidateDevRequired(fl validator.FieldLevel) bool {

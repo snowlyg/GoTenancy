@@ -1,6 +1,8 @@
 package request
 
-import "github.com/snowlyg/go-tenancy/model"
+import (
+	"github.com/snowlyg/go-tenancy/model"
+)
 
 type CreateAddress struct {
 	Name         string    `json:"name" validate:"required"`
@@ -10,7 +12,7 @@ type CreateAddress struct {
 	Province     string    `json:"province" validate:"required"`
 	City         string    `json:"city"`
 	District     string    `json:"district" validate:"required"`
-	IsDefault    int       `json:"isDefault" validate:"required"`
+	IsDefault    bool      `json:"isDefault"`
 	Detail       string    `json:"detail" validate:"required"`
 	Postcode     string    `json:"postcode"`
 	Age          int       `json:"age"`
@@ -20,6 +22,7 @@ type CreateAddress struct {
 	HospitalNO   string    `json:"hospitalNo"`
 	Disease      string    `json:"disease"`
 }
+
 type UpdateAddress struct {
 	Id           uint      `json:"id" form:"id" validate:"required,gt=0"`
 	Name         string    `json:"name" validate:"required"`
@@ -29,7 +32,7 @@ type UpdateAddress struct {
 	Province     string    `json:"province" validate:"required"`
 	City         string    `json:"city"`
 	District     string    `json:"district" validate:"required"`
-	IsDefault    int       `json:"isDefault" validate:"required"`
+	IsDefault    bool      `json:"isDefault" validate:"required"`
 	Detail       string    `json:"detail" validate:"required"`
 	Postcode     string    `json:"postcode"`
 	Age          int       `json:"age"`
