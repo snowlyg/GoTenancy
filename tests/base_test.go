@@ -10,6 +10,7 @@ import (
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
+	"github.com/snowlyg/multi"
 )
 
 func TestMain(m *testing.M) {
@@ -52,7 +53,25 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": 1}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": multi.AdminAuthority}).
+		Expect().Status(httptest.StatusOK).JSON().Object()
+
+	obj.Keys().ContainsOnly("code", "data", "msg")
+	obj.Value("code").Number().Equal(0)
+	obj.Value("msg").String().Equal("登录成功")
+	data := obj.Value("data").Object()
+	data.Value("AccessToken").NotNull()
+
+	token := data.Value("AccessToken").String().Raw()
+	return e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+token)
+	})
+}
+
+func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
+	e := baseTester(t)
+	obj := e.POST("/v1/public/login").
+		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "authorityType": multi.GeneralAuthority}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -68,7 +87,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 }
 
 func baseLogOut(auth *httpexpect.Expect) {
-	obj := auth.GET("/v1/admin/user/logout").
+	obj := auth.GET("/v1/auth/logout").
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

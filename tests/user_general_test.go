@@ -25,7 +25,7 @@ func TestGeneralUserList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "avatarUrl", "authorityName", "authorityType", "authorityId", "sex", "subscribe", "openId", "unionId", "country", "provice", "city", "idCard", "isAuth", "realName", "birthday", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "avatarUrl", "authorityName", "authorityType", "authorityId", "sex", "subscribe", "openId", "unionId", "country", "province", "city", "idCard", "isAuth", "realName", "birthday", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)

@@ -14,8 +14,8 @@ type casbin struct{}
 
 var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/register", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/logout", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/clean", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/api/createApi", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/api/getApiList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/api/getApiById", V2: "POST"},
@@ -82,10 +82,13 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/updateConfig", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/deleteConfig", V2: "DELETE"},
 
-	// 用户权限
+	// 普通用户权限
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
+	// 地址管理
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressList", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/createAddress", V2: "POST"},
-	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressByName", V2: "POST"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressById", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/updateAddress", V2: "PUT"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/deleteAddress", V2: "DELETE"},
 }

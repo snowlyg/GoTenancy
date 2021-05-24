@@ -61,9 +61,9 @@ type SysTenancyInfo struct {
 type Sex int
 
 const (
-	Female = iota
+	Unknown = iota
 	Male
-	Unknown
+	Female
 )
 
 type SysGeneralInfo struct {
@@ -77,7 +77,7 @@ type SysGeneralInfo struct {
 	OpenId    string    `json:"openId" form:"openId" gorm:"column:open_id;comment:openid"`
 	UnionId   string    `json:"unionId" form:"unionId" gorm:"column:union_id;comment:unionId"`
 	Country   string    `json:"country" form:"country" gorm:"column:country;comment:国家"`
-	Province  string    `json:"provice" form:"provice" gorm:"column:provice;comment:省份"`
+	Province  string    `json:"province" form:"province" gorm:"column:province;comment:省份"`
 	City      string    `json:"city" form:"city" gorm:"column:city;comment:城市"`
 	IdCard    string    `json:"idCard" form:"idCard" gorm:"column:id_card;comment:身份证号"`
 	IsAuth    int       `json:"isAuth" form:"isAuth" gorm:"column:is_auth;comment:是否实名认证"`

@@ -53,7 +53,7 @@ type SysGeneralUser struct {
 	OpenId        string    `json:"openId"`
 	UnionId       string    `json:"unionId"`
 	Country       string    `json:"country"`
-	Province      string    `json:"provice"`
+	Province      string    `json:"province"`
 	City          string    `json:"city"`
 	IdCard        string    `json:"idCard"`
 	IsAuth        int       `json:"isAuth"`

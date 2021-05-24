@@ -40,6 +40,7 @@ func MysqlTables(db *gorm.DB) {
 		model.SysMini{},
 		model.SysConfig{},
 		model.GeneralAddress{},
+		model.GeneralReceipt{},
 	)
 	if err != nil {
 		g.TENANCY_LOG.Error("register table failed", zap.Any("err", err))

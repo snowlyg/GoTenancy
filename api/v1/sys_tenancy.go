@@ -2,7 +2,9 @@ package v1
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/context"
 	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -21,8 +23,7 @@ func CreateTenancy(ctx iris.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		data := iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
-		response.OkWithDetailed(data, "创建成功", ctx)
+		response.OkWithDetailed(getTenancyMap(returnTenancy), "创建成功", ctx)
 	}
 }
 
@@ -69,9 +70,13 @@ func UpdateTenancy(ctx iris.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
-		response.OkWithDetailed(data, "更新成功", ctx)
+		response.OkWithDetailed(getTenancyMap(returnTenancy), "更新成功", ctx)
 	}
+}
+
+// getTenancyMap
+func getTenancyMap(returnTenancy model.SysTenancy) context.Map {
+	return iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 }
 
 // DeleteTenancy

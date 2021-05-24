@@ -2,7 +2,9 @@ package v1
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/context"
 	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -21,8 +23,7 @@ func CreateMini(ctx iris.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		data := iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
-		response.OkWithDetailed(data, "创建成功", ctx)
+		response.OkWithDetailed(getMiniMap(returnMini), "创建成功", ctx)
 	}
 }
 
@@ -37,9 +38,13 @@ func UpdateMini(ctx iris.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
-		response.OkWithDetailed(data, "更新成功", ctx)
+		response.OkWithDetailed(getMiniMap(returnMini), "更新成功", ctx)
 	}
+}
+
+// getMiniMap
+func getMiniMap(returnMini model.SysMini) context.Map {
+	return iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
 }
 
 // GetMiniList

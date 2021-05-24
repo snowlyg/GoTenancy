@@ -79,6 +79,10 @@ func Routers() *iris.Application {
 
 	V1Group := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord())
 	{
+		Auth := V1Group.Party("/auth")
+		{
+			router.InitAuthRouter(Auth) // 注册用户路由
+		}
 		AdminGroup := V1Group.Party("/admin", middleware.IsAdmin())
 		{
 			router.InitApiRouter(AdminGroup)                // 注册功能api路由
@@ -101,7 +105,8 @@ func Routers() *iris.Application {
 
 		GeneralGroup := V1Group.Party("/general", middleware.IsGeneral())
 		{
-			router.InitAddressRouter(GeneralGroup) //
+			router.InitAddressRouter(GeneralGroup) //我的地址管理
+			// router.InitReceiptRouter(GeneralGroup) //我的发票管理
 		}
 	}
 

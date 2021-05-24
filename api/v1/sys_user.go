@@ -1,6 +1,9 @@
 package v1
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -239,8 +242,8 @@ func SetUserInfo(ctx iris.Context) {
 	}
 }
 
-// GetClaims returns the current authorized client claims.
-func GetClaims(ctx iris.Context) *multi.CustomClaims {
+// getClaims returns the current authorized client claims.
+func getClaims(ctx iris.Context) *multi.CustomClaims {
 	waitUse := multi.Get(ctx)
 	if waitUse == nil {
 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
@@ -250,10 +253,25 @@ func GetClaims(ctx iris.Context) *multi.CustomClaims {
 
 // getUserAuthorityId 从Context中获取用户角色id
 func getUserAuthorityId(ctx iris.Context) string {
-	if claims := GetClaims(ctx); claims == nil {
+	if claims := getClaims(ctx); claims == nil {
 		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
 		return ""
 	} else {
 		return claims.AuthorityId
+	}
+}
+
+// getUserId 从Context中获取用户id
+func getUserId(ctx iris.Context) int {
+	if claims := getClaims(ctx); claims == nil {
+		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
+		return 0
+	} else {
+		id, err := strconv.Atoi(claims.ID)
+		if err != nil {
+			g.TENANCY_LOG.Error("strconv atoi ", zap.Any("err", fmt.Errorf("%s strconv atoi %w", claims.ID, err)))
+			return 0
+		}
+		return id
 	}
 }
