@@ -24,7 +24,7 @@ func TestAddressList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "name", "phone", "sex", "country", "province", "city", "district", "detail", "isDefault", "postcode", "age", "hospitalName", "locName", "bedNum", "hospitalNo", "disease", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "name", "phone", "sex", "country", "province", "city", "district", "detail", "isDefault", "postcode", "age", "hospitalName", "locName", "bedNum", "hospitalNo", "disease", "sysUserId", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
@@ -169,7 +169,7 @@ func TestAddressRegisterError(t *testing.T) {
 		"province":     "广东省",
 		"city":         "东莞市",
 		"district":     "寮步镇",
-		"isDefault":    1,
+		"isDefault":    false,
 		"detail":       "松山湖阿里产业园",
 		"postcode":     "413514",
 		"age":          32,

@@ -106,7 +106,7 @@ func Routers() *iris.Application {
 		GeneralGroup := V1Group.Party("/general", middleware.IsGeneral())
 		{
 			router.InitAddressRouter(GeneralGroup) //我的地址管理
-			// router.InitReceiptRouter(GeneralGroup) //我的发票管理
+			router.InitReceiptRouter(GeneralGroup) //我的发票管理
 		}
 	}
 

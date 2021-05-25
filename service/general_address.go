@@ -4,7 +4,6 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
-	"github.com/snowlyg/go-tenancy/model/response"
 )
 
 // CreateAddress
@@ -53,8 +52,8 @@ func DeleteAddress(id float64, user_id int) error {
 }
 
 // GetAddressInfoList
-func GetAddressInfoList(info request.PageInfo, user_id int) ([]response.GeneralAddress, int64, error) {
-	var addressList []response.GeneralAddress
+func GetAddressInfoList(info request.PageInfo, user_id int) ([]model.GeneralAddress, int64, error) {
+	var addressList []model.GeneralAddress
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.GeneralAddress{}).Where("sys_user_id = ?", user_id)

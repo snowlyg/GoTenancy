@@ -85,12 +85,18 @@ var carbines = []gormadapter.CasbinRule{
 	// 普通用户权限
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
-	// 地址管理
+	// 我的地址
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressList", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/createAddress", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressById", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/updateAddress", V2: "PUT"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/deleteAddress", V2: "DELETE"},
+	// 我的发票
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/receipt/getReceiptList", V2: "POST"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/receipt/createReceipt", V2: "POST"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/receipt/getReceiptById", V2: "POST"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/receipt/updateReceipt", V2: "PUT"},
+	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/receipt/deleteReceipt", V2: "DELETE"},
 }
 
 //Init casbin_rule 表数据初始化

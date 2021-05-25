@@ -14,7 +14,7 @@ var Receipt = new(receipt)
 type receipt struct{}
 
 var receipts = []model.GeneralReceipt{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, ReceiptType: 1, ReceiptTitle: "title", ReceiptTitleType: 1, DutyGaragraph: "garagraph", Email: "email", BankName: "bank_name", BankCode: "bank_code", Address: "松山湖阿里产业园", Tel: "413514", IsDefault: 1, SysUserID: 3},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, ReceiptType: 1, ReceiptTitle: "title", ReceiptTitleType: 1, DutyGaragraph: "garagraph", Email: "email", BankName: "bank_name", BankCode: "bank_code", Address: "松山湖阿里产业园", Tel: "413514", IsDefault: true, SysUserID: 3},
 }
 
 func (m *receipt) Init() error {
