@@ -6,7 +6,7 @@
         {
             "label": "init db",
             "type": "shell",
-            "command": "go test -timeout 30s -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
+            "command": "go test -v -timeout 30s -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
         },
         {
             "label": "test all",

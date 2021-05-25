@@ -89,6 +89,7 @@ func Routers() *iris.Application {
 			router.InitUserRouter(AdminGroup)               // 注册用户路由
 			router.InitTenancyRouter(AdminGroup)            // 注册商户路由
 			router.InitMiniRouter(AdminGroup)               // 注册小程序路由
+			router.InitBrandRouter(AdminGroup)              // 注册品牌路由
 			router.InitConfigRouter(AdminGroup)             // 注册系统配置路由
 			router.InitMenuRouter(AdminGroup)               // 注册menu路由
 			router.InitEmailRouter(AdminGroup)              // 邮件相关路由
