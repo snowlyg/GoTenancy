@@ -2,6 +2,7 @@
 log/
 cmd/
 tmp/
+crmeb/
 
 # files
 go.sum
