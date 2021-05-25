@@ -76,7 +76,7 @@ func UpdateTenancy(ctx iris.Context) {
 
 // getTenancyMap
 func getTenancyMap(returnTenancy model.SysTenancy) context.Map {
-	return iris.Map{"id": returnTenancy.ID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+	return iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 }
 
 // DeleteTenancy

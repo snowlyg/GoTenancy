@@ -10,10 +10,10 @@ type CreateAddress struct {
 	Sex          model.Sex `json:"sex" validate:"required"`
 	Country      string    `json:"country" validate:"required"`
 	Province     string    `json:"province" validate:"required"`
-	City         string    `json:"city"`
+	City         string    `json:"city" validate:"required"`
 	District     string    `json:"district" validate:"required"`
-	IsDefault    bool      `json:"isDefault"`
 	Detail       string    `json:"detail" validate:"required"`
+	IsDefault    bool      `json:"isDefault"`
 	Postcode     string    `json:"postcode"`
 	Age          int       `json:"age"`
 	HospitalName string    `json:"hospitalName"`
@@ -32,7 +32,7 @@ type UpdateAddress struct {
 	Province     string    `json:"province" validate:"required"`
 	City         string    `json:"city"`
 	District     string    `json:"district" validate:"required"`
-	IsDefault    bool      `json:"isDefault" validate:"required"`
+	IsDefault    bool      `json:"isDefault"`
 	Detail       string    `json:"detail" validate:"required"`
 	Postcode     string    `json:"postcode"`
 	Age          int       `json:"age"`
