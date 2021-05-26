@@ -53,7 +53,7 @@ func GetMenuAuthority(ctx iris.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err, menus := service.GetMenuAuthority(&param); err != nil {
+	if menus, err := service.GetMenuAuthority(&param); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithDetailed(response.SysMenusResponse{Menus: menus}, "获取失败", ctx)
 	} else {

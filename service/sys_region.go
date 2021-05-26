@@ -15,6 +15,6 @@ func GetRegion(pCode int) ([]response.SysRegion, error) {
 // GetRegionList 获取行政区域
 func GetRegionList() ([]response.SysRegion, error) {
 	var regions []response.SysRegion
-	err := g.TENANCY_DB.Where("p_code", 0).Preload("SubRegions.SubRegions").Find(&regions).Error
+	err := g.TENANCY_DB.Where("p_code = ?", 0).Find(&regions).Error
 	return regions, err
 }

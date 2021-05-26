@@ -30,7 +30,7 @@ func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (model.SysAuthori
 		return authorityBox, errors.New("存在相同角色id")
 	}
 	copyInfo.Authority.Children = []model.SysAuthority{}
-	err, menus := GetMenuAuthority(&request.GetAuthorityId{AuthorityId: copyInfo.OldAuthorityId})
+	menus, err := GetMenuAuthority(&request.GetAuthorityId{AuthorityId: copyInfo.OldAuthorityId})
 	if err != nil {
 		return copyInfo.Authority, err
 	}

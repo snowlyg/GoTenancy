@@ -24,7 +24,7 @@ func TestBrandCategoryList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "pid", "cateName", "isShow", "path", "sort", "level", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "pid", "cateName", "isShow", "path", "sort", "level", "children", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 	baseLogOut(auth)
@@ -53,7 +53,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("isShow").Boolean().Equal(data["isShow"].(bool))
 	brandCategory.Value("path").String().Equal(data["path"].(string))
 	brandCategory.Value("sort").Number().Equal(data["sort"].(int))
-	brandCategory.Value("pid").Number().Equal(data["pid"].(int))
+	brandCategory.Value("pid").String().Equal(data["pid"].(string))
 	brandCategory.Value("level").Number().Equal(data["level"].(int))
 	brandCategoryId := brandCategory.Value("id").Number().Raw()
 
@@ -80,7 +80,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("isShow").Boolean().Equal(update["isShow"].(bool))
 	brandCategory.Value("path").String().Equal(update["path"].(string))
 	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
+	brandCategory.Value("pid").String().Equal(update["pid"].(string))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
 	obj = auth.POST("/v1/admin/brandCategory/getBrandCategoryById").
@@ -96,7 +96,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("isShow").Boolean().Equal(update["isShow"].(bool))
 	brandCategory.Value("path").String().Equal(update["path"].(string))
 	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
+	brandCategory.Value("pid").String().Equal(update["pid"].(string))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
 	// setUserAuthority

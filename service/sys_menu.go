@@ -108,9 +108,10 @@ func AddMenuAuthority(menus []model.SysBaseMenu, authorityId string) error {
 }
 
 // GetMenuAuthority 查看当前角色树
-func GetMenuAuthority(info *request.GetAuthorityId) (err error, menus []model.SysMenu) {
-	err = g.TENANCY_DB.Where("authority_id = ? ", info.AuthorityId).Order("sort").Find(&menus).Error
+func GetMenuAuthority(info *request.GetAuthorityId) ([]model.SysMenu, error) {
+	var menus []model.SysMenu
+	err := g.TENANCY_DB.Where("authority_id = ? ", info.AuthorityId).Order("sort").Find(&menus).Error
 	//sql := "SELECT authority_menu.keep_alive,authority_menu.default_menu,authority_menu.created_at,authority_menu.updated_at,authority_menu.deleted_at,authority_menu.menu_level,authority_menu.parent_id,authority_menu.path,authority_menu.`name`,authority_menu.hidden,authority_menu.component,authority_menu.title,authority_menu.icon,authority_menu.sort,authority_menu.menu_id,authority_menu.authority_id FROM authority_menu WHERE authority_menu.authority_id = ? ORDER BY authority_menu.sort ASC"
 	//err = g.TENANCY_DB.Raw(sql, authorityId).Scan(&menus).Error
-	return err, menus
+	return menus, err
 }

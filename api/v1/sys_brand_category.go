@@ -63,13 +63,13 @@ func GetBrandCategoryList(ctx iris.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetBrandCategoryInfoList(pageInfo); err != nil {
+	if list, err := service.GetBrandCategoryInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
-			Total:    total,
+			Total:    0,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", ctx)

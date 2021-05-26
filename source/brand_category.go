@@ -14,8 +14,8 @@ var BrandCategory = new(brand_category)
 type brand_category struct{}
 
 var brand_categories = []model.SysBrandCategory{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, CateName: "计生保健", Pid: 0, Path: "", Sort: 0, Level: 0, IsShow: true},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, CateName: "大保健", Pid: 1, Path: "", Sort: 1, Level: 1, IsShow: true},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, CateName: "计生保健", Pid: "0", Path: "", Sort: 0, Level: 0, IsShow: true},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, CateName: "大保健", Pid: "1", Path: "", Sort: 1, Level: 1, IsShow: true},
 }
 
 func (m *brand_category) Init() error {

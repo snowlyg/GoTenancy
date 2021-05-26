@@ -2,10 +2,12 @@ package service
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"gorm.io/gorm"
 )
 
@@ -60,16 +62,32 @@ func DeleteBrandCategory(id float64) error {
 }
 
 // GetBrandCategoryInfoList
-func GetBrandCategoryInfoList(info request.PageInfo) ([]model.SysBrandCategory, int64, error) {
-	var brandCategoryList []model.SysBrandCategory
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.SysBrandCategory{})
-	var total int64
-	err := db.Count(&total).Error
-	if err != nil {
-		return brandCategoryList, total, err
+func GetBrandCategoryInfoList() ([]response.SysBrandCategory, error) {
+	var brandCategoryList []response.SysBrandCategory
+	treeMap, err := getBrandCategoryMap()
+	brandCategoryList = treeMap["0"]
+	for i := 0; i < len(brandCategoryList); i++ {
+		err = getBrandCategoryBaseChildrenList(&brandCategoryList[i], treeMap)
 	}
-	err = db.Limit(limit).Offset(offset).Find(&brandCategoryList).Error
-	return brandCategoryList, total, err
+	return brandCategoryList, err
+}
+
+// getBrandCategoryMap
+func getBrandCategoryMap() (map[string][]response.SysBrandCategory, error) {
+	var brandCategoryList []response.SysBrandCategory
+	treeMap := make(map[string][]response.SysBrandCategory)
+	err := g.TENANCY_DB.Model(&model.SysBrandCategory{}).Order("sort").Find(&brandCategoryList).Error
+	for _, v := range brandCategoryList {
+		treeMap[v.Pid] = append(treeMap[v.Pid], v)
+	}
+	return treeMap, err
+}
+
+// getBrandCategoryBaseChildrenList
+func getBrandCategoryBaseChildrenList(cate *response.SysBrandCategory, treeMap map[string][]response.SysBrandCategory) (err error) {
+	cate.Children = treeMap[strconv.Itoa(int(cate.ID))]
+	for i := 0; i < len(cate.Children); i++ {
+		err = getBrandCategoryBaseChildrenList(&cate.Children[i], treeMap)
+	}
+	return err
 }
