@@ -19,6 +19,7 @@ func CreateBrand(ctx iris.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
+
 	if returnBrand, err := service.CreateBrand(brand); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
