@@ -14,7 +14,7 @@ func CreateBrand(m request.CreateSysBrand) (model.SysBrand, error) {
 	var brand model.SysBrand
 	err := g.TENANCY_DB.Where("brand_name = ?", m.BrandName).First(&brand).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return brand, errors.New("商户名称已被注冊")
+		return brand, errors.New("名称已被注冊")
 	}
 	brand.BrandName = m.BrandName
 	brand.Sort = m.Sort
@@ -37,7 +37,7 @@ func UpdateBrand(m request.UpdateSysBrand) (model.SysBrand, error) {
 	var brand model.SysBrand
 	err := g.TENANCY_DB.Where("brand_name = ?", m.BrandName).Where("id <> ?", m.Id).First(&brand).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return brand, errors.New("商户名称已被注冊")
+		return brand, errors.New("名称已被注冊")
 	}
 	data := map[string]interface{}{
 		"brand_name": m.BrandName,

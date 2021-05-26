@@ -16,7 +16,7 @@ func CreateTenancy(t request.CreateSysTenancy) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
 	err := g.TENANCY_DB.Where("name = ?", t.Name).First(&tenancy).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return tenancy, errors.New("商户名称已被注冊")
+		return tenancy, errors.New("名称已被注冊")
 	}
 	tenancy.UUID = uuid.NewV4()
 	tenancy.Address = t.Address
@@ -45,7 +45,7 @@ func UpdateTenany(t request.UpdateSysTenancy) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
 	err := g.TENANCY_DB.Where("name = ?", t.Name).Not("id = ?", t.Id).First(&tenancy).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return tenancy, errors.New("商户名称已被注冊")
+		return tenancy, errors.New("名称已被注冊")
 	}
 
 	tenancy.ID = t.Id
