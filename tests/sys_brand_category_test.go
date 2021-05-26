@@ -37,7 +37,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     1,
 		"level":    1,
-		"pid":      1,
+		"pid":      "1",
 	}
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
@@ -64,7 +64,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      1,
+		"pid":      "1",
 	}
 
 	obj = auth.PUT("/v1/admin/brandCategory/updateBrandCategory").
@@ -117,7 +117,7 @@ func TestBrandCategoryRegisterError(t *testing.T) {
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      1,
+		"pid":      "1",
 	}
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
