@@ -45,7 +45,7 @@ func Login(u *model.SysUser, authorityType int) (response.LoginResponse, error) 
 		return response.LoginResponse{
 			User:  nil,
 			Token: "",
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 }
 
@@ -65,7 +65,7 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  admin,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(admin.ID), 10),
@@ -82,7 +82,7 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  admin,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 
 	token, _, err = createToken(claims)
@@ -108,7 +108,7 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
-		Where("sys_authorities.authority_type = ?", multi.AdminAuthority).
+		Where("sys_authorities.authority_type = ?", multi.TenancyAuthority).
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
@@ -117,7 +117,7 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  tenancy,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(tenancy.ID), 10),
@@ -136,7 +136,7 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  tenancy,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 
 	token, _, err = createToken(claims)
@@ -169,7 +169,7 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  general,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(general.ID), 10),
@@ -186,7 +186,7 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 		return response.LoginResponse{
 			User:  general,
 			Token: token,
-		}, errors.New("用户名不存在或者密码错误")
+		}, errors.New("用户名或者密码错误")
 	}
 
 	token, _, err = createToken(claims)
