@@ -77,7 +77,7 @@ func Routers() *iris.Application {
 		router.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
 
-	V1Group := Router.Party("/v1", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord())
+	V1Group := Router.Party("/v1", middleware.Auth(), middleware.CasbinHandler(), middleware.OperationRecord())
 	{
 		Auth := V1Group.Party("/auth")
 		{
@@ -101,7 +101,9 @@ func Routers() *iris.Application {
 			router.InitAuthorityRouter(AdminGroup)          // 注册角色路由
 			router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 
-			router.InitMediaRouter(AdminGroup) // 文件上传下载功能路由
+			// 商户
+			router.InitMediaRouter(AdminGroup)    // 媒体库路由
+			router.InitCategoryRouter(AdminGroup) // 商品分类路由
 
 		}
 

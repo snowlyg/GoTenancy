@@ -5,7 +5,7 @@ import (
 	"github.com/snowlyg/multi"
 )
 
-func JWTAuth() iris.Handler {
+func Auth() iris.Handler {
 	verifier := multi.NewVerifier()
 	verifier.Extractors = []multi.TokenExtractor{multi.FromHeader} // extract token only from Authorization: Bearer $token
 	return verifier.Verify()

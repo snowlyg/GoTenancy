@@ -32,6 +32,11 @@ func GetBrandByID(id float64) (model.SysBrand, error) {
 	return brand, err
 }
 
+// SetBrandCate
+func SetBrandCate(setSysBrand request.SetSysBrand) error {
+	return g.TENANCY_DB.Model(&model.SysBrand{}).Where("id = ?", setSysBrand.Id).Update("brand_category_id", setSysBrand.BrandCategoryID).Error
+}
+
 // UpdateBrand
 func UpdateBrand(m request.UpdateSysBrand) (model.SysBrand, error) {
 	var brand model.SysBrand

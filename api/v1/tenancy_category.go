@@ -12,102 +12,94 @@ import (
 	"go.uber.org/zap"
 )
 
-// CreateBrand
-func CreateBrand(ctx iris.Context) {
-	var brand request.CreateSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&brand)); errs != nil {
+// CreateCategory
+func CreateCategory(ctx iris.Context) {
+	var category request.CreateTenancyCategory
+	if errs := utils.Verify(ctx.ReadJSON(&category)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	if returnBrand, err := service.CreateBrand(brand); err != nil {
+	if returnCategory, err := service.CreateCategory(category); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		response.OkWithDetailed(getBrandMap(returnBrand), "创建成功", ctx)
+		response.OkWithDetailed(getCategoryMap(returnCategory), "创建成功", ctx)
 	}
 }
 
-// UpdateBrand
-func UpdateBrand(ctx iris.Context) {
-	var brand request.UpdateSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&brand)); errs != nil {
+// UpdateCategory
+func UpdateCategory(ctx iris.Context) {
+	var category request.UpdateTenancyCategory
+	if errs := utils.Verify(ctx.ReadJSON(&category)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnBrand, err := service.UpdateBrand(brand); err != nil {
+	if returnCategory, err := service.UpdateCategory(category); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		response.OkWithDetailed(getBrandMap(returnBrand), "更新成功", ctx)
+		response.OkWithDetailed(getCategoryMap(returnCategory), "更新成功", ctx)
 	}
 }
 
-// getBrandMap
-func getBrandMap(returnBrand model.SysBrand) context.Map {
-	return iris.Map{"id": returnBrand.ID, "brandName": returnBrand.BrandName, "sort": returnBrand.Sort, "pic": returnBrand.Pic, "isShow": returnBrand.IsShow}
+// getCategoryMap
+func getCategoryMap(returnCategory model.TenancyCategory) context.Map {
+	return iris.Map{
+		"id":       returnCategory.ID,
+		"cateName": returnCategory.CateName,
+		"pid":      returnCategory.Pid,
+		"sort":     returnCategory.Sort,
+		"path":     returnCategory.Path,
+		"isShow":   returnCategory.IsShow,
+		"level":    returnCategory.Level,
+	}
 }
 
-// GetBrandList
-func GetBrandList(ctx iris.Context) {
+// GetCategoryList
+func GetCategoryList(ctx iris.Context) {
 	var pageInfo request.PageInfo
 	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetBrandInfoList(pageInfo); err != nil {
+	if list, err := service.GetCategoryInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
-			Total:    total,
+			Total:    0,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", ctx)
 	}
 }
 
-// SetBrandCate
-func SetBrandCate(ctx iris.Context) {
-	var setSysBrand request.SetSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&setSysBrand)); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	err := service.SetBrandCate(setSysBrand)
-	if err != nil {
-		g.TENANCY_LOG.Error("设置失败!", zap.Any("err", err))
-		response.FailWithMessage("设置失败", ctx)
-	} else {
-		response.OkWithMessage("设置成功", ctx)
-	}
-}
-
-// GetBrandById
-func GetBrandById(ctx iris.Context) {
+// GetCategoryById
+func GetCategoryById(ctx iris.Context) {
 	var reqId request.GetById
 	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	brand, err := service.GetBrandByID(reqId.Id)
+	category, err := service.GetCategoryByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
-		response.OkWithData(brand, ctx)
+		response.OkWithData(category, ctx)
 	}
 }
 
-// DeleteBrand
-func DeleteBrand(ctx iris.Context) {
+// DeleteCategory
+func DeleteCategory(ctx iris.Context) {
 	var reqId request.GetById
 	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteBrand(reqId.Id); err != nil {
+	if err := service.DeleteCategory(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", ctx)
 	} else {

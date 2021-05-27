@@ -16,3 +16,8 @@ type UpdateSysBrand struct {
 	IsShow          bool   `json:"isShow"`                                   // 是否显示
 	BrandCategoryID int32  `json:"brandCategoryId" validate:"required,gt=0"` // 分类id
 }
+
+type SetSysBrand struct {
+	Id              uint  `json:"id" form:"id" validate:"required,gt=0"`
+	BrandCategoryID int32 `json:"brandCategoryId" validate:"required,gt=0"` // 分类id
+}
