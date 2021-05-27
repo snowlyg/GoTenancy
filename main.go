@@ -4,6 +4,7 @@ import (
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -21,6 +22,6 @@ func main() {
 	g.TENANCY_LOG.Info("cache type is ", zap.String("", g.TENANCY_CONFIG.System.CacheType))
 	// 初始化认证服务
 	initialize.Auth()
-	defer g.TENANCY_AUTH.Close()
+	defer multi.AuthDriver.Close()
 	core.RunServer()
 }

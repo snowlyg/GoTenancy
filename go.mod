@@ -6,6 +6,7 @@ require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.8+incompatible
+	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/casbin/casbin/v2 v2.28.4
 	github.com/casbin/gorm-adapter/v3 v3.2.9
@@ -30,7 +31,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil v3.21.3+incompatible
-	github.com/snowlyg/multi v0.0.0-20210508062654-5f76880232af
+	github.com/snowlyg/multi v0.0.0-20210527081546-12e8ef2c45a8
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.25
@@ -48,4 +49,7 @@ require (
 	gorm.io/gorm v1.21.10
 )
 
-// replace github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3 => D:\go\src\github.com\snowlyg\iris
+replace (
+// github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210413181054-382e7c14cbd3 => D:\go\src\github.com\snowlyg\iris
+github.com/snowlyg/multi v0.0.0-20210527081546-12e8ef2c45a8 => D:\go\src\github.com\snowlyg\multi
+)

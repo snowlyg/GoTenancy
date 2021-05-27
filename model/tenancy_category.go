@@ -12,5 +12,5 @@ type TenancyCategory struct {
 	IsShow   bool   `gorm:"column:is_show;type:bool;not null" json:"isShow"`                // 是否显示
 	Level    uint   `gorm:"column:level;type:int unsigned;not null;default:0" json:"level"` // 等级
 
-	TenancyID uint `gorm:"column:tenancy_id;type:int unsigned" json:"tenancyId"` // 商户id
+	SysTenancyID int `gorm:"index:sys_tenancy_id;column:tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
 }

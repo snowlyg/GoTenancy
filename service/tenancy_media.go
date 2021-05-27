@@ -5,10 +5,12 @@ import (
 	"mime/multipart"
 	"strings"
 
+	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/utils/upload"
+	"github.com/snowlyg/multi"
 )
 
 func Upload(file model.TenancyMedia) error {
@@ -34,11 +36,14 @@ func DeleteFile(file model.TenancyMedia) error {
 	return err
 }
 
-func GetFileRecordInfoList(info request.PageInfo) (interface{}, int64, error) {
+func GetFileRecordInfoList(info request.PageInfo, ctx iris.Context) (interface{}, int64, error) {
 	var total int64
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB
+	if !multi.IsAdmin(ctx) {
+		db = db.Where("tenancy_id = ?", multi.GetTenancyId(ctx))
+	}
 	var fileLists []model.TenancyMedia
 	err := db.Find(&fileLists).Count(&total).Error
 	if err != nil {
@@ -48,7 +53,7 @@ func GetFileRecordInfoList(info request.PageInfo) (interface{}, int64, error) {
 	return fileLists, total, err
 }
 
-func UploadFile(header *multipart.FileHeader, noSave string) (model.TenancyMedia, error) {
+func UploadFile(header *multipart.FileHeader, noSave string, ctx iris.Context) (model.TenancyMedia, error) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -61,6 +66,7 @@ func UploadFile(header *multipart.FileHeader, noSave string) (model.TenancyMedia
 		f.Name = header.Filename
 		f.Tag = s[len(s)-1]
 		f.Key = key
+		f.SysTenancyID = multi.GetTenancyId(ctx)
 		return f, Upload(f)
 	}
 	return f, nil

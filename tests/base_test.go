@@ -32,7 +32,7 @@ func TestMain(m *testing.M) {
 
 	db, _ := g.TENANCY_DB.DB()
 	db.Close()
-	g.TENANCY_AUTH.Close()
+	multi.AuthDriver.Close()
 }
 
 func baseTester(t *testing.T) *httpexpect.Expect {

@@ -8,5 +8,5 @@ type TenancyAttrTemplate struct {
 	TemplateName  string `gorm:"column:template_name;type:varchar(32);not null" json:"templateName"` // 规格名称
 	TemplateValue string `gorm:"column:template_value;type:text;not null" json:"templateValue"`      // 规格值
 
-	TenancyID int `gorm:"index:tenancy_id;column:tenancy_id;type:int;not null" json:"tenancyId"` // 商户 id
+	SysTenancyID int `gorm:"index:sys_tenancy_id;column:tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
 }

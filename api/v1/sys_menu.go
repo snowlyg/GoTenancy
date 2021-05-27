@@ -8,12 +8,13 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
 // GetMenu 获取用户动态路由
 func GetMenu(ctx iris.Context) {
-	if menus, err := service.GetMenuTree(getUserAuthorityId(ctx)); err != nil {
+	if menus, err := service.GetMenuTree(multi.GetAuthorityId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
@@ -21,7 +22,7 @@ func GetMenu(ctx iris.Context) {
 	}
 }
 
-// GetBaseMenuTree 获取用户动态路由
+// GetBaseMenuTree 获取基础路由树
 func GetBaseMenuTree(ctx iris.Context) {
 	if menus, err := service.GetBaseMenuTree(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))

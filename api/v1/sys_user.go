@@ -1,9 +1,6 @@
 package v1
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -242,36 +239,56 @@ func SetUserInfo(ctx iris.Context) {
 	}
 }
 
-// getClaims returns the current authorized client claims.
-func getClaims(ctx iris.Context) *multi.CustomClaims {
-	waitUse := multi.Get(ctx)
-	if waitUse == nil {
-		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
-	}
-	return waitUse
-}
+// // getClaims returns the current authorized client claims.
+// func getClaims(ctx iris.Context) *multi.CustomClaims {
+// 	waitUse := multi.Get(ctx)
+// 	if waitUse == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
+// 	}
+// 	return waitUse
+// }
 
-// getUserAuthorityId 从Context中获取用户角色id
-func getUserAuthorityId(ctx iris.Context) string {
-	if claims := getClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
-		return ""
-	} else {
-		return claims.AuthorityId
-	}
-}
+// // getUserAuthorityId 从Context中获取用户角色id
+// func getUserAuthorityId(ctx iris.Context) string {
+// 	if claims := getClaims(ctx); claims == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
+// 		return ""
+// 	} else {
+// 		return claims.AuthorityId
+// 	}
+// }
 
-// getUserId 从Context中获取用户id
-func getUserId(ctx iris.Context) int {
-	if claims := getClaims(ctx); claims == nil {
-		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
-		return 0
-	} else {
-		id, err := strconv.Atoi(claims.ID)
-		if err != nil {
-			g.TENANCY_LOG.Error("strconv atoi ", zap.Any("err", fmt.Errorf("%s strconv atoi %w", claims.ID, err)))
-			return 0
-		}
-		return id
-	}
-}
+// // getUserId 从Context中获取用户id
+// func getUserId(ctx iris.Context) int {
+// 	if claims := getClaims(ctx); claims == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取用户id失败, 请检查路由是否使用multi中间件")
+// 		return 0
+// 	} else {
+// 		id, err := strconv.Atoi(claims.ID)
+// 		if err != nil {
+// 			g.TENANCY_LOG.Error("strconv atoi ", zap.Any("err", fmt.Errorf("%s strconv atoi %w", claims.ID, err)))
+// 			return 0
+// 		}
+// 		return id
+// 	}
+// }
+
+// // getTenancyId 从Context中获取商户id
+// func getTenancyId(ctx iris.Context) int {
+// 	if claims := getClaims(ctx); claims == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取商户id失败, 请检查路由是否使用multi中间件")
+// 		return 0
+// 	} else {
+// 		return claims.TenancyId
+// 	}
+// }
+
+// // getTenancyName 从Context中获取商户id
+// func getTenancyName(ctx iris.Context) string {
+// 	if claims := getClaims(ctx); claims == nil {
+// 		g.TENANCY_LOG.Error("从Context中获取商户名称失败, 请检查路由是否使用multi中间件")
+// 		return ""
+// 	} else {
+// 		return claims.TenancyName
+// 	}
+// }

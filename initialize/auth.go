@@ -41,5 +41,4 @@ func Auth() {
 		g.TENANCY_LOG.Error("new auth diver failed")
 		os.Exit(0)
 	}
-	g.TENANCY_AUTH = multi.AuthDriver
 }

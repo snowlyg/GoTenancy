@@ -44,10 +44,10 @@ type TenancyProduct struct {
 	Image       string `gorm:"column:image;type:varchar(256);not null" json:"image"`               // 商品图片
 	SliderImage string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
 
-	OldID             int  `gorm:"column:old_id;type:int;default:0" json:"oldId"`
-	TempID            int  `gorm:"column:temp_id;type:int;not null;default:1" json:"tempId"`                                        // 运费模板ID
-	TenancyID         uint `gorm:"column:tenancy_id;type:int unsigned;not null" json:"tenancyId"`                                   // 商户Id
-	SysBrandID        int  `gorm:"column:sys_brand_id;type:int" json:"sysBrandId"`                                                  // 品牌 id
-	TenancyCategoryID int  `gorm:"index:tenancy_category_id;column:tenancy_category_id;type:int;not null" json:"tenancyCategoryId"` // 分类id
+	OldID             int `gorm:"column:old_id;type:int;default:0" json:"oldId"`
+	TempID            int `gorm:"column:temp_id;type:int;not null;default:1" json:"tempId"`                                        // 运费模板ID
+	SysTenancyID      int `gorm:"index:sys_tenancy_id;column:tenancy_id;type:int;not null" json:"sysTenancyId"`                    // 商户 id                                  // 商户Id
+	SysBrandID        int `gorm:"column:sys_brand_id;type:int" json:"sysBrandId"`                                                  // 品牌 id
+	TenancyCategoryID int `gorm:"index:tenancy_category_id;column:tenancy_category_id;type:int;not null" json:"tenancyCategoryId"` // 分类id
 
 }

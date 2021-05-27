@@ -34,6 +34,7 @@ type SysTenancyUser struct {
 	AuthorityName string `json:"authorityName"`
 	AuthorityType int    `json:"authorityType"`
 	AuthorityId   string `json:"authorityId"`
+	TenancyId     int    `json:"tenancyId"`
 	TenancyName   string `json:"tenancyName"`
 	DefaultRouter string `json:"defaultRouter"`
 }

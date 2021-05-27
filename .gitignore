@@ -3,6 +3,7 @@ log/
 cmd/
 tmp/
 crmeb/
+uploads/
 
 # files
 go.sum

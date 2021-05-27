@@ -103,7 +103,7 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 
 // tenancyLogin
 func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
-	var tenancy response.SysAdminUser
+	var tenancy response.SysTenancyUser
 	var token string
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
@@ -122,6 +122,8 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(tenancy.ID), 10),
 		Username:      tenancy.Username,
+		TenancyId:     tenancy.TenancyId,
+		TenancyName:   tenancy.TenancyName,
 		AuthorityId:   tenancy.AuthorityId,
 		AuthorityType: tenancy.AuthorityType,
 		LoginType:     multi.LoginTypeWeb,
@@ -153,7 +155,7 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 
 // generalLogin
 func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
-	var general response.SysAdminUser
+	var general response.SysGeneralUser
 	var token string
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
@@ -367,18 +369,18 @@ func FindUserById(id int) (*model.SysUser, error) {
 
 // createToken 创建token
 func createToken(claims *multi.CustomClaims) (string, int64, error) {
-	if g.TENANCY_AUTH.IsUserTokenOver(claims.ID) {
+	if multi.AuthDriver.IsUserTokenOver(claims.ID) {
 		return "", 0, errors.New("已达到同时登录设备上限")
 	}
 	token, err := multi.GetToken()
 	if err != nil {
 		return "", 0, err
 	}
-	err = g.TENANCY_AUTH.ToCache(token, claims)
+	err = multi.AuthDriver.ToCache(token, claims)
 	if err != nil {
 		return "", 0, err
 	}
-	if err = g.TENANCY_AUTH.SyncUserTokenCache(token); err != nil {
+	if err = multi.AuthDriver.SyncUserTokenCache(token); err != nil {
 		return "", 0, err
 	}
 
@@ -387,7 +389,7 @@ func createToken(claims *multi.CustomClaims) (string, int64, error) {
 
 // DelToken 删除token
 func DelToken(token string) error {
-	err := g.TENANCY_AUTH.DelUserTokenCache(token)
+	err := multi.AuthDriver.DelUserTokenCache(token)
 	if err != nil {
 		g.TENANCY_LOG.Error("del token", zap.Any("err", err))
 		return fmt.Errorf("del token %w", err)
@@ -397,7 +399,7 @@ func DelToken(token string) error {
 
 // CleanToken 清空 token
 func CleanToken(userId string) error {
-	err := g.TENANCY_AUTH.CleanUserTokenCache(userId)
+	err := multi.AuthDriver.CleanUserTokenCache(userId)
 	if err != nil {
 		g.TENANCY_LOG.Error("clean token", zap.Any("err", err))
 		return fmt.Errorf("clean token %w", err)

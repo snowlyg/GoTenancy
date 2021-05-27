@@ -14,5 +14,5 @@ type TenancyShippingTemplate struct {
 	IsDefault  bool   `gorm:"column:is_default;type:bool;default:false" json:"isDefault"`                   // 默认模板
 	Sort       int    `gorm:"index:mer_id;column:sort;type:int;not null;default:0" json:"sort"`             // 排序
 
-	TenancyID int `gorm:"index:tenancy_id;column:tenancy_id;type:int;not null" json:"tenancyId"` // 商户 id
+	SysTenancyID int `gorm:"index:sys_tenancy_id;column:tenancy_id;type:int;not null" json:"sysTenancyId"`
 }

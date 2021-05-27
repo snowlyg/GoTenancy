@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +21,7 @@ func CreateAddress(ctx iris.Context) {
 		return
 	}
 
-	user_id := getUserId(ctx)
+	user_id := multi.GetUserId(ctx)
 	if user_id == 0 {
 		g.TENANCY_LOG.Error("更新失败! general_user is 0")
 		response.FailWithMessage("请求失败", ctx)
@@ -63,7 +64,7 @@ func GetAddressList(ctx iris.Context) {
 		return
 	}
 
-	user_id := getUserId(ctx)
+	user_id := multi.GetUserId(ctx)
 	if user_id == 0 {
 		g.TENANCY_LOG.Error("更新失败! general_user is 0")
 		response.FailWithMessage("请求失败", ctx)
@@ -91,7 +92,7 @@ func GetAddressById(ctx iris.Context) {
 		return
 	}
 
-	user_id := getUserId(ctx)
+	user_id := multi.GetUserId(ctx)
 	if user_id == 0 {
 		g.TENANCY_LOG.Error("更新失败! general_user is 0")
 		response.FailWithMessage("请求失败", ctx)
@@ -115,7 +116,7 @@ func DeleteAddress(ctx iris.Context) {
 		return
 	}
 
-	user_id := getUserId(ctx)
+	user_id := multi.GetUserId(ctx)
 	if user_id == 0 {
 		g.TENANCY_LOG.Error("更新失败! general_user is 0")
 		response.FailWithMessage("请求失败", ctx)
