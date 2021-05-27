@@ -9,7 +9,7 @@ import (
 // IsAdmin
 func IsAdmin() iris.Handler {
 	return func(ctx iris.Context) {
-		if !multi.IsAdmin(ctx) {
+		if !multi.IsAdmin(ctx) && !multi.IsTenancy(ctx) {
 			response.ForbiddenFailWithMessage("无此操作权限", ctx)
 			ctx.StopExecution()
 		}

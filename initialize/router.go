@@ -64,7 +64,7 @@ func Routers() *iris.Application {
 	// before end-developer's middleware.
 	Router.UseRouter(recover.New())
 
-	// Router.StaticFS(g.TENANCY_CONFIG.Local.Path, http.Dir(g.TENANCY_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
+	Router.HandleDir(g.TENANCY_CONFIG.Local.Path, iris.Dir(g.TENANCY_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
 	g.TENANCY_LOG.Info("use middleware logger")
 	// 跨域
@@ -83,6 +83,8 @@ func Routers() *iris.Application {
 		{
 			router.InitAuthRouter(Auth) // 注册用户路由
 		}
+
+		// 商户和员工
 		AdminGroup := V1Group.Party("/admin", middleware.IsAdmin())
 		{
 			router.InitApiRouter(AdminGroup)                // 注册功能api路由
@@ -98,12 +100,10 @@ func Routers() *iris.Application {
 			router.InitCasbinRouter(AdminGroup)             // 权限相关路由
 			router.InitAuthorityRouter(AdminGroup)          // 注册角色路由
 			router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
+
+			router.InitMediaRouter(AdminGroup) // 文件上传下载功能路由
+
 		}
-
-		// TenancyGroup := Router.Party("/admin", middleware.JWTAuth(), middleware.CasbinHandler(), middleware.OperationRecord(), middleware.IsTenancy())
-		// {
-
-		// }
 
 		GeneralGroup := V1Group.Party("/general", middleware.IsGeneral())
 		{

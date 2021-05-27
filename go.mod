@@ -5,6 +5,8 @@ go 1.16
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
+	github.com/aliyun/aliyun-oss-go-sdk v2.1.8+incompatible
+	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/casbin/casbin/v2 v2.28.4
 	github.com/casbin/gorm-adapter/v3 v3.2.9
 	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
@@ -24,12 +26,14 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
 	github.com/mojocn/base64Captcha v1.3.4
+	github.com/qiniu/go-sdk/v7 v7.9.5
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil v3.21.3+incompatible
 	github.com/snowlyg/multi v0.0.0-20210508062654-5f76880232af
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/viper v1.7.1
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.25
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.uber.org/multierr v1.7.0 // indirect
