@@ -24,6 +24,7 @@ func CreateCategory(m request.CreateTenancyCategory) (model.TenancyCategory, err
 	brandCategory.IsShow = m.IsShow
 	brandCategory.Level = m.Level
 	brandCategory.Pid = m.Pid
+	brandCategory.Pic = m.Pic
 	err = g.TENANCY_DB.Create(&brandCategory).Error
 	return brandCategory, err
 }
@@ -49,6 +50,7 @@ func UpdateCategory(m request.UpdateTenancyCategory) (model.TenancyCategory, err
 		"path":      m.Path,
 		"is_show":   m.IsShow,
 		"level":     m.Level,
+		"pic":       m.Pic,
 	}
 	brandCategory.ID = m.Id
 	err = g.TENANCY_DB.Model(&brandCategory).Updates(data).Error

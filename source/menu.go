@@ -16,6 +16,8 @@ type menu struct{}
 
 var menus = []model.SysBaseMenu{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "0", Path: "dashboard", Name: "dashboard", Hidden: false, Component: "view/dashboard/index.vue", Sort: 1, Meta: model.Meta{Title: "仪表盘", Icon: "setting"}},
+
+	// 系统管理
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "admin", Name: "superAdmin", Component: "view/superAdmin/index.vue", Sort: 3, Meta: model.Meta{Title: "系统管理", Icon: "user-solid"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "2", Path: "tenancy", Name: "tenancy", Component: "view/superAdmin/tenancy/index.vue", Sort: 7, Meta: model.Meta{Title: "商户管理", Icon: "coordinate"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "2", Path: "brand", Name: "brand", Component: "view/superAdmin/brand/index.vue", Sort: 9, Meta: model.Meta{Title: "品牌管理", Icon: "coordinate"}},
@@ -29,16 +31,21 @@ var menus = []model.SysBaseMenu{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 12, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "2", Path: "operation", Name: "operation", Component: "view/superAdmin/operation/sysOperationRecord.vue", Sort: 20, Meta: model.Meta{Title: "操作历史", Icon: "time"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 13, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "2", Path: "state", Name: "state", Hidden: false, Component: "view/system/state.vue", Sort: 6, Meta: model.Meta{Title: "服务器状态", Icon: "cloudy"}},
 
+	// 商铺管理
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 21, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "tenancy", Name: "tenancy", Component: "view/tenancy/index.vue", Sort: 7, Meta: model.Meta{Title: "商铺管理", Icon: "coordinate"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 22, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "21", Path: "media", Name: "media", Component: "view/tenancy/media.vue", Sort: 11, Meta: model.Meta{Title: "媒体库", Icon: "upload"}},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 23, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "21", Path: "category", Name: "category", Component: "view/tenancy/category.vue", Sort: 12, Meta: model.Meta{Title: "分类管理", Icon: "cloudy"}},
 
+	// 用户管理
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 41, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "user", Name: "user", Component: "view/user/index.vue", Sort: 3, Meta: model.Meta{Title: "用户管理", Icon: "user-solid"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 42, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "41", Path: "tenancyUser", Name: "tenancyUser", Component: "view/user/tenancy.vue", Sort: 5, Meta: model.Meta{Title: "商户用户管理", Icon: "coordinate"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 43, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "41", Path: "generalUser", Name: "generalUser", Component: "view/user/general.vue", Sort: 6, Meta: model.Meta{Title: "普通用户管理", Icon: "coordinate"}},
 
+	// 系统工具
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 51, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "systemTools", Name: "systemTools", Component: "view/systemTools/index.vue", Sort: 5, Meta: model.Meta{Title: "系统工具", Icon: "s-cooperation"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 52, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "51", Path: "system", Name: "system", Component: "view/systemTools/system/system.vue", Sort: 17, Meta: model.Meta{Title: "系统配置", Icon: "s-operation"}},
 
+	// 个人信息
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 81, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 16, Meta: model.Meta{Title: "个人信息", Icon: "message-solid"}},
 }
 

@@ -53,6 +53,7 @@ func getCategoryMap(returnCategory model.TenancyCategory) context.Map {
 		"path":     returnCategory.Path,
 		"isShow":   returnCategory.IsShow,
 		"level":    returnCategory.Level,
+		"pic":      returnCategory.Pic,
 	}
 }
 
