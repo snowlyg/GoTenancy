@@ -13,7 +13,8 @@ var Casbin = new(casbin)
 type casbin struct{}
 
 var carbines = []gormadapter.CasbinRule{
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/register", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/registerTenancy", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/registerAdmin", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
 

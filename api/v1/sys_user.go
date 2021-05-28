@@ -65,15 +65,32 @@ func Clean(ctx iris.Context) {
 	response.OkWithMessage("TOKEN清空", ctx)
 }
 
-// Register 用户注册账号
-func Register(ctx iris.Context) {
+// RegisterAdmin 员工注册
+func RegisterAdmin(ctx iris.Context) {
 	var R request.Register
 	if errs := utils.Verify(ctx.ReadJSON(&R)); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	user := &model.SysUser{Username: R.Username, Password: R.Password, AuthorityId: R.AuthorityId}
-	userReturn, err := service.Register(*user, R.AuthorityType)
+	userReturn, err := service.Register(*user, multi.AdminAuthority)
+	if err != nil {
+		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
+		response.FailWithMessage(err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(iris.Map{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
+	}
+}
+
+// RegisterTenancy 商户注册
+func RegisterTenancy(ctx iris.Context) {
+	var R request.Register
+	if errs := utils.Verify(ctx.ReadJSON(&R)); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	user := &model.SysUser{Username: R.Username, Password: R.Password, AuthorityId: R.AuthorityId}
+	userReturn, err := service.Register(*user, multi.TenancyAuthority)
 	if err != nil {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
@@ -238,57 +255,3 @@ func SetUserInfo(ctx iris.Context) {
 		response.FailWithMessage("未知角色", ctx)
 	}
 }
-
-// // getClaims returns the current authorized client claims.
-// func getClaims(ctx iris.Context) *multi.CustomClaims {
-// 	waitUse := multi.Get(ctx)
-// 	if waitUse == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取用户ID失败, 请检查路由是否使用multi中间件")
-// 	}
-// 	return waitUse
-// }
-
-// // getUserAuthorityId 从Context中获取用户角色id
-// func getUserAuthorityId(ctx iris.Context) string {
-// 	if claims := getClaims(ctx); claims == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取用户角色id失败, 请检查路由是否使用multi中间件")
-// 		return ""
-// 	} else {
-// 		return claims.AuthorityId
-// 	}
-// }
-
-// // getUserId 从Context中获取用户id
-// func getUserId(ctx iris.Context) int {
-// 	if claims := getClaims(ctx); claims == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取用户id失败, 请检查路由是否使用multi中间件")
-// 		return 0
-// 	} else {
-// 		id, err := strconv.Atoi(claims.ID)
-// 		if err != nil {
-// 			g.TENANCY_LOG.Error("strconv atoi ", zap.Any("err", fmt.Errorf("%s strconv atoi %w", claims.ID, err)))
-// 			return 0
-// 		}
-// 		return id
-// 	}
-// }
-
-// // getTenancyId 从Context中获取商户id
-// func getTenancyId(ctx iris.Context) int {
-// 	if claims := getClaims(ctx); claims == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取商户id失败, 请检查路由是否使用multi中间件")
-// 		return 0
-// 	} else {
-// 		return claims.TenancyId
-// 	}
-// }
-
-// // getTenancyName 从Context中获取商户id
-// func getTenancyName(ctx iris.Context) string {
-// 	if claims := getClaims(ctx); claims == nil {
-// 		g.TENANCY_LOG.Error("从Context中获取商户名称失败, 请检查路由是否使用multi中间件")
-// 		return ""
-// 	} else {
-// 		return claims.TenancyName
-// 	}
-// }

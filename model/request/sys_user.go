@@ -2,10 +2,9 @@ package request
 
 // User register structure
 type Register struct {
-	Username      string `json:"username" validate:"required"`
-	Password      string `json:"password" validate:"required"`
-	AuthorityId   string `json:"authorityId" validate:"required"`
-	AuthorityType int    `json:"authorityType" validate:"required,gt=0"`
+	Username    string `json:"username" validate:"required"`
+	Password    string `json:"password" validate:"required"`
+	AuthorityId string `json:"authorityId" validate:"required"`
 }
 
 // User login structure

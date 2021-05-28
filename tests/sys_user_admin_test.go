@@ -35,8 +35,8 @@ func TestAdminUserList(t *testing.T) {
 
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": multi.AdminAuthority}).
+	obj := auth.POST("/v1/admin/user/registerAdmin").
+		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -101,8 +101,8 @@ func TestAdminUserProcess(t *testing.T) {
 
 func TestAdminUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": multi.AdminAuthority}).
+	obj := auth.POST("/v1/admin/user/registerAdmin").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
@@ -111,22 +111,10 @@ func TestAdminUserRegisterError(t *testing.T) {
 	baseLogOut(auth)
 }
 
-func TestAdminUserRegisterAuthorityTypeEmpty(t *testing.T) {
-	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId, "authorityType": 0}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("Key: 'Register.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
-
-	baseLogOut(auth)
-}
-
 func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
-	obj := auth.POST("/v1/admin/user/register").
-		WithJSON(map[string]interface{}{"username": "admin_authrity_id_empty", "password": "123456", "authorityId": "", "authorityType": multi.AdminAuthority}).
+	obj := auth.POST("/v1/admin/user/registerAdmin").
+		WithJSON(map[string]interface{}{"username": "admin_authrity_id_empty", "password": "123456", "authorityId": ""}).
 		Expect().Status(httptest.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)

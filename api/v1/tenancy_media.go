@@ -13,13 +13,14 @@ import (
 func UploadFile(ctx iris.Context) {
 	var file model.TenancyMedia
 	noSave := ctx.Params().GetStringDefault("noSave", "0")
+	path := ctx.FormValueDefault("path", "")
 	_, header, err := ctx.FormFile("file")
 	if err != nil {
 		g.TENANCY_LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", ctx)
 		return
 	}
-	file, err = service.UploadFile(header, noSave, ctx) // 文件上传后拿到文件路径
+	file, err = service.UploadFile(header, noSave, path, ctx) // 文件上传后拿到文件路径
 	if err != nil {
 		g.TENANCY_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", ctx)

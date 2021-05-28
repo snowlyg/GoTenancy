@@ -53,12 +53,16 @@ func GetFileRecordInfoList(info request.PageInfo, ctx iris.Context) (interface{}
 	return fileLists, total, err
 }
 
-func UploadFile(header *multipart.FileHeader, noSave string, ctx iris.Context) (model.TenancyMedia, error) {
+func UploadFile(header *multipart.FileHeader, noSave, path string, ctx iris.Context) (model.TenancyMedia, error) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
 		panic(uploadErr)
 	}
+	if path != "" {
+		filePath = path + filePath
+	}
+
 	var f model.TenancyMedia
 	if noSave == "0" {
 		s := strings.Split(header.Filename, ".")

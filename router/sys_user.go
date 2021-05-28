@@ -8,7 +8,8 @@ import (
 func InitUserRouter(Router iris.Party) {
 	UserRouter := Router.Party("/user")
 	{
-		UserRouter.Post("/register", v1.Register)                    // 注册
+		UserRouter.Post("/registerAdmin", v1.RegisterAdmin)          // 注册
+		UserRouter.Post("/registerTenancy", v1.RegisterTenancy)      // 注册
 		UserRouter.Post("/changePassword", v1.ChangePassword)        // 修改密码
 		UserRouter.Post("/getAdminList", v1.GetAdminList)            // 分页获取管理员列表
 		UserRouter.Post("/getTenancyList", v1.GetTenancyList)        // 分页获取商户列表
