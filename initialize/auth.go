@@ -16,7 +16,7 @@ import (
 func Auth() {
 	redisCfg := g.TENANCY_CONFIG.Redis
 	err := multi.InitDriver(&multi.Config{
-		DrvierType: g.TENANCY_CONFIG.System.CacheType,
+		DriverType: g.TENANCY_CONFIG.System.CacheType,
 		UniversalOptions: &redis.UniversalOptions{
 			Addrs:       strings.Split(redisCfg.Addr, ","),
 			Password:    redisCfg.Password,

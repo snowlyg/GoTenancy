@@ -104,6 +104,7 @@ func Routers() *iris.Application {
 			// 商户
 			router.InitMediaRouter(AdminGroup)    // 媒体库路由
 			router.InitCategoryRouter(AdminGroup) // 商品分类路由
+			router.InitProductRouter(AdminGroup)  // 商品路由
 
 		}
 

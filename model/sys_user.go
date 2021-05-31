@@ -58,10 +58,8 @@ type SysTenancyInfo struct {
 	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
 }
 
-type Sex int
-
 const (
-	Unknown = iota
+	Unknown int = iota
 	Male
 	Female
 )
@@ -72,7 +70,7 @@ type SysGeneralInfo struct {
 	Phone     string    `json:"phone" gorm:"type:char(15);default:'';comment:员工手机号"`
 	NickName  string    `json:"nickName" gorm:"type:varchar(16);default:'员工姓名';comment:员工姓名"`
 	AvatarUrl string    `json:"avatarUrl" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	Sex       Sex       `json:"sex" form:"sex" gorm:"column:sex;comment:性别 1:男，2：女"`
+	Sex       int       `json:"sex" form:"sex" gorm:"column:sex;comment:性别 1:男，2：女"`
 	Subscribe int       `json:"subscribe" form:"subscribe" gorm:"column:subscribe;comment:是否订阅"`
 	OpenId    string    `json:"openId" form:"openId" gorm:"type:varchar(30);column:open_id;comment:openid"`
 	UnionId   string    `json:"unionId" form:"unionId" gorm:"type:varchar(30);column:union_id;comment:unionId"`

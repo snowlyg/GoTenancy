@@ -67,6 +67,12 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 			Token: token,
 		}, errors.New("用户名或者密码错误")
 	}
+	if err != nil {
+		return response.LoginResponse{
+			User:  admin,
+			Token: token,
+		}, err
+	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(admin.ID), 10),
 		Username:      admin.Username,
@@ -109,8 +115,9 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.TenancyAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&tenancy).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -118,6 +125,12 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 			User:  tenancy,
 			Token: token,
 		}, errors.New("用户名或者密码错误")
+	}
+	if err != nil {
+		return response.LoginResponse{
+			User:  tenancy,
+			Token: token,
+		}, err
 	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(tenancy.ID), 10),
@@ -161,7 +174,7 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.GeneralAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.avatar_url,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&general).Error
@@ -170,6 +183,12 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 			User:  general,
 			Token: token,
 		}, errors.New("用户名或者密码错误")
+	}
+	if err != nil {
+		return response.LoginResponse{
+			User:  general,
+			Token: token,
+		}, err
 	}
 	claims := &multi.CustomClaims{
 		ID:            strconv.FormatUint(uint64(general.ID), 10),

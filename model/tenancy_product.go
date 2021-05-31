@@ -4,6 +4,23 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 )
 
+const (
+	General uint8 = iota
+	FlashSale
+	PreSale
+	Assist
+)
+
+const (
+	Single int = iota
+	Double
+)
+
+const (
+	ExtensionTypeSystem int = iota
+	ExtensionTypeCustom
+)
+
 type TenancyProduct struct {
 	g.TENANCY_MODEL
 	StoreName     string  `gorm:"column:store_name;type:varchar(128);not null" json:"storeName"`                    // 商品名称
@@ -31,22 +48,21 @@ type TenancyProduct struct {
 	Browse        int     `gorm:"column:browse;type:int;default:0" json:"browse"`                                   // 浏览量
 	CodePath      string  `gorm:"column:code_path;type:varchar(64);not null;default:''" json:"codePath"`            // 产品二维码地址(用户小程序海报)
 	VideoLink     string  `gorm:"column:video_link;type:varchar(200);not null;default:''" json:"videoLink"`         // 主图视频链接
-	SpecType      bool    `gorm:"column:spec_type;type:bool;not null" json:"specType"`                              // 规格 0单 1多
-	ExtensionType bool    `gorm:"column:extension_type;type:bool" json:"extensionType"`                             // 佣金比例 0.系统，1.自定义
+	SpecType      int     `gorm:"column:spec_type;type:tinyint;not null" json:"specType"`                           // 规格 0单 1多
+	ExtensionType int     `gorm:"column:extension_type;type:tinyint" json:"extensionType"`                          // 佣金比例 0.系统，1.自定义
 	Refusal       string  `gorm:"column:refusal;type:varchar(255)" json:"refusal"`                                  // 审核拒绝理由
 	Rate          float64 `gorm:"column:rate;type:decimal(2,1);default:5.0" json:"rate"`                            // 评价分数
 	ReplyCount    uint    `gorm:"column:reply_count;type:int unsigned;default:0" json:"replyCount"`                 // 评论数
 	GiveCouponIDs string  `gorm:"column:give_coupon_ids;type:varchar(500)" json:"giveCouponIds"`                    // 赠送优惠券
 	IsGiftBag     bool    `gorm:"column:is_gift_bag;type:bool" json:"isGiftBag"`                                    // 是否为礼包
 	CareCount     int     `gorm:"column:care_count;type:int;not null;default:0" json:"careCount"`                   // 收藏数
-	IsUsed        int     `gorm:"column:is_used;type:int;default:1" json:"isUsed"`                                  // 显示/隐藏
 	// 原商品ID
 	Image       string `gorm:"column:image;type:varchar(256);not null" json:"image"`               // 商品图片
 	SliderImage string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
 
 	OldID             int `gorm:"column:old_id;type:int;default:0" json:"oldId"`
-	TempID            int `gorm:"column:temp_id;type:int;not null;default:1" json:"tempId"`                                        // 运费模板ID
-	SysTenancyID      int `gorm:"index:sys_tenancy_id;column:tenancy_id;type:int;not null" json:"sysTenancyId"`                    // 商户 id                                  // 商户Id
+	TempID            int `gorm:"column:temp_id;type:int;not null;default:0" json:"tempId"`                                        // 运费模板ID
+	SysTenancyID      int `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"`                // 商户 id                                  // 商户Id
 	SysBrandID        int `gorm:"column:sys_brand_id;type:int" json:"sysBrandId"`                                                  // 品牌 id
 	TenancyCategoryID int `gorm:"index:tenancy_category_id;column:tenancy_category_id;type:int;not null" json:"tenancyCategoryId"` // 分类id
 

@@ -9,7 +9,7 @@ type GeneralAddress struct {
 	g.TENANCY_MODEL
 	Name      string `json:"name" gorm:"type:varchar(32);not null;comment:姓名"`
 	Phone     string `json:"phone" gorm:"type:varchar(16);not null;comment:手机号"`
-	Sex       Sex    `json:"sex" form:"sex" gorm:"not null;column:sex;comment:性别 0:女 1:男，2：未知"`
+	Sex       int    `json:"sex" form:"sex" gorm:"not null;column:sex;comment:性别 0:女 1:男，2：未知"`
 	Country   string `json:"country" form:"country" gorm:"type:varchar(64);not null;column:country;comment:国家"`
 	Province  string `json:"province" form:"province" gorm:"type:varchar(64);not null;column:province;comment:省份"`
 	City      string `json:"city" form:"city" gorm:"type:varchar(64);not null;column:city;comment:城市"`

@@ -2,8 +2,6 @@ package response
 
 import (
 	"time"
-
-	"github.com/snowlyg/go-tenancy/model"
 )
 
 type LoginResponse struct {
@@ -49,15 +47,15 @@ type SysGeneralUser struct {
 	AuthorityType int       `json:"authorityType"`
 	AuthorityId   string    `json:"authorityId"`
 	AvatarUrl     string    `json:"avatarUrl"`
-	Sex           model.Sex `json:"sex"`
-	Subscribe     int       `json:"subscribe"`
+	Sex           int       `json:"sex"`
+	Subscribe     bool      `json:"subscribe"`
 	OpenId        string    `json:"openId"`
 	UnionId       string    `json:"unionId"`
 	Country       string    `json:"country"`
 	Province      string    `json:"province"`
 	City          string    `json:"city"`
 	IdCard        string    `json:"idCard"`
-	IsAuth        int       `json:"isAuth"`
+	IsAuth        bool      `json:"isAuth"`
 	RealName      string    `json:"realName"`
 	Birthday      time.Time `json:"birthday"`
 }

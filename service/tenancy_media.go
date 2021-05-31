@@ -42,7 +42,7 @@ func GetFileRecordInfoList(info request.PageInfo, ctx iris.Context) (interface{}
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB
 	if !multi.IsAdmin(ctx) {
-		db = db.Where("tenancy_id = ?", multi.GetTenancyId(ctx))
+		db = db.Where("sys_tenancy_id = ?", multi.GetTenancyId(ctx))
 	}
 	var fileLists []model.TenancyMedia
 	err := db.Find(&fileLists).Count(&total).Error

@@ -4,15 +4,17 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
 // CreateCategory
-func CreateCategory(m request.CreateTenancyCategory) (model.TenancyCategory, error) {
+func CreateCategory(m request.CreateTenancyCategory, ctx iris.Context) (model.TenancyCategory, error) {
 	var brandCategory model.TenancyCategory
 	err := g.TENANCY_DB.Where("cate_name = ?", m.CateName).First(&brandCategory).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -25,6 +27,7 @@ func CreateCategory(m request.CreateTenancyCategory) (model.TenancyCategory, err
 	brandCategory.Level = m.Level
 	brandCategory.Pid = m.Pid
 	brandCategory.Pic = m.Pic
+	brandCategory.SysTenancyID = multi.GetTenancyId(ctx)
 	err = g.TENANCY_DB.Create(&brandCategory).Error
 	return brandCategory, err
 }
@@ -64,9 +67,9 @@ func DeleteCategory(id float64) error {
 }
 
 // GetCategoryInfoList
-func GetCategoryInfoList() ([]response.TenancyCategory, error) {
+func GetCategoryInfoList(ctx iris.Context) ([]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
-	treeMap, err := getCategoryMap()
+	treeMap, err := getCategoryMap(ctx)
 	brandCategoryList = treeMap["0"]
 	for i := 0; i < len(brandCategoryList); i++ {
 		err = getCategoryBaseChildrenList(&brandCategoryList[i], treeMap)
@@ -75,10 +78,14 @@ func GetCategoryInfoList() ([]response.TenancyCategory, error) {
 }
 
 // getCategoryMap
-func getCategoryMap() (map[string][]response.TenancyCategory, error) {
+func getCategoryMap(ctx iris.Context) (map[string][]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
 	treeMap := make(map[string][]response.TenancyCategory)
-	err := g.TENANCY_DB.Model(&model.TenancyCategory{}).Order("sort").Find(&brandCategoryList).Error
+	db := g.TENANCY_DB.Model(&model.TenancyCategory{})
+	if !multi.IsAdmin(ctx) {
+		db = db.Where("sys_tenancy_id = ?", multi.GetTenancyId(ctx))
+	}
+	err := db.Order("sort").Find(&brandCategoryList).Error
 	for _, v := range brandCategoryList {
 		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}

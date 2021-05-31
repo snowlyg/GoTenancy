@@ -20,7 +20,7 @@ func CreateCategory(ctx iris.Context) {
 		return
 	}
 
-	if returnCategory, err := service.CreateCategory(category); err != nil {
+	if returnCategory, err := service.CreateCategory(category, ctx); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
@@ -64,7 +64,7 @@ func GetCategoryList(ctx iris.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, err := service.GetCategoryInfoList(); err != nil {
+	if list, err := service.GetCategoryInfoList(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
 	} else {
