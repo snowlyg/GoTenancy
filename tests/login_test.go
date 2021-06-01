@@ -1,16 +1,15 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
-
-	"github.com/kataras/iris/v12/httptest"
 )
 
 func TestLoginWithErrorUsername(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "123456", "authorityType": 1}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
@@ -22,7 +21,7 @@ func TestLoginWithErrorPassword(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "error_pwd", "authorityType": 1}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
@@ -34,7 +33,7 @@ func TestLoginWithErrorUsernameAndPassword(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "error_pwd", "authorityType": 1}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
@@ -46,7 +45,7 @@ func TestLoginWithErrorAuthorityType(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "error_pwd", "authorityType": 3}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
@@ -58,7 +57,7 @@ func TestLoginWithEmptyAuthorityType(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": 0}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)

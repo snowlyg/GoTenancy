@@ -1,9 +1,8 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/utils"
 
 	"github.com/snowlyg/go-tenancy/service"
 
@@ -15,9 +14,9 @@ import (
 )
 
 // UpdateCasbin 更新角色api权限
-func UpdateCasbin(ctx iris.Context) {
+func UpdateCasbin(ctx *gin.Context) {
 	var cmr request.CasbinInReceive
-	if errs := utils.Verify(ctx.ReadJSON(&cmr)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&cmr); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -30,9 +29,9 @@ func UpdateCasbin(ctx iris.Context) {
 }
 
 // GetPolicyPathByAuthorityId 获取权限列表
-func GetPolicyPathByAuthorityId(ctx iris.Context) {
+func GetPolicyPathByAuthorityId(ctx *gin.Context) {
 	var casbin request.CasbinInReceive
-	if errs := utils.Verify(ctx.ReadJSON(&casbin)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&casbin); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

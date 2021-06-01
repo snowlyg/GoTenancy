@@ -1,22 +1,20 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
 // CreateReceipt
-func CreateReceipt(ctx iris.Context) {
+func CreateReceipt(ctx *gin.Context) {
 	var receipt request.CreateReceipt
-	if errs := utils.Verify(ctx.ReadJSON(&receipt)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&receipt); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -37,9 +35,9 @@ func CreateReceipt(ctx iris.Context) {
 }
 
 // UpdateReceipt
-func UpdateReceipt(ctx iris.Context) {
+func UpdateReceipt(ctx *gin.Context) {
 	var receipt request.UpdateReceipt
-	if errs := utils.Verify(ctx.ReadJSON(&receipt)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&receipt); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -52,8 +50,8 @@ func UpdateReceipt(ctx iris.Context) {
 }
 
 // getReceiptMap
-func getReceiptMap(returnReceipt model.GeneralReceipt) context.Map {
-	return iris.Map{
+func getReceiptMap(returnReceipt model.GeneralReceipt) gin.H {
+	return gin.H{
 		"id":               returnReceipt.ID,
 		"receiptType":      returnReceipt.ReceiptType,
 		"receiptTitle":     returnReceipt.ReceiptTitle,
@@ -69,9 +67,9 @@ func getReceiptMap(returnReceipt model.GeneralReceipt) context.Map {
 }
 
 // GetReceiptList
-func GetReceiptList(ctx iris.Context) {
+func GetReceiptList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -97,9 +95,9 @@ func GetReceiptList(ctx iris.Context) {
 }
 
 // GetReceiptById
-func GetReceiptById(ctx iris.Context) {
+func GetReceiptById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -121,9 +119,9 @@ func GetReceiptById(ctx iris.Context) {
 }
 
 // DeleteReceipt
-func DeleteReceipt(ctx iris.Context) {
+func DeleteReceipt(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

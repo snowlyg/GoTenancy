@@ -1,16 +1,15 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
-
-	"github.com/kataras/iris/v12/httptest"
 )
 
 func TestReceiptList(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	obj := auth.POST("/v1/general/receipt/getReceiptList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("获取成功")
@@ -46,7 +45,7 @@ func TestReceiptProcess(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("创建成功")
@@ -81,7 +80,7 @@ func TestReceiptProcess(t *testing.T) {
 
 	obj = auth.PUT("/v1/general/receipt/updateReceipt").
 		WithJSON(update).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("更新成功")
@@ -101,7 +100,7 @@ func TestReceiptProcess(t *testing.T) {
 
 	obj = auth.POST("/v1/general/receipt/getReceiptById").
 		WithJSON(map[string]interface{}{"id": receiptId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("操作成功")
@@ -122,7 +121,7 @@ func TestReceiptProcess(t *testing.T) {
 	// setUserAuthority
 	obj = auth.DELETE("/v1/general/receipt/deleteReceipt").
 		WithJSON(map[string]interface{}{"id": receiptId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
@@ -146,7 +145,7 @@ func TestReceiptRegisterReceiptTitleError(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.ReceiptTitle' Error:Field validation for 'ReceiptTitle' failed on the 'required' tag")
@@ -170,7 +169,7 @@ func TestReceiptRegisterReceiptTypeError(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.ReceiptType' Error:Field validation for 'ReceiptType' failed on the 'oneof' tag")
@@ -193,7 +192,7 @@ func TestReceiptRegisterEmaileError(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.Email' Error:Field validation for 'Email' failed on the 'email' tag")

@@ -1,19 +1,19 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitApiRouter(Router iris.Party) {
-	ApiRouter := Router.Party("/api")
+func InitApiRouter(Router *gin.RouterGroup) {
+	ApiRouter := Router.Group("/api")
 	{
-		ApiRouter.Post("/createApi", v1.CreateApi)               // 创建Api
-		ApiRouter.Post("/deleteApi", v1.DeleteApi)               // 删除Api
-		ApiRouter.Post("/getApiList", v1.GetApiList)             // 获取Api列表
-		ApiRouter.Post("/getApiById", v1.GetApiById)             // 获取单条Api消息
-		ApiRouter.Post("/updateApi", v1.UpdateApi)               // 更新api
-		ApiRouter.Post("/getAllApis", v1.GetAllApis)             // 获取所有api
-		ApiRouter.Delete("/deleteApisByIds", v1.DeleteApisByIds) // 删除选中api
+		ApiRouter.POST("/createApi", v1.CreateApi)               // 创建Api
+		ApiRouter.POST("/deleteApi", v1.DeleteApi)               // 删除Api
+		ApiRouter.POST("/getApiList", v1.GetApiList)             // 获取Api列表
+		ApiRouter.POST("/getApiById", v1.GetApiById)             // 获取单条Api消息
+		ApiRouter.POST("/updateApi", v1.UpdateApi)               // 更新api
+		ApiRouter.POST("/getAllApis", v1.GetAllApis)             // 获取所有api
+		ApiRouter.DELETE("/deleteApisByIds", v1.DeleteApisByIds) // 删除选中api
 	}
 }

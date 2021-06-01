@@ -39,8 +39,8 @@ func (*TencentCOS) DeleteFile(key string) error {
 	name := g.TENANCY_CONFIG.TencentCOS.PathPrefix + "/" + key
 	_, err := client.Object.Delete(context.Background(), name)
 	if err != nil {
-		g.TENANCY_LOG.Error("function bucketManager.Delete() Filed", zap.Any("err", err.Error()))
-		return errors.New("function bucketManager.Delete() Filed, err:" + err.Error())
+		g.TENANCY_LOG.Error("function bucketManager.DELETE() Filed", zap.Any("err", err.Error()))
+		return errors.New("function bucketManager.DELETE() Filed, err:" + err.Error())
 	}
 	return nil
 }

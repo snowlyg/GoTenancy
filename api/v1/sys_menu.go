@@ -1,19 +1,18 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
 // GetMenu 获取用户动态路由
-func GetMenu(ctx iris.Context) {
+func GetMenu(ctx *gin.Context) {
 	if menus, err := service.GetMenuTree(multi.GetAuthorityId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
@@ -23,7 +22,7 @@ func GetMenu(ctx iris.Context) {
 }
 
 // GetBaseMenuTree 获取基础路由树
-func GetBaseMenuTree(ctx iris.Context) {
+func GetBaseMenuTree(ctx *gin.Context) {
 	if menus, err := service.GetBaseMenuTree(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
@@ -33,9 +32,9 @@ func GetBaseMenuTree(ctx iris.Context) {
 }
 
 // AddMenuAuthority 增加menu和角色关联关系
-func AddMenuAuthority(ctx iris.Context) {
+func AddMenuAuthority(ctx *gin.Context) {
 	var authorityMenu request.AddMenuAuthorityInfo
-	if errs := utils.Verify(ctx.ReadJSON(&authorityMenu)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&authorityMenu); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -48,9 +47,9 @@ func AddMenuAuthority(ctx iris.Context) {
 }
 
 // GetMenuAuthority 获取指定角色menu
-func GetMenuAuthority(ctx iris.Context) {
+func GetMenuAuthority(ctx *gin.Context) {
 	var param request.GetAuthorityId
-	if errs := utils.Verify(ctx.ReadJSON(&param)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&param); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -58,14 +57,14 @@ func GetMenuAuthority(ctx iris.Context) {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithDetailed(response.SysMenusResponse{Menus: menus}, "获取失败", ctx)
 	} else {
-		response.OkWithDetailed(iris.Map{"menus": menus}, "获取成功", ctx)
+		response.OkWithDetailed(gin.H{"menus": menus}, "获取成功", ctx)
 	}
 }
 
 // AddBaseMenu 新增菜单
-func AddBaseMenu(ctx iris.Context) {
+func AddBaseMenu(ctx *gin.Context) {
 	var menu model.SysBaseMenu
-	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -79,9 +78,9 @@ func AddBaseMenu(ctx iris.Context) {
 }
 
 // DeleteBaseMenu 删除菜单
-func DeleteBaseMenu(ctx iris.Context) {
+func DeleteBaseMenu(ctx *gin.Context) {
 	var menu request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -94,9 +93,9 @@ func DeleteBaseMenu(ctx iris.Context) {
 }
 
 // UpdateBaseMenu 更新菜单
-func UpdateBaseMenu(ctx iris.Context) {
+func UpdateBaseMenu(ctx *gin.Context) {
 	var menu model.SysBaseMenu
-	if errs := utils.Verify(ctx.ReadJSON(&menu)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -109,9 +108,9 @@ func UpdateBaseMenu(ctx iris.Context) {
 }
 
 // GetBaseMenuById 根据id获取菜单
-func GetBaseMenuById(ctx iris.Context) {
+func GetBaseMenuById(ctx *gin.Context) {
 	var idInfo request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&idInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&idInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -124,9 +123,9 @@ func GetBaseMenuById(ctx iris.Context) {
 }
 
 // GetMenuList 分页获取基础menu列表
-func GetMenuList(ctx iris.Context) {
+func GetMenuList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

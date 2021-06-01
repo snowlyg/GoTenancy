@@ -5,8 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/iris-contrib/httpexpect/v2"
-	"github.com/kataras/iris/v12/httptest"
+	"github.com/gavv/httpexpect"
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
@@ -36,7 +35,7 @@ func TestMain(m *testing.M) {
 }
 
 func baseTester(t *testing.T) *httpexpect.Expect {
-	handler := initialize.Routers()
+	handler := initialize.App()
 	return httpexpect.WithConfig(httpexpect.Config{
 		BaseURL: "http://127.0.0.1:8089",
 		Client: &http.Client{
@@ -54,7 +53,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": multi.AdminAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -80,7 +79,7 @@ func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -108,7 +107,7 @@ func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/login").
 		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "authorityType": multi.GeneralAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -143,7 +142,7 @@ func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 
 func baseLogOut(auth *httpexpect.Expect) {
 	obj := auth.GET("/v1/auth/logout").
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("退出登录")

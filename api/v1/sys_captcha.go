@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model/response"
@@ -11,7 +11,7 @@ import (
 var store = base64Captcha.DefaultMemStore
 
 // Captcha 生成验证码
-func Captcha(ctx iris.Context) {
+func Captcha(ctx *gin.Context) {
 	//字符,公式,验证码配置
 	// 生成默认数字的driver
 	driver := base64Captcha.NewDriverDigit(g.TENANCY_CONFIG.Captcha.ImgHeight, g.TENANCY_CONFIG.Captcha.ImgWidth, g.TENANCY_CONFIG.Captcha.KeyLong, 0.7, 80)

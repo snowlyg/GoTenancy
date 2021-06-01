@@ -1,17 +1,17 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitConfigRouter(Router iris.Party) {
-	ConfigRouter := Router.Party("/config")
+func InitConfigRouter(Router *gin.RouterGroup) {
+	ConfigRouter := Router.Group("/config")
 	{
-		ConfigRouter.Post("/createConfig", v1.CreateConfig)
-		ConfigRouter.Post("/getConfigList", v1.GetConfigList)
-		ConfigRouter.Post("/getConfigByName", v1.GetConfigByName)
-		ConfigRouter.Put("/updateConfig", v1.UpdateConfig)
-		ConfigRouter.Delete("/deleteConfig", v1.DeleteConfig)
+		ConfigRouter.POST("/createConfig", v1.CreateConfig)
+		ConfigRouter.POST("/getConfigList", v1.GetConfigList)
+		ConfigRouter.POST("/getConfigByName", v1.GetConfigByName)
+		ConfigRouter.PUT("/updateConfig", v1.UpdateConfig)
+		ConfigRouter.DELETE("/deleteConfig", v1.DeleteConfig)
 	}
 }

@@ -1,18 +1,18 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 	"github.com/snowlyg/go-tenancy/middleware"
 )
 
-func InitPublicRouter(Router iris.Party) (R iris.Party) {
-	BaseRouter := Router.Party("/public", middleware.NeedInit())
+func InitPublicRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
+	BaseRouter := Router.Group("/public", middleware.NeedInit())
 	{
-		BaseRouter.Post("/login", v1.Login)
-		BaseRouter.Post("/captcha", v1.Captcha)
-		BaseRouter.Get("/region/{p_code:int}", v1.Region)
-		BaseRouter.Get("/getRegionList", v1.RegionList)
+		BaseRouter.POST("/login", v1.Login)
+		BaseRouter.POST("/captcha", v1.Captcha)
+		BaseRouter.GET("/region/{p_code:int}", v1.Region)
+		BaseRouter.GET("/getRegionList", v1.RegionList)
 	}
 	return BaseRouter
 }

@@ -1,8 +1,7 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/snowlyg/go-tenancy/utils"
+	"github.com/gin-gonic/gin"
 
 	"github.com/snowlyg/go-tenancy/model/response"
 
@@ -17,9 +16,9 @@ import (
 )
 
 // CreateApi 创建基础api
-func CreateApi(ctx iris.Context) {
+func CreateApi(ctx *gin.Context) {
 	var api model.SysApi
-	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&api); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -32,9 +31,9 @@ func CreateApi(ctx iris.Context) {
 }
 
 // DeleteApi 删除api
-func DeleteApi(ctx iris.Context) {
+func DeleteApi(ctx *gin.Context) {
 	var api model.SysApi
-	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&api); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -47,9 +46,9 @@ func DeleteApi(ctx iris.Context) {
 }
 
 // GetApiList 分页获取API列表
-func GetApiList(ctx iris.Context) {
+func GetApiList(ctx *gin.Context) {
 	var pageInfo request.SearchApiParams
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -67,9 +66,9 @@ func GetApiList(ctx iris.Context) {
 }
 
 // GetApiById 根据id获取api
-func GetApiById(ctx iris.Context) {
+func GetApiById(ctx *gin.Context) {
 	var idInfo request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&idInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&idInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -83,9 +82,9 @@ func GetApiById(ctx iris.Context) {
 }
 
 // UpdateApi 更新基础api
-func UpdateApi(ctx iris.Context) {
+func UpdateApi(ctx *gin.Context) {
 	var api model.SysApi
-	if errs := utils.Verify(ctx.ReadJSON(&api)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&api); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -98,7 +97,7 @@ func UpdateApi(ctx iris.Context) {
 }
 
 // GetAllApis 获取所有的Api 不分页
-func GetAllApis(ctx iris.Context) {
+func GetAllApis(ctx *gin.Context) {
 	if apis, err := service.GetAllApis(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)
@@ -108,9 +107,9 @@ func GetAllApis(ctx iris.Context) {
 }
 
 // DeleteApisByIds 删除选中Api
-func DeleteApisByIds(ctx iris.Context) {
+func DeleteApisByIds(ctx *gin.Context) {
 	var ids request.IdsReq
-	_ = ctx.ReadJSON(&ids)
+	_ = ctx.ShouldBindJSON(&ids)
 	if err := service.DeleteApisByIds(ids); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", ctx)

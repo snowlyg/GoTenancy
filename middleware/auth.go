@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/multi"
 )
 
-func Auth() iris.Handler {
+func Auth() gin.HandlerFunc {
 	verifier := multi.NewVerifier()
 	verifier.Extractors = []multi.TokenExtractor{multi.FromHeader} // extract token only from Authorization: Bearer $token
 	return verifier.Verify()

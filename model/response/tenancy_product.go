@@ -27,7 +27,7 @@ type TenancyProduct struct {
 	Browse        int     `json:"browse"`        // 浏览量
 	CodePath      string  `json:"codePath"`      // 产品二维码地址(用户小程序海报)
 	VideoLink     string  `json:"videoLink"`     // 主图视频链接
-	SpecType      bool    `json:"specType"`      // 规格 0单 1多
+	SpecType      int     `json:"specType"`      // 规格 0单 1多
 	ExtensionType bool    `json:"extensionType"` // 佣金比例 0.系统，1.自定义
 	Refusal       string  `json:"refusal"`       // 审核拒绝理由
 	Rate          float64 `json:"rate"`          // 评价分数

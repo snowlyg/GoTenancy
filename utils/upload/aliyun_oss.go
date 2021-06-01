@@ -33,8 +33,8 @@ func (*AliyunOSS) UploadFile(file *multipart.FileHeader) (string, string, error)
 	// 上传文件流。
 	err = bucket.PutObject(yunFileTmpPath, f)
 	if err != nil {
-		g.TENANCY_LOG.Error("function formUploader.Put() Failed", zap.Any("err", err.Error()))
-		return "", "", errors.New("function formUploader.Put() Failed, err:" + err.Error())
+		g.TENANCY_LOG.Error("function formUploader.PUT() Failed", zap.Any("err", err.Error()))
+		return "", "", errors.New("function formUploader.PUT() Failed, err:" + err.Error())
 	}
 
 	return g.TENANCY_CONFIG.AliyunOSS.BucketUrl + "/" + yunFileTmpPath, yunFileTmpPath, nil
@@ -51,8 +51,8 @@ func (*AliyunOSS) DeleteFile(key string) error {
 	// 如需删除文件夹，请将objectName设置为对应的文件夹名称。如果文件夹非空，则需要将文件夹下的所有object删除后才能删除该文件夹。
 	err = bucket.DeleteObject(key)
 	if err != nil {
-		g.TENANCY_LOG.Error("function bucketManager.Delete() Filed", zap.Any("err", err.Error()))
-		return errors.New("function bucketManager.Delete() Filed, err:" + err.Error())
+		g.TENANCY_LOG.Error("function bucketManager.DELETE() Filed", zap.Any("err", err.Error()))
+		return errors.New("function bucketManager.DELETE() Filed, err:" + err.Error())
 	}
 
 	return nil

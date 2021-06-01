@@ -1,15 +1,14 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
-
-	"github.com/kataras/iris/v12/httptest"
 )
 
 func TestCaptcha(t *testing.T) {
 	e := baseTester(t)
 	obj := e.POST("/v1/public/captcha").
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

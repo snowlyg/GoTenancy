@@ -1,7 +1,9 @@
 package response
 
 import (
-	"github.com/kataras/iris/v12"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
@@ -17,47 +19,47 @@ const (
 	FORBIDDEN_REQUEST_ERROR    = 4003
 )
 
-func Result(code int, data interface{}, msg string, ctx iris.Context) {
+func Result(code int, data interface{}, msg string, ctx *gin.Context) {
 	// 开始时间
-	ctx.JSON(Response{
+	ctx.JSON(http.StatusOK, Response{
 		code,
 		data,
 		msg,
 	})
 }
 
-func Ok(ctx iris.Context) {
+func Ok(ctx *gin.Context) {
 	Result(SUCCESS, map[string]interface{}{}, "操作成功", ctx)
 }
 
-func OkWithMessage(message string, ctx iris.Context) {
+func OkWithMessage(message string, ctx *gin.Context) {
 	Result(SUCCESS, map[string]interface{}{}, message, ctx)
 }
 
-func OkWithData(data interface{}, ctx iris.Context) {
+func OkWithData(data interface{}, ctx *gin.Context) {
 	Result(SUCCESS, data, "操作成功", ctx)
 }
 
-func OkWithDetailed(data interface{}, message string, ctx iris.Context) {
+func OkWithDetailed(data interface{}, message string, ctx *gin.Context) {
 	Result(SUCCESS, data, message, ctx)
 }
 
-func Fail(ctx iris.Context) {
+func Fail(ctx *gin.Context) {
 	Result(BAD_REQUEST_ERROR, map[string]interface{}{}, "操作失败", ctx)
 }
 
-func UnauthorizedFailWithMessage(message string, ctx iris.Context) {
+func UnauthorizedFailWithMessage(message string, ctx *gin.Context) {
 	Result(UNAUTHORIZED_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
-func ForbiddenFailWithMessage(message string, ctx iris.Context) {
+func ForbiddenFailWithMessage(message string, ctx *gin.Context) {
 	Result(FORBIDDEN_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
-func FailWithMessage(message string, ctx iris.Context) {
+func FailWithMessage(message string, ctx *gin.Context) {
 	Result(BAD_REQUEST_ERROR, map[string]interface{}{}, message, ctx)
 }
 
-func FailWithDetailed(data interface{}, message string, ctx iris.Context) {
+func FailWithDetailed(data interface{}, message string, ctx *gin.Context) {
 	Result(BAD_REQUEST_ERROR, data, message, ctx)
 }

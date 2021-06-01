@@ -8,10 +8,10 @@ type SysAuthority struct {
 	CreatedAt       time.Time      `json:"createdAt"`
 	UpdatedAt       time.Time      `json:"updatedAt"`
 	DeletedAt       *time.Time     `json:"-" sql:"index"`
-	AuthorityId     string         `json:"authorityId" gorm:"not null;unique;primary_key;comment:角色ID;size:90" validate:"required"`
-	AuthorityName   string         `json:"authorityName" gorm:"comment:角色名" validate:"required"`
+	AuthorityId     string         `json:"authorityId" gorm:"not null;unique;primary_key;comment:角色ID;size:90" binding:"required"`
+	AuthorityName   string         `json:"authorityName" gorm:"comment:角色名" binding:"required"`
 	AuthorityType   int            `json:"authorityType" gorm:"comment:角色类型"`
-	ParentId        string         `json:"parentId" gorm:"comment:父角色ID" validate:"required"`
+	ParentId        string         `json:"parentId" gorm:"comment:父角色ID" binding:"required"`
 	DataAuthorityId []SysAuthority `json:"dataAuthorityId" gorm:"many2many:sys_data_authority_id"`
 	Children        []SysAuthority `json:"children" gorm:"-"`
 	SysBaseMenus    []SysBaseMenu  `json:"menus" gorm:"many2many:sys_authority_menus;"`

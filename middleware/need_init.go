@@ -1,19 +1,19 @@
 package middleware
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model/response"
 )
 
 // NeedInit
-func NeedInit() iris.Handler {
-	return func(ctx iris.Context) {
+func NeedInit() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		if g.TENANCY_DB == nil {
-			response.OkWithDetailed(iris.Map{
+			response.OkWithDetailed(gin.H{
 				"needInit": true,
 			}, "前往初始化数据库", ctx)
-			ctx.StopExecution()
+			ctx.Abort()
 		} else {
 			ctx.Next()
 		}

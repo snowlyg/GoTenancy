@@ -1,91 +1,54 @@
 package initialize
 
 import (
-	stdContext "context"
-	"os"
-	"time"
+	"net/http"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/middleware/accesslog"
-	"github.com/kataras/iris/v12/middleware/recover"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/router"
 	"github.com/snowlyg/go-tenancy/utils"
-	"go.uber.org/zap"
 )
 
 // 初始化总路由
 
 var IdleConnsClosed = make(chan struct{})
 
-func Routers() *iris.Application {
-	Router := iris.New()
+func App() *gin.Engine {
+	App := gin.Default()
+	// 注册已定义验证方法
+	utils.RegisterValidation()
+	// 注册路由
+	Routers(App)
+	g.TENANCY_LOG.Info("router register success")
+	return App
+}
 
-	// 注册结构体验证
-	validate := validator.New()
-	utils.RegisterValidation(validate)
-	Router.Validator = validate
-
-	iris.RegisterOnInterrupt(func() {
-		timeout := 10 * time.Second
-		ctx, cancel := stdContext.WithTimeout(stdContext.Background(), timeout)
-		defer cancel()
-		// close all hosts
-		Router.Shutdown(ctx)
-		close(IdleConnsClosed)
-	})
-	// Set default log level.
-	Router.Logger().SetLevel(g.TENANCY_CONFIG.System.Level)
-
-	// Register the accesslog middleware.
-	logFile, err := os.OpenFile("./access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
-	if err == nil {
-		// Close the file on shutdown.
-		Router.ConfigureHost(func(su *iris.Supervisor) {
-			su.RegisterOnShutdown(func() {
-				logFile.Close()
-			})
-		})
-
-		ac := accesslog.New(logFile)
-		ac.AddOutput(Router.Logger().Printer)
-		Router.UseRouter(ac.Handler)
-		Router.Logger().Debugf("Using <%s> to log requests", logFile.Name())
-	}
-
-	// Register the requestid middleware
-	// before recover so current Context.GetID() contains the info on panic logs.
-	// Router.UseRouter(requestid.New())
-	// Router.Logger().Debugf("Using <UUID4> to identify requests")
-
-	// Register the recovery, after accesslog and recover,
-	// before end-developer's middleware.
-	Router.UseRouter(recover.New())
-
-	Router.HandleDir(g.TENANCY_CONFIG.Local.Path, iris.Dir(g.TENANCY_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
+// Routers
+func Routers(app *gin.Engine) {
+	app.StaticFS(g.TENANCY_CONFIG.Local.Path, http.Dir(g.TENANCY_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
 	g.TENANCY_LOG.Info("use middleware logger")
+
 	// 跨域
-	Router.Use(middleware.Cors()) // 如需跨域可以打开
+	app.Use(middleware.Cors()) // 如需跨域可以打开
 	g.TENANCY_LOG.Info("use middleware cors")
 	// 方便统一添加路由组前缀 多服务器上线使用
-	PublicGroup := Router.Party("/v1")
+	PublicGroup := app.Group("/v1")
 	{
 		router.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
 		router.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
 
-	V1Group := Router.Party("/v1", middleware.Auth(), middleware.CasbinHandler(), middleware.OperationRecord())
+	V1Group := app.Group("/v1", middleware.Auth(), middleware.CasbinHandler(), middleware.OperationRecord())
 	{
-		Auth := V1Group.Party("/auth")
+		Auth := V1Group.Group("/auth")
 		{
 			router.InitAuthRouter(Auth) // 注册用户路由
 		}
 
 		// 商户和员工
-		AdminGroup := V1Group.Party("/admin", middleware.IsAdmin())
+		AdminGroup := V1Group.Group("/admin", middleware.IsAdmin())
 		{
 			router.InitApiRouter(AdminGroup)                // 注册功能api路由
 			router.InitUserRouter(AdminGroup)               // 注册用户路由
@@ -108,17 +71,10 @@ func Routers() *iris.Application {
 
 		}
 
-		GeneralGroup := V1Group.Party("/general", middleware.IsGeneral())
+		GeneralGroup := V1Group.Group("/general", middleware.IsGeneral())
 		{
 			router.InitAddressRouter(GeneralGroup) //我的地址管理
 			router.InitReceiptRouter(GeneralGroup) //我的发票管理
 		}
 	}
-
-	err = Router.Build()
-	if err != nil {
-		g.TENANCY_LOG.Error("router build", zap.Any("err", err))
-	}
-	g.TENANCY_LOG.Info("router register success")
-	return Router
 }

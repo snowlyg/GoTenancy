@@ -1,21 +1,22 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
 // Login 用户登录
-func Login(ctx iris.Context) {
+func Login(ctx *gin.Context) {
 	var L request.Login
-	if errs := utils.Verify(ctx.ReadJSON(&L)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&L); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -34,7 +35,7 @@ func Login(ctx iris.Context) {
 }
 
 // Logout 退出登录
-func Logout(ctx iris.Context) {
+func Logout(ctx *gin.Context) {
 	token := multi.GetVerifiedToken(ctx)
 	if token == nil {
 		response.FailWithMessage("授权凭证为空", ctx)
@@ -50,7 +51,7 @@ func Logout(ctx iris.Context) {
 }
 
 // Clean 清空 token
-func Clean(ctx iris.Context) {
+func Clean(ctx *gin.Context) {
 	waitUse := multi.Get(ctx)
 	if waitUse == nil {
 		response.FailWithMessage("清空TOKEN失败", ctx)
@@ -66,9 +67,9 @@ func Clean(ctx iris.Context) {
 }
 
 // RegisterAdmin 员工注册
-func RegisterAdmin(ctx iris.Context) {
+func RegisterAdmin(ctx *gin.Context) {
 	var R request.Register
-	if errs := utils.Verify(ctx.ReadJSON(&R)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&R); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -78,14 +79,14 @@ func RegisterAdmin(ctx iris.Context) {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(iris.Map{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
+		response.OkWithDetailed(gin.H{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
 	}
 }
 
 // RegisterTenancy 商户注册
-func RegisterTenancy(ctx iris.Context) {
+func RegisterTenancy(ctx *gin.Context) {
 	var R request.Register
-	if errs := utils.Verify(ctx.ReadJSON(&R)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&R); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -95,14 +96,14 @@ func RegisterTenancy(ctx iris.Context) {
 		g.TENANCY_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(iris.Map{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
+		response.OkWithDetailed(gin.H{"id": userReturn.ID, "userName": userReturn.Username, "authorityId": userReturn.AuthorityId}, "注册成功", ctx)
 	}
 }
 
 // ChangePassword 用户修改密码
-func ChangePassword(ctx iris.Context) {
+func ChangePassword(ctx *gin.Context) {
 	var user request.ChangePasswordStruct
-	if errs := utils.Verify(ctx.ReadJSON(&user)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&user); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -117,9 +118,10 @@ func ChangePassword(ctx iris.Context) {
 }
 
 // GetAdminList 分页获取用户列表
-func GetAdminList(ctx iris.Context) {
+func GetAdminList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
+		fmt.Printf("ShouldBindJSON %v\n\n", errs)
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -137,9 +139,9 @@ func GetAdminList(ctx iris.Context) {
 }
 
 // GetTenancyList 分页获取用户列表
-func GetTenancyList(ctx iris.Context) {
+func GetTenancyList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -157,9 +159,9 @@ func GetTenancyList(ctx iris.Context) {
 }
 
 // GetGeneralList 分页获取用户列表
-func GetGeneralList(ctx iris.Context) {
+func GetGeneralList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -177,9 +179,9 @@ func GetGeneralList(ctx iris.Context) {
 }
 
 // SetUserAuthority 设置用户权限
-func SetUserAuthority(ctx iris.Context) {
+func SetUserAuthority(ctx *gin.Context) {
 	var sua request.SetUserAuth
-	if errs := utils.Verify(ctx.ReadJSON(&sua)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&sua); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -192,14 +194,14 @@ func SetUserAuthority(ctx iris.Context) {
 }
 
 // DeleteUser 删除用户
-func DeleteUser(ctx iris.Context) {
+func DeleteUser(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	jwtId := ctx.GetID()
-	if jwtId == uint(reqId.Id) {
+	jwtId := multi.GetUserId(ctx)
+	if jwtId == int(reqId.Id) {
 		response.FailWithMessage("删除失败, 自杀失败", ctx)
 		return
 	}
@@ -212,8 +214,8 @@ func DeleteUser(ctx iris.Context) {
 }
 
 // SetUserInfo 设置用户信息
-func SetUserInfo(ctx iris.Context) {
-	userId := ctx.Params().GetIntDefault("user_id", 0)
+func SetUserInfo(ctx *gin.Context) {
+	userId := ctx.DefaultQuery("user_id", "0")
 	user, err := service.FindUserById(userId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
@@ -222,7 +224,7 @@ func SetUserInfo(ctx iris.Context) {
 
 	if user.IsAdmin() {
 		var admin model.SysAdminInfo
-		_ = ctx.ReadJSON(&admin)
+		_ = ctx.ShouldBindJSON(&admin)
 		admin.ID = user.AdminInfo.ID
 		if _, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
@@ -232,7 +234,7 @@ func SetUserInfo(ctx iris.Context) {
 		}
 	} else if user.IsTenancy() {
 		var tenancy model.SysTenancyInfo
-		_ = ctx.ReadJSON(&tenancy)
+		_ = ctx.ShouldBindJSON(&tenancy)
 		tenancy.ID = user.TenancyInfo.ID
 		if _, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
@@ -242,7 +244,7 @@ func SetUserInfo(ctx iris.Context) {
 		}
 	} else if user.IsGeneral() {
 		var general model.SysGeneralInfo
-		_ = ctx.ReadJSON(&general)
+		_ = ctx.ShouldBindJSON(&general)
 		general.ID = user.GeneralInfo.ID
 		if _, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))

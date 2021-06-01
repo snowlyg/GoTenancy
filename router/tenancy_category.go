@@ -1,17 +1,17 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitCategoryRouter(Router iris.Party) {
-	CategoryRouter := Router.Party("/category")
+func InitCategoryRouter(Router *gin.RouterGroup) {
+	CategoryRouter := Router.Group("/category")
 	{
-		CategoryRouter.Post("/createCategory", v1.CreateCategory)
-		CategoryRouter.Post("/getCategoryList", v1.GetCategoryList)
-		CategoryRouter.Post("/getCategoryById", v1.GetCategoryById)
-		CategoryRouter.Put("/updateCategory", v1.UpdateCategory)
-		CategoryRouter.Delete("/deleteCategory", v1.DeleteCategory)
+		CategoryRouter.POST("/createCategory", v1.CreateCategory)
+		CategoryRouter.POST("/getCategoryList", v1.GetCategoryList)
+		CategoryRouter.POST("/getCategoryById", v1.GetCategoryById)
+		CategoryRouter.PUT("/updateCategory", v1.UpdateCategory)
+		CategoryRouter.DELETE("/deleteCategory", v1.DeleteCategory)
 	}
 }

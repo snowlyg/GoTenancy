@@ -91,7 +91,7 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 		}, errors.New("用户名或者密码错误")
 	}
 
-	token, _, err = createToken(claims)
+	token, _, err = multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
 		return response.LoginResponse{
 			User:  admin,
@@ -152,7 +152,7 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 		}, errors.New("用户名或者密码错误")
 	}
 
-	token, _, err = createToken(claims)
+	token, _, err = multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
 		return response.LoginResponse{
 			User:  tenancy,
@@ -208,7 +208,7 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 		}, errors.New("用户名或者密码错误")
 	}
 
-	token, _, err = createToken(claims)
+	token, _, err = multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
 		return response.LoginResponse{
 			User:  general,
@@ -380,30 +380,10 @@ func SetUserGeneralInfo(reqUser model.SysGeneralInfo, update bool) (model.SysGen
 }
 
 // FindUserById 通过id获取用户信息
-func FindUserById(id int) (*model.SysUser, error) {
+func FindUserById(id string) (*model.SysUser, error) {
 	var u model.SysUser
 	err := g.TENANCY_DB.Where("`id` = ?", id).Preload("Authority").Preload("AdminInfo").Preload("TenancyInfo").Preload("GeneralInfo").First(&u).Error
 	return &u, err
-}
-
-// createToken 创建token
-func createToken(claims *multi.CustomClaims) (string, int64, error) {
-	if multi.AuthDriver.IsUserTokenOver(claims.ID) {
-		return "", 0, errors.New("已达到同时登录设备上限")
-	}
-	token, err := multi.GetToken()
-	if err != nil {
-		return "", 0, err
-	}
-	err = multi.AuthDriver.ToCache(token, claims)
-	if err != nil {
-		return "", 0, err
-	}
-	if err = multi.AuthDriver.SyncUserTokenCache(token); err != nil {
-		return "", 0, err
-	}
-
-	return token, int64(claims.ExpiresIn), err
 }
 
 // DelToken 删除token

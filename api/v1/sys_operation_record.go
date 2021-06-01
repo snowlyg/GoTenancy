@@ -1,20 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateSysOperationRecord 创建SysOperationRecord
-func CreateSysOperationRecord(ctx iris.Context) {
+func CreateSysOperationRecord(ctx *gin.Context) {
 	var sysOperationRecord model.SysOperationRecord
-	_ = ctx.ReadJSON(&sysOperationRecord)
+	_ = ctx.ShouldBindJSON(&sysOperationRecord)
 	if err := service.CreateSysOperationRecord(sysOperationRecord); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
@@ -24,9 +23,9 @@ func CreateSysOperationRecord(ctx iris.Context) {
 }
 
 // DeleteSysOperationRecord 删除SysOperationRecord
-func DeleteSysOperationRecord(ctx iris.Context) {
+func DeleteSysOperationRecord(ctx *gin.Context) {
 	var sysOperationRecord model.SysOperationRecord
-	_ = ctx.ReadJSON(&sysOperationRecord)
+	_ = ctx.ShouldBindJSON(&sysOperationRecord)
 	if err := service.DeleteSysOperationRecord(sysOperationRecord); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", ctx)
@@ -36,9 +35,9 @@ func DeleteSysOperationRecord(ctx iris.Context) {
 }
 
 // DeleteSysOperationRecordByIds 批量删除SysOperationRecord
-func DeleteSysOperationRecordByIds(ctx iris.Context) {
+func DeleteSysOperationRecordByIds(ctx *gin.Context) {
 	var IDS request.IdsReq
-	_ = ctx.ReadJSON(&IDS)
+	_ = ctx.ShouldBindJSON(&IDS)
 	if err := service.DeleteSysOperationRecordByIds(IDS); err != nil {
 		g.TENANCY_LOG.Error("批量删除失败!", zap.Any("err", err))
 		response.FailWithMessage("批量删除失败", ctx)
@@ -48,9 +47,9 @@ func DeleteSysOperationRecordByIds(ctx iris.Context) {
 }
 
 // FindSysOperationRecord 用id查询SysOperationRecord
-func FindSysOperationRecord(ctx iris.Context) {
+func FindSysOperationRecord(ctx *gin.Context) {
 	var sysOperationRecord model.SysOperationRecord
-	if errs := utils.Verify(ctx.ReadJSON(&sysOperationRecord)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&sysOperationRecord); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -58,14 +57,14 @@ func FindSysOperationRecord(ctx iris.Context) {
 		g.TENANCY_LOG.Error("查询失败!", zap.Any("err", err))
 		response.FailWithMessage("查询失败", ctx)
 	} else {
-		response.OkWithDetailed(iris.Map{"resysOperationRecord": resysOperationRecord}, "查询成功", ctx)
+		response.OkWithDetailed(gin.H{"resysOperationRecord": resysOperationRecord}, "查询成功", ctx)
 	}
 }
 
 // GetSysOperationRecordList 分页获取SysOperationRecord列表
-func GetSysOperationRecordList(ctx iris.Context) {
+func GetSysOperationRecordList(ctx *gin.Context) {
 	var pageInfo request.SysOperationRecordSearch
-	_ = ctx.ReadQuery(&pageInfo)
+	_ = ctx.ShouldBindQuery(&pageInfo)
 	if list, total, err := service.GetSysOperationRecordInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)

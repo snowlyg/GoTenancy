@@ -1,9 +1,9 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
 
-	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/config"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/service"
@@ -37,7 +37,7 @@ func TestInitDB(t *testing.T) {
 	}
 	g.TENANCY_DB = nil
 	obj := e.GET("/v1/init/checkdb").
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
@@ -46,7 +46,7 @@ func TestInitDB(t *testing.T) {
 
 	obj = e.POST("/v1/init/initdb").
 		WithJSON(map[string]interface{}{"host": "127.0.0.1", "port": "3306", "userName": "root", "password": "Chindeo", "dbName": "tenancy"}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

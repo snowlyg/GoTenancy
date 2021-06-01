@@ -2,9 +2,9 @@ package tests
 
 import (
 	"fmt"
+	"net/http"
 	"testing"
 
-	"github.com/kataras/iris/v12/httptest"
 	"github.com/snowlyg/go-tenancy/source"
 	"github.com/snowlyg/multi"
 )
@@ -13,7 +13,7 @@ func TestTenancyUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("获取成功")
@@ -38,7 +38,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("注册成功")
@@ -52,7 +52,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("修改成功")
@@ -60,7 +60,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	// changePassword error
 	obj = auth.POST("/v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("修改失败，原密码与当前账户不符")
@@ -68,7 +68,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	// setUserAuthority
 	obj = auth.POST("/v1/admin/user/setUserAuthority").
 		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.TenancyAuthorityId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("修改成功")
@@ -76,7 +76,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	// setTenancyInfo
 	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
 		WithJSON(map[string]interface{}{"email": "tenancy@master.com", "phone": "13800138001"}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("设置成功")
@@ -84,7 +84,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/user/deleteUser").
 		WithJSON(map[string]interface{}{"id": userId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
@@ -96,7 +96,7 @@ func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名已注册")
@@ -108,7 +108,7 @@ func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": "", "authorityType": multi.TenancyAuthority}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'Register.AuthorityId' Error:Field validation for 'AuthorityId' failed on the 'required' tag")
@@ -120,7 +120,7 @@ func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": 0}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'Register.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")

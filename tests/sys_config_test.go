@@ -1,16 +1,15 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
-
-	"github.com/kataras/iris/v12/httptest"
 )
 
 func TestConfigList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/config/getConfigList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("获取成功")
@@ -39,7 +38,7 @@ func TestConfigProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/config/createConfig").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("创建成功")
@@ -60,7 +59,7 @@ func TestConfigProcess(t *testing.T) {
 
 	obj = auth.PUT("/v1/admin/config/updateConfig").
 		WithJSON(update).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("更新成功")
@@ -77,7 +76,7 @@ func TestConfigProcess(t *testing.T) {
 	}
 	obj = auth.POST("/v1/admin/config/getConfigByName").
 		WithJSON(getByName).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("操作成功")
@@ -91,7 +90,7 @@ func TestConfigProcess(t *testing.T) {
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/config/deleteConfig").
 		WithJSON(map[string]interface{}{"id": configId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
@@ -108,7 +107,7 @@ func TestConfigRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/config/createConfig").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("创建失败")

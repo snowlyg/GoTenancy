@@ -8,5 +8,5 @@ type SysAuthorityResponse struct {
 
 type SysAuthorityCopyResponse struct {
 	Authority      model.SysAuthority `json:"authority"`
-	OldAuthorityId string             `json:"oldAuthorityId" validate:"required"`
+	OldAuthorityId string             `json:"oldAuthorityId" binding:"required"`
 }

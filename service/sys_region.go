@@ -6,7 +6,7 @@ import (
 )
 
 // GetRegion 获取行政区域
-func GetRegion(pCode int) ([]response.SysRegion, error) {
+func GetRegion(pCode string) ([]response.SysRegion, error) {
 	var regions []response.SysRegion
 	err := g.TENANCY_DB.Where("p_code", pCode).Find(&regions).Error
 	return regions, err

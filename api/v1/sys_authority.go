@@ -1,12 +1,10 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/multi"
-
-	"github.com/snowlyg/go-tenancy/utils"
 
 	"github.com/snowlyg/go-tenancy/model/request"
 
@@ -18,9 +16,9 @@ import (
 )
 
 // CreateAuthority 创建角色
-func CreateAuthority(ctx iris.Context) {
+func CreateAuthority(ctx *gin.Context) {
 	var authority model.SysAuthority
-	if errs := utils.Verify(ctx.ReadJSON(&authority)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&authority); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -33,13 +31,13 @@ func CreateAuthority(ctx iris.Context) {
 }
 
 // CopyAuthority 拷贝角色
-func CopyAuthority(ctx iris.Context) {
+func CopyAuthority(ctx *gin.Context) {
 	var copyInfo response.SysAuthorityCopyResponse
-	if errs := utils.Verify(ctx.ReadJSON(&copyInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&copyInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if errs := utils.Verify(ctx.ReadJSON(&copyInfo.Authority)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&copyInfo.Authority); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -52,9 +50,9 @@ func CopyAuthority(ctx iris.Context) {
 }
 
 // DeleteAuthority 删除角色
-func DeleteAuthority(ctx iris.Context) {
+func DeleteAuthority(ctx *gin.Context) {
 	var authority request.DeleteAuthority
-	if errs := utils.Verify(ctx.ReadJSON(&authority)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&authority); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -67,9 +65,9 @@ func DeleteAuthority(ctx iris.Context) {
 }
 
 // UpdateAuthority 更新角色信息
-func UpdateAuthority(ctx iris.Context) {
+func UpdateAuthority(ctx *gin.Context) {
 	var auth model.SysAuthority
-	if errs := utils.Verify(ctx.ReadJSON(&auth)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&auth); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -82,9 +80,9 @@ func UpdateAuthority(ctx iris.Context) {
 }
 
 // GetAdminAuthorityList 分页获取角色列表
-func GetAdminAuthorityList(ctx iris.Context) {
+func GetAdminAuthorityList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -102,9 +100,9 @@ func GetAdminAuthorityList(ctx iris.Context) {
 }
 
 // GetTenancyAuthorityList 分页获取角色列表
-func GetTenancyAuthorityList(ctx iris.Context) {
+func GetTenancyAuthorityList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -122,9 +120,9 @@ func GetTenancyAuthorityList(ctx iris.Context) {
 }
 
 // GetGeneralAuthorityList 分页获取角色列表
-func GetGeneralAuthorityList(ctx iris.Context) {
+func GetGeneralAuthorityList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -142,9 +140,9 @@ func GetGeneralAuthorityList(ctx iris.Context) {
 }
 
 // GetAuthorityList 分页获取角色列表
-func GetAuthorityList(ctx iris.Context) {
+func GetAuthorityList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -162,9 +160,9 @@ func GetAuthorityList(ctx iris.Context) {
 }
 
 // SetDataAuthority 设置角色资源权限
-func SetDataAuthority(ctx iris.Context) {
+func SetDataAuthority(ctx *gin.Context) {
 	var auth request.SetDataAuthority
-	if errs := utils.Verify(ctx.ReadJSON(&auth)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&auth); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

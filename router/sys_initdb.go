@@ -1,14 +1,14 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitInitRouter(Router iris.Party) {
-	ApiRouter := Router.Party("/init")
+func InitInitRouter(Router *gin.RouterGroup) {
+	ApiRouter := Router.Group("/init")
 	{
-		ApiRouter.Post("/initdb", v1.InitDB)  // 创建Api
-		ApiRouter.Get("/checkdb", v1.CheckDB) // 创建Api
+		ApiRouter.POST("/initdb", v1.InitDB)  // 创建Api
+		ApiRouter.GET("/checkdb", v1.CheckDB) // 创建Api
 	}
 }

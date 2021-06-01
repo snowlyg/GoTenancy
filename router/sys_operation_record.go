@@ -1,18 +1,18 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitSysOperationRecordRouter(Router iris.Party) {
-	SysOperationRecordRouter := Router.Party("/sysOperationRecord")
+func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
+	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
-		SysOperationRecordRouter.Post("/createSysOperationRecord", v1.CreateSysOperationRecord)             // 新建SysOperationRecord
-		SysOperationRecordRouter.Delete("/deleteSysOperationRecord", v1.DeleteSysOperationRecord)           // 删除SysOperationRecord
-		SysOperationRecordRouter.Delete("/deleteSysOperationRecordByIds", v1.DeleteSysOperationRecordByIds) // 批量删除SysOperationRecord
-		SysOperationRecordRouter.Get("/findSysOperationRecord", v1.FindSysOperationRecord)                  // 根据ID获取SysOperationRecord
-		SysOperationRecordRouter.Get("/getSysOperationRecordList", v1.GetSysOperationRecordList)            // 获取SysOperationRecord列表
+		SysOperationRecordRouter.POST("/createSysOperationRecord", v1.CreateSysOperationRecord)             // 新建SysOperationRecord
+		SysOperationRecordRouter.DELETE("/deleteSysOperationRecord", v1.DeleteSysOperationRecord)           // 删除SysOperationRecord
+		SysOperationRecordRouter.DELETE("/deleteSysOperationRecordByIds", v1.DeleteSysOperationRecordByIds) // 批量删除SysOperationRecord
+		SysOperationRecordRouter.GET("/findSysOperationRecord", v1.FindSysOperationRecord)                  // 根据ID获取SysOperationRecord
+		SysOperationRecordRouter.GET("/getSysOperationRecordList", v1.GetSysOperationRecordList)            // 获取SysOperationRecord列表
 
 	}
 }

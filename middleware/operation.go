@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"bytes"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/service"
@@ -15,15 +15,18 @@ import (
 	"go.uber.org/zap"
 )
 
-func OperationRecord() iris.Handler {
-	return func(ctx iris.Context) {
+func OperationRecord() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		var body []byte
 		var userId int
-		if ctx.Method() != http.MethodGet {
+		if ctx.Request.Method != http.MethodGet {
 			var err error
-			body, err = ctx.GetBody()
+			body, err = ioutil.ReadAll(ctx.Request.Body)
 			if err != nil {
 				g.TENANCY_LOG.Error("read body from request error:", zap.Any("err", err))
+			} else {
+				// ioutil.ReadAll 读取数据后重新回写数据
+				ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 			}
 		}
 		waitUse := multi.Get(ctx)
@@ -42,30 +45,26 @@ func OperationRecord() iris.Handler {
 		}
 
 		record := model.SysOperationRecord{
-			Ip:     ctx.RemoteAddr(),
-			Method: ctx.Method(),
-			Path:   ctx.Path(),
-			Agent:  ctx.Request().UserAgent(),
+			Ip:     ctx.ClientIP(),
+			Method: ctx.Request.Method,
+			Path:   ctx.Request.URL.Path,
+			Agent:  ctx.Request.UserAgent(),
 			Body:   string(body),
 			UserID: userId,
 		}
 
 		writer := responseBodyWriter{
-			ResponseWriter: ctx.ResponseWriter().Clone(),
+			ResponseWriter: ctx.Writer,
 			body:           &bytes.Buffer{},
 		}
-		ctx.ResetResponseWriter(writer)
+		ctx.Writer = writer
 		now := time.Now()
 
 		ctx.Next()
 
 		latency := time.Since(now)
-		errorMessage := ""
-		if ctx.GetErr() != nil {
-			errorMessage = ctx.GetErr().Error()
-		}
-		record.ErrorMessage = errorMessage
-		record.Status = ctx.GetStatusCode()
+		record.ErrorMessage = ctx.Errors.ByType(gin.ErrorTypePrivate).String()
+		record.Status = ctx.Writer.Status()
 		record.Latency = latency
 		record.Resp = writer.body.String()
 
@@ -76,7 +75,7 @@ func OperationRecord() iris.Handler {
 }
 
 type responseBodyWriter struct {
-	context.ResponseWriter
+	gin.ResponseWriter
 	body *bytes.Buffer
 }
 

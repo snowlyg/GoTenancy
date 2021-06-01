@@ -33,8 +33,8 @@ func (*Qiniu) UploadFile(file *multipart.FileHeader) (string, string, error) {
 	fileKey := fmt.Sprintf("%d%s", time.Now().Unix(), file.Filename) // 文件名格式 自己可以改 建议保证唯一性
 	putErr := formUploader.Put(context.Background(), &ret, upToken, fileKey, f, file.Size, &putExtra)
 	if putErr != nil {
-		g.TENANCY_LOG.Error("function formUploader.Put() Filed", zap.Any("err", putErr.Error()))
-		return "", "", errors.New("function formUploader.Put() Filed, err:" + putErr.Error())
+		g.TENANCY_LOG.Error("function formUploader.PUT() Filed", zap.Any("err", putErr.Error()))
+		return "", "", errors.New("function formUploader.PUT() Filed, err:" + putErr.Error())
 	}
 	return g.TENANCY_CONFIG.Qiniu.ImgPath + "/" + ret.Key, ret.Key, nil
 }
@@ -44,8 +44,8 @@ func (*Qiniu) DeleteFile(key string) error {
 	cfg := qiniuConfig()
 	bucketManager := storage.NewBucketManager(mac, cfg)
 	if err := bucketManager.Delete(g.TENANCY_CONFIG.Qiniu.Bucket, key); err != nil {
-		g.TENANCY_LOG.Error("function bucketManager.Delete() Filed", zap.Any("err", err.Error()))
-		return errors.New("function bucketManager.Delete() Filed, err:" + err.Error())
+		g.TENANCY_LOG.Error("function bucketManager.DELETE() Filed", zap.Any("err", err.Error()))
+		return errors.New("function bucketManager.DELETE() Filed, err:" + err.Error())
 	}
 	return nil
 }

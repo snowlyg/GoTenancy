@@ -1,17 +1,17 @@
 package middleware
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/multi"
 )
 
 // IsAdmin
-func IsAdmin() iris.Handler {
-	return func(ctx iris.Context) {
+func IsAdmin() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		if !multi.IsAdmin(ctx) && !multi.IsTenancy(ctx) {
 			response.ForbiddenFailWithMessage("无此操作权限", ctx)
-			ctx.StopExecution()
+			ctx.Abort()
 		}
 		ctx.Next()
 	}

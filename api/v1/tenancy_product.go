@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateProduct
-func CreateProduct(ctx iris.Context) {
+func CreateProduct(ctx *gin.Context) {
 	var product request.CreateTenancyProduct
-	if errs := utils.Verify(ctx.ReadJSON(&product)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&product); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -29,9 +27,9 @@ func CreateProduct(ctx iris.Context) {
 }
 
 // UpdateProduct
-func UpdateProduct(ctx iris.Context) {
+func UpdateProduct(ctx *gin.Context) {
 	var product request.UpdateTenancyProduct
-	if errs := utils.Verify(ctx.ReadJSON(&product)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&product); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -44,8 +42,8 @@ func UpdateProduct(ctx iris.Context) {
 }
 
 // getProductMap
-func getProductMap(returnProduct model.TenancyProduct) context.Map {
-	return iris.Map{
+func getProductMap(returnProduct model.TenancyProduct) gin.H {
+	return gin.H{
 		"id":                returnProduct.ID,
 		"storeName":         returnProduct.StoreName,
 		"storeInfo":         returnProduct.StoreInfo,
@@ -91,9 +89,9 @@ func getProductMap(returnProduct model.TenancyProduct) context.Map {
 }
 
 // GetProductList
-func GetProductList(ctx iris.Context) {
+func GetProductList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -111,9 +109,9 @@ func GetProductList(ctx iris.Context) {
 }
 
 // GetProductById
-func GetProductById(ctx iris.Context) {
+func GetProductById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -127,9 +125,9 @@ func GetProductById(ctx iris.Context) {
 }
 
 // DeleteProduct
-func DeleteProduct(ctx iris.Context) {
+func DeleteProduct(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

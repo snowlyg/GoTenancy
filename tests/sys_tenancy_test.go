@@ -1,16 +1,15 @@
 package tests
 
 import (
+	"net/http"
 	"testing"
-
-	"github.com/kataras/iris/v12/httptest"
 )
 
 func TestTenancyList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("获取成功")
@@ -33,7 +32,7 @@ func TestTenancyList(t *testing.T) {
 func TestTenancyByRegion(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.GET("/v1/admin/tenancy/getTenancies/1").
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("获取成功")
@@ -53,7 +52,7 @@ func TestTenancyProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("创建成功")
@@ -79,7 +78,7 @@ func TestTenancyProcess(t *testing.T) {
 
 	obj = auth.PUT("/v1/admin/tenancy/updateTenancy").
 		WithJSON(update).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("更新成功")
@@ -94,7 +93,7 @@ func TestTenancyProcess(t *testing.T) {
 
 	obj = auth.POST("/v1/admin/tenancy/getTenancyById").
 		WithJSON(map[string]interface{}{"id": tenancyId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("操作成功")
@@ -114,7 +113,7 @@ func TestTenancyProcess(t *testing.T) {
 			"id":            tenancyId,
 			"sysRegionCode": 2,
 		}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("设置成功")
@@ -122,7 +121,7 @@ func TestTenancyProcess(t *testing.T) {
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/tenancy/deleteTenancy").
 		WithJSON(map[string]interface{}{"id": tenancyId}).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
@@ -140,7 +139,7 @@ func TestTenancyRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).
-		Expect().Status(httptest.StatusOK).JSON().Object()
+		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("创建失败")

@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -12,7 +12,7 @@ import (
 )
 
 // CreateProduct
-func CreateProduct(m request.CreateTenancyProduct, ctx iris.Context) (model.TenancyProduct, error) {
+func CreateProduct(m request.CreateTenancyProduct, ctx *gin.Context) (model.TenancyProduct, error) {
 	var product = model.TenancyProduct{
 		StoreName:         m.StoreName,
 		StoreInfo:         m.StoreInfo,
@@ -125,7 +125,7 @@ func DeleteProduct(id float64) error {
 }
 
 // GetProductInfoList
-func GetProductInfoList(info request.PageInfo, ctx iris.Context) ([]response.TenancyProduct, int64, error) {
+func GetProductInfoList(info request.PageInfo, ctx *gin.Context) ([]response.TenancyProduct, int64, error) {
 	var tenancyList []response.TenancyProduct
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)

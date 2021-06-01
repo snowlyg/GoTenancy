@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -14,7 +14,7 @@ import (
 )
 
 // CreateCategory
-func CreateCategory(m request.CreateTenancyCategory, ctx iris.Context) (model.TenancyCategory, error) {
+func CreateCategory(m request.CreateTenancyCategory, ctx *gin.Context) (model.TenancyCategory, error) {
 	var brandCategory model.TenancyCategory
 	err := g.TENANCY_DB.Where("cate_name = ?", m.CateName).First(&brandCategory).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -67,7 +67,7 @@ func DeleteCategory(id float64) error {
 }
 
 // GetCategoryInfoList
-func GetCategoryInfoList(ctx iris.Context) ([]response.TenancyCategory, error) {
+func GetCategoryInfoList(ctx *gin.Context) ([]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
 	treeMap, err := getCategoryMap(ctx)
 	brandCategoryList = treeMap["0"]
@@ -78,7 +78,7 @@ func GetCategoryInfoList(ctx iris.Context) ([]response.TenancyCategory, error) {
 }
 
 // getCategoryMap
-func getCategoryMap(ctx iris.Context) (map[string][]response.TenancyCategory, error) {
+func getCategoryMap(ctx *gin.Context) (map[string][]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
 	treeMap := make(map[string][]response.TenancyCategory)
 	db := g.TENANCY_DB.Model(&model.TenancyCategory{})

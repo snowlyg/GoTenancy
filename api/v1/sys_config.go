@@ -1,20 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateConfig
-func CreateConfig(ctx iris.Context) {
+func CreateConfig(ctx *gin.Context) {
 	var config model.SysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&config)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&config); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -22,15 +21,15 @@ func CreateConfig(ctx iris.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		data := iris.Map{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
+		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
 		response.OkWithDetailed(data, "创建成功", ctx)
 	}
 }
 
 // UpdateConfig
-func UpdateConfig(ctx iris.Context) {
+func UpdateConfig(ctx *gin.Context) {
 	var config model.SysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&config)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&config); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -38,15 +37,15 @@ func UpdateConfig(ctx iris.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", ctx)
 	} else {
-		data := iris.Map{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
+		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
 		response.OkWithDetailed(data, "更新成功", ctx)
 	}
 }
 
 // GetConfigList
-func GetConfigList(ctx iris.Context) {
+func GetConfigList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -64,9 +63,9 @@ func GetConfigList(ctx iris.Context) {
 }
 
 // GetConfigByName
-func GetConfigByName(ctx iris.Context) {
+func GetConfigByName(ctx *gin.Context) {
 	var req request.GetSysConfig
-	if errs := utils.Verify(ctx.ReadJSON(&req)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -80,9 +79,9 @@ func GetConfigByName(ctx iris.Context) {
 }
 
 // DeleteConfig
-func DeleteConfig(ctx iris.Context) {
+func DeleteConfig(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

@@ -1,17 +1,17 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitReceiptRouter(Router iris.Party) {
-	ReceiptRouter := Router.Party("/receipt")
+func InitReceiptRouter(Router *gin.RouterGroup) {
+	ReceiptRouter := Router.Group("/receipt")
 	{
-		ReceiptRouter.Post("/createReceipt", v1.CreateReceipt)
-		ReceiptRouter.Post("/getReceiptList", v1.GetReceiptList)
-		ReceiptRouter.Post("/getReceiptById", v1.GetReceiptById)
-		ReceiptRouter.Put("/updateReceipt", v1.UpdateReceipt)
-		ReceiptRouter.Delete("/deleteReceipt", v1.DeleteReceipt)
+		ReceiptRouter.POST("/createReceipt", v1.CreateReceipt)
+		ReceiptRouter.POST("/getReceiptList", v1.GetReceiptList)
+		ReceiptRouter.POST("/getReceiptById", v1.GetReceiptById)
+		ReceiptRouter.PUT("/updateReceipt", v1.UpdateReceipt)
+		ReceiptRouter.DELETE("/deleteReceipt", v1.DeleteReceipt)
 	}
 }

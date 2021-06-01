@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateCategory
-func CreateCategory(ctx iris.Context) {
+func CreateCategory(ctx *gin.Context) {
 	var category request.CreateTenancyCategory
-	if errs := utils.Verify(ctx.ReadJSON(&category)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&category); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -29,9 +27,9 @@ func CreateCategory(ctx iris.Context) {
 }
 
 // UpdateCategory
-func UpdateCategory(ctx iris.Context) {
+func UpdateCategory(ctx *gin.Context) {
 	var category request.UpdateTenancyCategory
-	if errs := utils.Verify(ctx.ReadJSON(&category)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&category); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -44,8 +42,8 @@ func UpdateCategory(ctx iris.Context) {
 }
 
 // getCategoryMap
-func getCategoryMap(returnCategory model.TenancyCategory) context.Map {
-	return iris.Map{
+func getCategoryMap(returnCategory model.TenancyCategory) gin.H {
+	return gin.H{
 		"id":       returnCategory.ID,
 		"cateName": returnCategory.CateName,
 		"pid":      returnCategory.Pid,
@@ -58,9 +56,9 @@ func getCategoryMap(returnCategory model.TenancyCategory) context.Map {
 }
 
 // GetCategoryList
-func GetCategoryList(ctx iris.Context) {
+func GetCategoryList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -78,9 +76,9 @@ func GetCategoryList(ctx iris.Context) {
 }
 
 // GetCategoryById
-func GetCategoryById(ctx iris.Context) {
+func GetCategoryById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -94,9 +92,9 @@ func GetCategoryById(ctx iris.Context) {
 }
 
 // DeleteCategory
-func DeleteCategory(ctx iris.Context) {
+func DeleteCategory(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

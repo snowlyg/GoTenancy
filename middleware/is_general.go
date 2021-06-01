@@ -1,17 +1,17 @@
 package middleware
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/multi"
 )
 
 // IsGeneral
-func IsGeneral() iris.Handler {
-	return func(ctx iris.Context) {
+func IsGeneral() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		if !multi.IsGeneral(ctx) {
 			response.ForbiddenFailWithMessage("无此操作权限", ctx)
-			ctx.StopExecution()
+			ctx.Abort()
 		}
 		ctx.Next()
 	}

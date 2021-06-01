@@ -1,6 +1,6 @@
 package request
 
 type GetSysConfig struct {
-	Type string `json:"type" form:"type"  validate:"required"`
-	Name string `json:"name" form:"name"  validate:"required"`
+	Type string `json:"type" form:"type"  binding:"required"`
+	Name string `json:"name" form:"name"  binding:"required"`
 }

@@ -1,17 +1,17 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitProductRouter(Router iris.Party) {
-	ProductRouter := Router.Party("/product")
+func InitProductRouter(Router *gin.RouterGroup) {
+	ProductRouter := Router.Group("/product")
 	{
-		ProductRouter.Post("/createProduct", v1.CreateProduct)
-		ProductRouter.Post("/getProductList", v1.GetProductList)
-		ProductRouter.Post("/getProductById", v1.GetProductById)
-		ProductRouter.Put("/updateProduct", v1.UpdateProduct)
-		ProductRouter.Delete("/deleteProduct", v1.DeleteProduct)
+		ProductRouter.POST("/createProduct", v1.CreateProduct)
+		ProductRouter.POST("/getProductList", v1.GetProductList)
+		ProductRouter.POST("/getProductById", v1.GetProductById)
+		ProductRouter.PUT("/updateProduct", v1.UpdateProduct)
+		ProductRouter.DELETE("/deleteProduct", v1.DeleteProduct)
 	}
 }

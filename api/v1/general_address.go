@@ -1,22 +1,20 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
 // CreateAddress
-func CreateAddress(ctx iris.Context) {
+func CreateAddress(ctx *gin.Context) {
 	var address request.CreateAddress
-	if errs := utils.Verify(ctx.ReadJSON(&address)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&address); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -37,9 +35,9 @@ func CreateAddress(ctx iris.Context) {
 }
 
 // UpdateAddress
-func UpdateAddress(ctx iris.Context) {
+func UpdateAddress(ctx *gin.Context) {
 	var address request.UpdateAddress
-	if errs := utils.Verify(ctx.ReadJSON(&address)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&address); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -52,14 +50,14 @@ func UpdateAddress(ctx iris.Context) {
 }
 
 // getAddressMap
-func getAddressMap(returnAddress model.GeneralAddress) context.Map {
-	return iris.Map{"id": returnAddress.ID, "name": returnAddress.Name, "phone": returnAddress.Phone, "sex": returnAddress.Sex, "country": returnAddress.Country, "province": returnAddress.Province, "city": returnAddress.City, "district": returnAddress.District, "isDefault": returnAddress.IsDefault, "detail": returnAddress.Detail, "postcode": returnAddress.Postcode, "age": returnAddress.Age, "hospitalName": returnAddress.HospitalName, "locName": returnAddress.LocName, "bedNum": returnAddress.BedNum, "hospitalNo": returnAddress.HospitalNO, "disease": returnAddress.Disease}
+func getAddressMap(returnAddress model.GeneralAddress) gin.H {
+	return gin.H{"id": returnAddress.ID, "name": returnAddress.Name, "phone": returnAddress.Phone, "sex": returnAddress.Sex, "country": returnAddress.Country, "province": returnAddress.Province, "city": returnAddress.City, "district": returnAddress.District, "isDefault": returnAddress.IsDefault, "detail": returnAddress.Detail, "postcode": returnAddress.Postcode, "age": returnAddress.Age, "hospitalName": returnAddress.HospitalName, "locName": returnAddress.LocName, "bedNum": returnAddress.BedNum, "hospitalNo": returnAddress.HospitalNO, "disease": returnAddress.Disease}
 }
 
 // GetAddressList
-func GetAddressList(ctx iris.Context) {
+func GetAddressList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -85,9 +83,9 @@ func GetAddressList(ctx iris.Context) {
 }
 
 // GetAddressById
-func GetAddressById(ctx iris.Context) {
+func GetAddressById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -109,9 +107,9 @@ func GetAddressById(ctx iris.Context) {
 }
 
 // DeleteAddress
-func DeleteAddress(ctx iris.Context) {
+func DeleteAddress(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

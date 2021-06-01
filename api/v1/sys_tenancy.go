@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateTenancy
-func CreateTenancy(ctx iris.Context) {
+func CreateTenancy(ctx *gin.Context) {
 	var tenancy request.CreateSysTenancy
-	if errs := utils.Verify(ctx.ReadJSON(&tenancy)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&tenancy); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -28,9 +26,9 @@ func CreateTenancy(ctx iris.Context) {
 }
 
 // GetTenancyById
-func GetTenancyById(ctx iris.Context) {
+func GetTenancyById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -44,9 +42,9 @@ func GetTenancyById(ctx iris.Context) {
 }
 
 // SetTenancyRegion
-func SetTenancyRegion(ctx iris.Context) {
+func SetTenancyRegion(ctx *gin.Context) {
 	var regionCode request.SetRegionCode
-	if errs := utils.Verify(ctx.ReadJSON(&regionCode)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&regionCode); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -60,9 +58,9 @@ func SetTenancyRegion(ctx iris.Context) {
 }
 
 // UpdateTenancy
-func UpdateTenancy(ctx iris.Context) {
+func UpdateTenancy(ctx *gin.Context) {
 	var tenancy request.UpdateSysTenancy
-	if errs := utils.Verify(ctx.ReadJSON(&tenancy)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&tenancy); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -75,14 +73,14 @@ func UpdateTenancy(ctx iris.Context) {
 }
 
 // getTenancyMap
-func getTenancyMap(returnTenancy model.SysTenancy) context.Map {
-	return iris.Map{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
+func getTenancyMap(returnTenancy model.SysTenancy) gin.H {
+	return gin.H{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 }
 
 // DeleteTenancy
-func DeleteTenancy(ctx iris.Context) {
+func DeleteTenancy(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -95,9 +93,9 @@ func DeleteTenancy(ctx iris.Context) {
 }
 
 // GetTenanciesList 分页获取商户列表
-func GetTenanciesList(ctx iris.Context) {
+func GetTenanciesList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -115,8 +113,8 @@ func GetTenanciesList(ctx iris.Context) {
 }
 
 // GetTenanciesByRegion 根据区域获取商户列表，不分页
-func GetTenanciesByRegion(ctx iris.Context) {
-	code := ctx.Params().GetIntDefault("code", -1)
+func GetTenanciesByRegion(ctx *gin.Context) {
+	code := ctx.DefaultQuery("code", "-1")
 	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", ctx)

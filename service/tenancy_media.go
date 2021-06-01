@@ -5,7 +5,7 @@ import (
 	"mime/multipart"
 	"strings"
 
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -36,7 +36,7 @@ func DeleteFile(file model.TenancyMedia) error {
 	return err
 }
 
-func GetFileRecordInfoList(info request.PageInfo, ctx iris.Context) (interface{}, int64, error) {
+func GetFileRecordInfoList(info request.PageInfo, ctx *gin.Context) (interface{}, int64, error) {
 	var total int64
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
@@ -53,7 +53,7 @@ func GetFileRecordInfoList(info request.PageInfo, ctx iris.Context) (interface{}
 	return fileLists, total, err
 }
 
-func UploadFile(header *multipart.FileHeader, noSave, path string, ctx iris.Context) (model.TenancyMedia, error) {
+func UploadFile(header *multipart.FileHeader, noSave, path string, ctx *gin.Context) (model.TenancyMedia, error) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {

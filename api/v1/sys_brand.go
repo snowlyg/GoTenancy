@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateBrand
-func CreateBrand(ctx iris.Context) {
+func CreateBrand(ctx *gin.Context) {
 	var brand request.CreateSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&brand)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&brand); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -29,9 +27,9 @@ func CreateBrand(ctx iris.Context) {
 }
 
 // UpdateBrand
-func UpdateBrand(ctx iris.Context) {
+func UpdateBrand(ctx *gin.Context) {
 	var brand request.UpdateSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&brand)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&brand); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -44,14 +42,14 @@ func UpdateBrand(ctx iris.Context) {
 }
 
 // getBrandMap
-func getBrandMap(returnBrand model.SysBrand) context.Map {
-	return iris.Map{"id": returnBrand.ID, "brandName": returnBrand.BrandName, "sort": returnBrand.Sort, "pic": returnBrand.Pic, "isShow": returnBrand.IsShow}
+func getBrandMap(returnBrand model.SysBrand) gin.H {
+	return gin.H{"id": returnBrand.ID, "brandName": returnBrand.BrandName, "sort": returnBrand.Sort, "pic": returnBrand.Pic, "isShow": returnBrand.IsShow}
 }
 
 // GetBrandList
-func GetBrandList(ctx iris.Context) {
+func GetBrandList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -69,9 +67,9 @@ func GetBrandList(ctx iris.Context) {
 }
 
 // SetBrandCate
-func SetBrandCate(ctx iris.Context) {
+func SetBrandCate(ctx *gin.Context) {
 	var setSysBrand request.SetSysBrand
-	if errs := utils.Verify(ctx.ReadJSON(&setSysBrand)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&setSysBrand); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -85,9 +83,9 @@ func SetBrandCate(ctx iris.Context) {
 }
 
 // GetBrandById
-func GetBrandById(ctx iris.Context) {
+func GetBrandById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -101,9 +99,9 @@ func GetBrandById(ctx iris.Context) {
 }
 
 // DeleteBrand
-func DeleteBrand(ctx iris.Context) {
+func DeleteBrand(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

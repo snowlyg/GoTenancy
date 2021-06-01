@@ -1,18 +1,18 @@
 package router
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
-func InitBrandRouter(Router iris.Party) {
-	BrandRouter := Router.Party("/brand")
+func InitBrandRouter(Router *gin.RouterGroup) {
+	BrandRouter := Router.Group("/brand")
 	{
-		BrandRouter.Post("/createBrand", v1.CreateBrand)
-		BrandRouter.Post("/getBrandList", v1.GetBrandList)
-		BrandRouter.Post("/getBrandById", v1.GetBrandById)
-		BrandRouter.Post("/setBrandCate", v1.SetBrandCate)
-		BrandRouter.Put("/updateBrand", v1.UpdateBrand)
-		BrandRouter.Delete("/deleteBrand", v1.DeleteBrand)
+		BrandRouter.POST("/createBrand", v1.CreateBrand)
+		BrandRouter.POST("/getBrandList", v1.GetBrandList)
+		BrandRouter.POST("/getBrandById", v1.GetBrandById)
+		BrandRouter.POST("/setBrandCate", v1.SetBrandCate)
+		BrandRouter.PUT("/updateBrand", v1.UpdateBrand)
+		BrandRouter.DELETE("/deleteBrand", v1.DeleteBrand)
 	}
 }

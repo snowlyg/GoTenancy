@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateMini
-func CreateMini(ctx iris.Context) {
+func CreateMini(ctx *gin.Context) {
 	var mini request.CreateSysMini
-	if errs := utils.Verify(ctx.ReadJSON(&mini)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&mini); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -28,9 +26,9 @@ func CreateMini(ctx iris.Context) {
 }
 
 // UpdateMini
-func UpdateMini(ctx iris.Context) {
+func UpdateMini(ctx *gin.Context) {
 	var mini request.UpdateSysMini
-	if errs := utils.Verify(ctx.ReadJSON(&mini)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&mini); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -43,14 +41,14 @@ func UpdateMini(ctx iris.Context) {
 }
 
 // getMiniMap
-func getMiniMap(returnMini model.SysMini) context.Map {
-	return iris.Map{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
+func getMiniMap(returnMini model.SysMini) gin.H {
+	return gin.H{"id": returnMini.ID, "name": returnMini.Name, "appId": returnMini.AppID, "appSecret": returnMini.AppSecret, "uuid": returnMini.UUID, "remark": returnMini.Remark}
 }
 
 // GetMiniList
-func GetMiniList(ctx iris.Context) {
+func GetMiniList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -68,9 +66,9 @@ func GetMiniList(ctx iris.Context) {
 }
 
 // GetMiniById
-func GetMiniById(ctx iris.Context) {
+func GetMiniById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -84,9 +82,9 @@ func GetMiniById(ctx iris.Context) {
 }
 
 // DeleteMini
-func DeleteMini(ctx iris.Context) {
+func DeleteMini(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}

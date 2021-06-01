@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -10,11 +10,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func UploadFile(ctx iris.Context) {
+func UploadFile(ctx *gin.Context) {
 	var file model.TenancyMedia
-	noSave := ctx.Params().GetStringDefault("noSave", "0")
-	path := ctx.FormValueDefault("path", "")
-	_, header, err := ctx.FormFile("file")
+	noSave := ctx.DefaultQuery("noSave", "0")
+	path := ctx.DefaultPostForm("path", "")
+	_, header, err := ctx.Request.FormFile("file")
 	if err != nil {
 		g.TENANCY_LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", ctx)
@@ -29,9 +29,9 @@ func UploadFile(ctx iris.Context) {
 	response.OkWithDetailed(response.TenancyMedia{File: file}, "上传成功", ctx)
 }
 
-func DeleteFile(ctx iris.Context) {
+func DeleteFile(ctx *gin.Context) {
 	var file model.TenancyMedia
-	_ = ctx.ReadJSON(&file)
+	_ = ctx.ShouldBindJSON(&file)
 	if err := service.DeleteFile(file); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", ctx)
@@ -40,9 +40,9 @@ func DeleteFile(ctx iris.Context) {
 	response.OkWithMessage("删除成功", ctx)
 }
 
-func GetFileList(ctx iris.Context) {
+func GetFileList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	_ = ctx.ReadJSON(&pageInfo)
+	_ = ctx.ShouldBindJSON(&pageInfo)
 	list, total, err := service.GetFileRecordInfoList(pageInfo, ctx)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))

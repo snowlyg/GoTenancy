@@ -79,7 +79,7 @@ func DeleteAuthority(auth *request.DeleteAuthority) error {
 	}
 	if len(auth.SysBaseMenus) > 0 {
 		err = g.TENANCY_DB.Model(auth).Association("SysBaseMenus").Delete(auth.SysBaseMenus)
-		//err = db.Association("SysBaseMenus").Delete(&auth)
+		//err = db.Association("SysBaseMenus").DELETE(&auth)
 	} else {
 		err = db.Error
 	}

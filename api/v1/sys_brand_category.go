@@ -1,21 +1,19 @@
 package v1
 
 import (
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/context"
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
-	"github.com/snowlyg/go-tenancy/utils"
 	"go.uber.org/zap"
 )
 
 // CreateBrandCategory
-func CreateBrandCategory(ctx iris.Context) {
+func CreateBrandCategory(ctx *gin.Context) {
 	var brandCategory request.CreateSysBrandCategory
-	if errs := utils.Verify(ctx.ReadJSON(&brandCategory)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&brandCategory); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -29,9 +27,9 @@ func CreateBrandCategory(ctx iris.Context) {
 }
 
 // UpdateBrandCategory
-func UpdateBrandCategory(ctx iris.Context) {
+func UpdateBrandCategory(ctx *gin.Context) {
 	var brandCategory request.UpdateSysBrandCategory
-	if errs := utils.Verify(ctx.ReadJSON(&brandCategory)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&brandCategory); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -44,8 +42,8 @@ func UpdateBrandCategory(ctx iris.Context) {
 }
 
 // getBrandCategoryMap
-func getBrandCategoryMap(returnBrandCategory model.SysBrandCategory) context.Map {
-	return iris.Map{
+func getBrandCategoryMap(returnBrandCategory model.SysBrandCategory) gin.H {
+	return gin.H{
 		"id":       returnBrandCategory.ID,
 		"cateName": returnBrandCategory.CateName,
 		"pid":      returnBrandCategory.Pid,
@@ -57,9 +55,9 @@ func getBrandCategoryMap(returnBrandCategory model.SysBrandCategory) context.Map
 }
 
 // GetBrandCategoryList
-func GetBrandCategoryList(ctx iris.Context) {
+func GetBrandCategoryList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
-	if errs := utils.Verify(ctx.ReadJSON(&pageInfo)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -77,9 +75,9 @@ func GetBrandCategoryList(ctx iris.Context) {
 }
 
 // GetBrandCategoryById
-func GetBrandCategoryById(ctx iris.Context) {
+func GetBrandCategoryById(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -93,9 +91,9 @@ func GetBrandCategoryById(ctx iris.Context) {
 }
 
 // DeleteBrandCategory
-func DeleteBrandCategory(ctx iris.Context) {
+func DeleteBrandCategory(ctx *gin.Context) {
 	var reqId request.GetById
-	if errs := utils.Verify(ctx.ReadJSON(&reqId)); errs != nil {
+	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
