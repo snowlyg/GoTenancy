@@ -7,6 +7,7 @@ import (
 
 func TestReceiptList(t *testing.T) {
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/receipt/getReceiptList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -25,8 +26,6 @@ func TestReceiptList(t *testing.T) {
 	first := list.First().Object()
 	first.Keys().ContainsOnly("id", "receiptType", "receiptTitle", "receiptTitleType", "dutyGaragraph", "email", "bankName", "bankCode", "address", "tel", "isDefault", "sysUserId", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-
-	baseLogOut(auth)
 }
 
 func TestReceiptProcess(t *testing.T) {
@@ -43,6 +42,7 @@ func TestReceiptProcess(t *testing.T) {
 		"isDefault":        true,
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -126,9 +126,7 @@ func TestReceiptProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
-
 func TestReceiptRegisterReceiptTitleError(t *testing.T) {
 	data := map[string]interface{}{
 		"receiptType":      1,
@@ -143,16 +141,14 @@ func TestReceiptRegisterReceiptTitleError(t *testing.T) {
 		"isDefault":        true,
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.ReceiptTitle' Error:Field validation for 'ReceiptTitle' failed on the 'required' tag")
-
-	baseLogOut(auth)
 }
-
 func TestReceiptRegisterReceiptTypeError(t *testing.T) {
 	data := map[string]interface{}{
 		"receiptType":      3,
@@ -167,6 +163,7 @@ func TestReceiptRegisterReceiptTypeError(t *testing.T) {
 		"isDefault":        true,
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -174,7 +171,6 @@ func TestReceiptRegisterReceiptTypeError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.ReceiptType' Error:Field validation for 'ReceiptType' failed on the 'oneof' tag")
 
-	baseLogOut(auth)
 }
 func TestReceiptRegisterEmaileError(t *testing.T) {
 	data := map[string]interface{}{
@@ -190,6 +186,7 @@ func TestReceiptRegisterEmaileError(t *testing.T) {
 		"isDefault":        true,
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -197,5 +194,4 @@ func TestReceiptRegisterEmaileError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateReceipt.Email' Error:Field validation for 'Email' failed on the 'email' tag")
 
-	baseLogOut(auth)
 }

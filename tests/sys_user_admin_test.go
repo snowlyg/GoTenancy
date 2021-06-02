@@ -11,6 +11,7 @@ import (
 
 func TestAdminUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/getAdminList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -29,12 +30,11 @@ func TestAdminUserList(t *testing.T) {
 	first := list.First().Object()
 	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "authorityId", "defaultRouter", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-
-	baseLogOut(auth)
 }
 
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -96,11 +96,11 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestAdminUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -108,11 +108,11 @@ func TestAdminUserRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名已注册")
 
-	baseLogOut(auth)
 }
 
 func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "admin_authrity_id_empty", "password": "123456", "authorityId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -120,5 +120,4 @@ func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'Register.AuthorityId' Error:Field validation for 'AuthorityId' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }

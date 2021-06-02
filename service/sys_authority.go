@@ -2,12 +2,14 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -73,19 +75,24 @@ func DeleteAuthority(request *request.DeleteAuthority) error {
 		return errors.New("此角色存在子角色不允许删除")
 	}
 	var auth model.SysAuthority
-	db := g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", request.AuthorityId).First(&auth)
-	err = db.Unscoped().Delete(auth).Error
+	err = g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", request.AuthorityId).First(&auth).Error
 	if err != nil {
-		return err
+		return fmt.Errorf("fond authority  %w", err)
 	}
+	err = g.TENANCY_DB.Unscoped().Delete(auth).Error
+	if err != nil {
+		return fmt.Errorf("delete authority %w", err)
+	}
+
 	if len(auth.SysBaseMenus) > 0 {
-		err = g.TENANCY_DB.Association("SysBaseMenus").Delete(auth.SysBaseMenus)
+		err = g.TENANCY_DB.Model(&model.SysAuthority{}).Association("SysBaseMenus").Delete(auth.SysBaseMenus)
+		if err != nil {
+			g.TENANCY_LOG.Error("association delete sys_base_menus ", zap.Any("err", err))
+		}
 		//err = db.Association("SysBaseMenus").DELETE(&auth)
-	} else {
-		err = db.Error
 	}
 	ClearCasbin(0, auth.AuthorityId)
-	return err
+	return nil
 }
 
 // GetAuthorityInfoList 分页获取数据

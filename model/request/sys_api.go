@@ -10,7 +10,6 @@ type SearchApiParams struct {
 	OrderKey string `json:"orderKey"`
 	Desc     bool   `json:"desc"`
 }
-
 type DeleteApi struct {
 	Id     uint   `json:"id" form:"id" binding:"required,gt=0"`
 	Path   string `json:"path" binding:"required"`

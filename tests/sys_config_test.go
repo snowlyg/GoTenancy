@@ -7,6 +7,7 @@ import (
 
 func TestConfigList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/config/getConfigList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,7 +27,6 @@ func TestConfigList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "type", "name", "value", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestConfigProcess(t *testing.T) {
@@ -36,6 +36,7 @@ func TestConfigProcess(t *testing.T) {
 		"value": "tRE49zaf5NCm6PidFZoaFg3u4WCHDok7fxgL63yV0pF4AMsdfsdfsdfssa",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/config/createConfig").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -95,7 +96,6 @@ func TestConfigProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestConfigRegisterError(t *testing.T) {
@@ -105,6 +105,7 @@ func TestConfigRegisterError(t *testing.T) {
 		"value": "tRE49zaf5NCm6PidFZoaFg3u4WCHDok7fxgL63yV0pF4AM",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/config/createConfig").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -112,5 +113,4 @@ func TestConfigRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("添加失败:设置名称已经使用")
 
-	baseLogOut(auth)
 }

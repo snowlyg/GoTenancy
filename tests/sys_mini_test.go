@@ -7,6 +7,7 @@ import (
 
 func TestMiniList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/mini/getMiniList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,7 +27,6 @@ func TestMiniList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "uuid", "name", "appId", "appSecret", "remark", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestMiniProcess(t *testing.T) {
@@ -37,6 +37,7 @@ func TestMiniProcess(t *testing.T) {
 		"remark":    "中德澳线上点餐商城",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/mini/createMini").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -99,7 +100,6 @@ func TestMiniProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestMiniRegisterError(t *testing.T) {
@@ -110,6 +110,7 @@ func TestMiniRegisterError(t *testing.T) {
 		"remark":    "中德澳上线护理商城",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/mini/createMini").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -117,5 +118,4 @@ func TestMiniRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("添加失败:商户名称已被注冊")
 
-	baseLogOut(auth)
 }

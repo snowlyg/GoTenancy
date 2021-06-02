@@ -11,6 +11,7 @@ import (
 
 func TestTenancyUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -31,11 +32,11 @@ func TestTenancyUserList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "headerImg", "authorityName", "authorityType", "authorityId", "tenancyName", "defaultRouter", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -89,11 +90,11 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -101,11 +102,11 @@ func TestTenancyUserRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("用户名已注册")
 
-	baseLogOut(auth)
 }
 
 func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": "", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -113,11 +114,11 @@ func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'Register.AuthorityId' Error:Field validation for 'AuthorityId' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }
 
 func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/register").
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": 0}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -125,5 +126,4 @@ func TestTenancyUserRegisterAuthorityTypeEmpty(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'Register.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }

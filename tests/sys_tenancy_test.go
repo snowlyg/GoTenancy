@@ -7,6 +7,7 @@ import (
 
 func TestTenancyList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,11 +27,11 @@ func TestTenancyList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "sysRegionCode", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestTenancyByRegion(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.GET("/v1/admin/tenancy/getTenancies/1").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
@@ -38,7 +39,6 @@ func TestTenancyByRegion(t *testing.T) {
 	obj.Value("msg").String().Equal("获取成功")
 	obj.Value("data").Array().Length().Equal(1)
 
-	baseLogOut(auth)
 }
 
 func TestTenancyProcess(t *testing.T) {
@@ -50,6 +50,7 @@ func TestTenancyProcess(t *testing.T) {
 		"sysRegionCode": 1,
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -126,7 +127,6 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestTenancyRegisterError(t *testing.T) {
@@ -137,6 +137,7 @@ func TestTenancyRegisterError(t *testing.T) {
 		"businessTime":  "08:30-17:30",
 		"sysRegionCode": 1}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/tenancy/createTenancy").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -144,5 +145,4 @@ func TestTenancyRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("添加失败:名称已被注冊")
 
-	baseLogOut(auth)
 }

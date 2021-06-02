@@ -7,6 +7,7 @@ import (
 
 func TestGeneralUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/user/getGeneralList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,6 +27,4 @@ func TestGeneralUserList(t *testing.T) {
 	first := list.First().Object()
 	first.Keys().ContainsOnly("id", "userName", "email", "phone", "nickName", "avatarUrl", "authorityName", "authorityType", "authorityId", "sex", "subscribe", "openId", "unionId", "country", "province", "city", "idCard", "isAuth", "realName", "birthday", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-
-	baseLogOut(auth)
 }

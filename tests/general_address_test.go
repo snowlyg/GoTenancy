@@ -7,6 +7,7 @@ import (
 
 func TestAddressList(t *testing.T) {
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/address/getAddressList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,7 +27,6 @@ func TestAddressList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "name", "phone", "sex", "country", "province", "city", "district", "detail", "isDefault", "postcode", "age", "hospitalName", "locName", "bedNum", "hospitalNo", "disease", "sysUserId", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestAddressProcess(t *testing.T) {
@@ -49,6 +49,7 @@ func TestAddressProcess(t *testing.T) {
 		"disease":      "不孕不育",
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/address/createAddress").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -156,7 +157,6 @@ func TestAddressProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestAddressRegisterError(t *testing.T) {
@@ -179,6 +179,7 @@ func TestAddressRegisterError(t *testing.T) {
 		"disease":      "不孕不育",
 	}
 	auth := generalWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/general/address/createAddress").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -186,5 +187,4 @@ func TestAddressRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateAddress.Name' Error:Field validation for 'Name' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }

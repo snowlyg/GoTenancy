@@ -7,6 +7,7 @@ import (
 
 func TestBrandList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brand/getBrandList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -25,8 +26,6 @@ func TestBrandList(t *testing.T) {
 	first := list.First().Object()
 	first.Keys().ContainsOnly("id", "brandName", "isShow", "pic", "sort", "brandCategoryId", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-
-	baseLogOut(auth)
 }
 
 func TestBrandProcess(t *testing.T) {
@@ -38,6 +37,7 @@ func TestBrandProcess(t *testing.T) {
 		"brandCategoryId": 1,
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brand/createBrand").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -104,8 +104,6 @@ func TestBrandProcess(t *testing.T) {
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
-
-	baseLogOut(auth)
 }
 
 func TestBrandRegisterError(t *testing.T) {
@@ -117,6 +115,7 @@ func TestBrandRegisterError(t *testing.T) {
 		"brandCategoryId": 1,
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brand/createBrand").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -124,5 +123,4 @@ func TestBrandRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateSysBrand.BrandName' Error:Field validation for 'BrandName' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }

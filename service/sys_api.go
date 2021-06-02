@@ -89,22 +89,24 @@ func GetApiById(id float64) (model.SysApi, error) {
 func UpdateApi(api model.SysApi) error {
 	var oldA model.SysApi
 	err := g.TENANCY_DB.Where("id = ?", api.ID).First(&oldA).Error
+	if err != nil {
+		return err
+	}
+	api.CreatedAt = oldA.CreatedAt
 	if oldA.Path != api.Path || oldA.Method != api.Method {
 		err := g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("存在相同api路径")
 		}
 	}
+
+	err = UpdateCasbinApi(oldA.Path, api.Path, oldA.Method, api.Method)
 	if err != nil {
 		return err
 	} else {
-		err = UpdateCasbinApi(oldA.Path, api.Path, oldA.Method, api.Method)
-		if err != nil {
-			return err
-		} else {
-			err = g.TENANCY_DB.Save(&api).Error
-		}
+		err = g.TENANCY_DB.Save(&api).Error
 	}
+
 	return err
 }
 

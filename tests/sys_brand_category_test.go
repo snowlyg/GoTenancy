@@ -7,6 +7,7 @@ import (
 
 func TestBrandCategoryList(t *testing.T) {
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brandCategory/getBrandCategoryList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -26,7 +27,6 @@ func TestBrandCategoryList(t *testing.T) {
 	first.Keys().ContainsOnly("id", "pid", "cateName", "isShow", "path", "sort", "level", "children", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
-	baseLogOut(auth)
 }
 
 func TestBrandCategoryProcess(t *testing.T) {
@@ -39,6 +39,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 		"pid":      "1",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -106,7 +107,6 @@ func TestBrandCategoryProcess(t *testing.T) {
 	obj.Value("code").Number().Equal(0)
 	obj.Value("msg").String().Equal("删除成功")
 
-	baseLogOut(auth)
 }
 
 func TestBrandCategoryRegisterError(t *testing.T) {
@@ -119,6 +119,7 @@ func TestBrandCategoryRegisterError(t *testing.T) {
 		"pid":      "1",
 	}
 	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -126,5 +127,4 @@ func TestBrandCategoryRegisterError(t *testing.T) {
 	obj.Value("code").Number().Equal(4000)
 	obj.Value("msg").String().Equal("Key: 'CreateSysBrandCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
 
-	baseLogOut(auth)
 }
