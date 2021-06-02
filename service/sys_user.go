@@ -332,14 +332,20 @@ func DeleteUser(id float64) (err error) {
 }
 
 // SetUserAdminInfo 设置admin信息
-func SetUserAdminInfo(reqUser model.SysAdminInfo, update bool) (model.SysAdminInfo, error) {
-	if update {
+func SetUserAdminInfo(reqUser model.SysAdminInfo, infoId uint, userId string) (model.SysAdminInfo, error) {
+	if infoId > 0 {
+		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}
 	} else {
-		err := g.TENANCY_DB.Create(&reqUser).Error
+		id, err := strconv.Atoi(userId)
+		if err != nil {
+			return reqUser, err
+		}
+		reqUser.SysUserID = id
+		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}
@@ -348,14 +354,20 @@ func SetUserAdminInfo(reqUser model.SysAdminInfo, update bool) (model.SysAdminIn
 }
 
 // SetUserTenancyInfo 设置商户信息
-func SetUserTenancyInfo(reqUser model.SysTenancyInfo, update bool) (model.SysTenancyInfo, error) {
-	if update {
+func SetUserTenancyInfo(reqUser model.SysTenancyInfo, infoId uint, userId string) (model.SysTenancyInfo, error) {
+	if infoId > 0 {
+		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}
 	} else {
-		err := g.TENANCY_DB.Create(&reqUser).Error
+		id, err := strconv.Atoi(userId)
+		if err != nil {
+			return reqUser, err
+		}
+		reqUser.SysUserID = id
+		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}
@@ -364,14 +376,20 @@ func SetUserTenancyInfo(reqUser model.SysTenancyInfo, update bool) (model.SysTen
 }
 
 // SetUserGeneralInfo 设置普通用户信息
-func SetUserGeneralInfo(reqUser model.SysGeneralInfo, update bool) (model.SysGeneralInfo, error) {
-	if update {
+func SetUserGeneralInfo(reqUser model.SysGeneralInfo, infoId uint, userId string) (model.SysGeneralInfo, error) {
+	if infoId > 0 {
+		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}
 	} else {
-		err := g.TENANCY_DB.Create(&reqUser).Error
+		id, err := strconv.Atoi(userId)
+		if err != nil {
+			return reqUser, err
+		}
+		reqUser.SysUserID = id
+		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err
 		}

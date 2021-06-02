@@ -82,7 +82,7 @@ func TestAdminUserProcess(t *testing.T) {
 
 	// setAdminInfo
 	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
-		WithJSON(map[string]interface{}{"email": "admin@master.com", "phone": "13800138001"}).
+		WithJSON(map[string]interface{}{"email": "admin@admin.com", "phone": "13800138001"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(0)

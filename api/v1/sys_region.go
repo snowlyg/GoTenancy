@@ -9,7 +9,7 @@ import (
 )
 
 func Region(ctx *gin.Context) {
-	pCode := ctx.DefaultQuery("p_code", "-1")
+	pCode := ctx.Param("p_code")
 	if regions, err := service.GetRegion(pCode); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)

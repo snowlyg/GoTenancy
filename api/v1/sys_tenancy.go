@@ -114,7 +114,7 @@ func GetTenanciesList(ctx *gin.Context) {
 
 // GetTenanciesByRegion 根据区域获取商户列表，不分页
 func GetTenanciesByRegion(ctx *gin.Context) {
-	code := ctx.DefaultQuery("code", "-1")
+	code := ctx.Param("code")
 	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)

@@ -216,9 +216,6 @@ func TestAuthorityProcess(t *testing.T) {
 	authority.Value("authorityType").Number().Equal(copy["authority"].(map[string]interface{})["authorityType"].(int))
 	authority.Value("children").Array().Empty()
 
-	menu := authority.Value("menus").Array().First().Object()
-	menu.Value("id").Number().Ge(0)
-
 	dataAuthorityId = authority.Value("dataAuthorityId").Array().First().Object()
 	dataAuthorityId.Value("authorityId").String().Equal(copy["dataAuthorityId"].([]map[string]interface{})[0]["authorityId"].(string))
 
@@ -259,7 +256,7 @@ func TestAuthorityProcess(t *testing.T) {
 
 func TestAuthorityRegisterError(t *testing.T) {
 	data := map[string]interface{}{
-		"authorityId":     "9523",
+		"authorityId":     "999",
 		"authorityName":   "测试角色",
 		"parentId":        "0",
 		"authorityType":   multi.AdminAuthority,

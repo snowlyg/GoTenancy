@@ -215,7 +215,7 @@ func DeleteUser(ctx *gin.Context) {
 
 // SetUserInfo 设置用户信息
 func SetUserInfo(ctx *gin.Context) {
-	userId := ctx.DefaultQuery("user_id", "0")
+	userId := ctx.Param("user_id")
 	user, err := service.FindUserById(userId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
@@ -225,8 +225,7 @@ func SetUserInfo(ctx *gin.Context) {
 	if user.IsAdmin() {
 		var admin model.SysAdminInfo
 		_ = ctx.ShouldBindJSON(&admin)
-		admin.ID = user.AdminInfo.ID
-		if _, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID > 0); err != nil {
+		if _, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID, userId); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
@@ -236,22 +235,23 @@ func SetUserInfo(ctx *gin.Context) {
 		var tenancy model.SysTenancyInfo
 		_ = ctx.ShouldBindJSON(&tenancy)
 		tenancy.ID = user.TenancyInfo.ID
-		if _, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID > 0); err != nil {
+		if _, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID, userId); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 			response.FailWithMessage("设置失败", ctx)
 		} else {
 			response.OkWithMessage("设置成功", ctx)
 		}
-	} else if user.IsGeneral() {
-		var general model.SysGeneralInfo
-		_ = ctx.ShouldBindJSON(&general)
-		general.ID = user.GeneralInfo.ID
-		if _, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID > 0); err != nil {
-			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
-			response.FailWithMessage("设置失败", ctx)
-		} else {
-			response.OkWithMessage("设置成功", ctx)
-		}
+		//TODO::不能修改用户信息
+		// } else if user.IsGeneral() {
+		// 	var general model.SysGeneralInfo
+		// 	_ = ctx.ShouldBindJSON(&general)
+		// 	general.ID = user.GeneralInfo.ID
+		// 	if _, err := service.SetUserGeneralInfo(general, user.GeneralInfo.ID, userId); err != nil {
+		// 		g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+		// 		response.FailWithMessage("设置失败", ctx)
+		// 	} else {
+		// 		response.OkWithMessage("设置成功", ctx)
+		// 	}
 	} else {
 		g.TENANCY_LOG.Error("未知角色", zap.Any("err", user.AuthorityType()))
 		response.FailWithMessage("未知角色", ctx)

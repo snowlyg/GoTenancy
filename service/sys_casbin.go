@@ -87,7 +87,7 @@ func Casbin() (*casbin.Enforcer, error) {
 func ParamsMatch(fullNameKey1 string, key2 string) bool {
 	key1 := strings.Split(fullNameKey1, "?")[0]
 	// 剥离路径后再使用casbin的keyMatch2
-	return util.KeyMatch3(key1, key2)
+	return util.KeyMatch2(key1, key2)
 }
 
 // ParamsMatchFunc 自定义规则函数
