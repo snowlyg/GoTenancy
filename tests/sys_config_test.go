@@ -110,7 +110,7 @@ func TestConfigRegisterError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("创建失败")
+	obj.Value("msg").String().Equal("添加失败:设置名称已经使用")
 
 	baseLogOut(auth)
 }

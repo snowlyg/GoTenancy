@@ -20,7 +20,7 @@ func CreateBrandCategory(ctx *gin.Context) {
 
 	if returnBrandCategory, err := service.CreateBrandCategory(brandCategory); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", ctx)
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getBrandCategoryMap(returnBrandCategory), "创建成功", ctx)
 	}

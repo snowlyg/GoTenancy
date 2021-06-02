@@ -19,7 +19,7 @@ func CreateConfig(ctx *gin.Context) {
 	}
 	if returnConfig, err := service.CreateConfig(config); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", ctx)
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
 		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
 		response.OkWithDetailed(data, "创建成功", ctx)

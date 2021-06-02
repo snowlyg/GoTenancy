@@ -28,7 +28,7 @@ func CreateAddress(ctx *gin.Context) {
 
 	if returnAddress, err := service.CreateAddress(address, user_id); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", ctx)
+		response.FailWithMessage("添加失败"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getAddressMap(returnAddress), "创建成功", ctx)
 	}

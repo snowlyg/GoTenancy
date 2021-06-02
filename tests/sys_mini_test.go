@@ -115,7 +115,7 @@ func TestMiniRegisterError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("code", "data", "msg")
 	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("创建失败")
+	obj.Value("msg").String().Equal("添加失败:商户名称已被注冊")
 
 	baseLogOut(auth)
 }
