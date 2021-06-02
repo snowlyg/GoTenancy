@@ -43,7 +43,7 @@ func UpdateAddress(ctx *gin.Context) {
 	}
 	if returnAddress, err := service.UpdateAddress(address); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getAddressMap(returnAddress), "更新成功", ctx)
 	}
@@ -71,7 +71,7 @@ func GetAddressList(ctx *gin.Context) {
 
 	if list, total, err := service.GetAddressInfoList(pageInfo, user_id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -100,7 +100,7 @@ func GetAddressById(ctx *gin.Context) {
 	address, err := service.GetAddressByID(reqId.Id, user_id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(address, ctx)
 	}
@@ -123,7 +123,7 @@ func DeleteAddress(ctx *gin.Context) {
 
 	if err := service.DeleteAddress(reqId.Id, user_id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

@@ -37,10 +37,6 @@ func CopyAuthority(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if errs := ctx.ShouldBindJSON(&copyInfo.Authority); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
 	if authBack, err := service.CopyAuthority(copyInfo); err != nil {
 		g.TENANCY_LOG.Error("拷贝失败!", zap.Any("err", err))
 		response.FailWithMessage("拷贝失败"+err.Error(), ctx)

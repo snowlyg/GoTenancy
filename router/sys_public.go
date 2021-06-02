@@ -11,7 +11,7 @@ func InitPublicRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	{
 		BaseRouter.POST("/login", v1.Login)
 		BaseRouter.POST("/captcha", v1.Captcha)
-		BaseRouter.GET("/region/{p_code:int}", v1.Region)
+		BaseRouter.GET("/region/:p_code", v1.Region)
 		BaseRouter.GET("/getRegionList", v1.RegionList)
 	}
 	return BaseRouter

@@ -35,7 +35,7 @@ func UpdateBrand(ctx *gin.Context) {
 	}
 	if returnBrand, err := service.UpdateBrand(brand); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getBrandMap(returnBrand), "更新成功", ctx)
 	}
@@ -55,7 +55,7 @@ func GetBrandList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetBrandInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -92,7 +92,7 @@ func GetBrandById(ctx *gin.Context) {
 	brand, err := service.GetBrandByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(brand, ctx)
 	}
@@ -107,7 +107,7 @@ func DeleteBrand(ctx *gin.Context) {
 	}
 	if err := service.DeleteBrand(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

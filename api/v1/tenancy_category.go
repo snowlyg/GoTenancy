@@ -35,7 +35,7 @@ func UpdateCategory(ctx *gin.Context) {
 	}
 	if returnCategory, err := service.UpdateCategory(category); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getCategoryMap(returnCategory), "更新成功", ctx)
 	}
@@ -64,7 +64,7 @@ func GetCategoryList(ctx *gin.Context) {
 	}
 	if list, err := service.GetCategoryInfoList(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -85,7 +85,7 @@ func GetCategoryById(ctx *gin.Context) {
 	category, err := service.GetCategoryByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(category, ctx)
 	}
@@ -100,7 +100,7 @@ func DeleteCategory(ctx *gin.Context) {
 	}
 	if err := service.DeleteCategory(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

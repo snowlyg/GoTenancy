@@ -15,7 +15,7 @@ import (
 func GetMenu(ctx *gin.Context) {
 	if menus, err := service.GetMenuTree(multi.GetAuthorityId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", ctx)
 	}
@@ -25,7 +25,7 @@ func GetMenu(ctx *gin.Context) {
 func GetBaseMenuTree(ctx *gin.Context) {
 	if menus, err := service.GetBaseMenuTree(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: menus}, "获取成功", ctx)
 	}
@@ -40,7 +40,7 @@ func AddMenuAuthority(ctx *gin.Context) {
 	}
 	if err := service.AddMenuAuthority(authorityMenu.Menus, authorityMenu.AuthorityId); err != nil {
 		g.TENANCY_LOG.Error("添加失败!", zap.Any("err", err))
-		response.FailWithMessage("添加失败", ctx)
+		response.FailWithMessage("添加失败"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("添加成功", ctx)
 	}
@@ -68,12 +68,12 @@ func AddBaseMenu(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.AddBaseMenu(menu); err != nil {
+	if menu, err := service.AddBaseMenu(menu); err != nil {
 		g.TENANCY_LOG.Error("添加失败!", zap.Any("err", err))
 
-		response.FailWithMessage("添加失败", ctx)
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithMessage("添加成功", ctx)
+		response.OkWithDetailed(menu, "添加成功", ctx)
 	}
 }
 
@@ -86,7 +86,7 @@ func DeleteBaseMenu(ctx *gin.Context) {
 	}
 	if err := service.DeleteBaseMenu(menu.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}
@@ -101,7 +101,7 @@ func UpdateBaseMenu(ctx *gin.Context) {
 	}
 	if err := service.UpdateBaseMenu(menu); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("更新成功", ctx)
 	}
@@ -116,7 +116,7 @@ func GetBaseMenuById(ctx *gin.Context) {
 	}
 	if menu, err := service.GetBaseMenuById(idInfo.Id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.SysBaseMenuResponse{Menu: menu}, "获取成功", ctx)
 	}
@@ -131,7 +131,7 @@ func GetMenuList(ctx *gin.Context) {
 	}
 	if menuList, err := service.GetInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     menuList,

@@ -67,8 +67,8 @@ const (
 type SysGeneralInfo struct {
 	g.TENANCY_MODEL
 	Email     string    `json:"email" gorm:"default:'';comment:员工邮箱"`
-	Phone     string    `json:"phone" gorm:"type:char(15);default:'';comment:员工手机号"`
-	NickName  string    `json:"nickName" gorm:"type:varchar(16);default:'员工姓名';comment:员工姓名"`
+	Phone     string    `json:"phone" gorm:"type:char(15);default:'';comment:手机号"`
+	NickName  string    `json:"nickName" gorm:"type:varchar(16);comment:昵称"`
 	AvatarUrl string    `json:"avatarUrl" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
 	Sex       int       `json:"sex" form:"sex" gorm:"column:sex;comment:性别 1:男，2：女"`
 	Subscribe int       `json:"subscribe" form:"subscribe" gorm:"column:subscribe;comment:是否订阅"`

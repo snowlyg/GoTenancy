@@ -35,7 +35,7 @@ func UpdateBrandCategory(ctx *gin.Context) {
 	}
 	if returnBrandCategory, err := service.UpdateBrandCategory(brandCategory); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getBrandCategoryMap(returnBrandCategory), "更新成功", ctx)
 	}
@@ -63,7 +63,7 @@ func GetBrandCategoryList(ctx *gin.Context) {
 	}
 	if list, err := service.GetBrandCategoryInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -84,7 +84,7 @@ func GetBrandCategoryById(ctx *gin.Context) {
 	brandCategory, err := service.GetBrandCategoryByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(brandCategory, ctx)
 	}
@@ -99,7 +99,7 @@ func DeleteBrandCategory(ctx *gin.Context) {
 	}
 	if err := service.DeleteBrandCategory(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

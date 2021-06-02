@@ -34,7 +34,7 @@ func UpdateMini(ctx *gin.Context) {
 	}
 	if returnMini, err := service.UpdateMini(mini); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getMiniMap(returnMini), "更新成功", ctx)
 	}
@@ -54,7 +54,7 @@ func GetMiniList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetMiniInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -75,7 +75,7 @@ func GetMiniById(ctx *gin.Context) {
 	mini, err := service.GetMiniByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(mini, ctx)
 	}
@@ -90,7 +90,7 @@ func DeleteMini(ctx *gin.Context) {
 	}
 	if err := service.DeleteMini(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

@@ -35,7 +35,7 @@ func UpdateConfig(ctx *gin.Context) {
 	}
 	if returnConfig, err := service.UpdateConfig(config); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
 		response.OkWithDetailed(data, "更新成功", ctx)
@@ -51,7 +51,7 @@ func GetConfigList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetConfigInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -72,7 +72,7 @@ func GetConfigByName(ctx *gin.Context) {
 	config, err := service.GetConfigByName(req.Name, req.Type)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(config, ctx)
 	}
@@ -87,7 +87,7 @@ func DeleteConfig(ctx *gin.Context) {
 	}
 	if err := service.DeleteConfig(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

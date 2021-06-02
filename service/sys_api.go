@@ -11,42 +11,43 @@ import (
 )
 
 // CreateApi 新增基础api
-func CreateApi(api model.SysApi) error {
+func CreateApi(api model.SysApi) (model.SysApi, error) {
 	err := g.TENANCY_DB.Where("path = ? AND method = ?", api.Path, api.Method).First(&model.SysApi{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同api")
+		return model.SysApi{}, errors.New("存在相同api")
 	}
-	return g.TENANCY_DB.Create(&api).Error
+	err = g.TENANCY_DB.Create(&api).Error
+	return api, err
 }
 
 // DeleteApi 删除基础api
-func DeleteApi(api model.SysApi) error {
-	err := g.TENANCY_DB.Delete(&api).Error
-	ClearCasbin(1, api.Path, api.Method)
+func DeleteApi(req request.DeleteApi) error {
+	err := g.TENANCY_DB.Delete(&model.SysApi{}, req.Id).Error
+	ClearCasbin(1, req.Path, req.Method)
 	return err
 }
 
 // GetAPIInfoList 分页获取数据
-func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc bool) ([]model.SysApi, int64, error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
+func GetAPIInfoList(pageInfo request.SearchApiParams) ([]model.SysApi, int64, error) {
+	limit := pageInfo.PageSize
+	offset := pageInfo.PageSize * (pageInfo.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysApi{})
 	var apiList []model.SysApi
 
-	if api.Path != "" {
-		db = db.Where("path LIKE ?", "%"+api.Path+"%")
+	if pageInfo.Path != "" {
+		db = db.Where("path LIKE ?", "%"+pageInfo.Path+"%")
 	}
 
-	if api.Description != "" {
-		db = db.Where("description LIKE ?", "%"+api.Description+"%")
+	if pageInfo.Description != "" {
+		db = db.Where("description LIKE ?", "%"+pageInfo.Description+"%")
 	}
 
-	if api.Method != "" {
-		db = db.Where("method = ?", api.Method)
+	if pageInfo.Method != "" {
+		db = db.Where("method = ?", pageInfo.Method)
 	}
 
-	if api.ApiGroup != "" {
-		db = db.Where("api_group = ?", api.ApiGroup)
+	if pageInfo.ApiGroup != "" {
+		db = db.Where("api_group = ?", pageInfo.ApiGroup)
 	}
 	var total int64
 	err := db.Count(&total).Error
@@ -55,12 +56,12 @@ func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc 
 		return apiList, total, err
 	} else {
 		db = db.Limit(limit).Offset(offset)
-		if order != "" {
+		if pageInfo.OrderKey != "" {
 			var OrderStr string
-			if desc {
-				OrderStr = order + " desc"
+			if pageInfo.Desc {
+				OrderStr = pageInfo.OrderKey + " desc"
 			} else {
-				OrderStr = order
+				OrderStr = pageInfo.OrderKey
 			}
 			err = db.Order(OrderStr).Find(&apiList).Error
 		} else {

@@ -35,7 +35,7 @@ func UpdateProduct(ctx *gin.Context) {
 	}
 	if returnProduct, err := service.UpdateProduct(product); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getProductMap(returnProduct), "更新成功", ctx)
 	}
@@ -97,7 +97,7 @@ func GetProductList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetProductInfoList(pageInfo, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -118,7 +118,7 @@ func GetProductById(ctx *gin.Context) {
 	product, err := service.GetProductByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(product, ctx)
 	}
@@ -133,7 +133,7 @@ func DeleteProduct(ctx *gin.Context) {
 	}
 	if err := service.DeleteProduct(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

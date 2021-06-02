@@ -63,22 +63,23 @@ func UpdateAuthority(auth model.SysAuthority) (model.SysAuthority, error) {
 }
 
 // DeleteAuthority 删除角色
-func DeleteAuthority(auth *request.DeleteAuthority) error {
-	err := g.TENANCY_DB.Where("authority_id = ?", auth.AuthorityId).First(&model.SysUser{}).Error
+func DeleteAuthority(request *request.DeleteAuthority) error {
+	err := g.TENANCY_DB.Where("authority_id = ?", request.AuthorityId).First(&model.SysUser{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("此角色有用户正在使用禁止删除")
 	}
-	err = g.TENANCY_DB.Where("parent_id = ?", auth.AuthorityId).First(&model.SysAuthority{}).Error
+	err = g.TENANCY_DB.Where("parent_id = ?", request.AuthorityId).First(&model.SysAuthority{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("此角色存在子角色不允许删除")
 	}
-	db := g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", auth.AuthorityId).First(auth)
+	var auth model.SysAuthority
+	db := g.TENANCY_DB.Preload("SysBaseMenus").Where("authority_id = ?", request.AuthorityId).First(&auth)
 	err = db.Unscoped().Delete(auth).Error
 	if err != nil {
 		return err
 	}
 	if len(auth.SysBaseMenus) > 0 {
-		err = g.TENANCY_DB.Model(auth).Association("SysBaseMenus").Delete(auth.SysBaseMenus)
+		err = g.TENANCY_DB.Association("SysBaseMenus").Delete(auth.SysBaseMenus)
 		//err = db.Association("SysBaseMenus").DELETE(&auth)
 	} else {
 		err = db.Error

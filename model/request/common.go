@@ -17,7 +17,7 @@ type IdsReq struct {
 
 // Get role by id structure
 type GetAuthorityId struct {
-	AuthorityId string `json:"authority_id" form:"authority_id" binding:"required"`
+	AuthorityId string `json:"authorityId" form:"authorityId" binding:"required"`
 }
 
 type Empty struct{}

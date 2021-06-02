@@ -34,7 +34,7 @@ func DeleteFile(ctx *gin.Context) {
 	_ = ctx.ShouldBindJSON(&file)
 	if err := service.DeleteFile(file); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 		return
 	}
 	response.OkWithMessage("删除成功", ctx)
@@ -46,7 +46,7 @@ func GetFileList(ctx *gin.Context) {
 	list, total, err := service.GetFileRecordInfoList(pageInfo, ctx)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,

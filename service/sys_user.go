@@ -174,7 +174,7 @@ func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.GeneralAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email,sys_general_infos.phone,sys_general_infos.nick_name,sys_general_infos.avatar_url,sys_general_infos.sex,sys_general_infos.subscribe,sys_general_infos.open_id,sys_general_infos.union_id,sys_general_infos.country,sys_general_infos.province,sys_general_infos.city,sys_general_infos.id_card,sys_general_infos.is_auth,sys_general_infos.real_name,sys_general_infos.birthday,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&general).Error

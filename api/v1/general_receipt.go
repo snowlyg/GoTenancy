@@ -43,7 +43,7 @@ func UpdateReceipt(ctx *gin.Context) {
 	}
 	if returnReceipt, err := service.UpdateReceipt(receipt); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getReceiptMap(returnReceipt), "更新成功", ctx)
 	}
@@ -83,7 +83,7 @@ func GetReceiptList(ctx *gin.Context) {
 
 	if list, total, err := service.GetReceiptInfoList(pageInfo, user_id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -112,7 +112,7 @@ func GetReceiptById(ctx *gin.Context) {
 	receipt, err := service.GetReceiptByID(reqId.Id, user_id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(receipt, ctx)
 	}
@@ -135,7 +135,7 @@ func DeleteReceipt(ctx *gin.Context) {
 
 	if err := service.DeleteReceipt(reqId.Id, user_id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

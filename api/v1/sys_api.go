@@ -22,24 +22,24 @@ func CreateApi(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.CreateApi(api); err != nil {
+	if api, err := service.CreateApi(api); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", ctx)
 	} else {
-		response.OkWithMessage("创建成功", ctx)
+		response.OkWithDetailed(api, "创建成功", ctx)
 	}
 }
 
 // DeleteApi 删除api
 func DeleteApi(ctx *gin.Context) {
-	var api model.SysApi
-	if errs := ctx.ShouldBindJSON(&api); errs != nil {
+	var req request.DeleteApi
+	if errs := ctx.ShouldBindJSON(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteApi(api); err != nil {
+	if err := service.DeleteApi(req); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}
@@ -52,9 +52,9 @@ func GetApiList(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetAPIInfoList(pageInfo.SysApi, pageInfo.PageInfo, pageInfo.OrderKey, pageInfo.Desc); err != nil {
+	if list, total, err := service.GetAPIInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -75,7 +75,7 @@ func GetApiById(ctx *gin.Context) {
 	api, err := service.GetApiById(idInfo.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(response.SysAPIResponse{Api: api}, ctx)
 	}
@@ -100,7 +100,7 @@ func UpdateApi(ctx *gin.Context) {
 func GetAllApis(ctx *gin.Context) {
 	if apis, err := service.GetAllApis(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.SysAPIListResponse{Apis: apis}, "获取成功", ctx)
 	}
@@ -112,7 +112,7 @@ func DeleteApisByIds(ctx *gin.Context) {
 	_ = ctx.ShouldBindJSON(&ids)
 	if err := service.DeleteApisByIds(ids); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

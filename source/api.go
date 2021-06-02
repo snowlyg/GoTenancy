@@ -50,7 +50,7 @@ var apis = []model.SysApi{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 33, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/system/setSystemConfig", Description: "设置配置文件内容", ApiGroup: "system", Method: "POST"},
 
 	// 商户
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 34, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/tenancy/getTenancies/{code:int}", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 34, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/tenancy/getTenancies/code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 35, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/tenancy/getTenancyList", Description: "获取商户列表", ApiGroup: "tenancy", Method: "POST"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 36, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/tenancy/createTenancy", Description: "添加商户", ApiGroup: "tenancy", Method: "POST"},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 37, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Path: "/v1/admin/tenancy/setTenancyRegion", Description: "设置商户地区", ApiGroup: "tenancy", Method: "POST"},

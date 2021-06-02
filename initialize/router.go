@@ -12,8 +12,6 @@ import (
 
 // 初始化总路由
 
-var IdleConnsClosed = make(chan struct{})
-
 func App() *gin.Engine {
 	App := gin.Default()
 	// 注册已定义验证方法

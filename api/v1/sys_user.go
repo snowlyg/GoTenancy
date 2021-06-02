@@ -127,7 +127,7 @@ func GetAdminList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetAdminInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -147,7 +147,7 @@ func GetTenancyList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetTenancyInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -167,7 +167,7 @@ func GetGeneralList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetGeneralInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -207,7 +207,7 @@ func DeleteUser(ctx *gin.Context) {
 	}
 	if err := service.DeleteUser(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}

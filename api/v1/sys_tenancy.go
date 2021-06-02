@@ -35,7 +35,7 @@ func GetTenancyById(ctx *gin.Context) {
 	tenancy, err := service.GetTenancyByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(tenancy, ctx)
 	}
@@ -51,7 +51,7 @@ func SetTenancyRegion(ctx *gin.Context) {
 	err := service.SetTenancyRegionByID(regionCode.Id, regionCode.SysRegionCode)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("设置成功", ctx)
 	}
@@ -66,7 +66,7 @@ func UpdateTenancy(ctx *gin.Context) {
 	}
 	if returnTenancy, err := service.UpdateTenany(tenancy); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", ctx)
+		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(getTenancyMap(returnTenancy), "更新成功", ctx)
 	}
@@ -86,7 +86,7 @@ func DeleteTenancy(ctx *gin.Context) {
 	}
 	if err := service.DeleteTenancy(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", ctx)
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("删除成功", ctx)
 	}
@@ -101,7 +101,7 @@ func GetTenanciesList(ctx *gin.Context) {
 	}
 	if list, total, err := service.GetTenanciesInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
@@ -117,7 +117,7 @@ func GetTenanciesByRegion(ctx *gin.Context) {
 	code := ctx.DefaultQuery("code", "-1")
 	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败", ctx)
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(tenancies, "获取成功", ctx)
 	}
