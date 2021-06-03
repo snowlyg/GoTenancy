@@ -35,6 +35,7 @@ var menus = []model.SysBaseMenu{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 21, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "tenancy", Name: "tenancy", Component: "view/tenancy/index.vue", Sort: 7, Meta: model.Meta{Title: "商铺管理", Icon: "coordinate"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 22, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "21", Path: "media", Name: "media", Component: "view/tenancy/media.vue", Sort: 11, Meta: model.Meta{Title: "媒体库", Icon: "upload"}},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 23, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "21", Path: "category", Name: "category", Component: "view/tenancy/category.vue", Sort: 12, Meta: model.Meta{Title: "分类管理", Icon: "cloudy"}},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 24, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "21", Path: "product", Name: "product", Component: "view/tenancy/product/index.vue", Sort: 13, Meta: model.Meta{Title: "商品管理", Icon: "cloudy"}},
 
 	// 用户管理
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 41, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "0", Path: "user", Name: "user", Component: "view/user/index.vue", Sort: 3, Meta: model.Meta{Title: "用户管理", Icon: "user-solid"}},

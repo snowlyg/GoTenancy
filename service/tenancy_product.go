@@ -14,13 +14,13 @@ import (
 // CreateProduct
 func CreateProduct(m request.CreateTenancyProduct, ctx *gin.Context) (model.TenancyProduct, error) {
 	var product = model.TenancyProduct{
-		StoreName:         m.StoreName,
-		StoreInfo:         m.StoreInfo,
-		Keyword:           m.Keyword,
-		BarCode:           m.BarCode,
-		IsShow:            m.IsShow,
-		Status:            m.Status,
-		TenancyStatus:     m.TenancyStatus,
+		StoreName: m.StoreName,
+		StoreInfo: m.StoreInfo,
+		Keyword:   m.Keyword,
+		BarCode:   m.BarCode,
+		IsShow:    m.IsShow,
+		Status:    m.Status,
+
 		UnitName:          m.UnitName,
 		Sort:              m.Sort,
 		Rank:              m.Rank,
@@ -78,7 +78,6 @@ func UpdateProduct(m request.UpdateTenancyProduct) (model.TenancyProduct, error)
 		"bar_code":          m.BarCode,
 		"is_show":           m.IsShow,
 		"status":            m.Status,
-		"tenancy_status":    m.TenancyStatus,
 		"unit_name":         m.UnitName,
 		"sort":              m.Sort,
 		"rank":              m.Rank,
@@ -139,6 +138,8 @@ func GetProductInfoList(info request.PageInfo, ctx *gin.Context) ([]response.Ten
 	if err != nil {
 		return tenancyList, total, err
 	}
-	err = db.Limit(limit).Offset(offset).Find(&tenancyList).Error
+	err = db.Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name").
+		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
+		Limit(limit).Offset(offset).Find(&tenancyList).Error
 	return tenancyList, total, err
 }

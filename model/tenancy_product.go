@@ -31,8 +31,7 @@ type TenancyProduct struct {
 	Keyword       string  `gorm:"column:keyword;type:varchar(128);not null" json:"keyword"`                         // 关键字
 	BarCode       string  `gorm:"column:bar_code;type:varchar(15);not null;default:''" json:"barCode"`              // 产品条码（一维码）
 	IsShow        int     `gorm:"column:is_show;type:tinyint;not null;default:2" json:"isShow"`                     // 商户 状态（2：未上架，1：上架）
-	Status        int     `gorm:"column:status;type:tinyint;not null;default:2" json:"status"`                      // 管理员 状态（2：审核中，1：审核通过 -1: 未通过 -2: 下架）
-	TenancyStatus int     `gorm:"column:tenancy_status;type:tinyint;default:2" json:"tenancyStatus"`                // 商铺状态是否 1.正常 2. 非正常
+	Status        int     `gorm:"column:status;type:tinyint;not null;default:2" json:"status"`                      // 管理员 状态（2：审核中，1：审核通过 3: 未通过）
 	UnitName      string  `gorm:"column:unit_name;type:varchar(16);not null" json:"unitName"`                       // 单位名
 	Sort          int16   `gorm:"index;column:sort;type:smallint;not null;default:0" json:"sort"`                   // 排序
 	Rank          int16   `gorm:"column:rank;type:smallint;not null;default:0" json:"rank"`                         // 总后台排序
@@ -51,8 +50,8 @@ type TenancyProduct struct {
 	Browse        int     `gorm:"column:browse;type:int;default:0" json:"browse"`                                   // 浏览量
 	CodePath      string  `gorm:"column:code_path;type:varchar(64);not null;default:''" json:"codePath"`            // 产品二维码地址(用户小程序海报)
 	VideoLink     string  `gorm:"column:video_link;type:varchar(200);not null;default:''" json:"videoLink"`         // 主图视频链接
-	SpecType      int     `gorm:"column:spec_type;type:tinyint;not null" json:"specType"`                           // 规格 0单 1多
-	ExtensionType int     `gorm:"column:extension_type;type:tinyint" json:"extensionType"`                          // 佣金比例 0.系统，1.自定义
+	SpecType      int     `gorm:"column:spec_type;type:tinyint;not null" json:"specType"`                           // 规格 1单 2多
+	ExtensionType int     `gorm:"column:extension_type;type:tinyint" json:"extensionType"`                          // 佣金比例 1.系统，2.自定义
 	Refusal       string  `gorm:"column:refusal;type:varchar(255)" json:"refusal"`                                  // 审核拒绝理由
 	Rate          float64 `gorm:"column:rate;type:decimal(2,1);default:5.0" json:"rate"`                            // 评价分数
 	ReplyCount    uint    `gorm:"column:reply_count;type:int unsigned;default:0" json:"replyCount"`                 // 评论数

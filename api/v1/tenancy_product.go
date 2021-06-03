@@ -51,7 +51,6 @@ func getProductMap(returnProduct model.TenancyProduct) gin.H {
 		"barCode":           returnProduct.BarCode,
 		"isShow":            returnProduct.IsShow,
 		"status":            returnProduct.Status,
-		"tenancyStatus":     returnProduct.TenancyStatus,
 		"unitName":          returnProduct.UnitName,
 		"sort":              returnProduct.Sort,
 		"rank":              returnProduct.Rank,

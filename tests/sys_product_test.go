@@ -32,7 +32,6 @@ func TestProductList(t *testing.T) {
 		"barCode",
 		"isShow",
 		"status",
-		"tenancyStatus",
 		"unitName",
 		"sort",
 		"rank",
@@ -64,6 +63,7 @@ func TestProductList(t *testing.T) {
 		"oldId",
 		"tempId",
 		"sysTenancyId",
+		"sysTenancyName",
 		"sysBrandId",
 		"tenancyCategoryId",
 		"createdAt",
@@ -81,7 +81,6 @@ func TestProductProcess(t *testing.T) {
 		"barCode":           "",
 		"isShow":            1,
 		"status":            1,
-		"tenancyStatus":     1,
 		"unitName":          "件",
 		"sort":              40,
 		"rank":              0,
@@ -132,7 +131,6 @@ func TestProductProcess(t *testing.T) {
 	product.Value("barCode").String().Equal(data["barCode"].(string))
 	product.Value("isShow").Number().Equal(data["isShow"].(int))
 	product.Value("status").Number().Equal(data["status"].(int))
-	product.Value("tenancyStatus").Number().Equal(data["tenancyStatus"].(int))
 	product.Value("unitName").String().Equal(data["unitName"].(string))
 	product.Value("sort").Number().Equal(data["sort"].(int))
 	product.Value("rank").Number().Equal(data["rank"].(int))
@@ -175,7 +173,6 @@ func TestProductProcess(t *testing.T) {
 		"barCode":           "",
 		"isShow":            1,
 		"status":            1,
-		"tenancyStatus":     1,
 		"unitName":          "件",
 		"sort":              40,
 		"rank":              0,
@@ -225,7 +222,6 @@ func TestProductProcess(t *testing.T) {
 	product.Value("barCode").String().Equal(update["barCode"].(string))
 	product.Value("isShow").Number().Equal(update["isShow"].(int))
 	product.Value("status").Number().Equal(update["status"].(int))
-	product.Value("tenancyStatus").Number().Equal(update["tenancyStatus"].(int))
 	product.Value("unitName").String().Equal(update["unitName"].(string))
 	product.Value("sort").Number().Equal(update["sort"].(int))
 	product.Value("rank").Number().Equal(update["rank"].(int))
@@ -274,7 +270,6 @@ func TestProductProcess(t *testing.T) {
 	product.Value("barCode").String().Equal(update["barCode"].(string))
 	product.Value("isShow").Number().Equal(update["isShow"].(int))
 	product.Value("status").Number().Equal(update["status"].(int))
-	product.Value("tenancyStatus").Number().Equal(update["tenancyStatus"].(int))
 	product.Value("unitName").String().Equal(update["unitName"].(string))
 	product.Value("sort").Number().Equal(update["sort"].(int))
 	product.Value("rank").Number().Equal(update["rank"].(int))
@@ -326,7 +321,6 @@ func TestProductAddError(t *testing.T) {
 		"barCode":           "",
 		"isShow":            1,
 		"status":            1,
-		"tenancyStatus":     1,
 		"unitName":          "件",
 		"sort":              40,
 		"rank":              0,
