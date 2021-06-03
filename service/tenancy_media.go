@@ -13,8 +13,9 @@ import (
 	"github.com/snowlyg/multi"
 )
 
-func Upload(file model.TenancyMedia) error {
-	return g.TENANCY_DB.Create(&file).Error
+func Upload(file model.TenancyMedia) (model.TenancyMedia, error) {
+	err := g.TENANCY_DB.Create(&file).Error
+	return file, err
 }
 
 func FindFile(id uint) (model.TenancyMedia, error) {
@@ -63,15 +64,15 @@ func UploadFile(header *multipart.FileHeader, noSave, path string, ctx *gin.Cont
 		filePath = path + filePath
 	}
 
-	var f model.TenancyMedia
+	var media model.TenancyMedia
 	if noSave == "0" {
 		s := strings.Split(header.Filename, ".")
-		f.Url = filePath
-		f.Name = header.Filename
-		f.Tag = s[len(s)-1]
-		f.Key = key
-		f.SysTenancyID = multi.GetTenancyId(ctx)
-		return f, Upload(f)
+		media.Url = filePath
+		media.Name = header.Filename
+		media.Tag = s[len(s)-1]
+		media.Key = key
+		media.SysTenancyID = multi.GetTenancyId(ctx)
+		return Upload(media)
 	}
-	return f, nil
+	return media, nil
 }

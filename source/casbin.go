@@ -107,7 +107,7 @@ var carbines = []gormadapter.CasbinRule{
 	// 媒体库
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/upload", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/getFileList", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
@@ -127,7 +127,7 @@ var carbines = []gormadapter.CasbinRule{
 	// 媒体库
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/upload", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/getFileList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
