@@ -6,9 +6,9 @@ type TenancyProduct struct {
 	StoreInfo     string  `json:"storeInfo"`     // 商品简介
 	Keyword       string  `json:"keyword"`       // 关键字
 	BarCode       string  `json:"barCode"`       // 产品条码（一维码）
-	IsShow        bool    `json:"isShow"`        // 商户 状态（0：未上架，1：上架）
-	Status        bool    `json:"status"`        // 管理员 状态（0：审核中，1：审核通过 -1: 未通过 -2: 下架）
-	TenancyStatus bool    `json:"tenancyStatus"` // 商铺状态是否 1.正常 0. 非正常
+	IsShow        int     `json:"isShow"`        // 商户 状态（0：未上架，1：上架）
+	Status        int     `json:"status"`        // 管理员 状态（0：审核中，1：审核通过 -1: 未通过 -2: 下架）
+	TenancyStatus int     `json:"tenancyStatus"` // 商铺状态是否 1.正常 0. 非正常
 	UnitName      string  `json:"unitName"`      // 单位名
 	Sort          int16   `json:"sort"`          // 排序
 	Rank          int16   `json:"rank"`          // 总后台排序
@@ -21,19 +21,19 @@ type TenancyProduct struct {
 	IsBenefit     uint8   `json:"isBenefit"`     // 促销单品
 	IsBest        uint8   `json:"isBest"`        // 是否精品
 	IsNew         uint8   `json:"isNew"`         // 是否新品
-	IsGood        bool    `json:"isGood"`        // 是否优品推荐
+	IsGood        int     `json:"isGood"`        // 是否优品推荐
 	ProductType   uint8   `json:"productType"`   // 0.普通商品 1.秒杀商品,2.预售商品，3.助力商品
 	Ficti         int32   `json:"ficti"`         // 虚拟销量
 	Browse        int     `json:"browse"`        // 浏览量
 	CodePath      string  `json:"codePath"`      // 产品二维码地址(用户小程序海报)
 	VideoLink     string  `json:"videoLink"`     // 主图视频链接
 	SpecType      int     `json:"specType"`      // 规格 0单 1多
-	ExtensionType bool    `json:"extensionType"` // 佣金比例 0.系统，1.自定义
+	ExtensionType int     `json:"extensionType"` // 佣金比例 0.系统，1.自定义
 	Refusal       string  `json:"refusal"`       // 审核拒绝理由
 	Rate          float64 `json:"rate"`          // 评价分数
 	ReplyCount    uint    `json:"replyCount"`    // 评论数
 	GiveCouponIDs string  `json:"giveCouponIds"` // 赠送优惠券
-	IsGiftBag     bool    `json:"isGiftBag"`     // 是否为礼包
+	IsGiftBag     int     `json:"isGiftBag"`     // 是否为礼包
 	CareCount     int     `json:"careCount"`     // 收藏数
 
 	Image       string `json:"image"`       // 商品图片
