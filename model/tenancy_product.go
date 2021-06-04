@@ -64,7 +64,7 @@ type TenancyProduct struct {
 
 	OldID             int `gorm:"column:old_id;type:int;default:0" json:"oldId"`
 	TempID            int `gorm:"column:temp_id;type:int;not null;default:0" json:"tempId"`                                        // 运费模板ID
-	SysTenancyID      int `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"`                // 商户 id                                  // 商户Id
+	SysTenancyID      int `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"`                // 商户 id
 	SysBrandID        int `gorm:"column:sys_brand_id;type:int" json:"sysBrandId"`                                                  // 品牌 id
 	TenancyCategoryID int `gorm:"index:tenancy_category_id;column:tenancy_category_id;type:int;not null" json:"tenancyCategoryId"` // 分类id
 
