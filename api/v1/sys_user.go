@@ -107,8 +107,12 @@ func ChangePassword(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	U := &model.SysUser{Username: user.Username, Password: user.Password}
-	err := service.ChangePassword(U, user.NewPassword, user.AuthorityType)
+	if user.NewPassword != user.AgainPassword {
+		response.FailWithMessage("两次输入密码不一致", ctx)
+		return
+	}
+	U := &model.SysUser{Username: multi.GetUsername(ctx), Password: user.Password}
+	err := service.ChangePassword(U, user.NewPassword, multi.GetAuthorityType(ctx))
 	if err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)

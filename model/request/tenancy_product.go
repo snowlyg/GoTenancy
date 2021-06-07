@@ -15,10 +15,10 @@ type CreateTenancyProduct struct {
 	Cost          float64 `binding:"required" json:"cost"`        // 成本价
 	OtPrice       float64 `binding:"required" json:"otPrice"`     // 原价
 	Stock         uint    `binding:"required" json:"stock"`       // 总库存
-	IsHot         uint8   `json:"isHot"`                          // 是否热卖
-	IsBenefit     uint8   `json:"isBenefit"`                      // 促销单品
-	IsBest        uint8   `json:"isBest"`                         // 是否精品
-	IsNew         uint8   `json:"isNew"`                          // 是否新品
+	IsHot         int     `json:"isHot"`                          // 是否热卖
+	IsBenefit     int     `json:"isBenefit"`                      // 促销单品
+	IsBest        int     `json:"isBest"`                         // 是否精品
+	IsNew         int     `json:"isNew"`                          // 是否新品
 	IsGood        int     `json:"isGood"`                         // 是否优品推荐
 	ProductType   int32   `binding:"required" json:"productType"` // 1.普通商品 2.秒杀商品,3.预售商品，4.助力商品
 	Ficti         int32   `json:"ficti"`                          // 虚拟销量

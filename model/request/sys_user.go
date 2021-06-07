@@ -18,10 +18,9 @@ type Login struct {
 
 // Modify password structure
 type ChangePasswordStruct struct {
-	Username      string `json:"username" binding:"required"`
 	Password      string `json:"password" binding:"required"`
 	NewPassword   string `json:"newPassword" binding:"required"`
-	AuthorityType int    `json:"authorityType"  binding:"required,gt=0"`
+	AgainPassword string `json:"againPassword" binding:"required"`
 }
 
 // Modify  user's auth structure

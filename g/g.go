@@ -9,6 +9,12 @@ import (
 	"github.com/snowlyg/go-tenancy/utils/timer"
 )
 
+const (
+	StatusUnknown int = iota
+	StatusTrue
+	StatusFalse
+)
+
 var (
 	TENANCY_DB     *gorm.DB
 	TENANCY_CONFIG config.Server

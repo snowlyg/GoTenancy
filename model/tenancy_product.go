@@ -40,10 +40,10 @@ type TenancyProduct struct {
 	Cost          float64 `gorm:"column:cost;type:decimal(10,2);default:0.00" json:"cost"`                          // 成本价
 	OtPrice       float64 `gorm:"column:ot_price;type:decimal(10,2);default:0.00" json:"otPrice"`                   // 原价
 	Stock         uint    `gorm:"column:stock;type:int unsigned;default:0" json:"stock"`                            // 总库存
-	IsHot         uint8   `gorm:"column:is_hot;type:tinyint unsigned;not null;default:0" json:"isHot"`              // 是否热卖
-	IsBenefit     uint8   `gorm:"column:is_benefit;type:tinyint unsigned;not null;default:0" json:"isBenefit"`      // 促销单品
-	IsBest        uint8   `gorm:"column:is_best;type:tinyint unsigned;not null;default:0" json:"isBest"`            // 是否精品
-	IsNew         uint8   `gorm:"column:is_new;type:tinyint unsigned;not null;default:0" json:"isNew"`              // 是否新品
+	IsHot         int     `gorm:"column:is_hot;type:tinyint unsigned;not null;default:0" json:"isHot"`              // 是否热卖
+	IsBenefit     int     `gorm:"column:is_benefit;type:tinyint unsigned;not null;default:0" json:"isBenefit"`      // 促销单品
+	IsBest        int     `gorm:"column:is_best;type:tinyint unsigned;not null;default:0" json:"isBest"`            // 是否精品
+	IsNew         int     `gorm:"column:is_new;type:tinyint unsigned;not null;default:0" json:"isNew"`              // 是否新品
 	IsGood        int     `gorm:"column:is_good;type:tinyint;not null;default:2" json:"isGood"`                     // 是否优品推荐
 	ProductType   int32   `gorm:"column:product_type;type:tinyint unsigned;not null;default:0" json:"productType"`  // 1.普通商品 2.秒杀商品,3.预售商品，4.助力商品
 	Ficti         int32   `gorm:"column:ficti;type:mediumint;default:0" json:"ficti"`                               // 虚拟销量

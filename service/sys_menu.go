@@ -12,8 +12,8 @@ import (
 // getMenuTreeMap 获取路由总树map
 func getMenuTreeMap(authorityId string) (map[uint][]model.SysMenu, error) {
 	var allMenus []model.SysMenu
-	treeMap := make(map[uint][]model.SysMenu)
-	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Order("sort").Find(&allMenus).Error
+	treeMap := make(map[uint][]model.SysMenu, 1000)
+	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Where("is_tenancy = ?", g.StatusFalse).Where("is_menu = ?", g.StatusTrue).Order("sort desc").Find(&allMenus).Error
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func AddBaseMenu(menu model.SysBaseMenu) (model.SysBaseMenu, error) {
 func getBaseMenuTreeMap() (map[uint][]model.SysBaseMenu, error) {
 	var allMenus []model.SysBaseMenu
 	treeMap := make(map[uint][]model.SysBaseMenu)
-	err := g.TENANCY_DB.Order("sort").Find(&allMenus).Error
+	err := g.TENANCY_DB.Order("sort desc").Find(&allMenus).Error
 	for _, v := range allMenus {
 		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}
@@ -110,7 +110,7 @@ func AddMenuAuthority(menus []model.SysBaseMenu, authorityId string) error {
 // GetMenuAuthority 查看当前角色树
 func GetMenuAuthority(info *request.GetAuthorityId) ([]model.SysMenu, error) {
 	var menus []model.SysMenu
-	err := g.TENANCY_DB.Where("authority_id = ? ", info.AuthorityId).Order("sort").Find(&menus).Error
+	err := g.TENANCY_DB.Where("authority_id = ? ", info.AuthorityId).Order("sort desc").Find(&menus).Error
 	//sql := "SELECT authority_menu.keep_alive,authority_menu.default_menu,authority_menu.created_at,authority_menu.updated_at,authority_menu.deleted_at,authority_menu.menu_level,authority_menu.parent_id,authority_menu.path,authority_menu.`name`,authority_menu.hidden,authority_menu.component,authority_menu.title,authority_menu.icon,authority_menu.sort,authority_menu.menu_id,authority_menu.authority_id FROM authority_menu WHERE authority_menu.authority_id = ? ORDER BY authority_menu.sort ASC"
 	//err = g.TENANCY_DB.Raw(sql, authorityId).Scan(&menus).Error
 	return menus, err
