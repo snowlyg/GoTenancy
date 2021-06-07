@@ -6,31 +6,16 @@ import (
 
 type SysBaseMenu struct {
 	g.TENANCY_MODEL
-	MenuLevel     uint   `json:"-"`
-	ParentId      string `json:"parentId" gorm:"comment:父菜单ID"  binding:"required"`
-	Path          string `json:"path" gorm:"comment:路由path" binding:"required"`
-	Name          string `json:"name" gorm:"comment:路由name" binding:"required"`
-	Hidden        bool   `json:"hidden" gorm:"comment:是否在列表隐藏"`
-	Component     string `json:"component" gorm:"comment:对应前端文件路径" binding:"required"`
-	Sort          int    `json:"sort" gorm:"comment:排序标记" binding:"required,gt=0"`
-	Meta          `json:"meta" gorm:"comment:附加属性"`
-	SysAuthoritys []SysAuthority         `json:"authoritys" gorm:"many2many:sys_authority_menus;"`
-	Children      []SysBaseMenu          `json:"children" gorm:"-"`
-	Parameters    []SysBaseMenuParameter `json:"parameters"`
-}
-
-type Meta struct {
-	KeepAlive   bool   `json:"keepAlive" gorm:"comment:是否缓存"`
-	DefaultMenu bool   `json:"defaultMenu" gorm:"comment:是否是基础路由（开发中）"`
-	Title       string `json:"title" gorm:"comment:菜单名" binding:"required"`
-	Icon        string `json:"icon" gorm:"comment:菜单图标"`
-	CloseTab    bool   `json:"closeTab" gorm:"comment:自动关闭tab"`
-}
-
-type SysBaseMenuParameter struct {
-	g.TENANCY_MODEL
-	SysBaseMenuID uint
-	Type          string `json:"type" gorm:"comment:地址栏携带参数为params还是query"`
-	Key           string `json:"key" gorm:"comment:地址栏携带参数的key"`
-	Value         string `json:"value" gorm:"comment:地址栏携带参数的值"`
+	Pid           uint           `gorm:"index:pid;column:pid;type:int unsigned;not null;default:0" json:"pid"`         // 父级id
+	Path          string         `gorm:"column:path;type:varchar(512);not null" json:"path"`                           // 路径
+	Icon          string         `gorm:"column:icon;type:varchar(32);default:''" json:"icon"`                          // 图标
+	MenuName      string         `gorm:"column:menu_name;type:varchar(128);not null;default:''" json:"menu_name"`      // 按钮名
+	Route         string         `gorm:"column:route;type:varchar(64);not null" json:"route"`                          // 路由名称
+	Params        string         `gorm:"column:params;type:varchar(128);not null;default:''" json:"params"`            // 参数
+	Sort          int8           `gorm:"column:sort;type:tinyint;not null;default:1" json:"sort"`                      // 排序
+	Hidden        uint8          `gorm:"column:hidden;type:tinyint unsigned;not null;default:1" json:"hidden"`         // 是否显示
+	IsTenancy     uint8          `gorm:"column:is_tenancy;type:tinyint unsigned;not null;default:1" json:"is_tenancy"` // 模块，1 平台， 2商户
+	IsMenu        uint8          `gorm:"column:is_menu;type:tinyint unsigned;not null;default:1" json:"is_menu"`       // 类型，1菜单 2 权限
+	SysAuthoritys []SysAuthority `json:"authoritys" gorm:"many2many:sys_authority_menus;"`
+	Children      []SysBaseMenu  `json:"children" gorm:"-"`
 }

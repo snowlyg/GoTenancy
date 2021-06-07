@@ -7,13 +7,13 @@ import (
 )
 
 type Response struct {
-	Code int         `json:"code"`
+	Code int         `json:"status"`
 	Data interface{} `json:"data"`
-	Msg  string      `json:"msg"`
+	Msg  string      `json:"message"`
 }
 
 const (
-	SUCCESS                    = 0
+	SUCCESS                    = 200
 	BAD_REQUEST_ERROR          = 4000
 	UNAUTHORIZED_REQUEST_ERROR = 4001
 	FORBIDDEN_REQUEST_ERROR    = 4003

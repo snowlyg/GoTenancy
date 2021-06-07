@@ -125,7 +125,6 @@ func InitDB(conf request.InitDB) error {
 		model.SysAuthority{},
 		model.SysApi{},
 		model.SysBaseMenu{},
-		model.SysBaseMenuParameter{},
 		model.SysOperationRecord{},
 		model.SysTenancy{},
 		model.SysRegion{},
@@ -136,7 +135,12 @@ func InitDB(conf request.InitDB) error {
 
 		model.TenancyMedia{},
 		model.TenancyCategory{},
+		model.TenancyAttrTemplate{},
 		model.TenancyProduct{},
+		model.TenancyProductContent{},
+		model.TenancyProductAttr{},
+		model.TenancyProductAttrValue{},
+		model.TenancyProductReply{},
 
 		model.GeneralAddress{},
 		model.GeneralReceipt{},
@@ -163,6 +167,7 @@ func InitDB(conf request.InitDB) error {
 		source.Brand,
 		source.BrandCategory,
 		source.Category,
+		source.AttrTemplate,
 		source.TenancyProduct,
 	)
 	if err != nil {

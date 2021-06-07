@@ -17,7 +17,7 @@ func GetMenu(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", ctx)
+		response.OkWithDetailed(menus, "获取成功", ctx)
 	}
 }
 
@@ -27,7 +27,7 @@ func GetBaseMenuTree(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: menus}, "获取成功", ctx)
+		response.OkWithDetailed(menus, "获取成功", ctx)
 	}
 }
 
@@ -55,7 +55,7 @@ func GetMenuAuthority(ctx *gin.Context) {
 	}
 	if menus, err := service.GetMenuAuthority(&param); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithDetailed(response.SysMenusResponse{Menus: menus}, "获取失败", ctx)
+		response.FailWithDetailed(menus, "获取失败", ctx)
 	} else {
 		response.OkWithDetailed(gin.H{"menus": menus}, "获取成功", ctx)
 	}
@@ -118,7 +118,7 @@ func GetBaseMenuById(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(response.SysBaseMenuResponse{Menu: menu}, "获取成功", ctx)
+		response.OkWithDetailed(menu, "获取成功", ctx)
 	}
 }
 

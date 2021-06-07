@@ -55,9 +55,9 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": multi.AdminAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("登录成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("登录成功")
 	data := obj.Value("data").Object()
 	user := data.Value("user").Object()
 	user.Value("id").Number().Equal(1)
@@ -82,9 +82,9 @@ func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("登录成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("登录成功")
 	data := obj.Value("data").Object()
 	user := data.Value("user").Object()
 	user.Value("id").Number().Equal(2)
@@ -111,9 +111,9 @@ func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "authorityType": multi.GeneralAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("登录成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("登录成功")
 	data := obj.Value("data").Object()
 	user := data.Value("user").Object()
 	user.Value("id").Number().Equal(3)
@@ -146,7 +146,7 @@ func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 func baseLogOut(auth *httpexpect.Expect) {
 	obj := auth.GET("/v1/auth/logout").
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("退出登录")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("退出登录")
 }

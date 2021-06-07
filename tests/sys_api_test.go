@@ -11,9 +11,9 @@ func TestApiList(t *testing.T) {
 	obj := auth.POST("/v1/admin/api/getApiList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
@@ -34,9 +34,9 @@ func TestAllApi(t *testing.T) {
 	obj := auth.POST("/v1/admin/api/getAllApis").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object().Value("apis").Array()
 	first := data.First().Object()
@@ -65,9 +65,9 @@ func TestApiProcess(t *testing.T) {
 	obj := auth.POST("/v1/admin/api/createApi").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("创建成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("创建成功")
 
 	api := obj.Value("data").Object()
 	api.Value("id").Number().Ge(0)
@@ -90,16 +90,16 @@ func TestApiProcess(t *testing.T) {
 	obj = auth.POST("/v1/admin/api/updateApi").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("修改成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
 
 	obj = auth.POST("/v1/admin/api/getApiById").
 		WithJSON(map[string]interface{}{"id": apiId}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("操作成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
 	api = obj.Value("data").Object().Value("api").Object()
 
 	api.Value("id").Number().Ge(0)
@@ -116,9 +116,9 @@ func TestApiProcess(t *testing.T) {
 			"method": apiMethod,
 		}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("删除成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("删除成功")
 
 }
 
@@ -134,8 +134,8 @@ func TestApiRegisterError(t *testing.T) {
 	obj := auth.POST("/v1/admin/api/createApi").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("添加失败:存在相同api")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("添加失败:存在相同api")
 
 }

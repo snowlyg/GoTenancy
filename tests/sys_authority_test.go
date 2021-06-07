@@ -13,9 +13,9 @@ func TestAuthorityList(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/getAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
@@ -46,9 +46,9 @@ func TestAdminAuthority(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/getAdminAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	list := data.Value("list").Array()
@@ -74,9 +74,9 @@ func TestTenancyAuthority(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/getTenancyAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	list := data.Value("list").Array()
@@ -102,9 +102,9 @@ func TestGeneralAuthority(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/getGeneralAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	list := data.Value("list").Array()
@@ -140,9 +140,9 @@ func TestAuthorityProcess(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/createAuthority").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("创建成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("创建成功")
 
 	authority := obj.Value("data").Object().Value("authority").Object()
 	authority.Value("parentId").String().Equal(data["parentId"].(string))
@@ -168,9 +168,9 @@ func TestAuthorityProcess(t *testing.T) {
 	obj = auth.PUT("/v1/admin/authority/updateAuthority").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("更新成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("更新成功")
 
 	authority = obj.Value("data").Object().Value("authority").Object()
 	authority.Value("parentId").String().Equal(update["parentId"].(string))
@@ -205,9 +205,9 @@ func TestAuthorityProcess(t *testing.T) {
 	obj = auth.POST("/v1/admin/authority/copyAuthority").
 		WithJSON(copy).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("拷贝成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("拷贝成功")
 
 	authority = obj.Value("data").Object().Value("authority").Object()
 	authority.Value("parentId").String().Equal(copy["authority"].(map[string]interface{})["parentId"].(string))
@@ -228,9 +228,9 @@ func TestAuthorityProcess(t *testing.T) {
 	obj = auth.POST("/v1/admin/authority/setDataAuthority").
 		WithJSON(setdata).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("设置成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
 
 	// delete
 	obj = auth.DELETE("/v1/admin/authority/deleteAuthority").
@@ -238,9 +238,9 @@ func TestAuthorityProcess(t *testing.T) {
 			"authorityId": authorityId,
 		}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("删除成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("删除成功")
 
 	// delete
 	obj = auth.DELETE("/v1/admin/authority/deleteAuthority").
@@ -248,9 +248,9 @@ func TestAuthorityProcess(t *testing.T) {
 			"authorityId": "9511",
 		}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("删除成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("删除成功")
 
 }
 
@@ -267,8 +267,8 @@ func TestAuthorityRegisterError(t *testing.T) {
 	obj := auth.POST("/v1/admin/authority/createAuthority").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("创建失败存在相同角色id")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("创建失败存在相同角色id")
 
 }

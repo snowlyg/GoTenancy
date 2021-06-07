@@ -10,9 +10,9 @@ func TestCaptcha(t *testing.T) {
 	obj := e.POST("/v1/public/captcha").
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("验证码获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("验证码获取成功")
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("captchaId", "picPath")
 

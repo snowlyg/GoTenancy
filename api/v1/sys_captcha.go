@@ -18,11 +18,11 @@ func Captcha(ctx *gin.Context) {
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
 		g.TENANCY_LOG.Error("验证码获取失败!", zap.Any("err", err))
-		response.FailWithMessage("验证码获取失败", ctx)
+		response.FailWithMessage("获取失败", ctx)
 	} else {
 		response.OkWithDetailed(response.SysCaptchaResponse{
 			CaptchaId: id,
 			PicPath:   b64s,
-		}, "验证码获取成功", ctx)
+		}, "获取成功", ctx)
 	}
 }

@@ -11,9 +11,9 @@ func TestLoginWithErrorUsername(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "123456", "authorityType": 1}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("用户名或者密码错误")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("用户名或者密码错误")
 	obj.Value("data").Object().Empty()
 }
 
@@ -23,9 +23,9 @@ func TestLoginWithErrorPassword(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "error_pwd", "authorityType": 1}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("用户名或者密码错误")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("用户名或者密码错误")
 	obj.Value("data").Object().Empty()
 }
 
@@ -35,9 +35,9 @@ func TestLoginWithErrorUsernameAndPassword(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "error_pwd", "authorityType": 1}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("用户名或者密码错误")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("用户名或者密码错误")
 	obj.Value("data").Object().Empty()
 }
 
@@ -47,9 +47,9 @@ func TestLoginWithErrorAuthorityType(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "error_username", "password": "error_pwd", "authorityType": 3}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("用户名或者密码错误")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("用户名或者密码错误")
 	obj.Value("data").Object().Empty()
 }
 
@@ -59,8 +59,8 @@ func TestLoginWithEmptyAuthorityType(t *testing.T) {
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": 0}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(4000)
-	obj.Value("msg").String().Equal("Key: 'Login.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("Key: 'Login.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 	obj.Value("data").Object().Empty()
 }

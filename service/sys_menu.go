@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -11,15 +10,15 @@ import (
 )
 
 // getMenuTreeMap 获取路由总树map
-func getMenuTreeMap(authorityId string) (map[string][]model.SysMenu, error) {
+func getMenuTreeMap(authorityId string) (map[uint][]model.SysMenu, error) {
 	var allMenus []model.SysMenu
-	treeMap := make(map[string][]model.SysMenu)
-	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+	treeMap := make(map[uint][]model.SysMenu)
+	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Order("sort").Find(&allMenus).Error
 	if err != nil {
 		return nil, err
 	}
 	for _, v := range allMenus {
-		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
+		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}
 	return treeMap, err
 }
@@ -27,7 +26,7 @@ func getMenuTreeMap(authorityId string) (map[string][]model.SysMenu, error) {
 // GetMenuTree 获取动态菜单树
 func GetMenuTree(authorityId string) ([]model.SysMenu, error) {
 	menuTree, err := getMenuTreeMap(authorityId)
-	menus := menuTree["0"]
+	menus := menuTree[0]
 	for i := 0; i < len(menus); i++ {
 		err = getChildrenList(&menus[i], menuTree)
 	}
@@ -35,7 +34,7 @@ func GetMenuTree(authorityId string) ([]model.SysMenu, error) {
 }
 
 // getChildrenList 获取子菜单
-func getChildrenList(menu *model.SysMenu, treeMap map[string][]model.SysMenu) error {
+func getChildrenList(menu *model.SysMenu, treeMap map[uint][]model.SysMenu) error {
 	menu.Children = treeMap[menu.MenuId]
 	for i := 0; i < len(menu.Children); i++ {
 		err := getChildrenList(&menu.Children[i], treeMap)
@@ -50,7 +49,7 @@ func getChildrenList(menu *model.SysMenu, treeMap map[string][]model.SysMenu) er
 func GetInfoList() ([]model.SysBaseMenu, error) {
 	var menuList []model.SysBaseMenu
 	treeMap, err := getBaseMenuTreeMap()
-	menuList = treeMap["0"]
+	menuList = treeMap[0]
 	for i := 0; i < len(menuList); i++ {
 		err = getBaseChildrenList(&menuList[i], treeMap)
 	}
@@ -58,8 +57,8 @@ func GetInfoList() ([]model.SysBaseMenu, error) {
 }
 
 // getBaseChildrenList 获取菜单的子菜单
-func getBaseChildrenList(menu *model.SysBaseMenu, treeMap map[string][]model.SysBaseMenu) (err error) {
-	menu.Children = treeMap[strconv.Itoa(int(menu.ID))]
+func getBaseChildrenList(menu *model.SysBaseMenu, treeMap map[uint][]model.SysBaseMenu) (err error) {
+	menu.Children = treeMap[menu.ID]
 	for i := 0; i < len(menu.Children); i++ {
 		err = getBaseChildrenList(&menu.Children[i], treeMap)
 	}
@@ -68,7 +67,7 @@ func getBaseChildrenList(menu *model.SysBaseMenu, treeMap map[string][]model.Sys
 
 // AddBaseMenu 添加基础路由
 func AddBaseMenu(menu model.SysBaseMenu) (model.SysBaseMenu, error) {
-	err := g.TENANCY_DB.Where("name = ?", menu.Name).First(&model.SysBaseMenu{}).Error
+	err := g.TENANCY_DB.Where("menu_name = ?", menu.MenuName).First(&model.SysBaseMenu{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return model.SysBaseMenu{}, errors.New("存在重复name，请修改name")
 	}
@@ -77,12 +76,12 @@ func AddBaseMenu(menu model.SysBaseMenu) (model.SysBaseMenu, error) {
 }
 
 // getBaseMenuTreeMap 获取路由总树map
-func getBaseMenuTreeMap() (map[string][]model.SysBaseMenu, error) {
+func getBaseMenuTreeMap() (map[uint][]model.SysBaseMenu, error) {
 	var allMenus []model.SysBaseMenu
-	treeMap := make(map[string][]model.SysBaseMenu)
-	err := g.TENANCY_DB.Order("sort").Preload("Parameters").Find(&allMenus).Error
+	treeMap := make(map[uint][]model.SysBaseMenu)
+	err := g.TENANCY_DB.Order("sort").Find(&allMenus).Error
 	for _, v := range allMenus {
-		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
+		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}
 	return treeMap, err
 }
@@ -93,7 +92,7 @@ func GetBaseMenuTree() ([]model.SysBaseMenu, error) {
 	if err != nil {
 		return nil, err
 	}
-	menus := treeMap["0"]
+	menus := treeMap[0]
 	for i := 0; i < len(menus); i++ {
 		err = getBaseChildrenList(&menus[i], treeMap)
 	}

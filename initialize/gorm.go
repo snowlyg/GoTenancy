@@ -33,7 +33,6 @@ func MysqlTables(db *gorm.DB) {
 		model.SysAuthority{},
 		model.SysApi{},
 		model.SysBaseMenu{},
-		model.SysBaseMenuParameter{},
 		model.SysOperationRecord{},
 		model.SysTenancy{},
 		model.SysRegion{},

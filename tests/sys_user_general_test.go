@@ -11,9 +11,9 @@ func TestGeneralUserList(t *testing.T) {
 	obj := auth.POST("/v1/admin/user/getGeneralList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")

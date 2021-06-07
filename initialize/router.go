@@ -63,9 +63,10 @@ func Routers(app *gin.Engine) {
 			router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 
 			// 商户
-			router.InitMediaRouter(AdminGroup)    // 媒体库路由
-			router.InitCategoryRouter(AdminGroup) // 商品分类路由
-			router.InitProductRouter(AdminGroup)  // 商品路由
+			router.InitMediaRouter(AdminGroup)        // 媒体库路由
+			router.InitCategoryRouter(AdminGroup)     // 商品分类路由
+			router.InitAttrTemplateRouter(AdminGroup) // 规格模板路由
+			router.InitProductRouter(AdminGroup)      // 商品路由
 
 		}
 

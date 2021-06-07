@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -38,8 +37,7 @@ func CopyAuthority(copyInfo response.SysAuthorityCopyResponse) (model.SysAuthori
 	}
 	var baseMenu []model.SysBaseMenu
 	for _, v := range menus {
-		intNum, _ := strconv.Atoi(v.MenuId)
-		v.SysBaseMenu.ID = uint(intNum)
+		v.SysBaseMenu.ID = v.MenuId
 		baseMenu = append(baseMenu, v.SysBaseMenu)
 	}
 	copyInfo.Authority.SysBaseMenus = baseMenu

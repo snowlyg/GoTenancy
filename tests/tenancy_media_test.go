@@ -12,9 +12,9 @@ func TestMediaList(t *testing.T) {
 	obj := auth.POST("/v1/admin/media/getFileList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("获取成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
@@ -37,9 +37,9 @@ func TestMediaProcess(t *testing.T) {
 		WithFile("file", name, fh).
 		WithForm(map[string]interface{}{"path": path}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("上传成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("上传成功")
 
 	media := obj.Value("data").Object().Value("file").Object()
 	media.Value("id").Number().Ge(0)
@@ -53,8 +53,8 @@ func TestMediaProcess(t *testing.T) {
 	obj = auth.DELETE("/v1/admin/media/deleteFile").
 		WithJSON(map[string]interface{}{"id": mediaId}).
 		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("code", "data", "msg")
-	obj.Value("code").Number().Equal(0)
-	obj.Value("msg").String().Equal("删除成功")
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("删除成功")
 
 }
