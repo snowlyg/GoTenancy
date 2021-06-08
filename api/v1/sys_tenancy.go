@@ -85,8 +85,7 @@ func UpdateTenancy(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	id := ctx.Param("id")
-	if returnTenancy, err := service.UpdateTenany(tenancy, id); err != nil {
+	if returnTenancy, err := service.UpdateTenany(tenancy, ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -103,12 +102,7 @@ func UpdateTenancy(ctx *gin.Context) {
 
 // DeleteTenancy
 func DeleteTenancy(ctx *gin.Context) {
-	var reqId request.GetById
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if err := service.DeleteTenancy(reqId.Id); err != nil {
+	if err := service.DeleteTenancy(ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
@@ -138,8 +132,7 @@ func GetTenanciesList(ctx *gin.Context) {
 
 // GetTenanciesByRegion 根据区域获取商户列表，不分页
 func GetTenanciesByRegion(ctx *gin.Context) {
-	code := ctx.Param("code")
-	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
+	if tenancies, err := service.GetTenanciesByRegion(ctx.Param("code")); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

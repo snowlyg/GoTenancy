@@ -249,8 +249,7 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/tenancy/deleteTenancy").
-		WithJSON(map[string]interface{}{"id": tenancyId}).
+	obj = auth.DELETE(fmt.Sprintf("/v1/admin/tenancy/deleteTenancy/%f", tenancyId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

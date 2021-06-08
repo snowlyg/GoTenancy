@@ -56,7 +56,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/tenancy/changeTenancyStatus", Description: "启用/禁用商户", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/getTenancyById/:id", Description: "获取商户详细信息", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/updateTenancy/:id", Description: "更新商户", ApiGroup: "tenancy", Method: "PUT"},
-	{Path: "/v1/admin/tenancy/deleteTenancy", Description: "删除商户", ApiGroup: "tenancy", Method: "DELETE"},
+	{Path: "/v1/admin/tenancy/deleteTenancy/:id", Description: "删除商户", ApiGroup: "tenancy", Method: "DELETE"},
 
 	{Path: "/v1/admin/casbin/casbinTest/:pathParam", Description: "RESTFUL模式测试", ApiGroup: "casbin", Method: "GET"},
 	{Path: "/v1/admin/authority/updateAuthority", Description: "更新角色信息", ApiGroup: "authority", Method: "PUT"},

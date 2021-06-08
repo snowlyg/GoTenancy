@@ -54,9 +54,8 @@ func UpdateTenany(tenancy model.SysTenancy, id string) (model.SysTenancy, error)
 }
 
 // DeleteTenancy
-func DeleteTenancy(id float64) error {
-	var tenancy model.SysTenancy
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&tenancy).Error
+func DeleteTenancy(id string) error {
+	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.SysTenancy{}).Error
 }
 
 // GetTenanciesInfoList

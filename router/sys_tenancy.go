@@ -16,6 +16,6 @@ func InitTenancyRouter(Router *gin.RouterGroup) {
 		TenancyRouter.POST("/setTenancyRegion", v1.SetTenancyRegion)       // 设置商户地区
 		TenancyRouter.POST("/changeTenancyStatus", v1.ChangeTenancyStatus) // 设置商户地区
 		TenancyRouter.PUT("/updateTenancy/:id", v1.UpdateTenancy)          // 更新Tenancy
-		TenancyRouter.DELETE("/deleteTenancy", v1.DeleteTenancy)           // 删除Tenancy
+		TenancyRouter.DELETE("/deleteTenancy/:id", v1.DeleteTenancy)       // 删除Tenancy
 	}
 }
