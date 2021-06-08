@@ -1,8 +1,6 @@
 package source
 
 import (
-	"time"
-
 	"github.com/gookit/color"
 	uuid "github.com/satori/go.uuid"
 	"github.com/snowlyg/go-tenancy/g"
@@ -15,7 +13,8 @@ var Tenancy = new(tenancy)
 type tenancy struct{}
 
 var tenancies = []model.SysTenancy{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, UUID: uuid.NewV4(), Name: "宝安中心人民医院", Tele: "0755-23568911", Address: "xxx街道888号", BusinessTime: "08:30-17:30", SysRegionCode: 1},
+	{BaseTenancy: model.BaseTenancy{UUID: uuid.NewV4(), Name: "宝安中心人民医院", Tele: "0755-23568911", Address: "xxx街道888号", BusinessTime: "08:30-17:30", Status: g.StatusTrue, SysRegionCode: 1}},
+	{BaseTenancy: model.BaseTenancy{UUID: uuid.NewV4(), Name: "东莞第三人民医院", Tele: "0755-23568922", Address: "xxx街道777号", BusinessTime: "08:35-17:35", Status: g.StatusTrue, SysRegionCode: 2}},
 }
 
 //@description: sys_tenancies 表数据初始化

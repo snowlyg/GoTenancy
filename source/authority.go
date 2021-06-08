@@ -1,8 +1,6 @@
 package source
 
 import (
-	"time"
-
 	"github.com/gookit/color"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -21,11 +19,11 @@ var (
 type authority struct{}
 
 var authorities = []model.SysAuthority{
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: AdminAuthorityId, AuthorityType: multi.AdminAuthority, AuthorityName: "超级管理员", ParentId: "0", DefaultRouter: "dashboard"},
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: TenancyAuthorityId, AuthorityType: multi.TenancyAuthority, AuthorityName: "商户管理员", ParentId: "0", DefaultRouter: "dashboard"},
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: GeneralAuthorityId, AuthorityType: multi.GeneralAuthority, AuthorityName: "C端用户", ParentId: "0", DefaultRouter: "dashboard"},
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "8881", AuthorityName: "普通用户子角色", ParentId: AdminAuthorityId, AuthorityType: multi.AdminAuthority, DefaultRouter: "dashboard"},
-	{CreatedAt: time.Now(), UpdatedAt: time.Now(), AuthorityId: "9528", AuthorityType: multi.GeneralAuthority, AuthorityName: "测试角色", ParentId: "0", DefaultRouter: "dashboard"},
+	{AuthorityId: AdminAuthorityId, AuthorityType: multi.AdminAuthority, AuthorityName: "超级管理员", ParentId: "0", DefaultRouter: "dashboard"},
+	{AuthorityId: TenancyAuthorityId, AuthorityType: multi.TenancyAuthority, AuthorityName: "商户管理员", ParentId: "0", DefaultRouter: "dashboard"},
+	{AuthorityId: GeneralAuthorityId, AuthorityType: multi.GeneralAuthority, AuthorityName: "C端用户", ParentId: "0", DefaultRouter: "dashboard"},
+	{AuthorityId: "8881", AuthorityName: "普通用户子角色", ParentId: AdminAuthorityId, AuthorityType: multi.AdminAuthority, DefaultRouter: "dashboard"},
+	{AuthorityId: "9528", AuthorityType: multi.GeneralAuthority, AuthorityName: "测试角色", ParentId: "0", DefaultRouter: "dashboard"},
 }
 
 //@description: sys_authorities 表数据初始化

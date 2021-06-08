@@ -1,8 +1,6 @@
 package source
 
 import (
-	"time"
-
 	"github.com/gookit/color"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -14,9 +12,9 @@ var AttrTemplate = new(attrTemplate)
 type attrTemplate struct{}
 
 var attrTemplates = []model.TenancyAttrTemplate{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, TemplateName: "鞋类", TemplateValue: "[{\"value\":\"\\u989c\\u8272\",\"detail\":[\"\\u9ec4\\u8272\",\"\\u7ea2\\u8272\"]},{\"value\":\"\\u5927\\u5c0f\",\"detail\":[\"35\",\"36\",\"38\"]}]", SysTenancyID: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, TemplateName: "化妆品", TemplateValue: "[{\"value\":\"\\u96c5\\u8bd7\\u5170\\u9edb\",\"detail\":[\"15\",\"20\"]},{\"value\":\"\\u5170\\u853b\",\"detail\":[\"15\",\"20\"]}]", SysTenancyID: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, TemplateName: "手机", TemplateValue: "[{\"value\":\"\\u989c\\u8272\",\"detail\":[\"\\u9ed1\",\"\\u94f6\",\"\\u91d1\",\"\\u767d\",\"\\u65e0\\u8272\"]}]", SysTenancyID: 1},
+	{TemplateName: "鞋类", TemplateValue: "[{\"value\":\"\\u989c\\u8272\",\"detail\":[\"\\u9ec4\\u8272\",\"\\u7ea2\\u8272\"]},{\"value\":\"\\u5927\\u5c0f\",\"detail\":[\"35\",\"36\",\"38\"]}]", SysTenancyID: 1},
+	{TemplateName: "化妆品", TemplateValue: "[{\"value\":\"\\u96c5\\u8bd7\\u5170\\u9edb\",\"detail\":[\"15\",\"20\"]},{\"value\":\"\\u5170\\u853b\",\"detail\":[\"15\",\"20\"]}]", SysTenancyID: 1},
+	{TemplateName: "手机", TemplateValue: "[{\"value\":\"\\u989c\\u8272\",\"detail\":[\"\\u9ed1\",\"\\u94f6\",\"\\u91d1\",\"\\u767d\",\"\\u65e0\\u8272\"]}]", SysTenancyID: 1},
 }
 
 func (m *attrTemplate) Init() error {

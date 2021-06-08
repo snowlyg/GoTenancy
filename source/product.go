@@ -1,8 +1,6 @@
 package source
 
 import (
-	"time"
-
 	"github.com/gookit/color"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -15,7 +13,6 @@ type product struct{}
 
 var products = []model.TenancyProduct{
 	{
-		TENANCY_MODEL:     g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		StoreName:         "领立裁腰带短袖连衣裙",
 		StoreInfo:         "短袖连衣裙",
 		Keyword:           "短袖连衣裙",

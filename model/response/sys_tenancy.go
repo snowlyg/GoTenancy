@@ -1,11 +1,13 @@
 package response
 
+import "github.com/snowlyg/go-tenancy/model"
+
 type SysTenancy struct {
 	TenancyResponse
-	UUID          string `json:"uuid"`
-	Name          string `json:"name"`
-	Tele          string `json:"tele"`
-	Address       string `json:"address"`
-	BusinessTime  string `json:"businessTime"`
-	SysRegionCode int    `json:"sysRegionCode"`
+	model.BaseTenancy
+}
+
+type Counts struct {
+	Invalid int
+	Valid   int
 }

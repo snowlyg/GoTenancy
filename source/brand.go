@@ -1,8 +1,6 @@
 package source
 
 import (
-	"time"
-
 	"github.com/gookit/color"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -14,7 +12,7 @@ var Brand = new(brand)
 type brand struct{}
 
 var brands = []model.SysBrand{
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, BrandName: "杜蕾斯", Sort: 0, Pic: "http://qmplusimg.henrongyi.top/head.png", IsShow: true, BrandCategoryID: 1},
+	{BrandName: "杜蕾斯", Sort: 0, Pic: "http://qmplusimg.henrongyi.top/head.png", IsShow: true, BrandCategoryID: 1},
 }
 
 func (m *brand) Init() error {

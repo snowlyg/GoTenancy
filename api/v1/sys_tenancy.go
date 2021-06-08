@@ -12,7 +12,7 @@ import (
 
 // CreateTenancy
 func CreateTenancy(ctx *gin.Context) {
-	var tenancy request.CreateSysTenancy
+	var tenancy model.SysTenancy
 	if errs := ctx.ShouldBindJSON(&tenancy); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -21,18 +21,23 @@ func CreateTenancy(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getTenancyMap(returnTenancy), "创建成功", ctx)
+		response.OkWithDetailed(gin.H{
+			"id":            returnTenancy.ID,
+			"uuid":          returnTenancy.UUID,
+			"name":          returnTenancy.Name,
+			"tele":          returnTenancy.Tele,
+			"address":       returnTenancy.Address,
+			"status":        returnTenancy.Status,
+			"businessTime":  returnTenancy.BusinessTime,
+			"sysRegionCode": returnTenancy.SysRegionCode,
+		}, "创建成功", ctx)
 	}
 }
 
 // GetTenancyById
 func GetTenancyById(ctx *gin.Context) {
-	var reqId request.GetById
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	tenancy, err := service.GetTenancyByID(reqId.Id)
+	id := ctx.Param("id")
+	tenancy, err := service.GetTenancyByID(id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -48,7 +53,23 @@ func SetTenancyRegion(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := service.SetTenancyRegionByID(regionCode.Id, regionCode.SysRegionCode)
+	err := service.SetTenancyRegionByID(regionCode)
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
+	}
+}
+
+// ChangeTenancyStatus
+func ChangeTenancyStatus(ctx *gin.Context) {
+	var changeStatus request.ChangeTenancyStatus
+	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	err := service.ChangeTenancyStatus(changeStatus)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -59,22 +80,25 @@ func SetTenancyRegion(ctx *gin.Context) {
 
 // UpdateTenancy
 func UpdateTenancy(ctx *gin.Context) {
-	var tenancy request.UpdateSysTenancy
+	var tenancy model.SysTenancy
 	if errs := ctx.ShouldBindJSON(&tenancy); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnTenancy, err := service.UpdateTenany(tenancy); err != nil {
+	id := ctx.Param("id")
+	if returnTenancy, err := service.UpdateTenany(tenancy, id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getTenancyMap(returnTenancy), "更新成功", ctx)
+		response.OkWithDetailed(gin.H{
+			"name":          returnTenancy.Name,
+			"tele":          returnTenancy.Tele,
+			"address":       returnTenancy.Address,
+			"status":        returnTenancy.Status,
+			"businessTime":  returnTenancy.BusinessTime,
+			"sysRegionCode": returnTenancy.SysRegionCode,
+		}, "更新成功", ctx)
 	}
-}
-
-// getTenancyMap
-func getTenancyMap(returnTenancy model.SysTenancy) gin.H {
-	return gin.H{"id": returnTenancy.ID, "uuid": returnTenancy.UUID, "name": returnTenancy.Name, "tele": returnTenancy.Tele, "address": returnTenancy.Address, "businessTime": returnTenancy.BusinessTime, "sysRegionCode": returnTenancy.SysRegionCode}
 }
 
 // DeleteTenancy
@@ -94,7 +118,7 @@ func DeleteTenancy(ctx *gin.Context) {
 
 // GetTenanciesList 分页获取商户列表
 func GetTenanciesList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
+	var pageInfo request.TenancyPageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -116,6 +140,16 @@ func GetTenanciesList(ctx *gin.Context) {
 func GetTenanciesByRegion(ctx *gin.Context) {
 	code := ctx.Param("code")
 	if tenancies, err := service.GetTenanciesByRegion(code); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(tenancies, "获取成功", ctx)
+	}
+}
+
+// GetTenancyCount 获取Tenancy对应状态数量
+func GetTenancyCount(ctx *gin.Context) {
+	if tenancies, err := service.GetTenancyCount(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
