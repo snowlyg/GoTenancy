@@ -36,12 +36,12 @@ func SetTenancyRegionByID(regionCode request.SetRegionCode) error {
 }
 
 // ChangeTenancyStatus
-func ChangeTenancyStatus(changeStatus request.ChangeTenancyStatus) error {
+func ChangeTenancyStatus(changeStatus request.ChangeStatus) error {
 	return g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", changeStatus.Id).Update("status", changeStatus.Status).Error
 }
 
-// UpdateTenany
-func UpdateTenany(tenancy model.SysTenancy, id string) (model.SysTenancy, error) {
+// UpdateTenancy
+func UpdateTenancy(tenancy model.SysTenancy, id string) (model.SysTenancy, error) {
 	err := g.TENANCY_DB.Where("name = ?", tenancy.Name).Not("id = ?", id).First(&tenancy).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return tenancy, errors.New("名称已被注冊")

@@ -6,6 +6,11 @@ type PageInfo struct {
 	PageSize int `json:"pageSize" form:"pageSize" binding:"required"`
 }
 
+type ChangeStatus struct {
+	Id     float64 `json:"id" form:"id" binding:"required,gt=0"`
+	Status int     `json:"status" binding:"required"`
+}
+
 // Find by id structure
 type GetById struct {
 	Id float64 `json:"id" form:"id" binding:"required"`

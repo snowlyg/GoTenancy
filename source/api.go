@@ -25,6 +25,10 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/authority/createAuthority", Description: "创建角色", ApiGroup: "authority", Method: "POST"},
 	{Path: "/v1/admin/authority/deleteAuthority", Description: "删除角色", ApiGroup: "authority", Method: "POST"},
 	{Path: "/v1/admin/authority/getAuthorityList", Description: "获取角色列表", ApiGroup: "authority", Method: "POST"},
+	{Path: "/v1/admin/authority/setDataAuthority", Description: "设置角色资源权限", ApiGroup: "authority", Method: "POST"},
+	{Path: "/v1/admin/authority/updateAuthority", Description: "更新角色信息", ApiGroup: "authority", Method: "PUT"},
+	{Path: "/v1/admin/authority/copyAuthority", Description: "拷贝角色", ApiGroup: "authority", Method: "POST"},
+
 	{Path: "/v1/admin/menu/getMenu", Description: "获取菜单树", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getMenuList", Description: "分页获取基础menu列表", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/addBaseMenu", Description: "新增菜单", ApiGroup: "menu", Method: "POST"},
@@ -34,18 +38,42 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/menu/deleteBaseMenu", Description: "删除菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/updateBaseMenu", Description: "更新菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getBaseMenuById", Description: "根据id获取菜单", ApiGroup: "menu", Method: "POST"},
+
 	{Path: "/v1/admin/user/changePassword", Description: "修改密码", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getAdminList", Description: "获取管理员列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getTenancyList", Description: "获取商户员工列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getGeneralList", Description: "获取普通用户列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/setUserAuthority", Description: "修改用户角色", ApiGroup: "user", Method: "POST"},
+	{Path: "/v1/admin/user/setUserInfo", Description: "设置用户信息", ApiGroup: "user", Method: "PUT"},
+	{Path: "/v1/admin/user/deleteUser", Description: "删除用户", ApiGroup: "user", Method: "DELETE"},
+
 	{Path: "/v1/auth/logout", Description: "退出", ApiGroup: "user", Method: "GET"},
 	{Path: "/v1/auth/clean", Description: "清空", ApiGroup: "user", Method: "GET"},
+
 	{Path: "/v1/admin/casbin/updateCasbin", Description: "更改角色api权限", ApiGroup: "casbin", Method: "POST"},
 	{Path: "/v1/admin/casbin/getPolicyPathByAuthorityId", Description: "获取权限列表", ApiGroup: "casbin", Method: "POST"},
-	{Path: "/v1/admin/authority/setDataAuthority", Description: "设置角色资源权限", ApiGroup: "authority", Method: "POST"},
+	{Path: "/v1/admin/casbin/casbinTest/:pathParam", Description: "RESTFUL模式测试", ApiGroup: "casbin", Method: "GET"},
+
 	{Path: "/v1/admin/system/getSystemConfig", Description: "获取配置文件内容", ApiGroup: "system", Method: "POST"},
 	{Path: "/v1/admin/system/setSystemConfig", Description: "设置配置文件内容", ApiGroup: "system", Method: "POST"},
+	{Path: "/v1/admin/system/getServerInfo", Description: "获取服务器信息", ApiGroup: "system", Method: "POST"},
+
+	// 配置
+	{Path: "/v1/admin/config/getConfigList", Description: "获取配置项列表", ApiGroup: "config", Method: "POST"},
+	{Path: "/v1/admin/config/createConfig", Description: "添加配置项", ApiGroup: "config", Method: "POST"},
+	{Path: "/v1/admin/config/getConfigByName", Description: "获取根据name配置项", ApiGroup: "config", Method: "POST"},
+	{Path: "/v1/admin/config/updateConfig", Description: "更新配置项", ApiGroup: "config", Method: "PUT"},
+	{Path: "/v1/admin/config/deleteConfig", Description: "删除配置项", ApiGroup: "config", Method: "DELETE"},
+
+	// 配置分类
+	{Path: "/v1/admin/configCategory/getCreateConfigCategoryMap", Description: "获取配置分类创建表单", ApiGroup: "configCategory", Method: "GET"},
+	{Path: "/v1/admin/configCategory/getUpdateConfigCategoryMap/:id", Description: "获取配置分类编辑表单", ApiGroup: "configCategory", Method: "GET"},
+	{Path: "/v1/admin/configCategory/getConfigCategoryList", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "GET"},
+	{Path: "/v1/admin/configCategory/createConfigCategory", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "POST"},
+	{Path: "/v1/admin/configCategory/changeConfigCategoryStatus", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "POST"},
+	{Path: "/v1/admin/configCategory/getConfigCategoryById/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "GET"},
+	{Path: "/v1/admin/configCategory/updateConfigCategory/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "PUT"},
+	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "DELETE"},
 
 	// 商户
 	{Path: "/v1/admin/tenancy/getTenancies/code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
@@ -57,11 +85,6 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/tenancy/getTenancyById/:id", Description: "获取商户详细信息", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/updateTenancy/:id", Description: "更新商户", ApiGroup: "tenancy", Method: "PUT"},
 	{Path: "/v1/admin/tenancy/deleteTenancy/:id", Description: "删除商户", ApiGroup: "tenancy", Method: "DELETE"},
-
-	{Path: "/v1/admin/casbin/casbinTest/:pathParam", Description: "RESTFUL模式测试", ApiGroup: "casbin", Method: "GET"},
-	{Path: "/v1/admin/authority/updateAuthority", Description: "更新角色信息", ApiGroup: "authority", Method: "PUT"},
-	{Path: "/v1/admin/authority/copyAuthority", Description: "拷贝角色", ApiGroup: "authority", Method: "POST"},
-	{Path: "/v1/admin/user/deleteUser", Description: "删除用户", ApiGroup: "user", Method: "DELETE"},
 
 	// 小程序
 	{Path: "/v1/admin/mini/getMiniList", Description: "获取小程序列表", ApiGroup: "mini", Method: "POST"},
@@ -79,8 +102,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录", ApiGroup: "sysOperationRecord", Method: "GET"},
 	{Path: "/v1/admin/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecord", Method: "GET"},
 	{Path: "/v1/admin/sysOperationRecord/deleteSysOperationRecordByIds", Description: "批量删除操作历史", ApiGroup: "sysOperationRecord", Method: "DELETE"},
-	{Path: "/v1/admin/user/setUserInfo", Description: "设置用户信息", ApiGroup: "user", Method: "PUT"},
-	{Path: "/v1/admin/system/getServerInfo", Description: "获取服务器信息", ApiGroup: "system", Method: "POST"},
+
 	{Path: "/v1/admin/email/emailTest", Description: "发送测试邮件", ApiGroup: "email", Method: "POST"},
 	{Path: "/v1/admin/api/deleteApisByIds", Description: "批量删除api", ApiGroup: "api", Method: "DELETE"},
 }

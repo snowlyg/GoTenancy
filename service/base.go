@@ -7,6 +7,33 @@ import (
 	"gorm.io/gorm"
 )
 
+type Form struct {
+	Rule    []Rule                   `json:"rule"`
+	Action  string                   `json:"action"`
+	Method  string                   `json:"method"`
+	Title   string                   `json:"title"`
+	Config  Config                   `json:"config"`
+	Headers []map[string]interface{} `json:"headers,omitempty"`
+}
+
+type Config struct {
+}
+
+type Rule struct {
+	Title    string                   `json:"title"`
+	Type     string                   `json:"type"`
+	Field    string                   `json:"field"`
+	Value    interface{}              `json:"value"`
+	Props    map[string]interface{}   `json:"props"`
+	Options  []Option                 `json:"options,omitempty"`
+	Validate []map[string]interface{} `json:"validate,omitempty"`
+}
+
+type Option struct {
+	Label string `json:"label"`
+	Value int    `json:"value"`
+}
+
 // filterDate
 func filterDate(db *gorm.DB, date string) *gorm.DB {
 	dates := strings.Split(date, "-")

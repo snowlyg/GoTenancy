@@ -64,7 +64,7 @@ func SetTenancyRegion(ctx *gin.Context) {
 
 // ChangeTenancyStatus
 func ChangeTenancyStatus(ctx *gin.Context) {
-	var changeStatus request.ChangeTenancyStatus
+	var changeStatus request.ChangeStatus
 	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -85,7 +85,7 @@ func UpdateTenancy(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnTenancy, err := service.UpdateTenany(tenancy, ctx.Param("id")); err != nil {
+	if returnTenancy, err := service.UpdateTenancy(tenancy, ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
