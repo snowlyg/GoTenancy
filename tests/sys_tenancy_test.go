@@ -9,17 +9,41 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 )
 
+type param struct {
+	args   map[string]interface{}
+	length int
+}
+
 func TestTenancyList(t *testing.T) {
+	ml := 3
+	// 当天时间大于 15 号，当月数量为 4
+	if time.Now().Day() > 15 {
+		ml = 4
+	}
+
+	year, month, _ := time.Now().Date()
+	date := fmt.Sprintf("%d/%02d/01-%d/%02d/28", year, month, year, month)
+	params := []param{
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": ""}, length: 4},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "today"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "yesterday"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately7"}, length: 3},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately30"}, length: 4},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "month"}, length: ml},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "year"}, length: 4},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "2", "keyword": "", "date": ""}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": date}, length: ml},
+	}
+	for _, param := range params {
+		list(t, param.args, param.length)
+	}
+}
+
+func list(t *testing.T, params map[string]interface{}, length int) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
 	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
-		WithJSON(map[string]interface{}{
-			"page":     1,
-			"pageSize": 10,
-			"status":   "1",
-			"keyword":  "宝安",
-			"date":     fmt.Sprintf("%d/%02d/01-%d/%02d/28", time.Now().Year(), time.Now().Month(), time.Now().Year(), time.Now().Month()),
-		}).
+		WithJSON(params).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -32,106 +56,10 @@ func TestTenancyList(t *testing.T) {
 	data.Value("total").Number().Ge(0)
 
 	list := data.Value("list").Array()
-	list.Length().Ge(0)
+	list.Length().Equal(length)
 	first := list.First().Object()
 	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "sysRegionCode", "status", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-}
-func TestTenancyListNextMonth(t *testing.T) {
-	auth := baseWithLoginTester(t)
-	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
-		WithJSON(map[string]interface{}{
-			"page":     1,
-			"pageSize": 10,
-			"status":   "1",
-			"keyword":  "宝安",
-			"date":     fmt.Sprintf("%d/%02d/01-%d/%02d/28", time.Now().Year(), time.Now().AddDate(0, 1, 0).Month(), time.Now().Year(), time.Now().AddDate(0, 1, 0).Month()),
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
-	data.Value("pageSize").Number().Equal(10)
-	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Equal(0)
-	data.Value("list").Array().Empty()
-}
-
-func TestTenancyListNoKeyword(t *testing.T) {
-	auth := baseWithLoginTester(t)
-	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
-		WithJSON(map[string]interface{}{
-			"page":     1,
-			"pageSize": 10,
-			"status":   "1",
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
-	data.Value("pageSize").Number().Equal(10)
-	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Ge(0)
-
-	list := data.Value("list").Array()
-	list.Length().Ge(0)
-	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "sysRegionCode", "status", "createdAt", "updatedAt")
-	first.Value("id").Number().Ge(0)
-}
-
-func TestTenancyListKeyword(t *testing.T) {
-	auth := baseWithLoginTester(t)
-	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
-		WithJSON(map[string]interface{}{
-			"page":     1,
-			"pageSize": 10,
-			"status":   "1",
-			"keyword":  "北京",
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
-	data.Value("pageSize").Number().Equal(10)
-	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Equal(0)
-	data.Value("list").Array().Empty()
-}
-
-func TestTenancyListStatus(t *testing.T) {
-	auth := baseWithLoginTester(t)
-	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
-		WithJSON(map[string]interface{}{
-			"page":     1,
-			"pageSize": 10,
-			"status":   "2",
-			"keyword":  "",
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
-	data.Value("pageSize").Number().Equal(10)
-	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Equal(0)
-	data.Value("list").Array().Empty()
 }
 
 func TestTenancyByRegion(t *testing.T) {
@@ -153,8 +81,8 @@ func TestGetTenancyCount(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
-	obj.Value("data").Object().Value("invalid").Equal(0)
-	obj.Value("data").Object().Value("valid").Equal(2)
+	obj.Value("data").Object().Value("invalid").Equal(1)
+	obj.Value("data").Object().Value("valid").Equal(4)
 }
 
 func TestTenancyProcess(t *testing.T) {

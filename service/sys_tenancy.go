@@ -2,8 +2,6 @@ package service
 
 import (
 	"errors"
-	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -68,12 +66,7 @@ func GetTenanciesInfoList(info request.TenancyPageInfo) ([]response.SysTenancy, 
 		db = db.Where(g.TENANCY_DB.Where("name like ?", info.Keyword+"%").Or("tele like ?", info.Keyword+"%"))
 	}
 	if info.Date != "" {
-		dates := strings.Split(info.Date, "-")
-		if len(dates) == 2 {
-			start, _ := time.Parse("2006/01/02", dates[0])
-			end, _ := time.Parse("2006/01/02", dates[1])
-			db = db.Where("created_at BETWEEN ? AND ?", start, end)
-		}
+		db = filterDate(db, info.Date)
 	}
 
 	var total int64
