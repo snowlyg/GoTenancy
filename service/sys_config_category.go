@@ -77,6 +77,28 @@ func DeleteConfigCategory(id string) error {
 // GetConfigCategoriesInfoList
 func GetConfigCategoriesInfoList() ([]model.SysConfigCategory, error) {
 	var cateList []model.SysConfigCategory
-	err := g.TENANCY_DB.Model(&model.SysConfigCategory{}).Where("status = ?", g.StatusTrue).Find(&cateList).Error
+	err := g.TENANCY_DB.Find(&cateList).Error
 	return cateList, err
+}
+
+type Opt struct {
+	Label string `json:"label"`
+	Value int    `json:"value"`
+}
+
+// GetConfigCategoriesOptions
+func GetConfigCategoriesOptions() ([]Option, error) {
+	var options []Option
+	var opts []Opt
+	err := g.TENANCY_DB.Model(&model.SysConfigCategory{}).Select("id as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
+	if err != nil {
+		return options, err
+	}
+	options = append(options, Option{Label: "选择", Value: 0})
+
+	for _, opt := range opts {
+		options = append(options, Option{Label: opt.Label, Value: opt.Value})
+	}
+
+	return options, err
 }

@@ -4,6 +4,7 @@ cmd/
 tmp/
 crmeb/
 uploads/
+.history/
 
 # files
 go.sum

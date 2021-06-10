@@ -1,320 +1,69 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
-	"github.com/snowlyg/go-tenancy/model/response"
 	"gorm.io/gorm"
 )
 
-// getFrom() {
-// 	if (this.$route.params.key === "upload") {
-// 		this.FromData = {
-// 			rule: [
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_appid",
-// 					value: "",
-// 					title: "Appid",
-// 					info: "小程序Appid",
-// 					props: { type: "text", placeholder: "请输入Appid" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_appsecret",
-// 					value: "",
-// 					title: "Appsecret",
-// 					info: "小程序Appsecret",
-// 					props: { type: "text", placeholder: "请输入Appsecret" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_mchid",
-// 					value: "",
-// 					title: "Mchid",
-// 					info: "商户号",
-// 					props: { type: "text", placeholder: "请输入Mchid" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_key",
-// 					value: "",
-// 					title: "Key",
-// 					info: "商户key",
-// 					props: { type: "text", placeholder: "请输入Key" },
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_routine_client_cert",
-// 					value: "",
-// 					title: "小程序支付证书",
-// 					name: "pay_routine_client_cert",
-// 					info: "小程序支付证书",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + this.token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_routine_client_key",
-// 					value: "",
-// 					title: "小程序支付证书密钥",
-// 					name: "pay_routine_client_key",
-// 					info: "小程序支付证书密钥",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + this.token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 			],
-// 			action: "/sys/config/save/routine_pay.html",
-// 			method: "POST",
-// 			title: "小程序支付配置",
-// 			config: {},
-// 		};
-// 	} else if (this.$route.params.key === "routine_pay") {
-// 		this.FromData = {
-// 			rule: [
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_appid",
-// 					value: "",
-// 					title: "Appid",
-// 					info: "小程序Appid",
-// 					props: { type: "text", placeholder: "请输入Appid" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_appsecret",
-// 					value: "",
-// 					title: "Appsecret",
-// 					info: "小程序Appsecret",
-// 					props: { type: "text", placeholder: "请输入Appsecret" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_mchid",
-// 					value: "",
-// 					title: "Mchid",
-// 					info: "商户号",
-// 					props: { type: "text", placeholder: "请输入Mchid" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_routine_key",
-// 					value: "",
-// 					title: "Key",
-// 					info: "商户key",
-// 					props: { type: "text", placeholder: "请输入Key" },
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_routine_client_cert",
-// 					value: "",
-// 					title: "小程序支付证书",
-// 					name: "pay_routine_client_cert",
-// 					info: "小程序支付证书",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + this.token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_routine_client_key",
-// 					value: "",
-// 					title: "小程序支付证书密钥",
-// 					name: "pay_routine_client_key",
-// 					info: "小程序支付证书密钥",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + this.token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 			],
-// 			action: "/sys/config/save/routine_pay.html",
-// 			method: "POST",
-// 			title: "小程序支付配置",
-// 			config: {},
-// 		};
-// 	} else if (this.$route.params.key === "wechat_payment") {
-// 		this.FromData = {
-// 			rule: [
-// 				{
-// 					type: "input",
-// 					field: "pay_weixin_appid",
-// 					value: "sdfsdfas",
-// 					title: "Appid",
-// 					info: "微信公众号身份的唯一标识。审核通过后，在微信发送的邮件中查看。",
-// 					props: { type: "text", placeholder: "请输入Appid" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_weixin_appsecret",
-// 					value: "sadfsadf",
-// 					title: "Appsecret",
-// 					info: "JSAPI接口中获取openid，审核后在公众平台开启开发模式后可查看。",
-// 					props: { type: "text", placeholder: "请输入Appsecret" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_weixin_mchid",
-// 					value: "asfsdafa",
-// 					title: "Mchid",
-// 					info: "受理商ID，身份标识",
-// 					props: { type: "text", placeholder: "请输入Mchid" },
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_weixin_client_cert",
-// 					value: "",
-// 					title: "微信支付证书",
-// 					name: "pay_weixin_client_cert",
-// 					info: "微信支付证书，在微信商家平台中可以下载！文件名一般为apiclient_cert.pem",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 				{
-// 					type: "upload",
-// 					field: "pay_weixin_client_key",
-// 					value: "",
-// 					title: "微信支付证书密钥",
-// 					name: "pay_weixin_client_key",
-// 					info: "微信支付证书密钥，在微信商家平台中可以下载！文件名一般为apiclient_key.pem",
-// 					props: {
-// 						limit: 1,
-// 						uploadType: "file",
-// 						headers: {
-// 							"Authorization": "Bearer " + this.token,
-// 						},
-// 						data: [],
-// 						action: "/sys/config/setting/upload_file/file.html",
-// 					},
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "pay_weixin_key",
-// 					value: "",
-// 					title: "Key",
-// 					info: "商户支付密钥Key。审核通过后，在微信发送的邮件中查看。",
-// 					props: { type: "text", placeholder: "请输入Key" },
-// 				},
-// 				{
-// 					type: "radio",
-// 					field: "pay_weixin_open",
-// 					value: "",
-// 					title: "开启",
-// 					info: "是否启用微信支付",
-// 					props: {},
-// 					options: [
-// 						{ value: "0", label: "关闭" },
-// 						{ value: "1", label: "开启" },
-// 					],
-// 				},
-// 			],
-// 			action: "/sys/config/save/wechat_payment.html",
-// 			method: "POST",
-// 			title: "公众号支付配置",
-// 			config: {},
-// 		};
-// 	} else if (this.$route.params.key === "alipay") {
-// 		this.FromData = {
-// 			rule: [
-// 				{
-// 					type: "radio",
-// 					field: "alipay_open",
-// 					value: "",
-// 					title: "支付宝支付状态",
-// 					info: "",
-// 					props: {},
-// 					options: [
-// 						{ value: "0", label: "关闭" },
-// 						{ value: "1", label: "开启" },
-// 					],
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "alipay_app_id",
-// 					value: "",
-// 					title: "支付宝app_id",
-// 					info: "",
-// 					props: { type: "text", placeholder: "请输入支付宝app_id" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "alipay_public_key",
-// 					value: "",
-// 					title: "支付宝公钥",
-// 					info: "",
-// 					props: { type: "text", placeholder: "请输入支付宝公钥" },
-// 				},
-// 				{
-// 					type: "input",
-// 					field: "alipay_private_key",
-// 					value: "",
-// 					title: "支付密钥",
-// 					info: "",
-// 					props: { type: "text", placeholder: "请输入支付密钥" },
-// 				},
-// 			],
-// 			action: "/sys/config/save/alipay.html",
-// 			method: "POST",
-// 			title: "支付宝支付配置",
-// 			config: {},
-// 		};
-// 	}
-// },
+// GetConfigMap
+func GetConfigMap(id string) (Form, error) {
+	var form Form
+	var formStr string
+	if id != "" {
+		config, err := GetConfigByID(id)
+		if err != nil {
+			return form, err
+		}
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"sysConfigCategoryId","value":%d,"title":"配置分类","props":{"type":"other","options":[],"placeholder":"请选择分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"userType","value":%d,"title":"后台类型","props":{"multiple":false,"placeholder":"请选择后台类型"},"validate":[{"message":"请选择后台类型","required":true,"type":"number","trigger":"change"}],"options":[{"label":"总后台配置","value":2},{"label":"商户后台配置","value":1}]},{"type":"input","field":"configName","value":"%s","title":"配置名称","props":{"type":"text","placeholder":"请输入配置名称"},"validate":[{"message":"请输入配置名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"configKey","value":"%s","title":"配置key","props":{"type":"text","placeholder":"请输入配置key"},"validate":[{"message":"请输入配置key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"说明","props":{"type":"text","placeholder":"请输入说明"}},{"type":"select","field":"configType","value":"%s","title":"配置类型","props":{"multiple":false,"placeholder":"请选择配置类型"},"validate":[{"message":"请选择配置类型","required":true,"type":"string","trigger":"change"}],"options":[]},{"type":"input","field":"configRule","value":"","title":"规则","props":{"type":"textarea","placeholder":"请输入规则"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"required","value":%d,"title":"必填","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":0,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s/%s","method":"PUT","title":"添加配置","config":{}}`, config.SysConfigCategoryID, config.UserType, config.ConfigKey, config.ConfigName, config.Info, config.ConfigType, config.Sort, config.Required, config.Status, "/admin/config/updateConfig", id)
+	} else {
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"sysConfigCategoryId","value":%d,"title":"配置分类","props":{"type":"other","options":[],"placeholder":"请选择分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"userType","value":%d,"title":"后台类型","props":{"multiple":false,"placeholder":"请选择后台类型"},"validate":[{"message":"请选择后台类型","required":true,"type":"number","trigger":"change"}],"options":[{"label":"总后台配置","value":2},{"label":"商户后台配置","value":1}]},{"type":"input","field":"configName","value":"%s","title":"配置名称","props":{"type":"text","placeholder":"请输入配置名称"},"validate":[{"message":"请输入配置名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"configKey","value":"%s","title":"配置key","props":{"type":"text","placeholder":"请输入配置key"},"validate":[{"message":"请输入配置key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"说明","props":{"type":"text","placeholder":"请输入说明"}},{"type":"select","field":"configType","value":"%s","title":"配置类型","props":{"multiple":false,"placeholder":"请选择配置类型"},"validate":[{"message":"请选择配置类型","required":true,"type":"string","trigger":"change"}],"options":[]},{"type":"input","field":"configRule","value":"","title":"规则","props":{"type":"textarea","placeholder":"请输入规则"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"required","value":%d,"title":"必填","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":0,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s","method":"POST","title":"添加配置","config":{}}`, 0, 2, "", "", "", "", 0, 2, 1, "/admin/config/createConfig")
+	}
+	err := json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	opts, err := GetConfigCategoriesOptions()
+	if err != nil {
+		return form, err
+	}
+	form.Rule[0].Props["options"] = opts
+	form.Rule[5].Options = ConfigTypes
+	return form, err
+}
+
 // CreateConfig
 func CreateConfig(m model.SysConfig) (model.SysConfig, error) {
-	err := g.TENANCY_DB.Where("name = ?", m.Name).Where("type = ?", m.Type).First(&model.SysConfig{}).Error
+	err := g.TENANCY_DB.Where("config_key = ?", m.ConfigKey).First(&model.SysConfig{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return m, errors.New("设置名称已经使用")
+		return m, fmt.Errorf("设置key:%s已经使用", m.ConfigKey)
 	}
 	err = g.TENANCY_DB.Create(&m).Error
 	return m, err
 }
 
-// GetConfigByName
-func GetConfigByName(name, style string) (model.SysConfig, error) {
+// GetConfigByKey
+func GetConfigByKey(config_key string) (model.SysConfig, error) {
 	var config model.SysConfig
-	err := g.TENANCY_DB.Where("name = ?", name).Where("type = ?", style).First(&config).Error
+	err := g.TENANCY_DB.Where("config_key = ?", config_key).First(&config).Error
+	return config, err
+}
+
+// GetConfigByID
+func GetConfigByID(id string) (model.SysConfig, error) {
+	var config model.SysConfig
+	err := g.TENANCY_DB.Where("id = ?", id).First(&config).Error
 	return config, err
 }
 
 // GetConfigInfoList
-func GetConfigInfoList(info request.PageInfo) ([]response.SysConfig, int64, error) {
-	var configList []response.SysConfig
+func GetConfigInfoList(info request.PageInfo) ([]model.SysConfig, int64, error) {
+	var configList []model.SysConfig
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysConfig{})
@@ -324,21 +73,33 @@ func GetConfigInfoList(info request.PageInfo) ([]response.SysConfig, int64, erro
 		return configList, total, err
 	}
 	err = db.Limit(limit).Offset(offset).Find(&configList).Error
+	if err != nil {
+		return configList, total, err
+	}
+	// 获取类型名称
+	for i := 0; i < len(configList); i++ {
+		configList[i].TypeName = GetConfigTypeName(configList[i].ConfigType)
+	}
 	return configList, total, err
 }
 
+// ChangeConfigStatus
+func ChangeConfigStatus(changeStatus request.ChangeStatus) error {
+	return g.TENANCY_DB.Model(&model.SysConfig{}).Where("id = ?", changeStatus.Id).Update("status", changeStatus.Status).Error
+}
+
 // UpdateConfig
-func UpdateConfig(m model.SysConfig) (model.SysConfig, error) {
-	err := g.TENANCY_DB.Where("name = ?", m.Name).Where("id <> ?", m.ID).Where("type = ?", m.Type).First(&model.SysConfig{}).Error
+func UpdateConfig(m model.SysConfig, id string) (model.SysConfig, error) {
+	err := g.TENANCY_DB.Where("config_key = ?", m.ConfigKey).Where("id <> ?", id).First(&model.SysConfig{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return m, errors.New("设置名称已经使用")
+		return m, fmt.Errorf("设置key:%s已经使用", m.ConfigKey)
 	}
-	err = g.TENANCY_DB.Updates(&m).Error
+	err = g.TENANCY_DB.Where("id= ?", id).Updates(&m).Error
 	return m, err
 }
 
 // DeleteConfig
-func DeleteConfig(id float64) error {
+func DeleteConfig(id string) error {
 	var config model.SysConfig
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&config).Error
+	return g.TENANCY_DB.Unscoped().Where("id = ?", id).Delete(&config).Error
 }

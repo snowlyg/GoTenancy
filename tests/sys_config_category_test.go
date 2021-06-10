@@ -98,7 +98,18 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategory.Value("info").String().Equal(update["info"].(string))
 	configCategory.Value("status").Number().Equal(update["status"].(int))
 
-	// setUserAuthority
+	// changeConfigCategoryStatus
+	obj = auth.POST("/v1/admin/configCategory/changeConfigCategoryStatus").
+		WithJSON(map[string]interface{}{
+			"id":     configCategoryId,
+			"status": 2,
+		}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
+
+	// deleteConfigCategory
 	obj = auth.DELETE(fmt.Sprintf("/v1/admin/configCategory/deleteConfigCategory/%f", configCategoryId)).
 		WithJSON(map[string]interface{}{"id": configCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()

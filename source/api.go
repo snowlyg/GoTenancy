@@ -59,21 +59,25 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/system/getServerInfo", Description: "获取服务器信息", ApiGroup: "system", Method: "POST"},
 
 	// 配置
+	{Path: "/v1/admin/config/getCreateConfigMap", Description: "获取配置创建表单", ApiGroup: "config", Method: "GET"},
+	{Path: "/v1/admin/config/getUpdateConfigMap/:id", Description: "获取配置编辑表单", ApiGroup: "config", Method: "GET"},
 	{Path: "/v1/admin/config/getConfigList", Description: "获取配置项列表", ApiGroup: "config", Method: "POST"},
 	{Path: "/v1/admin/config/createConfig", Description: "添加配置项", ApiGroup: "config", Method: "POST"},
-	{Path: "/v1/admin/config/getConfigByName", Description: "获取根据name配置项", ApiGroup: "config", Method: "POST"},
-	{Path: "/v1/admin/config/updateConfig", Description: "更新配置项", ApiGroup: "config", Method: "PUT"},
-	{Path: "/v1/admin/config/deleteConfig", Description: "删除配置项", ApiGroup: "config", Method: "DELETE"},
+	{Path: "/v1/admin/config/getConfigByKey/:key", Description: "获取根据key配置项", ApiGroup: "config", Method: "GET"},
+	{Path: "/v1/admin/config/getConfigByID/:id", Description: "获取根据id配置项", ApiGroup: "config", Method: "GET"},
+	{Path: "/v1/admin/config/changeConfigStatus", Description: "修改配置状态", ApiGroup: "config", Method: "POST"},
+	{Path: "/v1/admin/config/updateConfig/:id", Description: "更新配置项", ApiGroup: "config", Method: "PUT"},
+	{Path: "/v1/admin/config/deleteConfig/:id", Description: "删除配置项", ApiGroup: "config", Method: "DELETE"},
 
 	// 配置分类
 	{Path: "/v1/admin/configCategory/getCreateConfigCategoryMap", Description: "获取配置分类创建表单", ApiGroup: "configCategory", Method: "GET"},
 	{Path: "/v1/admin/configCategory/getUpdateConfigCategoryMap/:id", Description: "获取配置分类编辑表单", ApiGroup: "configCategory", Method: "GET"},
 	{Path: "/v1/admin/configCategory/getConfigCategoryList", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "GET"},
-	{Path: "/v1/admin/configCategory/createConfigCategory", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "POST"},
-	{Path: "/v1/admin/configCategory/changeConfigCategoryStatus", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "POST"},
-	{Path: "/v1/admin/configCategory/getConfigCategoryById/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "GET"},
-	{Path: "/v1/admin/configCategory/updateConfigCategory/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "PUT"},
-	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "获取配置分类列表", ApiGroup: "configCategory", Method: "DELETE"},
+	{Path: "/v1/admin/configCategory/createConfigCategory", Description: "添加配置分类", ApiGroup: "configCategory", Method: "POST"},
+	{Path: "/v1/admin/configCategory/changeConfigCategoryStatus", Description: "修改配置分类状态", ApiGroup: "configCategory", Method: "POST"},
+	{Path: "/v1/admin/configCategory/getConfigCategoryById/:id", Description: "获取配置分类", ApiGroup: "configCategory", Method: "GET"},
+	{Path: "/v1/admin/configCategory/updateConfigCategory/:id", Description: "更新配置分类", ApiGroup: "configCategory", Method: "PUT"},
+	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "删除配置分类", ApiGroup: "configCategory", Method: "DELETE"},
 
 	// 商户
 	{Path: "/v1/admin/tenancy/getTenancies/code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},

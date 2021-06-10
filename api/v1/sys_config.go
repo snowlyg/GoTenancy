@@ -10,6 +10,26 @@ import (
 	"go.uber.org/zap"
 )
 
+// GetCreateConfigMap
+func GetCreateConfigMap(ctx *gin.Context) {
+	if form, err := service.GetConfigMap(""); err != nil {
+		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
+		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(form, "获取成功", ctx)
+	}
+}
+
+// GetUpdateConfigMap
+func GetUpdateConfigMap(ctx *gin.Context) {
+	if form, err := service.GetConfigMap(ctx.Param("id")); err != nil {
+		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
+		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(form, "获取成功", ctx)
+	}
+}
+
 // CreateConfig
 func CreateConfig(ctx *gin.Context) {
 	var config model.SysConfig
@@ -21,8 +41,7 @@ func CreateConfig(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
-		response.OkWithDetailed(data, "创建成功", ctx)
+		response.OkWithDetailed(returnConfig, "创建成功", ctx)
 	}
 }
 
@@ -33,12 +52,27 @@ func UpdateConfig(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnConfig, err := service.UpdateConfig(config); err != nil {
+	if returnConfig, err := service.UpdateConfig(config, ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		data := gin.H{"id": returnConfig.ID, "name": returnConfig.Name, "type": returnConfig.Type, "value": returnConfig.Value}
-		response.OkWithDetailed(data, "更新成功", ctx)
+		response.OkWithDetailed(returnConfig, "更新成功", ctx)
+	}
+}
+
+// ChangeConfigStatus
+func ChangeConfigStatus(ctx *gin.Context) {
+	var changeStatus request.ChangeStatus
+	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	err := service.ChangeConfigStatus(changeStatus)
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
 	}
 }
 
@@ -62,14 +96,20 @@ func GetConfigList(ctx *gin.Context) {
 	}
 }
 
-// GetConfigByName
-func GetConfigByName(ctx *gin.Context) {
-	var req request.GetSysConfig
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
+// GetConfigByKey
+func GetConfigByKey(ctx *gin.Context) {
+	config, err := service.GetConfigByKey(ctx.Param("key"))
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithData(config, ctx)
 	}
-	config, err := service.GetConfigByName(req.Name, req.Type)
+}
+
+// GetConfigByID
+func GetConfigByID(ctx *gin.Context) {
+	config, err := service.GetConfigByID(ctx.Param("id"))
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -80,12 +120,7 @@ func GetConfigByName(ctx *gin.Context) {
 
 // DeleteConfig
 func DeleteConfig(ctx *gin.Context) {
-	var reqId request.GetById
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if err := service.DeleteConfig(reqId.Id); err != nil {
+	if err := service.DeleteConfig(ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

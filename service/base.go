@@ -7,6 +7,27 @@ import (
 	"gorm.io/gorm"
 )
 
+var ConfigTypes = []Option{
+	{Value: "input", Label: "文本框"},
+	{Value: "number", Label: "数字框"},
+	{Value: "textarea", Label: "多行文本框"},
+	{Value: "radio", Label: "单选框"},
+	{Value: "checkbox", Label: "多选框"},
+	{Value: "select", Label: "下拉框"},
+	{Value: "file", Label: "文件上传"},
+	{Value: "image", Label: "图片上传"},
+	{Value: "color", Label: "颜色选择框"},
+}
+
+func GetConfigTypeName(value string) string {
+	for i := 0; i < len(ConfigTypes); i++ {
+		if ConfigTypes[i].Value.(string) == value {
+			return ConfigTypes[i].Label
+		}
+	}
+	return ""
+}
+
 type Form struct {
 	Rule    []Rule                   `json:"rule"`
 	Action  string                   `json:"action"`
@@ -30,8 +51,8 @@ type Rule struct {
 }
 
 type Option struct {
-	Label string `json:"label"`
-	Value int    `json:"value"`
+	Label string      `json:"label"`
+	Value interface{} `json:"value"`
 }
 
 // filterDate
