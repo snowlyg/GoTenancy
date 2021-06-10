@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"testing"
@@ -21,8 +22,6 @@ func TestMediaList(t *testing.T) {
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
 	data.Value("total").Number().Ge(0)
-	data.Value("list").Array().Empty()
-
 }
 
 func TestMediaProcess(t *testing.T) {
@@ -49,9 +48,27 @@ func TestMediaProcess(t *testing.T) {
 	media.Value("key").String().NotEmpty()
 	mediaId := media.Value("id").Number().Raw()
 
+	// getUpdateMediaMap
+	obj = auth.GET(fmt.Sprintf("/v1/admin/media/getUpdateMediaMap/%f", mediaId)).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	// changeTenancyStatus
+	obj = auth.POST("/v1/admin/media/updateMediaName").
+		WithJSON(map[string]interface{}{
+			"id":   mediaId,
+			"name": "name_jpg",
+		}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
+
 	// setUserAuthority
 	obj = auth.DELETE("/v1/admin/media/deleteFile").
-		WithJSON(map[string]interface{}{"id": mediaId}).
+		WithJSON(map[string]interface{}{"ids": []float64{mediaId}}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

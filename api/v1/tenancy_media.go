@@ -10,17 +10,26 @@ import (
 	"go.uber.org/zap"
 )
 
+// GetUpdateMediaMap
+func GetUpdateMediaMap(ctx *gin.Context) {
+	if form, err := service.GetMediaMap(ctx.Param("id")); err != nil {
+		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
+		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(form, "获取成功", ctx)
+	}
+}
+
 func UploadFile(ctx *gin.Context) {
 	var file model.TenancyMedia
 	noSave := ctx.DefaultQuery("noSave", "0")
-	path := ctx.DefaultPostForm("path", "")
 	_, header, err := ctx.Request.FormFile("file")
 	if err != nil {
 		g.TENANCY_LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", ctx)
 		return
 	}
-	file, err = service.UploadFile(header, noSave, path, ctx) // 文件上传后拿到文件路径
+	file, err = service.UploadFile(header, noSave, ctx) // 文件上传后拿到文件路径
 	if err != nil {
 		g.TENANCY_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", ctx)
@@ -30,9 +39,9 @@ func UploadFile(ctx *gin.Context) {
 }
 
 func DeleteFile(ctx *gin.Context) {
-	var file model.TenancyMedia
+	var file request.DeleteMedia
 	_ = ctx.ShouldBindJSON(&file)
-	if err := service.DeleteFile(file); err != nil {
+	if err := service.DeleteFile(file.Ids); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 		return
@@ -40,8 +49,19 @@ func DeleteFile(ctx *gin.Context) {
 	response.OkWithMessage("删除成功", ctx)
 }
 
+func UpdateMediaName(ctx *gin.Context) {
+	var req request.UpdateMediaName
+	_ = ctx.ShouldBindJSON(&req)
+	if err := service.UpdateMediaName(req); err != nil {
+		g.TENANCY_LOG.Error("修改失败!", zap.Any("err", err))
+		response.FailWithMessage("修改失败:"+err.Error(), ctx)
+		return
+	}
+	response.OkWithMessage("修改成功", ctx)
+}
+
 func GetFileList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
+	var pageInfo request.MediaPageInfo
 	_ = ctx.ShouldBindJSON(&pageInfo)
 	list, total, err := service.GetFileRecordInfoList(pageInfo, ctx)
 	if err != nil {

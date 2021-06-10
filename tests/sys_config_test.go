@@ -80,6 +80,20 @@ func TestConfigProcess(t *testing.T) {
 	configId := config.Value("id").Number().Raw()
 	configKey := config.Value("configKey").String().Raw()
 
+	// getCreateConfigMap
+	obj = auth.GET("/v1/admin/config/getCreateConfigMap").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	// getUpdateConfigMap
+	obj = auth.GET(fmt.Sprintf("/v1/admin/config/getUpdateConfigMap/%f", configId)).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
 	update := map[string]interface{}{
 		"configKey":           "sdfsdfsdf",
 		"configName":          "sdfgdfgdsg",

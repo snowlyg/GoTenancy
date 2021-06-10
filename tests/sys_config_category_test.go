@@ -29,6 +29,16 @@ func TestConfigCategoryList(t *testing.T) {
 
 }
 
+func TestCreateConfigCategoryMap(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("/v1/admin/configCategory/getCreateConfigCategoryMap").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+}
+
 func TestConfigCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"name":   "箱包",
@@ -56,6 +66,13 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategory.Value("info").String().Equal(data["info"].(string))
 	configCategory.Value("status").Number().Equal(data["status"].(int))
 	configCategoryId := configCategory.Value("id").Number().Raw()
+
+	// getUpdateConfigCategoryMap
+	obj = auth.GET(fmt.Sprintf("/v1/admin/configCategory/getUpdateConfigCategoryMap/%f", configCategoryId)).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 	update := map[string]interface{}{
 		"id":     configCategoryId,
