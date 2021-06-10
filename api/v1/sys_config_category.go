@@ -12,7 +12,7 @@ import (
 
 // GetCreateConfigCategoryMap
 func GetCreateConfigCategoryMap(ctx *gin.Context) {
-	if form, err := service.GetConfigCategoryMap(""); err != nil {
+	if form, err := service.GetConfigCategoryMap(0); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -22,7 +22,12 @@ func GetCreateConfigCategoryMap(ctx *gin.Context) {
 
 // GetUpdateConfigCategoryMap
 func GetUpdateConfigCategoryMap(ctx *gin.Context) {
-	if form, err := service.GetConfigCategoryMap(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if form, err := service.GetConfigCategoryMap(req.Id); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -106,7 +111,12 @@ func ChangeConfigCategoryStatus(ctx *gin.Context) {
 
 // GetConfigCategoryById
 func GetConfigCategoryById(ctx *gin.Context) {
-	configCategory, err := service.GetConfigCategoryByID(ctx.Param("id"))
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	configCategory, err := service.GetConfigCategoryByID(req.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -117,7 +127,12 @@ func GetConfigCategoryById(ctx *gin.Context) {
 
 // DeleteConfigCategory
 func DeleteConfigCategory(ctx *gin.Context) {
-	if err := service.DeleteConfigCategory(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteConfigCategory(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

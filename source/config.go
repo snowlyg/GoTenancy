@@ -37,14 +37,13 @@ var configs = []model.SysConfig{
 	// 197	5	警戒库存	mer_store_stock	input		0	设置商品的警戒库存	0	1	1	2020-05-18 11:23:43
 	// 198	0	短信平台账号	sms_account	input		0	设置短信平台账号	0	0	0	2020-05-18 15:33:58
 	// 199	0	短信平台密码	sms_token	input		0	设置短信平台密码	0	0	0	2020-05-18 15:34:22
-	// 208	6	Appid	pay_weixin_appid	input		0	微信公众号身份的唯一标识。审核通过后，在微信发送的邮件中查看。	0	0	1	2020-06-02 17:56:51
-	// 209	6	Appsecret	pay_weixin_appsecret	input		0	JSAPI接口中获取openid，审核后在公众平台开启开发模式后可查看。	0	0	1	2020-06-02 17:57:23
-	// 210	6	Mchid	pay_weixin_mchid	input		0	受理商ID，身份标识	0	0	1	2020-06-02 17:57:49
-	// 211	6	微信支付证书	pay_weixin_client_cert	file		0	微信支付证书，在微信商家平台中可以下载！文件名一般为apiclient_cert.pem	0	0	1	2020-06-02 17:58:33
-	// 212	6	微信支付证书密钥	pay_weixin_client_key	file		0	微信支付证书密钥，在微信商家平台中可以下载！文件名一般为apiclient_key.pem	0	0	1	2020-06-02 17:58:59
-	// 213	6	Key	pay_weixin_key	input		0	商户支付密钥Key。审核通过后，在微信发送的邮件中查看。	0	0	1	2020-06-02 17:59:24
-	// 214	6	开启	pay_weixin_open	radio	0:关闭
-	// 1:开启	0	是否启用微信支付	0	0	1	2020-06-02 18:00:04
+	{SysConfigCategoryID: 6, ConfigName: "Appid", ConfigKey: "pay_weixin_appid", ConfigType: "input", ConfigRule: "", Required: 2, Info: "微信公众号身份的唯一标识。审核通过后，在微信发送的邮件中查看。", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "Appsecret", ConfigKey: "pay_weixin_appsecret", ConfigType: "input", ConfigRule: "", Required: 2, Info: "JSAPI接口中获取openid，审核后在公众平台开启开发模式后可查看。", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "Mchid", ConfigKey: "pay_weixin_mchid", ConfigType: "input", ConfigRule: "", Required: 2, Info: "受理商ID，身份标识", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "微信支付证书", ConfigKey: "pay_weixin_client_cert", ConfigType: "file", ConfigRule: "", Required: 2, Info: "微信支付证书，在微信商家平台中可以下载！文件名一般为apiclient_cert.pem", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "微信支付证书密钥", ConfigKey: "pay_weixin_client_key", ConfigType: "file", ConfigRule: "", Required: 2, Info: "微信支付证书密钥，在微信商家平台中可以下载！文件名一般为apiclient_key.pem", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "Key", ConfigKey: "pay_weixin_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "商户支付密钥Key。审核通过后，在微信发送的邮件中查看。", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "开启", ConfigKey: "pay_weixin_open", ConfigType: "radio", ConfigRule: "0:关闭 1:开启", Required: 2, Info: "是否启用微信支付", Sort: 0, UserType: 2, Status: 1},
 	// 215	12	充值注意事项	recharge_attention	textarea		0	充值注意事项	0	0	1	2020-06-03 09:49:01
 	// 216	1	订单自动关闭时间	auto_close_order_timer	number		0	订单自动关闭时间(单位:分钟)	0	0	1	2020-06-03 09:49:01
 	// 217	5	默认退货收货地址	mer_refund_address	input		0	设置默认退货收货地址	0	1	1	2020-06-12 16:28:41
@@ -77,16 +76,16 @@ var configs = []model.SysConfig{
 	// 244	9	secretKey	tengxun_secretKey	input		0	secretKey	0	0	1	2020-06-18 15:40:48
 	// 245	9	存储空间名称	tengxun_storage_name	input		0	存储空间名称	0	0	1	2020-06-18 15:41:06
 	// 246	9	所属地域	tengxun_storage_region	input		0	所属地域	0	0	1	2020-06-18 15:41:39
-	// 247	10	appId	routine_appId	input		0	appId	0	0	1	2020-06-19 10:07:31
-	// 248	10	小程序AppSecret	routine_appsecret	input		0	小程序AppSecret	0	0	1	2020-06-19 10:09:32
-	// 249	10	小程序授权logo	routine_logo	image		0	小程序授权logo	0	0	1	2020-06-19 10:10:36
-	// 250	10	小程序名称	routine_name	input		0	小程序名称	0	0	1	2020-06-19 10:11:07
-	// 252	11	Appid	pay_routine_appid	input		0	小程序Appid	0	0	1	2020-06-19 10:42:10
-	// 253	11	Appsecret	pay_routine_appsecret	input		0	小程序Appsecret	0	0	1	2020-06-19 10:46:34
-	// 254	11	Mchid	pay_routine_mchid	input		0	商户号	0	0	1	2020-06-19 10:46:59
-	// 255	11	Key	pay_routine_key	input		0	商户key	0	0	1	2020-06-19 10:47:21
-	// 256	11	小程序支付证书	pay_routine_client_cert	file		0	小程序支付证书	0	0	1	2020-06-19 10:47:46
-	// 257	11	小程序支付证书密钥	pay_routine_client_key	file		0	小程序支付证书密钥	0	0	1	2020-06-19 10:48:02
+	{SysConfigCategoryID: 10, ConfigName: "appId", ConfigKey: "routine_appId", ConfigType: "input", ConfigRule: "", Required: 2, Info: "appId", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 10, ConfigName: "小程序AppSecret", ConfigKey: "routine_appsecret", ConfigType: "input", ConfigRule: "", Required: 2, Info: "小程序AppSecret", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 10, ConfigName: "小程序授权logo", ConfigKey: "routine_logo", ConfigType: "image", ConfigRule: "", Required: 2, Info: "小程序授权logo", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 10, ConfigName: "小程序名称", ConfigKey: "routine_name", ConfigType: "input", ConfigRule: "", Required: 2, Info: "小程序名称", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "Appid", ConfigKey: "pay_routine_appid", ConfigType: "input", ConfigRule: "", Required: 2, Info: "小程序Appid", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "Appsecret", ConfigKey: "pay_routine_appsecret", ConfigType: "input", ConfigRule: "", Required: 2, Info: "小程序Appsecret", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "Mchid", ConfigKey: "pay_routine_mchid", ConfigType: "input", ConfigRule: "", Required: 2, Info: "商户号", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "Key", ConfigKey: "pay_routine_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "商户key", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "小程序支付证书", ConfigKey: "pay_routine_client_cert", ConfigType: "file", ConfigRule: "", Required: 2, Info: "小程序支付证书", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 11, ConfigName: "小程序支付证书密钥", ConfigKey: "pay_routine_client_key", ConfigType: "file", ConfigRule: "", Required: 2, Info: "小程序支付证书密钥", Sort: 0, UserType: 2, Status: 1},
 	// 258	12	余额充值开关	recharge_switch	radio	1:开启
 	// 0:关闭	0	余额充值开关	0	0	1	2020-06-19 15:47:12
 	// 259	12	用户最低充值金额	store_user_min_recharge	number		0	用户最低充值金额	0	0	1	2020-06-19 15:47:40
@@ -164,11 +163,10 @@ var configs = []model.SysConfig{
 	// 310	4	验证码时效配置(分钟)	sms_time	number		0		0	0	1	2020-09-08 15:53:42
 	// 311	5	打印机自动打印	printing_auto_status	radio	0:关闭
 	// 1:开启	0	开启后订单支付成功后自动打印	0	1	1	2020-10-17 11:25:09
-	// 312	15	支付宝支付状态	alipay_open	radio	0:关闭
-	// 1:开启	0		0	0	1	2020-10-22 11:40:41
-	// 313	15	支付宝app_id	alipay_app_id	input		0		0	0	1	2020-10-22 11:41:23
-	// 314	15	支付宝公钥	alipay_public_key	input		0		0	0	1	2020-10-22 11:41:51
-	// 315	15	支付密钥	alipay_private_key	input		0		0	0	1	2020-10-22 11:42:22
+	{SysConfigCategoryID: 15, ConfigName: "支付宝支付状态", ConfigKey: "alipay_open", ConfigType: "radio", ConfigRule: "0:关闭 1:开启", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 15, ConfigName: "支付宝app_id", ConfigKey: "alipay_app_id", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 15, ConfigName: "支付宝公钥", ConfigKey: "alipay_public_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 15, ConfigName: "支付密钥", ConfigKey: "alipay_private_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
 	// 316	5	打印机开启	printing_status	radio	0:关闭
 	// 1:开启	0		0	1	1	2020-11-10 17:59:49
 	// 317	5	开启发票	mer_open_receipt	radio	0:关闭

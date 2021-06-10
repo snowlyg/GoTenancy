@@ -7,12 +7,28 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
+// GetConfigMap
+func GetConfigMap(ctx *gin.Context) {
+	var req request.GetByConfigCate
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if form, err := service.GetConfigMapByCate(req.Cate, multi.GetVerifiedToken(ctx)); err != nil {
+		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
+		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(form, "获取成功", ctx)
+	}
+}
+
 // GetCreateConfigMap
 func GetCreateConfigMap(ctx *gin.Context) {
-	if form, err := service.GetConfigMap(""); err != nil {
+	if form, err := service.GetConfigMap(0); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -22,7 +38,12 @@ func GetCreateConfigMap(ctx *gin.Context) {
 
 // GetUpdateConfigMap
 func GetUpdateConfigMap(ctx *gin.Context) {
-	if form, err := service.GetConfigMap(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if form, err := service.GetConfigMap(req.Id); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -47,12 +68,17 @@ func CreateConfig(ctx *gin.Context) {
 
 // UpdateConfig
 func UpdateConfig(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
 	var config model.SysConfig
 	if errs := ctx.ShouldBindJSON(&config); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnConfig, err := service.UpdateConfig(config, ctx.Param("id")); err != nil {
+	if returnConfig, err := service.UpdateConfig(config, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -109,7 +135,12 @@ func GetConfigByKey(ctx *gin.Context) {
 
 // GetConfigByID
 func GetConfigByID(ctx *gin.Context) {
-	config, err := service.GetConfigByID(ctx.Param("id"))
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	config, err := service.GetConfigByID(req.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -120,7 +151,12 @@ func GetConfigByID(ctx *gin.Context) {
 
 // DeleteConfig
 func DeleteConfig(ctx *gin.Context) {
-	if err := service.DeleteConfig(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteConfig(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

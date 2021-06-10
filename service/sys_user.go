@@ -321,12 +321,12 @@ func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64
 }
 
 // SetUserAuthority  设置一个用户的权限
-func SetUserAuthority(id float64, authorityId string) error {
+func SetUserAuthority(id uint, authorityId string) error {
 	return g.TENANCY_DB.Model(&model.SysUser{}).Where("id = ?", id).Update("authority_id", authorityId).Error
 }
 
 // DeleteUser 删除用户
-func DeleteUser(id float64) (err error) {
+func DeleteUser(id uint) (err error) {
 	var user model.SysUser
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&user).Error
 }

@@ -28,7 +28,7 @@ func CreateMini(m request.CreateSysMini) (model.SysMini, error) {
 }
 
 // GetMiniByID
-func GetMiniByID(id float64) (model.SysMini, error) {
+func GetMiniByID(id uint) (model.SysMini, error) {
 	var mini model.SysMini
 	err := g.TENANCY_DB.Where("id = ?", id).First(&mini).Error
 	return mini, err
@@ -51,7 +51,7 @@ func UpdateMini(m request.UpdateSysMini) (model.SysMini, error) {
 }
 
 // DeleteMini
-func DeleteMini(id float64) error {
+func DeleteMini(id uint) error {
 	var mini model.SysMini
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&mini).Error
 }

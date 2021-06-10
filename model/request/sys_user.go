@@ -25,15 +25,15 @@ type ChangePasswordStruct struct {
 
 // Modify  user's auth structure
 type SetUserAuth struct {
-	Id          float64 `json:"id" form:"id" binding:"required,gt=0"`
-	AuthorityId string  `json:"authorityId" binding:"required"`
+	Id          uint   `json:"id" form:"id" binding:"required,gt=0"`
+	AuthorityId string `json:"authorityId" binding:"required"`
 }
 
 // Modify  user's auth structure
 type SetAdminInfo struct {
-	Id        float64 `json:"id" form:"id"  binding:"required,gt=0"`
-	Email     string  `json:"email"  binding:"required"`
-	Phone     string  `json:"phone"  binding:"required"`
-	Name      string  `json:"nickName"  binding:"required"`
-	HeaderImg string  `json:"headerImg"  binding:"required"`
+	Id        uint   `json:"id" form:"id"  binding:"required,gt=0"`
+	Email     string `json:"email"  binding:"required"`
+	Phone     string `json:"phone"  binding:"required"`
+	Name      string `json:"nickName"  binding:"required"`
+	HeaderImg string `json:"headerImg"  binding:"required"`
 }

@@ -9,7 +9,7 @@ import (
 )
 
 // DeleteBaseMenu 删除基础路由
-func DeleteBaseMenu(id float64) error {
+func DeleteBaseMenu(id uint) error {
 	err := g.TENANCY_DB.Preload("Parameters").Where("parent_id = ?", id).First(&model.SysBaseMenu{}).Error
 	if err != nil {
 		var menu model.SysBaseMenu
@@ -62,7 +62,7 @@ func UpdateBaseMenu(menu model.SysBaseMenu) error {
 }
 
 // GetBaseMenuById 返回当前选中menu
-func GetBaseMenuById(id float64) (model.SysBaseMenu, error) {
+func GetBaseMenuById(id uint) (model.SysBaseMenu, error) {
 	var menu model.SysBaseMenu
 	err := g.TENANCY_DB.Where("id = ?", id).First(&menu).Error
 	return menu, err

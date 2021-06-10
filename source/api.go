@@ -64,6 +64,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/system/getServerInfo", Description: "获取服务器信息", ApiGroup: "system", Method: "POST"},
 
 	// 配置
+	{Path: "/v1/admin/config/getConfigMap/:cate", Description: "获取配置表单", ApiGroup: "config", Method: "GET"},
 	{Path: "/v1/admin/config/getCreateConfigMap", Description: "获取配置创建表单", ApiGroup: "config", Method: "GET"},
 	{Path: "/v1/admin/config/getUpdateConfigMap/:id", Description: "获取配置编辑表单", ApiGroup: "config", Method: "GET"},
 	{Path: "/v1/admin/config/getConfigList", Description: "获取配置项列表", ApiGroup: "config", Method: "POST"},

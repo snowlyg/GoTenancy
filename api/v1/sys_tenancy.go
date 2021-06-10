@@ -36,8 +36,12 @@ func CreateTenancy(ctx *gin.Context) {
 
 // GetTenancyById
 func GetTenancyById(ctx *gin.Context) {
-	id := ctx.Param("id")
-	tenancy, err := service.GetTenancyByID(id)
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	tenancy, err := service.GetTenancyByID(req.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -80,12 +84,17 @@ func ChangeTenancyStatus(ctx *gin.Context) {
 
 // UpdateTenancy
 func UpdateTenancy(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
 	var tenancy model.SysTenancy
 	if errs := ctx.ShouldBindJSON(&tenancy); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnTenancy, err := service.UpdateTenancy(tenancy, ctx.Param("id")); err != nil {
+	if returnTenancy, err := service.UpdateTenancy(tenancy, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -102,7 +111,12 @@ func UpdateTenancy(ctx *gin.Context) {
 
 // DeleteTenancy
 func DeleteTenancy(ctx *gin.Context) {
-	if err := service.DeleteTenancy(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteTenancy(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

@@ -33,7 +33,7 @@ func CreateCategory(m request.CreateTenancyCategory, ctx *gin.Context) (model.Te
 }
 
 // GetCategoryByID
-func GetCategoryByID(id float64) (model.TenancyCategory, error) {
+func GetCategoryByID(id uint) (model.TenancyCategory, error) {
 	var brandCategory model.TenancyCategory
 	err := g.TENANCY_DB.Where("id = ?", id).First(&brandCategory).Error
 	return brandCategory, err
@@ -61,7 +61,7 @@ func UpdateCategory(m request.UpdateTenancyCategory) (model.TenancyCategory, err
 }
 
 // DeleteCategory
-func DeleteCategory(id float64) error {
+func DeleteCategory(id uint) error {
 	var brandCategory model.TenancyCategory
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&brandCategory).Error
 }

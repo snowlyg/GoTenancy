@@ -17,7 +17,7 @@ func CreateAttrTemplate(brandAttrTemplate model.TenancyAttrTemplate, ctx *gin.Co
 }
 
 // GetAttrTemplateByID
-func GetAttrTemplateByID(id float64) (model.TenancyAttrTemplate, error) {
+func GetAttrTemplateByID(id uint) (model.TenancyAttrTemplate, error) {
 	var brandAttrTemplate model.TenancyAttrTemplate
 	err := g.TENANCY_DB.Where("id = ?", id).First(&brandAttrTemplate).Error
 	return brandAttrTemplate, err
@@ -30,7 +30,7 @@ func UpdateAttrTemplate(brandAttrTemplate model.TenancyAttrTemplate) (model.Tena
 }
 
 // DeleteAttrTemplate
-func DeleteAttrTemplate(id float64) error {
+func DeleteAttrTemplate(id uint) error {
 	var brandAttrTemplate model.TenancyAttrTemplate
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&brandAttrTemplate).Error
 }

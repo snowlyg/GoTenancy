@@ -737,7 +737,7 @@ var menus = []model.SysBaseMenu{
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1023}, 1022, "/719/1022/", "", "预售商品", "/marketing/presell/list",Params:  "[]", Sort: 0,Hidden: 1, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1024}, 1022, "/719/1022/", "", "预售协议", "/marketing/presell/agreement",Params:  "[]", Sort: 0,Hidden: 1, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1025}, 106, "106/", "", "预售", "/marketing/presell/list",Params:  "[]", Sort: 0,Hidden: 1, IsTenancy:1,IsMenu: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1026}, Pid: 669, Path: "/110/669/", Icon: "", MenuName: "支付宝支付配置", Route: "/admin/systemForm/Basics/alipay", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 0, IsMenu: 1},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1026}, Pid: 669, Path: "/110/669/", Icon: "", MenuName: "支付宝支付配置", Route: "/admin/systemForm/Basics/alipay", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1027}, 0, "/", "user-solid", "用户", "/user",Params:  "[]", Sort: 1,Hidden: 1, IsTenancy:1,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1028}, 1027, "1027/", "", "标签管理", "/user/_label",Params:  "[]", Sort: 0,Hidden: 1, IsTenancy:1,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1029}, 1028, "1028/", "", "手动标签", "/user/label",Params:  "[]", Sort: 0,Hidden: 1, IsTenancy:1,IsMenu: 1},

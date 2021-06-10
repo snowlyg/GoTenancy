@@ -44,10 +44,41 @@ type Rule struct {
 	Title    string                   `json:"title"`
 	Type     string                   `json:"type"`
 	Field    string                   `json:"field"`
+	Info     string                   `json:"info"`
 	Value    interface{}              `json:"value"`
 	Props    map[string]interface{}   `json:"props"`
 	Options  []Option                 `json:"options,omitempty"`
 	Validate []map[string]interface{} `json:"validate,omitempty"`
+}
+
+func (r *Rule) NewType(t string) {
+	if t == "file" {
+		r.Type = "upload"
+	}
+	r.Type = t
+}
+
+func (r *Rule) NewProps(token []byte) {
+	switch r.Type {
+	case "input":
+		r.Props = map[string]interface{}{
+			"placeholder": "请输入" + r.Title,
+			"type":        "text",
+		}
+	case "radio":
+		r.Props = map[string]interface{}{}
+	case "file":
+		r.Props = map[string]interface{}{
+			"action": "/admin/media/upload",
+			"data":   map[string]interface{}{},
+			"headers": []map[string]interface{}{
+				{"Authorization": "Bearer " + string(token)},
+			},
+
+			"limit":      1,
+			"uploadType": "file",
+		}
+	}
 }
 
 type Option struct {

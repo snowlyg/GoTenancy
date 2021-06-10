@@ -20,4 +20,5 @@ type SysConfig struct {
 	SysConfigCategoryID int `gorm:"index:sys_config_category_id;column:sys_config_category_id;type:int unsigned;not null" json:"sysConfigCategoryId"  binding:"required"` // 商户 id
 
 	TypeName string `gorm:"-" json:"typeName"` // 配置类型
+	Value    string `gorm:"-" json:"value"`    // 配置类型
 }

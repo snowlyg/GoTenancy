@@ -29,7 +29,7 @@ func CreateBrandCategory(m request.CreateSysBrandCategory) (model.SysBrandCatego
 }
 
 // GetBrandCategoryByID
-func GetBrandCategoryByID(id float64) (model.SysBrandCategory, error) {
+func GetBrandCategoryByID(id uint) (model.SysBrandCategory, error) {
 	var brandCategory model.SysBrandCategory
 	err := g.TENANCY_DB.Where("id = ?", id).First(&brandCategory).Error
 	return brandCategory, err
@@ -56,7 +56,7 @@ func UpdateBrandCategory(m request.UpdateSysBrandCategory) (model.SysBrandCatego
 }
 
 // DeleteBrandCategory
-func DeleteBrandCategory(id float64) error {
+func DeleteBrandCategory(id uint) error {
 	var brandCategory model.SysBrandCategory
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&brandCategory).Error
 }

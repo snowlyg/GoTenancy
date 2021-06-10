@@ -7,13 +7,13 @@ type PageInfo struct {
 }
 
 type ChangeStatus struct {
-	Id     float64 `json:"id" form:"id" binding:"required,gt=0"`
-	Status int     `json:"status" binding:"required"`
+	Id     uint `json:"id" form:"id" binding:"required,gt=0"`
+	Status int  `json:"status" binding:"required"`
 }
 
 // Find by id structure
 type GetById struct {
-	Id float64 `json:"id" form:"id" binding:"required"`
+	Id uint `json:"id" uri:"id" form:"id" binding:"required"`
 }
 
 type IdsReq struct {

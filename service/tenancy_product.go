@@ -61,7 +61,7 @@ func CreateProduct(m request.CreateTenancyProduct, ctx *gin.Context) (model.Tena
 }
 
 // GetProductByID
-func GetProductByID(id float64) (model.TenancyProduct, error) {
+func GetProductByID(id uint) (model.TenancyProduct, error) {
 	var product model.TenancyProduct
 	err := g.TENANCY_DB.Where("id = ?", id).First(&product).Error
 	return product, err
@@ -118,7 +118,7 @@ func UpdateProduct(m request.UpdateTenancyProduct) (model.TenancyProduct, error)
 }
 
 // DeleteProduct
-func DeleteProduct(id float64) error {
+func DeleteProduct(id uint) error {
 	var product model.TenancyProduct
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&product).Error
 }

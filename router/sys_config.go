@@ -8,6 +8,7 @@ import (
 func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")
 	{
+		ConfigRouter.GET("/getConfigMap/:category", v1.GetConfigMap)
 		ConfigRouter.GET("/getCreateConfigMap", v1.GetCreateConfigMap)
 		ConfigRouter.GET("/getUpdateConfigMap/:id", v1.GetUpdateConfigMap)
 		ConfigRouter.POST("/getConfigList", v1.GetConfigList)

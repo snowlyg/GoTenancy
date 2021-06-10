@@ -15,7 +15,7 @@ import (
 )
 
 // GetMediaMap
-func GetMediaMap(id string) (Form, error) {
+func GetMediaMap(id uint) (Form, error) {
 	var form Form
 	var formStr string
 	file, err := FindFile(id)
@@ -23,7 +23,7 @@ func GetMediaMap(id string) (Form, error) {
 		return form, err
 	}
 
-	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"名称","props":{"type":"text","placeholder":"请输入名称"},"validate":[{"message":"请输入名称","required":true,"type":"string","trigger":"change"}]}],"action":"%s","method":"POST","title":"编辑配置","config":{}}`, file.Name, "/admin/media/updateMediaName/"+id)
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"名称","props":{"type":"text","placeholder":"请输入名称"},"validate":[{"message":"请输入名称","required":true,"type":"string","trigger":"change"}]}],"action":"%s/%d","method":"POST","title":"编辑配置","config":{}}`, file.Name, "/admin/media/updateMediaName", id)
 
 	err = json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
@@ -46,7 +46,7 @@ func FindFiles(ids []int) ([]model.TenancyMedia, error) {
 }
 
 // FindFile
-func FindFile(id string) (model.TenancyMedia, error) {
+func FindFile(id uint) (model.TenancyMedia, error) {
 	var file model.TenancyMedia
 	err := g.TENANCY_DB.Where("id = ?", id).First(&file).Error
 	return file, err

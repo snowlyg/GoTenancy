@@ -24,7 +24,7 @@ func CreateTenancy(tenancy model.SysTenancy) (model.SysTenancy, error) {
 }
 
 // GetTenancyByID
-func GetTenancyByID(id string) (model.SysTenancy, error) {
+func GetTenancyByID(id uint) (model.SysTenancy, error) {
 	var tenancy model.SysTenancy
 	err := g.TENANCY_DB.Where("id = ?", id).First(&tenancy).Error
 	return tenancy, err
@@ -41,7 +41,7 @@ func ChangeTenancyStatus(changeStatus request.ChangeStatus) error {
 }
 
 // UpdateTenancy
-func UpdateTenancy(tenancy model.SysTenancy, id string) (model.SysTenancy, error) {
+func UpdateTenancy(tenancy model.SysTenancy, id uint) (model.SysTenancy, error) {
 	err := g.TENANCY_DB.Where("name = ?", tenancy.Name).Not("id = ?", id).First(&tenancy).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return tenancy, errors.New("名称已被注冊")
@@ -52,7 +52,7 @@ func UpdateTenancy(tenancy model.SysTenancy, id string) (model.SysTenancy, error
 }
 
 // DeleteTenancy
-func DeleteTenancy(id string) error {
+func DeleteTenancy(id uint) error {
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.SysTenancy{}).Error
 }
 

@@ -12,7 +12,12 @@ import (
 
 // GetUpdateMediaMap
 func GetUpdateMediaMap(ctx *gin.Context) {
-	if form, err := service.GetMediaMap(ctx.Param("id")); err != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if form, err := service.GetMediaMap(req.Id); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {

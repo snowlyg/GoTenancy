@@ -11,16 +11,46 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetConfigMapByCate
+func GetConfigMapByCate(cate string, token []byte) (Form, error) {
+	form := Form{
+		Action:  "",
+		Method:  "POST",
+		Headers: nil,
+	}
+	configs, err := GetConfigByCateKey(cate)
+	if err != nil {
+		return form, err
+	}
+	for i := 0; i < len(configs); i++ {
+		fmt.Printf("\n\n config:%+v\n\n", configs[i])
+		rule := Rule{
+			Title: configs[i].ConfigName,
+			Field: configs[i].ConfigKey,
+			Info:  configs[i].Info,
+			Value: configs[i].Value,
+		}
+		rule.NewType(configs[i].ConfigType)
+		rule.NewProps(token)
+		form.Rule = append(form.Rule, rule)
+		if i == 0 {
+			form.Title = configs[i].TypeName
+		}
+	}
+
+	return form, nil
+}
+
 // GetConfigMap
-func GetConfigMap(id string) (Form, error) {
+func GetConfigMap(id uint) (Form, error) {
 	var form Form
 	var formStr string
-	if id != "" {
+	if id > 0 {
 		config, err := GetConfigByID(id)
 		if err != nil {
 			return form, err
 		}
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"sysConfigCategoryId","value":%d,"title":"配置分类","props":{"type":"other","options":[],"placeholder":"请选择分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"userType","value":%d,"title":"后台类型","props":{"multiple":false,"placeholder":"请选择后台类型"},"validate":[{"message":"请选择后台类型","required":true,"type":"number","trigger":"change"}],"options":[{"label":"总后台配置","value":2},{"label":"商户后台配置","value":1}]},{"type":"input","field":"configName","value":"%s","title":"配置名称","props":{"type":"text","placeholder":"请输入配置名称"},"validate":[{"message":"请输入配置名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"configKey","value":"%s","title":"配置key","props":{"type":"text","placeholder":"请输入配置key"},"validate":[{"message":"请输入配置key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"说明","props":{"type":"text","placeholder":"请输入说明"}},{"type":"select","field":"configType","value":"%s","title":"配置类型","props":{"multiple":false,"placeholder":"请选择配置类型"},"validate":[{"message":"请选择配置类型","required":true,"type":"string","trigger":"change"}],"options":[]},{"type":"input","field":"configRule","value":"","title":"规则","props":{"type":"textarea","placeholder":"请输入规则"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"required","value":%d,"title":"必填","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":0,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s/%s","method":"PUT","title":"添加配置","config":{}}`, config.SysConfigCategoryID, config.UserType, config.ConfigKey, config.ConfigName, config.Info, config.ConfigType, config.Sort, config.Required, config.Status, "/admin/config/updateConfig", id)
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"sysConfigCategoryId","value":%d,"title":"配置分类","props":{"type":"other","options":[],"placeholder":"请选择分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"userType","value":%d,"title":"后台类型","props":{"multiple":false,"placeholder":"请选择后台类型"},"validate":[{"message":"请选择后台类型","required":true,"type":"number","trigger":"change"}],"options":[{"label":"总后台配置","value":2},{"label":"商户后台配置","value":1}]},{"type":"input","field":"configName","value":"%s","title":"配置名称","props":{"type":"text","placeholder":"请输入配置名称"},"validate":[{"message":"请输入配置名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"configKey","value":"%s","title":"配置key","props":{"type":"text","placeholder":"请输入配置key"},"validate":[{"message":"请输入配置key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"说明","props":{"type":"text","placeholder":"请输入说明"}},{"type":"select","field":"configType","value":"%s","title":"配置类型","props":{"multiple":false,"placeholder":"请选择配置类型"},"validate":[{"message":"请选择配置类型","required":true,"type":"string","trigger":"change"}],"options":[]},{"type":"input","field":"configRule","value":"","title":"规则","props":{"type":"textarea","placeholder":"请输入规则"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"required","value":%d,"title":"必填","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":0,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s/%d","method":"PUT","title":"添加配置","config":{}}`, config.SysConfigCategoryID, config.UserType, config.ConfigKey, config.ConfigName, config.Info, config.ConfigType, config.Sort, config.Required, config.Status, "/admin/config/updateConfig", id)
 	} else {
 		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"sysConfigCategoryId","value":%d,"title":"配置分类","props":{"type":"other","options":[],"placeholder":"请选择分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"userType","value":%d,"title":"后台类型","props":{"multiple":false,"placeholder":"请选择后台类型"},"validate":[{"message":"请选择后台类型","required":true,"type":"number","trigger":"change"}],"options":[{"label":"总后台配置","value":2},{"label":"商户后台配置","value":1}]},{"type":"input","field":"configName","value":"%s","title":"配置名称","props":{"type":"text","placeholder":"请输入配置名称"},"validate":[{"message":"请输入配置名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"configKey","value":"%s","title":"配置key","props":{"type":"text","placeholder":"请输入配置key"},"validate":[{"message":"请输入配置key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"说明","props":{"type":"text","placeholder":"请输入说明"}},{"type":"select","field":"configType","value":"%s","title":"配置类型","props":{"multiple":false,"placeholder":"请选择配置类型"},"validate":[{"message":"请选择配置类型","required":true,"type":"string","trigger":"change"}],"options":[]},{"type":"input","field":"configRule","value":"","title":"规则","props":{"type":"textarea","placeholder":"请输入规则"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"required","value":%d,"title":"必填","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":0,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s","method":"POST","title":"添加配置","config":{}}`, 0, 2, "", "", "", "", 0, 2, 1, "/admin/config/createConfig")
 	}
@@ -47,6 +77,18 @@ func CreateConfig(m model.SysConfig) (model.SysConfig, error) {
 	return m, err
 }
 
+// GetConfigByCateKey
+func GetConfigByCateKey(config_key string) ([]response.SysConfig, error) {
+	var configs []response.SysConfig
+	err := g.TENANCY_DB.
+		Select("sys_configs.*,sys_config_values.value,sys_config_categories.name as typeName").
+		Joins("left join sys_config_categories on sys_configs.sys_config_category_id = sys_config_categories.id").
+		Joins("left join sys_config_values on sys_configs.config_key = sys_config_values.config_key").
+		Where("sys_config_categories.key = ?", config_key).Find(&configs).Error
+
+	return configs, err
+}
+
 // GetConfigByKey
 func GetConfigByKey(config_key string) (model.SysConfig, error) {
 	var config model.SysConfig
@@ -55,7 +97,7 @@ func GetConfigByKey(config_key string) (model.SysConfig, error) {
 }
 
 // GetConfigByID
-func GetConfigByID(id string) (model.SysConfig, error) {
+func GetConfigByID(id uint) (model.SysConfig, error) {
 	var config model.SysConfig
 	err := g.TENANCY_DB.Where("id = ?", id).First(&config).Error
 	return config, err
@@ -89,7 +131,7 @@ func ChangeConfigStatus(changeStatus request.ChangeStatus) error {
 }
 
 // UpdateConfig
-func UpdateConfig(m model.SysConfig, id string) (model.SysConfig, error) {
+func UpdateConfig(m model.SysConfig, id uint) (model.SysConfig, error) {
 	err := g.TENANCY_DB.Where("config_key = ?", m.ConfigKey).Where("id <> ?", id).First(&model.SysConfig{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return m, fmt.Errorf("设置key:%s已经使用", m.ConfigKey)
@@ -99,7 +141,7 @@ func UpdateConfig(m model.SysConfig, id string) (model.SysConfig, error) {
 }
 
 // DeleteConfig
-func DeleteConfig(id string) error {
+func DeleteConfig(id uint) error {
 	var config model.SysConfig
 	return g.TENANCY_DB.Unscoped().Where("id = ?", id).Delete(&config).Error
 }

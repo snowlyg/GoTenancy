@@ -79,7 +79,7 @@ func GetAllApis() ([]model.SysApi, error) {
 }
 
 // GetApiById 根据id获取api
-func GetApiById(id float64) (model.SysApi, error) {
+func GetApiById(id uint) (model.SysApi, error) {
 	var api model.SysApi
 	err := g.TENANCY_DB.Where("id = ?", id).First(&api).Error
 	return api, err

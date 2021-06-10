@@ -26,7 +26,7 @@ func CreateBrand(m request.CreateSysBrand) (model.SysBrand, error) {
 }
 
 // GetBrandByID
-func GetBrandByID(id float64) (model.SysBrand, error) {
+func GetBrandByID(id uint) (model.SysBrand, error) {
 	var brand model.SysBrand
 	err := g.TENANCY_DB.Where("id = ?", id).First(&brand).Error
 	return brand, err
@@ -56,7 +56,7 @@ func UpdateBrand(m request.UpdateSysBrand) (model.SysBrand, error) {
 }
 
 // DeleteBrand
-func DeleteBrand(id float64) error {
+func DeleteBrand(id uint) error {
 	var brand model.SysBrand
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&brand).Error
 }

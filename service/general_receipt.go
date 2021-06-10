@@ -25,7 +25,7 @@ func CreateReceipt(m request.CreateReceipt, user_id int) (model.GeneralReceipt, 
 }
 
 // GetReceiptByID
-func GetReceiptByID(id float64, user_id int) (model.GeneralReceipt, error) {
+func GetReceiptByID(id uint, user_id int) (model.GeneralReceipt, error) {
 	var receipt model.GeneralReceipt
 	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).First(&receipt).Error
 	return receipt, err
@@ -51,7 +51,7 @@ func UpdateReceipt(m request.UpdateReceipt) (model.GeneralReceipt, error) {
 }
 
 // DeleteReceipt
-func DeleteReceipt(id float64, user_id int) error {
+func DeleteReceipt(id uint, user_id int) error {
 	var receipt model.GeneralReceipt
 	return g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).Delete(&receipt).Error
 }

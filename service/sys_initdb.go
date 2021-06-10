@@ -131,6 +131,7 @@ func InitDB(conf request.InitDB) error {
 		model.SysMini{},
 		model.SysConfig{},
 		model.SysConfigCategory{},
+		model.SysConfigValue{},
 		model.SysBrandCategory{},
 		model.SysBrand{},
 
@@ -164,6 +165,7 @@ func InitDB(conf request.InitDB) error {
 		source.Mini,
 		source.Config,
 		source.SysConfigCategory,
+		source.SysConfigValue,
 		source.Address,
 		source.Receipt,
 		source.Brand,

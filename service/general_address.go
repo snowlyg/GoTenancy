@@ -31,7 +31,7 @@ func CreateAddress(m request.CreateAddress, user_id int) (model.GeneralAddress, 
 }
 
 // GetAddressByID
-func GetAddressByID(id float64, user_id int) (model.GeneralAddress, error) {
+func GetAddressByID(id uint, user_id int) (model.GeneralAddress, error) {
 	var address model.GeneralAddress
 	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).First(&address).Error
 	return address, err
@@ -46,7 +46,7 @@ func UpdateAddress(m request.UpdateAddress) (model.GeneralAddress, error) {
 }
 
 // DeleteAddress
-func DeleteAddress(id float64, user_id int) error {
+func DeleteAddress(id uint, user_id int) error {
 	var address model.GeneralAddress
 	return g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).Delete(&address).Error
 }
