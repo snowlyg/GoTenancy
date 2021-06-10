@@ -56,7 +56,7 @@ func TestMediaProcess(t *testing.T) {
 	obj.Value("message").String().Equal("获取成功")
 
 	// changeTenancyStatus
-	obj = auth.POST("/v1/admin/media/updateMediaName").
+	obj = auth.POST(fmt.Sprintf("/v1/admin/media/updateMediaName/%f", mediaId)).
 		WithJSON(map[string]interface{}{
 			"id":   mediaId,
 			"name": "name_jpg",

@@ -5,8 +5,7 @@ type DeleteMedia struct {
 }
 
 type UpdateMediaName struct {
-	Id   float64 `json:"id" form:"id" binding:"required,gt=0"`
-	Name string  `json:"name" form:"name" binding:"required"`
+	Name string `json:"name" form:"name" binding:"required"`
 }
 
 type MediaPageInfo struct {

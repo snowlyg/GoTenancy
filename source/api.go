@@ -52,7 +52,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/media/getUpdateMediaMap/:id", Description: "获取媒体文件表单", ApiGroup: "media", Method: "GET"},
 	{Path: "/v1/admin/media/upload", Description: "上传媒体文件", ApiGroup: "media", Method: "POST"},
 	{Path: "/v1/admin/media/getFileList", Description: "获取媒体文件列表", ApiGroup: "media", Method: "POST"},
-	{Path: "/v1/admin/media/updateMediaName", Description: "修改媒体文件名称", ApiGroup: "media", Method: "POST"},
+	{Path: "/v1/admin/media/updateMediaName/:id", Description: "修改媒体文件名称", ApiGroup: "media", Method: "POST"},
 	{Path: "/v1/admin/media/deleteFile", Description: "删除媒体文件", ApiGroup: "media", Method: "DELETE"},
 
 	{Path: "/v1/admin/casbin/updateCasbin", Description: "更改角色api权限", ApiGroup: "casbin", Method: "POST"},

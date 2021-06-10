@@ -23,7 +23,7 @@ func GetMediaMap(id string) (Form, error) {
 		return form, err
 	}
 
-	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"名称","props":{"type":"text","placeholder":"请输入名称"},"validate":[{"message":"请输入名称","required":true,"type":"string","trigger":"change"}]}],"action":"%s","method":"POST","title":"编辑配置","config":{}}`, file.Name, "/admin/media/updateMediaName")
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"名称","props":{"type":"text","placeholder":"请输入名称"},"validate":[{"message":"请输入名称","required":true,"type":"string","trigger":"change"}]}],"action":"%s","method":"POST","title":"编辑配置","config":{}}`, file.Name, "/admin/media/updateMediaName/"+id)
 
 	err = json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
@@ -102,8 +102,8 @@ func GetFileRecordInfoList(info request.MediaPageInfo, ctx *gin.Context) (interf
 }
 
 // UpdateMediaName
-func UpdateMediaName(updateMediaName request.UpdateMediaName) error {
-	return g.TENANCY_DB.Model(&model.TenancyMedia{}).Where("id = ?", updateMediaName.Id).Update("name", updateMediaName.Name).Error
+func UpdateMediaName(updateMediaName request.UpdateMediaName, id string) error {
+	return g.TENANCY_DB.Model(&model.TenancyMedia{}).Where("id = ?", id).Update("name", updateMediaName.Name).Error
 }
 
 // UploadFile

@@ -52,7 +52,7 @@ func DeleteFile(ctx *gin.Context) {
 func UpdateMediaName(ctx *gin.Context) {
 	var req request.UpdateMediaName
 	_ = ctx.ShouldBindJSON(&req)
-	if err := service.UpdateMediaName(req); err != nil {
+	if err := service.UpdateMediaName(req, ctx.Param("id")); err != nil {
 		g.TENANCY_LOG.Error("修改失败!", zap.Any("err", err))
 		response.FailWithMessage("修改失败:"+err.Error(), ctx)
 		return

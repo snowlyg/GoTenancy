@@ -11,7 +11,7 @@ func InitMediaRouter(Router *gin.RouterGroup) {
 		MediaGroup.GET("/getUpdateMediaMap/:id", v1.GetUpdateMediaMap) // 修改名称表单
 		MediaGroup.POST("/upload", v1.UploadFile)                      // 上传文件
 		MediaGroup.POST("/getFileList", v1.GetFileList)                // 获取上传文件列表
-		MediaGroup.POST("/updateMediaName", v1.UpdateMediaName)        // 修改名称
+		MediaGroup.POST("/updateMediaName/:id", v1.UpdateMediaName)    // 修改名称
 		MediaGroup.DELETE("/deleteFile", v1.DeleteFile)                // 删除指定文件
 	}
 }
