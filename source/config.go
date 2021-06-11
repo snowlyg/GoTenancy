@@ -14,7 +14,7 @@ type config struct{}
 var configs = []model.SysConfig{
 	{SysConfigCategoryID: 2, ConfigName: "网站域名", ConfigKey: "site_url", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 2, ConfigName: "网站名称", ConfigKey: "site_name", ConfigType: "input", ConfigRule: "", Required: 1, Info: "", Sort: 0, UserType: 2, Status: 1},
-	{SysConfigCategoryID: 2, ConfigName: "网站开启", ConfigKey: "site_open", ConfigType: "radio", ConfigRule: "0:关闭1:开启", Required: 1, Info: "", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 2, ConfigName: "网站开启", ConfigKey: "site_open", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 1, Info: "", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 3, ConfigName: "公众号名称", ConfigKey: "wechat_name", ConfigType: "input", ConfigRule: "", Required: 2, Info: "设置公众号名称", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 5, ConfigName: "联系电话", ConfigKey: "set_phone", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 1, Status: 1},
 	{SysConfigCategoryID: 5, ConfigName: "联系邮箱", ConfigKey: "set_email", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 1, Status: 1},
@@ -29,7 +29,7 @@ var configs = []model.SysConfig{
 	{SysConfigCategoryID: 3, ConfigName: "微信分享图片", ConfigKey: "wechat_share_img", ConfigType: "image", ConfigRule: "", Required: 2, Info: "若填写此图片地址，则分享网页出去时会分享此图片。可有效防止分享图片变形", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 3, ConfigName: "微信分享标题", ConfigKey: "wechat_share_title", ConfigType: "input", ConfigRule: "", Required: 2, Info: "微信分享标题", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 3, ConfigName: "微信分享简介", ConfigKey: "wechat_share_synopsis", ConfigType: "textarea", ConfigRule: "", Required: 2, Info: "微信分享简介", Sort: 0, UserType: 2, Status: 1},
-	{SysConfigCategoryID: 3, ConfigName: "消息加解密方式", ConfigKey: "wechat_encode", ConfigType: "radio", ConfigRule: "0:明文模式1:兼容模式2:安全模式", Required: 1, Info: "如需使用安全模式请在管理中心修改，仅限服务号和认证订阅号", Sort: 1, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 3, ConfigName: "消息加解密方式", ConfigKey: "wechat_encode", ConfigType: "radio", ConfigRule: "0:明文模式;1:兼容模式;2:安全模式", Required: 1, Info: "如需使用安全模式请在管理中心修改，仅限服务号和认证订阅号", Sort: 1, UserType: 2, Status: 1},
 	// 194	0	一级分销比例	extension_one_rate	input		0	设置分销员一级分销比例, 最大为1(1=100%)	0	0	1	2020-05-08 15:38:03
 	// 195	0	二级分销比例	extension_two_rate	input		0	设置分销员二级分销比例, 最大为1(1=100%)	0	0	1	2020-05-08 15:39:03
 	// 196	0	开启分销	extension_status	radio	1:开启
@@ -43,20 +43,20 @@ var configs = []model.SysConfig{
 	{SysConfigCategoryID: 6, ConfigName: "微信支付证书", ConfigKey: "pay_weixin_client_cert", ConfigType: "file", ConfigRule: "", Required: 2, Info: "微信支付证书，在微信商家平台中可以下载！文件名一般为apiclient_cert.pem", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 6, ConfigName: "微信支付证书密钥", ConfigKey: "pay_weixin_client_key", ConfigType: "file", ConfigRule: "", Required: 2, Info: "微信支付证书密钥，在微信商家平台中可以下载！文件名一般为apiclient_key.pem", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 6, ConfigName: "Key", ConfigKey: "pay_weixin_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "商户支付密钥Key。审核通过后，在微信发送的邮件中查看。", Sort: 0, UserType: 2, Status: 1},
-	{SysConfigCategoryID: 6, ConfigName: "开启", ConfigKey: "pay_weixin_open", ConfigType: "radio", ConfigRule: "0:关闭 1:开启", Required: 2, Info: "是否启用微信支付", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 6, ConfigName: "开启", ConfigKey: "pay_weixin_open", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否启用微信支付", Sort: 0, UserType: 2, Status: 1},
 	// 215	12	充值注意事项	recharge_attention	textarea		0	充值注意事项	0	0	1	2020-06-03 09:49:01
-	// 216	1	订单自动关闭时间	auto_close_order_timer	number		0	订单自动关闭时间(单位:分钟)	0	0	1	2020-06-03 09:49:01
+	{SysConfigCategoryID: 1, ConfigName: "订单自动关闭时间", ConfigKey: "auto_close_order_timer", ConfigType: "number", ConfigRule: "", Required: 2, Info: "订单自动关闭时间(单位:分钟)", Sort: 0, UserType: 2, Status: 1},
 	// 217	5	默认退货收货地址	mer_refund_address	input		0	设置默认退货收货地址	0	1	1	2020-06-12 16:28:41
 	// 218	5	默认退货收货人	mer_refund_user	input		0	设置默认退货收货人	0	1	1	2020-06-12 16:29:15
-	// 219	1	退款理由	refund_message	textarea		0	设置退款理由	0	0	1	2020-06-12 16:34:51
-	// 220	1	商户自动处理退款订单期限（天）	mer_refund_order_agree	number		1	申请退款的订单超过期限，将自动退款处理。	0	0	1	2020-06-13 14:59:35
+	{SysConfigCategoryID: 1, ConfigName: "退款理由", ConfigKey: "refund_message", ConfigType: "textarea", ConfigRule: "", Required: 2, Info: "设置退款理由", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "商户自动处理退款订单期限（天）", ConfigKey: "mer_refund_order_agree", ConfigType: "number", ConfigRule: "", Required: 1, Info: "申请退款的订单超过期限，将自动退款处理。", Sort: 0, UserType: 2, Status: 1},
 	// 221	5	银行卡开户行	bank	input		1		0	1	1	2020-06-15 10:56:52
 	// 222	5	银行卡卡号	bank_number	input		1		0	1	1	2020-06-15 10:57:20
 	// 223	5	银行卡持卡人姓名	bank_name	input		1		0	1	1	2020-06-15 10:57:50
 	// 224	5	银行卡开户行地址	bank_address	input		1		0	1	1	2020-06-15 10:58:16
 	// 225	13	佣金最低提现金额	user_extract_min	number	佣金达到最低额才可以提现	1		0	0	1	2020-06-16 14:53:52
 	// 226	13	佣金冻结时间	lock_brokerage_timer	number		0	设置佣金冻结时间(天)	0	0	1	2020-06-17 14:36:16
-	// 227	1	快递查询密钥	express_app_code	input		0	阿里云快递查询接口密钥购买地址：https://market.aliyun.com/products/56928004/cmapi021863.html	0	0	1	2020-06-17 18:32:16
+	{SysConfigCategoryID: 1, ConfigName: "快递查询密钥", ConfigKey: "express_app_code", ConfigType: "input", ConfigRule: "", Required: 2, Info: "阿里云快递查询接口密钥购买地址：https://market.aliyun.com/products/56928004/cmapi021863.html", Sort: 0, UserType: 2, Status: 1},
 	// 228	7	空间域名 Domain	uploadUrl	input		0	空间域名 Domain	0	0	1	2020-06-18 10:21:19
 	// 229	7	accessKey	accessKey	input		0	accessKey	0	0	1	2020-06-18 10:21:37
 	// 230	7	secretKey	secretKey	input		0	secretKey	0	0	1	2020-06-18 10:22:40
@@ -86,15 +86,12 @@ var configs = []model.SysConfig{
 	{SysConfigCategoryID: 11, ConfigName: "Key", ConfigKey: "pay_routine_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "商户key", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 11, ConfigName: "小程序支付证书", ConfigKey: "pay_routine_client_cert", ConfigType: "file", ConfigRule: "", Required: 2, Info: "小程序支付证书", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 11, ConfigName: "小程序支付证书密钥", ConfigKey: "pay_routine_client_key", ConfigType: "file", ConfigRule: "", Required: 2, Info: "小程序支付证书密钥", Sort: 0, UserType: 2, Status: 1},
-	// 258	12	余额充值开关	recharge_switch	radio	1:开启
-	// 0:关闭	0	余额充值开关	0	0	1	2020-06-19 15:47:12
-	// 259	12	用户最低充值金额	store_user_min_recharge	number		0	用户最低充值金额	0	0	1	2020-06-19 15:47:40
-	// 260	12	余额功能启用	balance_func_status	radio	1:开启
-	// 0:关闭	0	商城余额功能启用或者关闭	0	0	1	2020-06-19 15:54:16
-	// 261	12	余额支付状态	yue_pay_status	radio	1:开启
-	// 0:关闭	0	余额支付状态	0	0	1	2020-06-19 16:02:16
-	// 262	1	首页广告图	home_ad_pic	image		0	设置首页广告图(750*164px)	0	0	1	2020-06-25 10:05:06
-	// 263	1	首页广告链接	home_ad_url	input		0	设置首页广告链接	0	0	1	2020-06-25 10:05:32
+	{SysConfigCategoryID: 12, ConfigName: "余额充值开关", ConfigKey: "recharge_switch", ConfigType: "radio", ConfigRule: "1:开启;0:关闭", Required: 2, Info: "余额充值开关", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 12, ConfigName: "用户最低充值金额", ConfigKey: "store_user_min_recharge", ConfigType: "number", ConfigRule: "", Required: 2, Info: "用户最低充值金额", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 12, ConfigName: "余额功能启用", ConfigKey: "balance_func_status", ConfigType: "radio", ConfigRule: "1:开启;0:关闭", Required: 2, Info: "商城余额功能启用或者关闭", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 12, ConfigName: "余额支付状态", ConfigKey: "yue_pay_status", ConfigType: "radio", ConfigRule: "1:开启;0:关闭", Required: 2, Info: "余额支付状态", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "首页广告图", ConfigKey: "home_ad_pic", ConfigType: "image", ConfigRule: "", Required: 2, Info: "设置首页广告图(750*164px)", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "首页广告链接", ConfigKey: "home_ad_url", ConfigType: "input", ConfigRule: "", Required: 2, Info: "设置首页广告链接", Sort: 0, UserType: 2, Status: 1},
 	// 264	13	分销说明	promoter_explain	textarea		0		0	0	1	2020-06-25 15:32:21
 	// 265	13	商户设置礼包最大数量	max_bag_number	number		0		0	0	1	2020-06-25 15:48:27
 	// 266	2	商城 logo	site_logo	image		0	设置商城logo(254*90px)	0	0	1	2020-06-26 11:41:23
@@ -127,25 +124,21 @@ var configs = []model.SysConfig{
 	// 1:开启	0	退货信息提醒	0	0	1	2020-07-01 14:04:27
 	// 283	2	后台登录页logo	sys_login_logo	image		0	后台登录页logo	0	0	1	2020-07-06 15:20:18
 	// 284	2	后台登录页标题	sys_login_title	input		0	后台登录页标题	0	0	1	2020-07-07 16:39:25
-	// 285	1	菜单logo	sys_menu_logo	image		0	设置菜单顶部logo	0	0	1	2020-07-09 16:31:46
-	// 286	1	菜单小logo	sys_menu_slogo	image		0	设置菜单顶部小logo	0	0	1	2020-07-09 16:31:46
-	// 287	1	商户入驻协议	sys_intention_agree	textarea		0	商户入驻协议	0	0	0	2020-07-20 11:19:32
-	// 288	1	开启商户入驻	mer_intention_open	radio	0:关闭
-	// 1:开启	0	是否开启商户入驻功能	0	0	1	2020-07-27 14:47:45
+	{SysConfigCategoryID: 1, ConfigName: "菜单logo", ConfigKey: "sys_menu_logo", ConfigType: "image", ConfigRule: "", Required: 2, Info: "设置菜单顶部logo", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "菜单小logo", ConfigKey: "sys_menu_slogo", ConfigType: "image", ConfigRule: "", Required: 2, Info: "设置菜单顶部小logo", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "商户入驻协议", ConfigKey: "sys_intention_agree", ConfigType: "textarea", ConfigRule: "", Required: 2, Info: "商户入驻协议", Sort: 0, UserType: 2, Status: 0},
+	{SysConfigCategoryID: 1, ConfigName: "开启商户入驻", ConfigKey: "mer_intention_open", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启商户入驻功能", Sort: 0, UserType: 2, Status: 1},
 	// 289	4	预售尾款支付通知	sms_pay_presell_status	radio	0:关闭
 	// 1:开启	0		1	0	1	2020-11-30 17:46:45
 	// 290	5	打印机终端号	terminal_number	input		0	打印机终端号	0	1	1	2020-07-29 15:47:41
 	// 291	5	打印机应用ID	printing_client_id	input		0	打印机开发者用户ID	0	1	1	2020-07-29 15:55:13
 	// 292	5	打印机用户ID	develop_id	input		0	打印机的应用ID	0	1	1	2020-07-29 15:56:06
 	// 293	5	打印机密匙	printing_api_key	input		0	打印机应用密匙	0	1	1	2020-07-29 15:57:46
-	// 294	1	开启直播免审核	broadcast_room_type	radio	0:关闭
-	// 1:开启	0	是否开启直播免审核	0	0	1	2020-07-29 16:50:35
-	// 295	1	开启复制第三方平台商品	copy_product_status	radio	0:关闭
-	// 1:开启	0	是否开启复制商品功能	0	0	1	2020-07-30 15:49:01
-	// 296	1	复制商品接口KEY	copy_product_apikey	input		0	接口key	0	0	1	2020-07-30 15:49:46
-	// 297	1	开启直播商品免审核	broadcast_goods_type	radio	0:关闭
-	// 1:开启	0	是否开启直播商品免审核	0	0	1	2020-07-30 16:00:53
-	// 298	1	腾讯地图KEY	tx_map_key	input		0	腾讯地图KEY	0	0	1	2020-08-01 11:55:13
+	{SysConfigCategoryID: 1, ConfigName: "开启直播免审核", ConfigKey: "broadcast_room_type", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启直播免审核", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "开启复制第三方平台商品", ConfigKey: "copy_product_status", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启复制商品功能", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "复制商品接口KEY", ConfigKey: "copy_product_apikey", ConfigType: "input", ConfigRule: "", Required: 2, Info: "接口key", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "开启直播商品免审核", ConfigKey: "broadcast_goods_type", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启直播商品免审核", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "腾讯地图KEY", ConfigKey: "tx_map_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "腾讯地图KEY", Sort: 0, UserType: 2, Status: 1},
 	// 299	14	开启门店自提	mer_take_status	radio	0:关闭
 	// 1:开启	0	是否开启门店自提	0	1	1	2020-08-01 11:59:14
 	// 300	14	自提点名称	mer_take_name	input		0	设置自提点名称	0	1	1	2020-08-01 12:01:08
@@ -154,10 +147,9 @@ var configs = []model.SysConfig{
 	// 303	14	店铺经纬度	mer_take_location	input		0	设置店铺经纬度	0	1	1	2020-08-01 12:16:18
 	// 304	14	自提点营业日期	mer_take_day	input		0	设置自提点营业日期	0	1	1	2020-08-01 12:17:06
 	// 305	14	自提点营业时间	mer_take_time	input		0	设置自提点营业时间	0	1	1	2020-08-01 12:17:39
-	// 306	1	订单自动收货时间(天)	auto_take_order_timer	number		0	设置订单自动收货时间(天)	0	0	1	2020-08-04 14:57:23
-	// 307	1	默认赠送复制次数	copy_product_defaul	number		0	默认给商户赠送可用次数	0	0	1	2020-08-06 12:16:20
-	// 308	1	是否展示店铺	hide_mer_status	radio	1:关闭
-	// 0:开启	0	是否展示店铺	0	0	1	2020-08-17 15:03:44
+	{SysConfigCategoryID: 1, ConfigName: "	订单自动收货时间(天)", ConfigKey: "auto_take_order_timer", ConfigType: "number", ConfigRule: "", Required: 2, Info: "设置订单自动收货时间(天)", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "默认赠送复制次数", ConfigKey: "copy_product_defaul", ConfigType: "number", ConfigRule: "", Required: 2, Info: "默认给商户赠送可用次数", Sort: 0, UserType: 2, Status: 1},
+	{SysConfigCategoryID: 1, ConfigName: "是否展示店铺", ConfigKey: "hide_mer_status", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否展示店铺", Sort: 0, UserType: 2, Status: 1},
 	// 309	4	直播审核通过主播通知	sms_broadcast_room_status	radio	0:关闭
 	// 1:开启	0		0	0	1	2020-09-08 15:53:42
 	// 310	4	验证码时效配置(分钟)	sms_time	number		0		0	0	1	2020-09-08 15:53:42

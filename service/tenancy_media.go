@@ -95,7 +95,8 @@ func GetFileRecordInfoList(info request.MediaPageInfo, ctx *gin.Context) (interf
 	for i := 0; i < len(fileLists); i++ {
 		url := fileLists[i].Url
 		if !strings.Contains(url, "http://") && !strings.Contains(url, "https://") {
-			fileLists[i].Url = "http://127.0.0.1:8089/" + fileLists[i].Url
+			seitURL, _ := GetSeitURL()
+			fileLists[i].Url = seitURL + fileLists[i].Url
 		}
 	}
 	return fileLists, total, err

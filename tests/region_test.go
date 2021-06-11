@@ -7,7 +7,7 @@ import (
 
 func TestParentRegion(t *testing.T) {
 	e := baseTester(t)
-	obj := e.GET("/v1/public/region/0").
+	obj := e.GET("v1/public/region/0").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -17,7 +17,7 @@ func TestParentRegion(t *testing.T) {
 
 func TestSubRegion1(t *testing.T) {
 	e := baseTester(t)
-	obj := e.GET("/v1/public/region/19").
+	obj := e.GET("v1/public/region/19").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -27,7 +27,7 @@ func TestSubRegion1(t *testing.T) {
 
 func TestSubRegion2(t *testing.T) {
 	e := baseTester(t)
-	obj := e.GET("/v1/public/region/20").
+	obj := e.GET("v1/public/region/20").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -37,7 +37,7 @@ func TestSubRegion2(t *testing.T) {
 
 func TestSubRegionList(t *testing.T) {
 	e := baseTester(t)
-	obj := e.GET("/v1/public/getRegionList").
+	obj := e.GET("v1/public/getRegionList").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

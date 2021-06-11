@@ -8,7 +8,7 @@ import (
 func TestMenu(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("/v1/admin/menu/getMenu").
+	obj := auth.GET("v1/admin/menu/getMenu").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -37,7 +37,7 @@ func TestMenu(t *testing.T) {
 func TestBaseMenu(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/menu/getBaseMenuTree").
+	obj := auth.POST("v1/admin/menu/getBaseMenuTree").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -69,7 +69,7 @@ func TestBaseMenu(t *testing.T) {
 func TestMenuList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/menu/getMenuList").
+	obj := auth.POST("v1/admin/menu/getMenuList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -134,7 +134,7 @@ func TestMenuProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/menu/addBaseMenu").
+	obj := auth.POST("v1/admin/menu/addBaseMenu").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -195,14 +195,14 @@ func TestMenuProcess(t *testing.T) {
 		"sort": 111,
 	}
 
-	obj = auth.POST("/v1/admin/menu/updateBaseMenu").
+	obj = auth.POST("v1/admin/menu/updateBaseMenu").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("更新成功")
 
-	obj = auth.POST("/v1/admin/menu/addMenuAuthority").
+	obj = auth.POST("v1/admin/menu/addMenuAuthority").
 		WithJSON(map[string]interface{}{
 			"authorityId": "9528",
 			"menus": []map[string]interface{}{
@@ -217,7 +217,7 @@ func TestMenuProcess(t *testing.T) {
 	obj.Value("message").String().Equal("添加成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/menu/deleteBaseMenu").
+	obj = auth.DELETE("v1/admin/menu/deleteBaseMenu").
 		WithJSON(map[string]interface{}{"id": menuId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -237,7 +237,7 @@ func TestMenuAddError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/menu/addBaseMenu").
+	obj := auth.POST("v1/admin/menu/addBaseMenu").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

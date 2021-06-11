@@ -17,7 +17,7 @@ func SaveConfigValue(ctx *gin.Context) {
 		return
 	}
 
-	var config map[string]string
+	var config map[string]interface{}
 	if errs := ctx.ShouldBindJSON(&config); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return

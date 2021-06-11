@@ -12,7 +12,7 @@ import (
 func TestAdminUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/getAdminList").
+	obj := auth.POST("v1/admin/user/getAdminList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -35,7 +35,7 @@ func TestAdminUserList(t *testing.T) {
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerAdmin").
+	obj := auth.POST("v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -49,7 +49,7 @@ func TestAdminUserProcess(t *testing.T) {
 	userId := user.Value("id").Number().Raw()
 
 	// changePassword error
-	obj = auth.POST("/v1/admin/user/changePassword").
+	obj = auth.POST("v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -57,7 +57,7 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改成功")
 
 	// changePassword error
-	obj = auth.POST("/v1/admin/user/changePassword").
+	obj = auth.POST("v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -65,7 +65,7 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改失败，原密码与当前账户不符")
 
 	// changePassword error
-	obj = auth.POST("/v1/admin/user/changePassword").
+	obj = auth.POST("v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": 0}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -73,7 +73,7 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("Key: 'ChangePasswordStruct.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
 
 	// setUserAuthority
-	obj = auth.POST("/v1/admin/user/setUserAuthority").
+	obj = auth.POST("v1/admin/user/setUserAuthority").
 		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.AdminAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -81,7 +81,7 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改成功")
 
 	// setAdminInfo
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/user/setUserInfo/%d", int(userId))).
 		WithJSON(map[string]interface{}{"email": "admin@admin.com", "phone": "13800138001"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -89,7 +89,7 @@ func TestAdminUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/user/deleteUser").
+	obj = auth.DELETE("v1/admin/user/deleteUser").
 		WithJSON(map[string]interface{}{"id": userId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -101,7 +101,7 @@ func TestAdminUserProcess(t *testing.T) {
 func TestAdminUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerAdmin").
+	obj := auth.POST("v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.AdminAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -113,7 +113,7 @@ func TestAdminUserRegisterError(t *testing.T) {
 func TestAdminUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerAdmin").
+	obj := auth.POST("v1/admin/user/registerAdmin").
 		WithJSON(map[string]interface{}{"username": "admin_authrity_id_empty", "password": "123456", "authorityId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

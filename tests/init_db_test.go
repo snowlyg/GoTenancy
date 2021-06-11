@@ -36,7 +36,7 @@ func TestInitDB(t *testing.T) {
 		t.Fatalf("write config err %v\n", err)
 	}
 	g.TENANCY_DB = nil
-	obj := e.GET("/v1/init/checkdb").
+	obj := e.GET("v1/init/checkdb").
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -44,7 +44,7 @@ func TestInitDB(t *testing.T) {
 	obj.Value("message").String().Equal("前往初始化数据库")
 	obj.Value("data").Object().Value("needInit").Boolean().True()
 
-	obj = e.POST("/v1/init/initdb").
+	obj = e.POST("v1/init/initdb").
 		WithJSON(map[string]interface{}{"host": "127.0.0.1", "port": "3306", "userName": "root", "password": "Chindeo", "dbName": "tenancy"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 

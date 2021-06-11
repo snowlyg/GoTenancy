@@ -42,7 +42,7 @@ func TestTenancyList(t *testing.T) {
 func list(t *testing.T, params map[string]interface{}, length int) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/getTenancyList").
+	obj := auth.POST("v1/admin/tenancy/getTenancyList").
 		WithJSON(params).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -65,7 +65,7 @@ func list(t *testing.T, params map[string]interface{}, length int) {
 func TestTenancyByRegion(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("/v1/admin/tenancy/getTenancies/1").
+	obj := auth.GET("v1/admin/tenancy/getTenancies/1").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -76,7 +76,7 @@ func TestTenancyByRegion(t *testing.T) {
 func TestGetTenancyCount(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("/v1/admin/tenancy/getTenancyCount").
+	obj := auth.GET("v1/admin/tenancy/getTenancyCount").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -96,7 +96,7 @@ func TestTenancyProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/createTenancy").
+	obj := auth.POST("v1/admin/tenancy/createTenancy").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -123,7 +123,7 @@ func TestTenancyProcess(t *testing.T) {
 		"sysRegionCode": 3,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/tenancy/updateTenancy/%f", tenancyId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/tenancy/updateTenancy/%f", tenancyId)).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -138,7 +138,7 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
 	tenancy.Value("status").Number().Equal(update["status"].(int))
 
-	obj = auth.GET(fmt.Sprintf("/v1/admin/tenancy/getTenancyById/%f", tenancyId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/getTenancyById/%f", tenancyId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -155,7 +155,7 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("status").Number().Equal(update["status"].(int))
 
 	// setTenancyRegion
-	obj = auth.POST("/v1/admin/tenancy/setTenancyRegion").
+	obj = auth.POST("v1/admin/tenancy/setTenancyRegion").
 		WithJSON(map[string]interface{}{
 			"id":            tenancyId,
 			"sysRegionCode": 2,
@@ -166,7 +166,7 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// changeTenancyStatus
-	obj = auth.POST("/v1/admin/tenancy/changeTenancyStatus").
+	obj = auth.POST("v1/admin/tenancy/changeTenancyStatus").
 		WithJSON(map[string]interface{}{
 			"id":     tenancyId,
 			"status": 2,
@@ -177,7 +177,7 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("/v1/admin/tenancy/deleteTenancy/%f", tenancyId)).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/tenancy/deleteTenancy/%f", tenancyId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -196,7 +196,7 @@ func TestTenancyRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/tenancy/createTenancy").
+	obj := auth.POST("v1/admin/tenancy/createTenancy").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

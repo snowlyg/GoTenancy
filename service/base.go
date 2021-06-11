@@ -51,17 +51,26 @@ type Rule struct {
 	Validate []map[string]interface{} `json:"validate,omitempty"`
 }
 
-func (r *Rule) NewType(t string) {
-	if t == "file" {
-		r.Type = "upload"
-	} else {
-		r.Type = t
-	}
-}
-func (r *Rule) NewOptions(rule string) {
+func (r *Rule) TransData(rule string, token []byte) {
 	switch r.Type {
 	case "input":
+		r.Props = map[string]interface{}{
+			"placeholder": "请输入" + r.Title,
+			"type":        "text",
+		}
+	case "textarea":
+		r.Props = map[string]interface{}{
+			"placeholder": "请输入" + r.Title,
+			"type":        "textarea",
+		}
+		r.Type = "input"
+	case "number":
+		r.Props = map[string]interface{}{
+			"placeholder": "请输入" + r.Title,
+		}
+		r.Type = "inputNumber"
 	case "radio":
+		r.Props = map[string]interface{}{}
 		rules := strings.Split(rule, ";")
 		for _, ru := range rules {
 			rus := strings.Split(ru, ":")
@@ -69,23 +78,10 @@ func (r *Rule) NewOptions(rule string) {
 				r.Options = append(r.Options, Option{Label: rus[1], Value: rus[0]})
 			}
 		}
-	case "upload":
-
-	}
-}
-
-func (r *Rule) NewProps(token []byte) {
-	switch r.Type {
-	case "input":
+	case "file":
+		seitURL, _ := GetSeitURL()
 		r.Props = map[string]interface{}{
-			"placeholder": "请输入" + r.Title,
-			"type":        "text",
-		}
-	case "radio":
-		r.Props = map[string]interface{}{}
-	case "upload":
-		r.Props = map[string]interface{}{
-			"action": "http://localhost:8089/v1/admin/media/upload",
+			"action": seitURL + "v1/admin/media/upload",
 			"data":   map[string]interface{}{},
 			"headers": map[string]interface{}{
 				"Authorization": "Bearer " + string(token),
@@ -94,7 +90,21 @@ func (r *Rule) NewProps(token []byte) {
 			"limit":      1,
 			"uploadType": "file",
 		}
+		r.Type = "upload"
+	case "image":
+		r.Props = map[string]interface{}{
+			"footer":    false,
+			"height":    "480px",
+			"maxLength": 1,
+			"modal":     map[string]interface{}{"modal": false},
+			"src":       "/admin/setting/uploadPicture?field=" + r.Field + "&type=1",
+			"title":     "请选择" + r.Title,
+			"type":      r.Type,
+			"width":     "896px",
+		}
+		r.Type = "frame"
 	}
+
 }
 
 type Option struct {

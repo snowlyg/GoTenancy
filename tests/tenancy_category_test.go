@@ -8,7 +8,7 @@ import (
 func TestCategoryList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/category/getCategoryList").
+	obj := auth.POST("v1/admin/category/getCategoryList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -41,7 +41,7 @@ func TestCategoryProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/category/createCategory").
+	obj := auth.POST("v1/admin/category/createCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -70,7 +70,7 @@ func TestCategoryProcess(t *testing.T) {
 		"pic":      "http://qmplusimg.henrongyi.top/head.png",
 	}
 
-	obj = auth.PUT("/v1/admin/category/updateCategory").
+	obj = auth.PUT("v1/admin/category/updateCategory").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -87,7 +87,7 @@ func TestCategoryProcess(t *testing.T) {
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("/v1/admin/category/getCategoryById").
+	obj = auth.POST("v1/admin/category/getCategoryById").
 		WithJSON(map[string]interface{}{"id": categoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -105,7 +105,7 @@ func TestCategoryProcess(t *testing.T) {
 	category.Value("level").Number().Equal(update["level"].(int))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/category/deleteCategory").
+	obj = auth.DELETE("v1/admin/category/deleteCategory").
 		WithJSON(map[string]interface{}{"id": categoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -126,7 +126,7 @@ func TestCategoryRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/category/createCategory").
+	obj := auth.POST("v1/admin/category/createCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

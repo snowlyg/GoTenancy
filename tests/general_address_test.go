@@ -8,7 +8,7 @@ import (
 func TestAddressList(t *testing.T) {
 	auth := generalWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/general/address/getAddressList").
+	obj := auth.POST("v1/general/address/getAddressList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -50,7 +50,7 @@ func TestAddressProcess(t *testing.T) {
 	}
 	auth := generalWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/general/address/createAddress").
+	obj := auth.POST("v1/general/address/createAddress").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -97,7 +97,7 @@ func TestAddressProcess(t *testing.T) {
 		"disease":      "不孕不育1",
 	}
 
-	obj = auth.PUT("/v1/general/address/updateAddress").
+	obj = auth.PUT("v1/general/address/updateAddress").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -123,7 +123,7 @@ func TestAddressProcess(t *testing.T) {
 	address.Value("hospitalNo").String().Equal(update["hospitalNo"].(string))
 	address.Value("disease").String().Equal(update["disease"].(string))
 
-	obj = auth.POST("/v1/general/address/getAddressById").
+	obj = auth.POST("v1/general/address/getAddressById").
 		WithJSON(map[string]interface{}{"id": addressId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -150,7 +150,7 @@ func TestAddressProcess(t *testing.T) {
 	address.Value("disease").String().Equal(update["disease"].(string))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/general/address/deleteAddress").
+	obj = auth.DELETE("v1/general/address/deleteAddress").
 		WithJSON(map[string]interface{}{"id": addressId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -180,7 +180,7 @@ func TestAddressRegisterError(t *testing.T) {
 	}
 	auth := generalWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/general/address/createAddress").
+	obj := auth.POST("v1/general/address/createAddress").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

@@ -8,7 +8,7 @@ import (
 func TestBrandCategoryList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brandCategory/getBrandCategoryList").
+	obj := auth.POST("v1/admin/brandCategory/getBrandCategoryList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -40,7 +40,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
+	obj := auth.POST("v1/admin/brandCategory/createBrandCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -67,7 +67,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 		"pid":      "1",
 	}
 
-	obj = auth.PUT("/v1/admin/brandCategory/updateBrandCategory").
+	obj = auth.PUT("v1/admin/brandCategory/updateBrandCategory").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -83,7 +83,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("pid").String().Equal(update["pid"].(string))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("/v1/admin/brandCategory/getBrandCategoryById").
+	obj = auth.POST("v1/admin/brandCategory/getBrandCategoryById").
 		WithJSON(map[string]interface{}{"id": brandCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -100,7 +100,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/brandCategory/deleteBrandCategory").
+	obj = auth.DELETE("v1/admin/brandCategory/deleteBrandCategory").
 		WithJSON(map[string]interface{}{"id": brandCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -120,7 +120,7 @@ func TestBrandCategoryRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brandCategory/createBrandCategory").
+	obj := auth.POST("v1/admin/brandCategory/createBrandCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

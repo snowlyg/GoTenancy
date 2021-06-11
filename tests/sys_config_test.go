@@ -9,7 +9,7 @@ import (
 func TestConfigList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/config/getConfigList").
+	obj := auth.POST("v1/admin/config/getConfigList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -56,7 +56,7 @@ func TestConfigProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/config/createConfig").
+	obj := auth.POST("v1/admin/config/createConfig").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -81,14 +81,14 @@ func TestConfigProcess(t *testing.T) {
 	configKey := config.Value("configKey").String().Raw()
 
 	// getCreateConfigMap
-	obj = auth.GET("/v1/admin/config/getCreateConfigMap").
+	obj = auth.GET("v1/admin/config/getCreateConfigMap").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
 	// getUpdateConfigMap
-	obj = auth.GET(fmt.Sprintf("/v1/admin/config/getUpdateConfigMap/%f", configId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/config/getUpdateConfigMap/%f", configId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -107,7 +107,7 @@ func TestConfigProcess(t *testing.T) {
 		"userType":            2,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/config/updateConfig/%f", configId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/config/updateConfig/%f", configId)).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -126,7 +126,7 @@ func TestConfigProcess(t *testing.T) {
 	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
 	config.Value("userType").Number().Equal(update["userType"].(int))
 
-	obj = auth.GET("/v1/admin/config/getConfigByKey/" + configKey).
+	obj = auth.GET("v1/admin/config/getConfigByKey/" + configKey).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -145,7 +145,7 @@ func TestConfigProcess(t *testing.T) {
 	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
 	config.Value("userType").Number().Equal(update["userType"].(int))
 
-	obj = auth.GET(fmt.Sprintf("/v1/admin/config/getConfigByID/%f", configId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/config/getConfigByID/%f", configId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -165,7 +165,7 @@ func TestConfigProcess(t *testing.T) {
 	config.Value("userType").Number().Equal(update["userType"].(int))
 
 	// changeConfigStatus
-	obj = auth.POST("/v1/admin/config/changeConfigStatus").
+	obj = auth.POST("v1/admin/config/changeConfigStatus").
 		WithJSON(map[string]interface{}{
 			"id":     configId,
 			"status": 2,
@@ -176,7 +176,7 @@ func TestConfigProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("/v1/admin/config/deleteConfig/%f", configId)).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/config/deleteConfig/%f", configId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -199,7 +199,7 @@ func TestConfigRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/config/createConfig").
+	obj := auth.POST("v1/admin/config/createConfig").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

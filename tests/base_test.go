@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
+	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/multi"
 )
 
@@ -36,8 +37,9 @@ func TestMain(m *testing.M) {
 
 func baseTester(t *testing.T) *httpexpect.Expect {
 	handler := initialize.App()
+	seitURL, _ := service.GetSeitURL()
 	return httpexpect.WithConfig(httpexpect.Config{
-		BaseURL: "http://127.0.0.1:8089",
+		BaseURL: seitURL,
 		Client: &http.Client{
 			Transport: httpexpect.NewBinder(handler),
 			Jar:       httpexpect.NewJar(),
@@ -51,7 +53,7 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("/v1/public/login").
+	obj := e.POST("v1/public/login").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": multi.AdminAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
@@ -78,7 +80,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 
 func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("/v1/public/login").
+	obj := e.POST("v1/public/login").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
@@ -107,7 +109,7 @@ func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 
 func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("/v1/public/login").
+	obj := e.POST("v1/public/login").
 		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "authorityType": multi.GeneralAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
@@ -144,7 +146,7 @@ func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 }
 
 func baseLogOut(auth *httpexpect.Expect) {
-	obj := auth.GET("/v1/auth/logout").
+	obj := auth.GET("v1/auth/logout").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

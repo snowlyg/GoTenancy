@@ -10,7 +10,7 @@ import (
 func TestAuthorityList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/getAuthorityList").
+	obj := auth.POST("v1/admin/authority/getAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -43,7 +43,7 @@ func TestAuthorityList(t *testing.T) {
 func TestAdminAuthority(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/getAdminAuthorityList").
+	obj := auth.POST("v1/admin/authority/getAdminAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -71,7 +71,7 @@ func TestAdminAuthority(t *testing.T) {
 func TestTenancyAuthority(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/getTenancyAuthorityList").
+	obj := auth.POST("v1/admin/authority/getTenancyAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -99,7 +99,7 @@ func TestTenancyAuthority(t *testing.T) {
 func TestGeneralAuthority(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/getGeneralAuthorityList").
+	obj := auth.POST("v1/admin/authority/getGeneralAuthorityList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -137,7 +137,7 @@ func TestAuthorityProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/createAuthority").
+	obj := auth.POST("v1/admin/authority/createAuthority").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -165,7 +165,7 @@ func TestAuthorityProcess(t *testing.T) {
 		},
 	}
 
-	obj = auth.PUT("/v1/admin/authority/updateAuthority").
+	obj = auth.PUT("v1/admin/authority/updateAuthority").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -202,7 +202,7 @@ func TestAuthorityProcess(t *testing.T) {
 		"oldAuthorityId": "9528",
 	}
 
-	obj = auth.POST("/v1/admin/authority/copyAuthority").
+	obj = auth.POST("v1/admin/authority/copyAuthority").
 		WithJSON(copy).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -225,7 +225,7 @@ func TestAuthorityProcess(t *testing.T) {
 			{"authorityId": "8881"},
 		},
 	}
-	obj = auth.POST("/v1/admin/authority/setDataAuthority").
+	obj = auth.POST("v1/admin/authority/setDataAuthority").
 		WithJSON(setdata).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -233,7 +233,7 @@ func TestAuthorityProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// delete
-	obj = auth.DELETE("/v1/admin/authority/deleteAuthority").
+	obj = auth.DELETE("v1/admin/authority/deleteAuthority").
 		WithJSON(map[string]interface{}{
 			"authorityId": authorityId,
 		}).
@@ -243,7 +243,7 @@ func TestAuthorityProcess(t *testing.T) {
 	obj.Value("message").String().Equal("删除成功")
 
 	// delete
-	obj = auth.DELETE("/v1/admin/authority/deleteAuthority").
+	obj = auth.DELETE("v1/admin/authority/deleteAuthority").
 		WithJSON(map[string]interface{}{
 			"authorityId": "9511",
 		}).
@@ -264,7 +264,7 @@ func TestAuthorityRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/authority/createAuthority").
+	obj := auth.POST("v1/admin/authority/createAuthority").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

@@ -8,7 +8,7 @@ import (
 func TestMiniList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/mini/getMiniList").
+	obj := auth.POST("v1/admin/mini/getMiniList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -38,7 +38,7 @@ func TestMiniProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/mini/createMini").
+	obj := auth.POST("v1/admin/mini/createMini").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -62,7 +62,7 @@ func TestMiniProcess(t *testing.T) {
 		"remark":    "中德澳线上点餐商城1",
 	}
 
-	obj = auth.PUT("/v1/admin/mini/updateMini").
+	obj = auth.PUT("v1/admin/mini/updateMini").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -77,7 +77,7 @@ func TestMiniProcess(t *testing.T) {
 	mini.Value("appSecret").String().Equal(update["appSecret"].(string))
 	mini.Value("remark").String().Equal(update["remark"].(string))
 
-	obj = auth.POST("/v1/admin/mini/getMiniById").
+	obj = auth.POST("v1/admin/mini/getMiniById").
 		WithJSON(map[string]interface{}{"id": miniId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -93,7 +93,7 @@ func TestMiniProcess(t *testing.T) {
 	mini.Value("remark").String().Equal(update["remark"].(string))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/mini/deleteMini").
+	obj = auth.DELETE("v1/admin/mini/deleteMini").
 		WithJSON(map[string]interface{}{"id": miniId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -111,7 +111,7 @@ func TestMiniRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/mini/createMini").
+	obj := auth.POST("v1/admin/mini/createMini").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

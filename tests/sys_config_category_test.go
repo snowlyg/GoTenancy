@@ -9,7 +9,7 @@ import (
 func TestConfigCategoryList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("/v1/admin/configCategory/getConfigCategoryList").
+	obj := auth.GET("v1/admin/configCategory/getConfigCategoryList").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -32,7 +32,7 @@ func TestConfigCategoryList(t *testing.T) {
 func TestCreateConfigCategoryMap(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("/v1/admin/configCategory/getCreateConfigCategoryMap").
+	obj := auth.GET("v1/admin/configCategory/getCreateConfigCategoryMap").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -50,7 +50,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/configCategory/createConfigCategory").
+	obj := auth.POST("v1/admin/configCategory/createConfigCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -68,7 +68,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategoryId := configCategory.Value("id").Number().Raw()
 
 	// getUpdateConfigCategoryMap
-	obj = auth.GET(fmt.Sprintf("/v1/admin/configCategory/getUpdateConfigCategoryMap/%f", configCategoryId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getUpdateConfigCategoryMap/%f", configCategoryId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -84,7 +84,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 		"status": 2,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/configCategory/updateConfigCategory/%f", configCategoryId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/configCategory/updateConfigCategory/%f", configCategoryId)).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -99,7 +99,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategory.Value("info").String().Equal(update["info"].(string))
 	configCategory.Value("status").Number().Equal(update["status"].(int))
 
-	obj = auth.GET(fmt.Sprintf("/v1/admin/configCategory/getConfigCategoryById/%f", configCategoryId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getConfigCategoryById/%f", configCategoryId)).
 		WithJSON(map[string]interface{}{"id": configCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -116,7 +116,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategory.Value("status").Number().Equal(update["status"].(int))
 
 	// changeConfigCategoryStatus
-	obj = auth.POST("/v1/admin/configCategory/changeConfigCategoryStatus").
+	obj = auth.POST("v1/admin/configCategory/changeConfigCategoryStatus").
 		WithJSON(map[string]interface{}{
 			"id":     configCategoryId,
 			"status": 2,
@@ -127,7 +127,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// deleteConfigCategory
-	obj = auth.DELETE(fmt.Sprintf("/v1/admin/configCategory/deleteConfigCategory/%f", configCategoryId)).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/configCategory/deleteConfigCategory/%f", configCategoryId)).
 		WithJSON(map[string]interface{}{"id": configCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -147,7 +147,7 @@ func TestConfigCategoryRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/configCategory/createConfigCategory").
+	obj := auth.POST("v1/admin/configCategory/createConfigCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

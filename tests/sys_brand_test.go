@@ -8,7 +8,7 @@ import (
 func TestBrandList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brand/getBrandList").
+	obj := auth.POST("v1/admin/brand/getBrandList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -38,7 +38,7 @@ func TestBrandProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brand/createBrand").
+	obj := auth.POST("v1/admin/brand/createBrand").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -62,7 +62,7 @@ func TestBrandProcess(t *testing.T) {
 		"brandCategoryId": 1,
 	}
 
-	obj = auth.PUT("/v1/admin/brand/updateBrand").
+	obj = auth.PUT("v1/admin/brand/updateBrand").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -76,7 +76,7 @@ func TestBrandProcess(t *testing.T) {
 	brand.Value("pic").String().Equal(update["pic"].(string))
 	brand.Value("sort").Number().Equal(update["sort"].(int))
 
-	obj = auth.POST("/v1/admin/brand/getBrandById").
+	obj = auth.POST("v1/admin/brand/getBrandById").
 		WithJSON(map[string]interface{}{"id": brandId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -90,7 +90,7 @@ func TestBrandProcess(t *testing.T) {
 	brand.Value("pic").String().Equal(update["pic"].(string))
 	brand.Value("sort").Number().Equal(update["sort"].(int))
 
-	obj = auth.POST("/v1/admin/brand/setBrandCate").
+	obj = auth.POST("v1/admin/brand/setBrandCate").
 		WithJSON(map[string]interface{}{"id": brandId, "brandCategoryId": 1}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -98,7 +98,7 @@ func TestBrandProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/brand/deleteBrand").
+	obj = auth.DELETE("v1/admin/brand/deleteBrand").
 		WithJSON(map[string]interface{}{"id": brandId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -116,7 +116,7 @@ func TestBrandRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/brand/createBrand").
+	obj := auth.POST("v1/admin/brand/createBrand").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

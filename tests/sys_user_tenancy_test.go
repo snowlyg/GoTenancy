@@ -12,7 +12,7 @@ import (
 func TestTenancyUserList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/getTenancyList").
+	obj := auth.POST("v1/admin/user/getTenancyList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -37,7 +37,7 @@ func TestTenancyUserList(t *testing.T) {
 func TestTenancyUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerTenancy").
+	obj := auth.POST("v1/admin/user/registerTenancy").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -51,7 +51,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	userId := user.Value("id").Number().Raw()
 
 	// changePassword error
-	obj = auth.POST("/v1/admin/user/changePassword").
+	obj = auth.POST("v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -59,7 +59,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改成功")
 
 	// changePassword error
-	obj = auth.POST("/v1/admin/user/changePassword").
+	obj = auth.POST("v1/admin/user/changePassword").
 		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -67,7 +67,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改失败，原密码与当前账户不符")
 
 	// setUserAuthority
-	obj = auth.POST("/v1/admin/user/setUserAuthority").
+	obj = auth.POST("v1/admin/user/setUserAuthority").
 		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.TenancyAuthorityId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -75,7 +75,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("修改成功")
 
 	// setTenancyInfo
-	obj = auth.PUT(fmt.Sprintf("/v1/admin/user/setUserInfo/%d", int(userId))).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/user/setUserInfo/%d", int(userId))).
 		WithJSON(map[string]interface{}{"email": "tenancy@master.com", "phone": "13800138001"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -83,7 +83,7 @@ func TestTenancyUserProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/user/deleteUser").
+	obj = auth.DELETE("v1/admin/user/deleteUser").
 		WithJSON(map[string]interface{}{"id": userId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -95,7 +95,7 @@ func TestTenancyUserProcess(t *testing.T) {
 func TestTenancyUserRegisterError(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerTenancy").
+	obj := auth.POST("v1/admin/user/registerTenancy").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityId": source.TenancyAuthorityId, "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -107,7 +107,7 @@ func TestTenancyUserRegisterError(t *testing.T) {
 func TestTenancyUserRegisterAuthorityIdEmpty(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/user/registerTenancy").
+	obj := auth.POST("v1/admin/user/registerTenancy").
 		WithJSON(map[string]interface{}{"username": "chindeo_tenancy", "password": "123456", "authorityId": "", "authorityType": multi.TenancyAuthority}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

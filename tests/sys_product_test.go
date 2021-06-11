@@ -8,7 +8,7 @@ import (
 func TestProductList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/product/getProductList").
+	obj := auth.POST("v1/admin/product/getProductList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -116,7 +116,7 @@ func TestProductProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/product/createProduct").
+	obj := auth.POST("v1/admin/product/createProduct").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -207,7 +207,7 @@ func TestProductProcess(t *testing.T) {
 		"tenancyCategoryId": 1,
 	}
 
-	obj = auth.PUT("/v1/admin/product/updateProduct").
+	obj = auth.PUT("v1/admin/product/updateProduct").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -255,7 +255,7 @@ func TestProductProcess(t *testing.T) {
 	product.Value("sysBrandId").Number().Equal(update["sysBrandId"].(int))
 	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
 
-	obj = auth.POST("/v1/admin/product/getProductById").
+	obj = auth.POST("v1/admin/product/getProductById").
 		WithJSON(map[string]interface{}{"id": productId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -304,7 +304,7 @@ func TestProductProcess(t *testing.T) {
 	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/product/deleteProduct").
+	obj = auth.DELETE("v1/admin/product/deleteProduct").
 		WithJSON(map[string]interface{}{"id": productId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -356,7 +356,7 @@ func TestProductAddError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/product/createProduct").
+	obj := auth.POST("v1/admin/product/createProduct").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

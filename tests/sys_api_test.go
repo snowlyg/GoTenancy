@@ -8,7 +8,7 @@ import (
 func TestApiList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/api/getApiList").
+	obj := auth.POST("v1/admin/api/getApiList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -31,7 +31,7 @@ func TestApiList(t *testing.T) {
 func TestAllApi(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/api/getAllApis").
+	obj := auth.POST("v1/admin/api/getAllApis").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -62,7 +62,7 @@ func TestApiProcess(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/api/createApi").
+	obj := auth.POST("v1/admin/api/createApi").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -87,14 +87,14 @@ func TestApiProcess(t *testing.T) {
 		"path":        "update_test_api_process",
 	}
 
-	obj = auth.POST("/v1/admin/api/updateApi").
+	obj = auth.POST("v1/admin/api/updateApi").
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("修改成功")
 
-	obj = auth.POST("/v1/admin/api/getApiById").
+	obj = auth.POST("v1/admin/api/getApiById").
 		WithJSON(map[string]interface{}{"id": apiId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -109,7 +109,7 @@ func TestApiProcess(t *testing.T) {
 	api.Value("method").String().Equal(update["method"].(string))
 
 	// setUserAuthority
-	obj = auth.DELETE("/v1/admin/api/deleteApi").
+	obj = auth.DELETE("v1/admin/api/deleteApi").
 		WithJSON(map[string]interface{}{
 			"id":     apiId,
 			"path":   apiPath,
@@ -131,7 +131,7 @@ func TestApiRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("/v1/admin/api/createApi").
+	obj := auth.POST("v1/admin/api/createApi").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

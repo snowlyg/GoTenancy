@@ -27,13 +27,12 @@ func GetConfigMapByCate(cate string, token []byte) (Form, error) {
 	for i := 0; i < len(configs); i++ {
 		rule := Rule{
 			Title: configs[i].ConfigName,
+			Type:  configs[i].ConfigType,
 			Field: configs[i].ConfigKey,
 			Info:  configs[i].Info,
 			Value: configs[i].Value,
 		}
-		rule.NewType(configs[i].ConfigType)
-		rule.NewProps(token)
-		rule.NewOptions(configs[i].ConfigRule)
+		rule.TransData(configs[i].ConfigRule, token)
 		form.Rule = append(form.Rule, rule)
 		if i == 0 {
 			form.Title = GetConfigTypeName(configs[i].ConfigType)
