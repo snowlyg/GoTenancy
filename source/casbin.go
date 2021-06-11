@@ -87,7 +87,9 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/mini/updateMini", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/mini/deleteMini", V2: "DELETE"},
 
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getConfigMap/:cate", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configValue/saveConfigValue/:category", V2: "POST"},
+
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getConfigMap/:category", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getCreateConfigMap", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getUpdateConfigMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getConfigList", V2: "POST"},

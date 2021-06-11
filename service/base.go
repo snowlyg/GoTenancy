@@ -54,8 +54,24 @@ type Rule struct {
 func (r *Rule) NewType(t string) {
 	if t == "file" {
 		r.Type = "upload"
+	} else {
+		r.Type = t
 	}
-	r.Type = t
+}
+func (r *Rule) NewOptions(rule string) {
+	switch r.Type {
+	case "input":
+	case "radio":
+		rules := strings.Split(rule, ";")
+		for _, ru := range rules {
+			rus := strings.Split(ru, ":")
+			if len(rus) == 2 {
+				r.Options = append(r.Options, Option{Label: rus[1], Value: rus[0]})
+			}
+		}
+	case "upload":
+
+	}
 }
 
 func (r *Rule) NewProps(token []byte) {
@@ -67,12 +83,12 @@ func (r *Rule) NewProps(token []byte) {
 		}
 	case "radio":
 		r.Props = map[string]interface{}{}
-	case "file":
+	case "upload":
 		r.Props = map[string]interface{}{
-			"action": "/admin/media/upload",
+			"action": "http://localhost:8089/v1/admin/media/upload",
 			"data":   map[string]interface{}{},
-			"headers": []map[string]interface{}{
-				{"Authorization": "Bearer " + string(token)},
+			"headers": map[string]interface{}{
+				"Authorization": "Bearer " + string(token),
 			},
 
 			"limit":      1,

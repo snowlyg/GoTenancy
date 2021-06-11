@@ -8,13 +8,15 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"gorm.io/gorm"
 )
 
 // GetConfigMapByCate
 func GetConfigMapByCate(cate string, token []byte) (Form, error) {
 	form := Form{
-		Action:  "",
+		//TODO: 添加 /sys/ 前缀，兼容前端 form-create/element-ui 组件
+		Action:  "/sys/admin/configValue/saveConfigValue/" + cate,
 		Method:  "POST",
 		Headers: nil,
 	}
@@ -23,7 +25,6 @@ func GetConfigMapByCate(cate string, token []byte) (Form, error) {
 		return form, err
 	}
 	for i := 0; i < len(configs); i++ {
-		fmt.Printf("\n\n config:%+v\n\n", configs[i])
 		rule := Rule{
 			Title: configs[i].ConfigName,
 			Field: configs[i].ConfigKey,
@@ -32,9 +33,10 @@ func GetConfigMapByCate(cate string, token []byte) (Form, error) {
 		}
 		rule.NewType(configs[i].ConfigType)
 		rule.NewProps(token)
+		rule.NewOptions(configs[i].ConfigRule)
 		form.Rule = append(form.Rule, rule)
 		if i == 0 {
-			form.Title = configs[i].TypeName
+			form.Title = GetConfigTypeName(configs[i].ConfigType)
 		}
 	}
 
@@ -81,7 +83,7 @@ func CreateConfig(m model.SysConfig) (model.SysConfig, error) {
 func GetConfigByCateKey(config_key string) ([]response.SysConfig, error) {
 	var configs []response.SysConfig
 	err := g.TENANCY_DB.
-		Select("sys_configs.*,sys_config_values.value,sys_config_categories.name as typeName").
+		Select("sys_configs.*,sys_config_values.value").
 		Joins("left join sys_config_categories on sys_configs.sys_config_category_id = sys_config_categories.id").
 		Joins("left join sys_config_values on sys_configs.config_key = sys_config_values.config_key").
 		Where("sys_config_categories.key = ?", config_key).Find(&configs).Error

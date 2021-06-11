@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -26,7 +25,6 @@ func GetUpdateMediaMap(ctx *gin.Context) {
 }
 
 func UploadFile(ctx *gin.Context) {
-	var file model.TenancyMedia
 	noSave := ctx.DefaultQuery("noSave", "0")
 	_, header, err := ctx.Request.FormFile("file")
 	if err != nil {
@@ -34,13 +32,13 @@ func UploadFile(ctx *gin.Context) {
 		response.FailWithMessage("接收文件失败", ctx)
 		return
 	}
-	file, err = service.UploadFile(header, noSave, ctx) // 文件上传后拿到文件路径
+	file, err := service.UploadFile(header, noSave, ctx) // 文件上传后拿到文件路径
 	if err != nil {
 		g.TENANCY_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", ctx)
 		return
 	}
-	response.OkWithDetailed(response.TenancyMedia{File: file}, "上传成功", ctx)
+	response.OkWithDetailed(gin.H{"src": file.Url}, "上传成功", ctx)
 }
 
 func DeleteFile(ctx *gin.Context) {
