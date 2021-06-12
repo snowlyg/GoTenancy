@@ -9,7 +9,6 @@ import (
 	"github.com/snowlyg/go-tenancy/core"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/initialize"
-	"github.com/snowlyg/go-tenancy/service"
 	"github.com/snowlyg/multi"
 )
 
@@ -37,9 +36,8 @@ func TestMain(m *testing.M) {
 
 func baseTester(t *testing.T) *httpexpect.Expect {
 	handler := initialize.App()
-	seitURL, _ := service.GetSeitURL()
 	return httpexpect.WithConfig(httpexpect.Config{
-		BaseURL: seitURL,
+		BaseURL: "http://127.0.0.1:8089/",
 		Client: &http.Client{
 			Transport: httpexpect.NewBinder(handler),
 			Jar:       httpexpect.NewJar(),
