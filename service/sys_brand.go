@@ -1,7 +1,9 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -9,17 +11,37 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetBrandMap
+func GetBrandMap(id uint) (Form, error) {
+	var form Form
+	var formStr string
+	if id > 0 {
+		brand, err := GetBrandByID(id)
+		if err != nil {
+			return form, err
+		}
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s/%d","method":"PUT","title":"添加品牌","config":{}}`, brand.BrandCategoryID, brand.BrandName, brand.Pic, brand.Status, brand.Sort, "/admin/brand/updateBrand", id)
+	} else {
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s","method":"POST","title":"添加品牌","config":{}}`, 0, "", "", 2, 0, "/admin/brand/createBrand")
+	}
+	err := json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	opts, err := GetBrandCategoriesOptions()
+	if err != nil {
+		return form, err
+	}
+	form.Rule[0].Props["options"] = opts
+	return form, err
+}
+
 // CreateBrand
-func CreateBrand(m request.CreateSysBrand) (model.SysBrand, error) {
-	var brand model.SysBrand
-	err := g.TENANCY_DB.Where("brand_name = ?", m.BrandName).First(&brand).Error
+func CreateBrand(brand model.SysBrand) (model.SysBrand, error) {
+	err := g.TENANCY_DB.Where("brand_name = ?", brand.BrandName).First(&brand).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return brand, errors.New("名称已被注冊")
 	}
-	brand.BrandName = m.BrandName
-	brand.Sort = m.Sort
-	brand.Pic = m.Pic
-	brand.BrandCategoryID = m.BrandCategoryID
 	err = g.TENANCY_DB.Create(&brand).Error
 	return brand, err
 }
@@ -31,41 +53,35 @@ func GetBrandByID(id uint) (model.SysBrand, error) {
 	return brand, err
 }
 
-// SetBrandCate
-func SetBrandCate(setSysBrand request.SetSysBrand) error {
-	return g.TENANCY_DB.Model(&model.SysBrand{}).Where("id = ?", setSysBrand.Id).Update("brand_category_id", setSysBrand.BrandCategoryID).Error
+// ChangeBrandStatus
+func ChangeBrandStatus(changeStatus request.ChangeStatus) error {
+	return g.TENANCY_DB.Model(&model.SysBrand{}).Where("id = ?", changeStatus.Id).Update("status", changeStatus.Status).Error
 }
 
 // UpdateBrand
-func UpdateBrand(m request.UpdateSysBrand) (model.SysBrand, error) {
-	var brand model.SysBrand
-	err := g.TENANCY_DB.Where("brand_name = ?", m.BrandName).Where("id <> ?", m.Id).First(&brand).Error
+func UpdateBrand(brand model.SysBrand, id uint) (model.SysBrand, error) {
+	err := g.TENANCY_DB.Where("brand_name = ?", brand.BrandName).Where("id <> ?", id).First(&brand).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return brand, errors.New("名称已被注冊")
 	}
-	data := map[string]interface{}{
-		"brand_name": m.BrandName,
-		"sort":       m.Sort,
-		"pic":        m.Pic,
-		"is_show":    m.IsShow,
-	}
-	brand.ID = m.Id
-	err = g.TENANCY_DB.Model(&brand).Updates(data).Error
+	err = g.TENANCY_DB.Where("id = ?", id).Updates(brand).Error
 	return brand, err
 }
 
 // DeleteBrand
 func DeleteBrand(id uint) error {
-	var brand model.SysBrand
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&brand).Error
+	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.SysBrand{}).Error
 }
 
 // GetBrandInfoList
-func GetBrandInfoList(info request.PageInfo) ([]model.SysBrand, int64, error) {
+func GetBrandInfoList(info request.BrandPageInfo) ([]model.SysBrand, int64, error) {
 	var brandList []model.SysBrand
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysBrand{})
+	if info.BrandCategoryId > 0 {
+		db = db.Where("brand_category_id =?", info.BrandCategoryId)
+	}
 	var total int64
 	err := db.Count(&total).Error
 	if err != nil {

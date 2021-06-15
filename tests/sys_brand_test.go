@@ -92,13 +92,6 @@ func TestBrandProcess(t *testing.T) {
 	brand.Value("pic").String().Equal(update["pic"].(string))
 	brand.Value("sort").Number().Equal(update["sort"].(int))
 
-	obj = auth.POST("v1/admin/brand/setBrandCate").
-		WithJSON(map[string]interface{}{"id": brandId, "brandCategoryId": 1}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
 	// setUserAuthority
 	obj = auth.DELETE("v1/admin/brand/deleteBrand").
 		WithJSON(map[string]interface{}{"id": brandId}).

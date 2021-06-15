@@ -110,13 +110,17 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configCategory/updateConfigCategory/:id", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configCategory/deleteConfigCategory/:id", V2: "DELETE"},
 
+	// 品牌
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getCreateBrandMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getUpdateBrandMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getBrandList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/createBrand", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getBrandById", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/setBrandCate", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/updateBrand", V2: "PUT"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/deleteBrand", V2: "DELETE"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getBrandById/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/changeBrandStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/updateBrand/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/deleteBrand/:id", V2: "DELETE"},
 
+	// 品牌分类
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brandCategory/getCreateBrandCategoryMap", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brandCategory/getUpdateBrandCategoryMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brandCategory/getBrandCategoryList", V2: "POST"},

@@ -8,11 +8,13 @@ import (
 func InitBrandRouter(Router *gin.RouterGroup) {
 	BrandRouter := Router.Group("/brand")
 	{
+		BrandRouter.GET("/getCreateBrandMap", v1.GetCreateBrandMap)
+		BrandRouter.GET("/getUpdateBrandMap/:id", v1.GetUpdateBrandMap)
 		BrandRouter.POST("/createBrand", v1.CreateBrand)
 		BrandRouter.POST("/getBrandList", v1.GetBrandList)
-		BrandRouter.POST("/getBrandById", v1.GetBrandById)
-		BrandRouter.POST("/setBrandCate", v1.SetBrandCate)
-		BrandRouter.PUT("/updateBrand", v1.UpdateBrand)
-		BrandRouter.DELETE("/deleteBrand", v1.DeleteBrand)
+		BrandRouter.GET("/getBrandById/:id", v1.GetBrandById)
+		BrandRouter.POST("/changeBrandStatus", v1.ChangeBrandStatus)
+		BrandRouter.PUT("/updateBrand/:id", v1.UpdateBrand)
+		BrandRouter.DELETE("/deleteBrand/:id", v1.DeleteBrand)
 	}
 }

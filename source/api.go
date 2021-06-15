@@ -117,6 +117,16 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/brandCategory/updateBrandCategory/:id", Description: "更新品牌分类", ApiGroup: "brandCategory", Method: "PUT"},
 	{Path: "/v1/admin/brandCategory/deleteBrandCategory/:id", Description: "删除品牌分类", ApiGroup: "brandCategory", Method: "DELETE"},
 
+	//品牌
+	{Path: "/v1/admin/brand/getCreateBrandMap", Description: "获取品牌添加表单", ApiGroup: "brand", Method: "GET"},
+	{Path: "/v1/admin/brand/getUpdateBrandMap/:id", Description: "获取品牌编辑表单", ApiGroup: "brand", Method: "GET"},
+	{Path: "/v1/admin/brand/getBrandList", Description: "获取品牌列表", ApiGroup: "brand", Method: "POST"},
+	{Path: "/v1/admin/brand/createBrand", Description: "添加品牌", ApiGroup: "brand", Method: "POST"},
+	{Path: "/v1/admin/brand/getBrandById/:id", Description: "获取根据id品牌", ApiGroup: "brand", Method: "GET"},
+	{Path: "/v1/admin/brand/changeBrandStatus", Description: "修改品牌分类状态", ApiGroup: "brand", Method: "POST"},
+	{Path: "/v1/admin/brand/updateBrand/:id", Description: "更新品牌", ApiGroup: "brand", Method: "PUT"},
+	{Path: "/v1/admin/brand/deleteBrand/:id", Description: "删除品牌", ApiGroup: "brand", Method: "DELETE"},
+
 	// 小程序
 	{Path: "/v1/admin/mini/getMiniList", Description: "获取小程序列表", ApiGroup: "mini", Method: "POST"},
 	{Path: "/v1/admin/mini/createMini", Description: "添加小程序", ApiGroup: "mini", Method: "POST"},

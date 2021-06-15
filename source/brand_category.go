@@ -14,6 +14,10 @@ type brand_category struct{}
 var brand_categories = []model.SysBrandCategory{
 	{BaseBrandCategory: model.BaseBrandCategory{CateName: "计生保健", Pid: 0, Path: "", Sort: 0, Level: 0, Status: g.StatusTrue}},
 	{BaseBrandCategory: model.BaseBrandCategory{CateName: "大保健", Pid: 1, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue}},
+	{BaseBrandCategory: model.BaseBrandCategory{CateName: "手机数码", Pid: 0, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue}},
+	{BaseBrandCategory: model.BaseBrandCategory{CateName: "红米", Pid: 3, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue}},
+	{BaseBrandCategory: model.BaseBrandCategory{CateName: "女鞋箱包", Pid: 0, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue}},
+	{BaseBrandCategory: model.BaseBrandCategory{CateName: "珠宝", Pid: 5, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue}},
 }
 
 func (m *brand_category) Init() error {
