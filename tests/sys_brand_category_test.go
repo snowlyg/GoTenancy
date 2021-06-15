@@ -1,8 +1,11 @@
 package tests
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/snowlyg/go-tenancy/g"
 )
 
 func TestBrandCategoryList(t *testing.T) {
@@ -24,7 +27,7 @@ func TestBrandCategoryList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "pid", "cateName", "isShow", "path", "sort", "level", "children", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "pid", "cateName", "status", "path", "sort", "level", "children", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 
 }
@@ -32,11 +35,11 @@ func TestBrandCategoryList(t *testing.T) {
 func TestBrandCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "数码产品",
-		"isShow":   false,
+		"status":   2,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     1,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
@@ -50,24 +53,23 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory := obj.Value("data").Object()
 	brandCategory.Value("id").Number().Ge(0)
 	brandCategory.Value("cateName").String().Equal(data["cateName"].(string))
-	brandCategory.Value("isShow").Boolean().Equal(data["isShow"].(bool))
+	brandCategory.Value("status").Number().Equal(data["status"].(int))
 	brandCategory.Value("path").String().Equal(data["path"].(string))
 	brandCategory.Value("sort").Number().Equal(data["sort"].(int))
-	brandCategory.Value("pid").String().Equal(data["pid"].(string))
+	brandCategory.Value("pid").Number().Equal(data["pid"].(int))
 	brandCategory.Value("level").Number().Equal(data["level"].(int))
 	brandCategoryId := brandCategory.Value("id").Number().Raw()
 
 	update := map[string]interface{}{
-		"id":       brandCategoryId,
 		"cateName": "家电",
-		"isShow":   true,
+		"status":   1,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 	}
 
-	obj = auth.PUT("v1/admin/brandCategory/updateBrandCategory").
+	obj = auth.PUT(fmt.Sprintf("v1/admin/brandCategory/updateBrandCategory/%d", int(brandCategoryId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -77,14 +79,13 @@ func TestBrandCategoryProcess(t *testing.T) {
 
 	brandCategory.Value("id").Number().Ge(0)
 	brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
-	brandCategory.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	brandCategory.Value("status").Number().Equal(update["status"].(int))
 	brandCategory.Value("path").String().Equal(update["path"].(string))
 	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").String().Equal(update["pid"].(string))
+	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.GET("v1/admin/brandCategory/getBrandCategoryById").
-		WithJSON(map[string]interface{}{"id": brandCategoryId}).
+	obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getBrandCategoryById/%d", int(brandCategoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -93,15 +94,36 @@ func TestBrandCategoryProcess(t *testing.T) {
 
 	brandCategory.Value("id").Number().Ge(0)
 	brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
-	brandCategory.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	brandCategory.Value("status").Number().Equal(update["status"].(int))
 	brandCategory.Value("path").String().Equal(update["path"].(string))
 	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").String().Equal(update["pid"].(string))
+	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
-	// setUserAuthority
-	obj = auth.DELETE("v1/admin/brandCategory/deleteBrandCategory").
-		WithJSON(map[string]interface{}{"id": brandCategoryId}).
+	obj = auth.POST("v1/admin/brandCategory/changeBrandCategoryStatus").
+		WithJSON(map[string]interface{}{
+			"id":     brandCategoryId,
+			"status": g.StatusTrue,
+		}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
+
+	obj = auth.GET("v1/admin/brandCategory/getCreateBrandCategoryMap").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getUpdateBrandCategoryMap/%d", int(brandCategoryId))).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	// deleteBrandCategory
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/brandCategory/deleteBrandCategory/%d", int(brandCategoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -112,11 +134,11 @@ func TestBrandCategoryProcess(t *testing.T) {
 func TestBrandCategoryRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "",
-		"isShow":   true,
+		"status":   1,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
@@ -125,6 +147,6 @@ func TestBrandCategoryRegisterError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("Key: 'CreateSysBrandCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
+	obj.Value("message").String().Equal("Key: 'SysBrandCategory.BaseBrandCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
 
 }
