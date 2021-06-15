@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -22,7 +21,7 @@ func CreateBrand(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getBrandMap(returnBrand), "创建成功", ctx)
+		response.OkWithDetailed(returnBrand, "创建成功", ctx)
 	}
 }
 
@@ -37,13 +36,8 @@ func UpdateBrand(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getBrandMap(returnBrand), "更新成功", ctx)
+		response.OkWithDetailed(returnBrand, "更新成功", ctx)
 	}
-}
-
-// getBrandMap
-func getBrandMap(returnBrand model.SysBrand) gin.H {
-	return gin.H{"id": returnBrand.ID, "brandName": returnBrand.BrandName, "sort": returnBrand.Sort, "pic": returnBrand.Pic, "isShow": returnBrand.IsShow}
 }
 
 // GetBrandList

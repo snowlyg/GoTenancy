@@ -3,6 +3,8 @@ package tests
 import (
 	"net/http"
 	"testing"
+
+	"github.com/snowlyg/go-tenancy/g"
 )
 
 func TestCategoryList(t *testing.T) {
@@ -32,7 +34,7 @@ func TestCategoryList(t *testing.T) {
 func TestCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "数码产品",
-		"isShow":   false,
+		"isShow":   g.StatusFalse,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     1,
 		"level":    1,
@@ -62,7 +64,7 @@ func TestCategoryProcess(t *testing.T) {
 	update := map[string]interface{}{
 		"id":       categoryId,
 		"cateName": "家电",
-		"isShow":   true,
+		"isShow":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
@@ -117,7 +119,7 @@ func TestCategoryProcess(t *testing.T) {
 func TestCategoryRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "",
-		"isShow":   true,
+		"isShow":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,

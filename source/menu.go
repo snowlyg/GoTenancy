@@ -419,7 +419,7 @@ var menus = []model.SysBaseMenu{
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 536}, 42, "/42/", "", "商户对账", "/merchant/list/record/:id?", "", 0, 0, 0, 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 537}, 515, "/515/", "", "财务记录", "/accounts/record", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 538}, 537, "/515/537/", "", "资金记录", "/accounts/capital", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 539}, Pid: 87, Path: "/87/", Icon: "", MenuName: "商品管理", Route: "/product/examine", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 539}, Pid: 87, Path: "/87/", Icon: "", MenuName: "商品管理", Route: "/admin/product/examine", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 540}, 0, "/", "s-cooperation", "订单", "/order", "", 98,Hidden: 1, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 541}, 540, "/540/", "", "订单列表", "/order/list", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 542}, 540, "/540/", "", "退款单", "/order/refund", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},

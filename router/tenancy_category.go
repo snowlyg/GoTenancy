@@ -8,10 +8,13 @@ import (
 func InitCategoryRouter(Router *gin.RouterGroup) {
 	CategoryRouter := Router.Group("/category")
 	{
+		CategoryRouter.GET("/getCreateTenancyCategoryMap", v1.GetCreateTenancyCategoryMap)
+		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", v1.GetUpdateTenancyCategoryMap)
 		CategoryRouter.POST("/createCategory", v1.CreateCategory)
 		CategoryRouter.POST("/getCategoryList", v1.GetCategoryList)
-		CategoryRouter.POST("/getCategoryById", v1.GetCategoryById)
-		CategoryRouter.PUT("/updateCategory", v1.UpdateCategory)
-		CategoryRouter.DELETE("/deleteCategory", v1.DeleteCategory)
+		CategoryRouter.GET("/getCategoryById/:id", v1.GetCategoryById)
+		CategoryRouter.POST("/changeCategoryStatus", v1.ChangeCategoryStatus)
+		CategoryRouter.PUT("/updateCategory/:id", v1.UpdateCategory)
+		CategoryRouter.DELETE("/deleteCategory/:id", v1.DeleteCategory)
 	}
 }

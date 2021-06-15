@@ -7,6 +7,6 @@ type SysBrandCategory struct {
 	Path     string             `json:"path"`     // 路径
 	Sort     int32              `json:"sort"`     // 排序
 	Level    uint               `json:"level"`    // 等级
-	IsShow   bool               `json:"isShow"`   // 是否显示
+	Status   int                `json:"status"`   // 是否显示
 	Children []SysBrandCategory `json:"children" gorm:"-"`
 }

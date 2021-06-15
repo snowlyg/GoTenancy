@@ -108,8 +108,14 @@ func (r *Rule) TransData(rule string, token []byte) {
 }
 
 type Option struct {
-	Label string      `json:"label"`
-	Value interface{} `json:"value"`
+	Label    string      `json:"label"`
+	Value    interface{} `json:"value"`
+	Children []Option    `json:"children"`
+}
+
+type Opt struct {
+	Label string `json:"label"`
+	Value int    `json:"value"`
 }
 
 // filterDate

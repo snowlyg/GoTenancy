@@ -19,7 +19,6 @@ func CreateBrand(m request.CreateSysBrand) (model.SysBrand, error) {
 	brand.BrandName = m.BrandName
 	brand.Sort = m.Sort
 	brand.Pic = m.Pic
-	brand.IsShow = m.IsShow
 	brand.BrandCategoryID = m.BrandCategoryID
 	err = g.TENANCY_DB.Create(&brand).Error
 	return brand, err

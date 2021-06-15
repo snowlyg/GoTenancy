@@ -12,7 +12,7 @@ var Brand = new(brand)
 type brand struct{}
 
 var brands = []model.SysBrand{
-	{BrandName: "杜蕾斯", Sort: 0, Pic: "http://qmplusimg.henrongyi.top/head.png", IsShow: true, BrandCategoryID: 1},
+	{BrandName: "杜蕾斯", Sort: 0, Pic: "http://qmplusimg.henrongyi.top/head.png", Status: g.StatusTrue, BrandCategoryID: 1},
 }
 
 func (m *brand) Init() error {

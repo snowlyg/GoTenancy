@@ -131,11 +131,14 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryById", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/updateCategory", V2: "PUT"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/deleteCategory", V2: "DELETE"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/changeCategoryStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/updateCategory/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/deleteCategory/:id", V2: "DELETE"},
 
 	//规格参数
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateList", V2: "POST"},
@@ -160,11 +163,14 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryById", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/updateCategory", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/deleteCategory", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/changeCategoryStatus", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/updateCategory/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/deleteCategory/:id", V2: "DELETE"},
 
 	//规格参数
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateList", V2: "POST"},

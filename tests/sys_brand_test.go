@@ -3,6 +3,8 @@ package tests
 import (
 	"net/http"
 	"testing"
+
+	"github.com/snowlyg/go-tenancy/g"
 )
 
 func TestBrandList(t *testing.T) {
@@ -48,7 +50,7 @@ func TestBrandProcess(t *testing.T) {
 	brand := obj.Value("data").Object()
 	brand.Value("id").Number().Ge(0)
 	brand.Value("brandName").String().Equal(data["brandName"].(string))
-	brand.Value("isShow").Boolean().Equal(data["isShow"].(bool))
+	brand.Value("isShow").Number().Equal(data["isShow"].(int))
 	brand.Value("pic").String().Equal(data["pic"].(string))
 	brand.Value("sort").Number().Equal(data["sort"].(int))
 	brandId := brand.Value("id").Number().Raw()
@@ -72,7 +74,7 @@ func TestBrandProcess(t *testing.T) {
 
 	brand.Value("id").Number().Ge(0)
 	brand.Value("brandName").String().Equal(update["brandName"].(string))
-	brand.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	brand.Value("isShow").Number().Equal(update["isShow"].(int))
 	brand.Value("pic").String().Equal(update["pic"].(string))
 	brand.Value("sort").Number().Equal(update["sort"].(int))
 
@@ -86,7 +88,7 @@ func TestBrandProcess(t *testing.T) {
 
 	brand.Value("id").Number().Ge(0)
 	brand.Value("brandName").String().Equal(update["brandName"].(string))
-	brand.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	brand.Value("isShow").Number().Equal(update["isShow"].(int))
 	brand.Value("pic").String().Equal(update["pic"].(string))
 	brand.Value("sort").Number().Equal(update["sort"].(int))
 
@@ -109,7 +111,7 @@ func TestBrandProcess(t *testing.T) {
 func TestBrandRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"brandName":       "",
-		"isShow":          true,
+		"isShow":          g.StatusTrue,
 		"pic":             "http://qmplusimg.henrongyi.top/head.png",
 		"sort":            2,
 		"brandCategoryId": 1,

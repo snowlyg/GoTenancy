@@ -21,16 +21,7 @@ func CreateTenancy(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(gin.H{
-			"id":            returnTenancy.ID,
-			"uuid":          returnTenancy.UUID,
-			"name":          returnTenancy.Name,
-			"tele":          returnTenancy.Tele,
-			"address":       returnTenancy.Address,
-			"status":        returnTenancy.Status,
-			"businessTime":  returnTenancy.BusinessTime,
-			"sysRegionCode": returnTenancy.SysRegionCode,
-		}, "创建成功", ctx)
+		response.OkWithDetailed(returnTenancy, "创建成功", ctx)
 	}
 }
 
@@ -98,14 +89,7 @@ func UpdateTenancy(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(gin.H{
-			"name":          returnTenancy.Name,
-			"tele":          returnTenancy.Tele,
-			"address":       returnTenancy.Address,
-			"status":        returnTenancy.Status,
-			"businessTime":  returnTenancy.BusinessTime,
-			"sysRegionCode": returnTenancy.SysRegionCode,
-		}, "更新成功", ctx)
+		response.OkWithDetailed(returnTenancy, "更新成功", ctx)
 	}
 }
 

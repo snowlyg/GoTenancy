@@ -3,6 +3,8 @@ package tests
 import (
 	"net/http"
 	"testing"
+
+	"github.com/snowlyg/go-tenancy/g"
 )
 
 func TestProductList(t *testing.T) {
@@ -319,8 +321,8 @@ func TestProductAddError(t *testing.T) {
 		"storeInfo":         "短袖连衣裙",
 		"keyword":           "短袖连衣裙",
 		"barCode":           "",
-		"isShow":            1,
-		"status":            1,
+		"isShow":            g.StatusTrue,
+		"status":            g.StatusTrue,
 		"unitName":          "件",
 		"sort":              40,
 		"rank":              0,
@@ -333,7 +335,7 @@ func TestProductAddError(t *testing.T) {
 		"isBenefit":         0,
 		"isBest":            0,
 		"isNew":             0,
-		"isGood":            1,
+		"isGood":            g.StatusTrue,
 		"productType":       1,
 		"ficti":             100,
 		"browse":            0,

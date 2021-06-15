@@ -12,8 +12,8 @@ var Category = new(category)
 type category struct{}
 
 var categories = []model.TenancyCategory{
-	{CateName: "计生保健", Pid: "0", Path: "", Sort: 0, Level: 0, IsShow: true, SysTenancyID: 1, Pic: "http://qmplusimg.henrongyi.top/head.png"},
-	{CateName: "大保健", Pid: "1", Path: "", Sort: 1, Level: 1, IsShow: true, SysTenancyID: 1, Pic: "http://qmplusimg.henrongyi.top/head.png"},
+	{BaseTenancyCategory: model.BaseTenancyCategory{CateName: "计生保健", Pid: 0, Path: "", Sort: 0, Level: 0, Status: g.StatusTrue, Pic: "http://qmplusimg.henrongyi.top/head.png"}, SysTenancyID: 1},
+	{BaseTenancyCategory: model.BaseTenancyCategory{CateName: "大保健", Pid: 1, Path: "", Sort: 1, Level: 1, Status: g.StatusTrue, Pic: "http://qmplusimg.henrongyi.top/head.png"}, SysTenancyID: 1},
 }
 
 func (m *category) Init() error {

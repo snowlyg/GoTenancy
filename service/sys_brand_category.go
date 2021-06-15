@@ -21,7 +21,6 @@ func CreateBrandCategory(m request.CreateSysBrandCategory) (model.SysBrandCatego
 	brandCategory.CateName = m.CateName
 	brandCategory.Sort = m.Sort
 	brandCategory.Path = m.Path
-	brandCategory.IsShow = m.IsShow
 	brandCategory.Level = m.Level
 	brandCategory.Pid = m.Pid
 	err = g.TENANCY_DB.Create(&brandCategory).Error

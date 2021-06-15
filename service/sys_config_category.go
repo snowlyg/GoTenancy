@@ -88,11 +88,6 @@ func GetConfigCategoriesInfoList() ([]model.SysConfigCategory, error) {
 	return cateList, err
 }
 
-type Opt struct {
-	Label string `json:"label"`
-	Value int    `json:"value"`
-}
-
 // GetConfigCategoriesOptions
 func GetConfigCategoriesOptions() ([]Option, error) {
 	var options []Option
@@ -101,7 +96,7 @@ func GetConfigCategoriesOptions() ([]Option, error) {
 	if err != nil {
 		return options, err
 	}
-	options = append(options, Option{Label: "选择", Value: 0})
+	options = append(options, Option{Label: "请选择", Value: 0})
 
 	for _, opt := range opts {
 		options = append(options, Option{Label: opt.Label, Value: opt.Value})

@@ -97,6 +97,15 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/tenancy/updateTenancy/:id", Description: "更新商户", ApiGroup: "tenancy", Method: "PUT"},
 	{Path: "/v1/admin/tenancy/deleteTenancy/:id", Description: "删除商户", ApiGroup: "tenancy", Method: "DELETE"},
 
+	//商品分类
+	{Path: "/v1/admin/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", Description: "获取类编辑表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/createCategory", Description: "添加商品分类", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "category", Method: "GET"},
+	{Path: "/v1/admin/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "category", Method: "PUT"},
+	{Path: "/v1/admin/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
 	// 小程序
 	{Path: "/v1/admin/mini/getMiniList", Description: "获取小程序列表", ApiGroup: "mini", Method: "POST"},
 	{Path: "/v1/admin/mini/createMini", Description: "添加小程序", ApiGroup: "mini", Method: "POST"},

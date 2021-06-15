@@ -6,7 +6,7 @@ type CreateSysBrandCategory struct {
 	Path     string `json:"path"  `                       // 路径
 	Sort     int32  `json:"sort"`                         // 排序
 	Level    uint   `json:"level"`                        // 等级
-	IsShow   bool   `json:"isShow"`                       // 是否显示
+	IsShow   int    `json:"isShow"`                       // 是否显示
 }
 
 type UpdateSysBrandCategory struct {
@@ -16,5 +16,5 @@ type UpdateSysBrandCategory struct {
 	Path     string `json:"path"`                         // 路径
 	Sort     int32  `json:"sort"`                         // 排序
 	Level    uint   `json:"level"`                        // 等级
-	IsShow   bool   `json:"isShow"`                       // 是否显示
+	IsShow   int    `json:"isShow"`                       // 是否显示
 }
