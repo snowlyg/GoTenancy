@@ -99,13 +99,24 @@ var baseApis = []model.SysApi{
 
 	//商品分类
 	{Path: "/v1/admin/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", Description: "获取类编辑表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/createCategory", Description: "添加商品分类", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "category", Method: "GET"},
 	{Path: "/v1/admin/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "category", Method: "PUT"},
 	{Path: "/v1/admin/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
+
+	//品牌分类
+	{Path: "/v1/admin/category/getCreateBrandCategoryMap", Description: "获取品牌分类添加表单", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/category/getUpdateBrandCategoryMap/:id", Description: "获取品牌分类编辑表单", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/brandCategory/getBrandCategoryList", Description: "获取品牌分类列表", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/brandCategory/createBrandCategory", Description: "添加品牌分类", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/brandCategory/getBrandCategoryById/:id", Description: "获取根据id品牌分类", ApiGroup: "brandCategory", Method: "GET"},
+	{Path: "/v1/admin/brandCategory/changeBrandCategoryStatus", Description: "修改品牌分类状态", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/brandCategory/updateBrandCategory/:id", Description: "更新品牌分类", ApiGroup: "brandCategory", Method: "PUT"},
+	{Path: "/v1/admin/brandCategory/deleteBrandCategory/:id", Description: "删除品牌分类", ApiGroup: "brandCategory", Method: "DELETE"},
+
 	// 小程序
 	{Path: "/v1/admin/mini/getMiniList", Description: "获取小程序列表", ApiGroup: "mini", Method: "POST"},
 	{Path: "/v1/admin/mini/createMini", Description: "添加小程序", ApiGroup: "mini", Method: "POST"},

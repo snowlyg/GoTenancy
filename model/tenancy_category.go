@@ -10,7 +10,7 @@ type TenancyCategory struct {
 }
 
 type BaseTenancyCategory struct {
-	Pid      int32  `gorm:"index:pid;column:pid;type:mediumint;not null" json:"pid" binding:"required"`     // 父id
+	Pid      int32  `gorm:"index:pid;column:pid;type:mediumint;not null" json:"pid"`                        // 父id
 	CateName string `gorm:"column:cate_name;type:varchar(100);not null" json:"cateName" binding:"required"` // 分类名称
 	Path     string `gorm:"column:path;type:varchar(255);not null;default:''" json:"path"`                  // 路径
 	Sort     int32  `gorm:"index;column:sort;type:mediumint;not null" json:"sort"`                          // 排序

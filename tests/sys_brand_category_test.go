@@ -83,7 +83,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("pid").String().Equal(update["pid"].(string))
 	brandCategory.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("v1/admin/brandCategory/getBrandCategoryById").
+	obj = auth.GET("v1/admin/brandCategory/getBrandCategoryById").
 		WithJSON(map[string]interface{}{"id": brandCategoryId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

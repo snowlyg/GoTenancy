@@ -1,12 +1,9 @@
 package response
 
+import "github.com/snowlyg/go-tenancy/model"
+
 type SysBrandCategory struct {
 	TenancyResponse
-	Pid      string             `json:"pid"`      // 父id
-	CateName string             `json:"cateName"` // 分类名称
-	Path     string             `json:"path"`     // 路径
-	Sort     int32              `json:"sort"`     // 排序
-	Level    uint               `json:"level"`    // 等级
-	Status   int                `json:"status"`   // 是否显示
+	model.BaseBrandCategory
 	Children []SysBrandCategory `json:"children" gorm:"-"`
 }
