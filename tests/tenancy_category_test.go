@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -26,23 +27,23 @@ func TestCategoryList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "pid", "cateName", "isShow", "path", "sort", "level", "children", "pic", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "pid", "cateName", "status", "path", "sort", "level", "children", "pic", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
-
 }
 
 func TestCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "数码产品",
-		"isShow":   g.StatusFalse,
+		"status":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     1,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 		"pic":      "http://qmplusimg.henrongyi.top/head.png",
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
+
 	obj := auth.POST("v1/admin/category/createCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -53,26 +54,25 @@ func TestCategoryProcess(t *testing.T) {
 	category := obj.Value("data").Object()
 	category.Value("id").Number().Ge(0)
 	category.Value("cateName").String().Equal(data["cateName"].(string))
-	category.Value("isShow").Boolean().Equal(data["isShow"].(bool))
+	category.Value("status").Number().Equal(data["status"].(int))
 	category.Value("path").String().Equal(data["path"].(string))
 	category.Value("sort").Number().Equal(data["sort"].(int))
-	category.Value("pid").String().Equal(data["pid"].(string))
+	category.Value("pid").Number().Equal(data["pid"].(int))
 	category.Value("pic").String().Equal(data["pic"].(string))
 	category.Value("level").Number().Equal(data["level"].(int))
 	categoryId := category.Value("id").Number().Raw()
 
 	update := map[string]interface{}{
-		"id":       categoryId,
 		"cateName": "家电",
-		"isShow":   g.StatusTrue,
+		"status":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 		"pic":      "http://qmplusimg.henrongyi.top/head.png",
 	}
 
-	obj = auth.PUT("v1/admin/category/updateCategory").
+	obj = auth.PUT(fmt.Sprintf("v1/admin/category/updateCategory/%d", int(categoryId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -80,17 +80,15 @@ func TestCategoryProcess(t *testing.T) {
 	obj.Value("message").String().Equal("更新成功")
 	category = obj.Value("data").Object()
 
-	category.Value("id").Number().Ge(0)
 	category.Value("cateName").String().Equal(update["cateName"].(string))
-	category.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	category.Value("status").Number().Equal(update["status"].(int))
 	category.Value("path").String().Equal(update["path"].(string))
 	category.Value("sort").Number().Equal(update["sort"].(int))
-	category.Value("pid").String().Equal(update["pid"].(string))
+	category.Value("pid").Number().Equal(update["pid"].(int))
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("v1/admin/category/getCategoryById").
-		WithJSON(map[string]interface{}{"id": categoryId}).
+	obj = auth.GET(fmt.Sprintf("v1/admin/category/getCategoryById/%d", int(categoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -99,16 +97,37 @@ func TestCategoryProcess(t *testing.T) {
 
 	category.Value("id").Number().Ge(0)
 	category.Value("cateName").String().Equal(update["cateName"].(string))
-	category.Value("isShow").Boolean().Equal(update["isShow"].(bool))
+	category.Value("status").Number().Equal(update["status"].(int))
 	category.Value("path").String().Equal(update["path"].(string))
 	category.Value("sort").Number().Equal(update["sort"].(int))
-	category.Value("pid").String().Equal(update["pid"].(string))
+	category.Value("pid").Number().Equal(update["pid"].(int))
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	// setUserAuthority
-	obj = auth.DELETE("v1/admin/category/deleteCategory").
-		WithJSON(map[string]interface{}{"id": categoryId}).
+	obj = auth.POST("v1/admin/category/changeCategoryStatus").
+		WithJSON(map[string]interface{}{
+			"id":     categoryId,
+			"status": g.StatusTrue,
+		}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
+
+	obj = auth.GET("v1/admin/category/getCreateTenancyCategoryMap").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	obj = auth.GET(fmt.Sprintf("v1/admin/category/getUpdateTenancyCategoryMap/%d", int(categoryId))).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	// deleteCategory
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/category/deleteCategory/%d", int(categoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -119,11 +138,11 @@ func TestCategoryProcess(t *testing.T) {
 func TestCategoryRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "",
-		"isShow":   g.StatusTrue,
+		"status":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
-		"pid":      "1",
+		"pid":      1,
 		"pic":      "http://qmplusimg.henrongyi.top/head.png",
 	}
 	auth := baseWithLoginTester(t)
@@ -133,6 +152,6 @@ func TestCategoryRegisterError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("Key: 'CreateTenancyCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
+	obj.Value("message").String().Equal("Key: 'TenancyCategory.BaseTenancyCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
 
 }
