@@ -35,7 +35,7 @@ func TestBrandCategoryList(t *testing.T) {
 func TestBrandCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "数码产品",
-		"status":   2,
+		"status":   g.StatusFalse,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     1,
 		"level":    1,
@@ -62,7 +62,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 
 	update := map[string]interface{}{
 		"cateName": "家电",
-		"status":   1,
+		"status":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
@@ -134,7 +134,7 @@ func TestBrandCategoryProcess(t *testing.T) {
 func TestBrandCategoryRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "",
-		"status":   1,
+		"status":   g.StatusTrue,
 		"path":     "http://qmplusimg.henrongyi.top/head.png",
 		"sort":     2,
 		"level":    1,
