@@ -140,6 +140,7 @@ var carbines = []gormadapter.CasbinRule{
 	//商品分类
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategorySelect", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
@@ -155,11 +156,12 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/deleteAttrTemplate", V2: "DELETE"},
 
 	//商品
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getProductFilter", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getProductList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/createProduct", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getProductById", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/updateProduct", V2: "PUT"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/deleteProduct", V2: "DELETE"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getProductById/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/updateProduct/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/deleteProduct/:id", V2: "DELETE"},
 
 	//商户用户权限
 	// 媒体库
@@ -172,6 +174,7 @@ var carbines = []gormadapter.CasbinRule{
 	//商品分类
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategorySelect", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
@@ -187,11 +190,12 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/deleteAttrTemplate", V2: "DELETE"},
 
 	//商品
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductFilter", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/createProduct", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductById", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/updateProduct", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/deleteProduct", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/updateProduct/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/deleteProduct/:id", V2: "DELETE"},
 
 	// 普通用户权限
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/logout", V2: "GET"},

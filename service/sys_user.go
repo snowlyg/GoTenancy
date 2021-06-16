@@ -344,7 +344,7 @@ func SetUserAdminInfo(reqUser model.SysAdminInfo, infoId uint, userId string) (m
 		if err != nil {
 			return reqUser, err
 		}
-		reqUser.SysUserID = id
+		reqUser.SysUserID = uint(id)
 		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err
@@ -366,7 +366,7 @@ func SetUserTenancyInfo(reqUser model.SysTenancyInfo, infoId uint, userId string
 		if err != nil {
 			return reqUser, err
 		}
-		reqUser.SysUserID = id
+		reqUser.SysUserID = uint(id)
 		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err
@@ -388,7 +388,7 @@ func SetUserGeneralInfo(reqUser model.SysGeneralInfo, infoId uint, userId string
 		if err != nil {
 			return reqUser, err
 		}
-		reqUser.SysUserID = id
+		reqUser.SysUserID = uint(id)
 		err = g.TENANCY_DB.Create(&reqUser).Error
 		if err != nil {
 			return reqUser, err

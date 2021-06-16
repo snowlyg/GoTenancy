@@ -17,7 +17,7 @@ type SysConfig struct {
 	UserType   uint8  `gorm:"column:user_type;type:tinyint unsigned;not null;default:1" json:"userType"  binding:"required"`    // 2=总后台配置 1=商户后台配置
 	Status     int    `gorm:"column:status;type:tinyint unsigned;not null;default:1" json:"status"  binding:"required"`         // 是否显示
 
-	SysConfigCategoryID int `gorm:"index:sys_config_category_id;column:sys_config_category_id;type:int unsigned;not null" json:"sysConfigCategoryId"  binding:"required"` // 商户 id
+	SysConfigCategoryID uint `gorm:"index:sys_config_category_id;column:sys_config_category_id;type:int unsigned;not null" json:"sysConfigCategoryId"  binding:"required"` // 商户 id
 
 	TypeName string `gorm:"-" json:"typeName"` // 配置类型
 	Value    string `gorm:"-" json:"value"`    // 配置类型

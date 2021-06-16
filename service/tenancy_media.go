@@ -77,7 +77,7 @@ func GetFileRecordInfoList(info request.MediaPageInfo, ctx *gin.Context) (interf
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB
-	if !multi.IsAdmin(ctx) {
+	if multi.IsTenancy(ctx) {
 		db = db.Where("sys_tenancy_id = ?", multi.GetTenancyId(ctx))
 	}
 	if info.Name != "" {

@@ -6,7 +6,7 @@ type TenancyCategory struct {
 	g.TENANCY_MODEL
 	BaseTenancyCategory
 
-	SysTenancyID int `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int unsigned;not null" json:"sysTenancyId"` // 商户 id
+	SysTenancyID uint `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int unsigned;not null" json:"sysTenancyId"` // 商户 id
 }
 
 type BaseTenancyCategory struct {

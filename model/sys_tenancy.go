@@ -19,5 +19,5 @@ type BaseTenancy struct {
 	BusinessTime string    `json:"businessTime" form:"businessTime" gorm:"column:business_time;comment:商户营业时间"`
 	Status       int       `gorm:"column:status;type:tinyint(1);not null;default:2" json:"status" binding:"required"` // 商户是否禁用2锁定,1正常
 
-	SysRegionCode int `json:"sysRegionCode" form:"sysRegionCode" gorm:"column:sys_region_code;comment:商户所属区域code" binding:"required"`
+	SysRegionCode uint `json:"sysRegionCode" form:"sysRegionCode" gorm:"column:sys_region_code;comment:商户所属区域code" binding:"required"`
 }

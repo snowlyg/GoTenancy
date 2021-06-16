@@ -18,7 +18,7 @@ import (
 func OperationRecord() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var body []byte
-		var userId int
+		var userId uint
 		if ctx.Request.Method != http.MethodGet {
 			var err error
 			body, err = ioutil.ReadAll(ctx.Request.Body)
@@ -35,13 +35,13 @@ func OperationRecord() gin.HandlerFunc {
 			if err != nil {
 				userId = 0
 			}
-			userId = id
+			userId = uint(id)
 		} else {
 			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
 			if err != nil {
 				userId = 0
 			}
-			userId = id
+			userId = uint(id)
 		}
 
 		record := model.SysOperationRecord{

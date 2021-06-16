@@ -100,12 +100,21 @@ var baseApis = []model.SysApi{
 	//商品分类
 	{Path: "/v1/admin/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/category/getCategorySelect", Description: "获取商品分类选项", ApiGroup: "category", Method: "GET"},
 	{Path: "/v1/admin/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/createCategory", Description: "添加商品分类", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "category", Method: "GET"},
 	{Path: "/v1/admin/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "category", Method: "POST"},
 	{Path: "/v1/admin/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "category", Method: "PUT"},
 	{Path: "/v1/admin/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
+
+	//商品
+	{Path: "/v1/admin/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "product", Method: "GET"},
+	{Path: "/v1/admin/product/getProductList", Description: "获取商品列表", ApiGroup: "product", Method: "POST"},
+	{Path: "/v1/admin/product/createProduct", Description: "添加商品", ApiGroup: "product", Method: "POST"},
+	{Path: "/v1/admin/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "product", Method: "GET"},
+	{Path: "/v1/admin/product/updateProduct/:id", Description: "编辑商品", ApiGroup: "product", Method: "PUT"},
+	{Path: "/v1/admin/product/deleteProduct/:id", Description: "删除商品", ApiGroup: "product", Method: "DELETE"},
 
 	//品牌分类
 	{Path: "/v1/admin/category/getCreateBrandCategoryMap", Description: "获取品牌分类添加表单", ApiGroup: "brandCategory", Method: "POST"},

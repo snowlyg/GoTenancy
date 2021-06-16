@@ -26,5 +26,5 @@ type GeneralAddress struct {
 	HospitalNO   string `json:"hospitalNo" form:"hospitalNo" gorm:"type:varchar(20);column:hospital_no;comment:住院号"`
 	Disease      string `json:"disease" form:"disease" gorm:"type:varchar(150);column:disease;comment:病种"`
 
-	SysUserID int `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }

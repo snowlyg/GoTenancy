@@ -22,5 +22,5 @@ type TenancyProductAttrValue struct {
 	ExtensionTwo float64 `gorm:"column:extension_two;type:decimal(8,2);default:0.00" json:"extensionTwo"` // 二级佣金
 	Unique       string  `gorm:"index;column:unique;type:char(12);not null;default:''" json:"unique"`     // 唯一值
 
-	TenancyProductID int `gorm:"index:tenancy_product_id;column:tenancy_product_id;type:int;not null" json:"tenancyProductId"` // 商品id
+	TenancyProductID uint `gorm:"index:tenancy_product_id;column:tenancy_product_id;type:int;not null" json:"tenancyProductId"` // 商品id
 }

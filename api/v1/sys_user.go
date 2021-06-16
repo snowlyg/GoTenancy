@@ -205,7 +205,7 @@ func DeleteUser(ctx *gin.Context) {
 		return
 	}
 	jwtId := multi.GetUserId(ctx)
-	if jwtId == int(reqId.Id) {
+	if jwtId == reqId.Id {
 		response.FailWithMessage("删除失败, 自杀失败", ctx)
 		return
 	}

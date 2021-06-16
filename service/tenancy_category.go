@@ -95,7 +95,7 @@ func getCategoryMap(ctx *gin.Context) (map[int32][]response.TenancyCategory, err
 	var brandCategoryList []response.TenancyCategory
 	treeMap := make(map[int32][]response.TenancyCategory)
 	db := g.TENANCY_DB.Model(&model.TenancyCategory{})
-	if !multi.IsAdmin(ctx) {
+	if multi.IsTenancy(ctx) {
 		db = db.Where("sys_tenancy_id = ?", multi.GetTenancyId(ctx))
 	}
 	err := db.Order("sort").Find(&brandCategoryList).Error

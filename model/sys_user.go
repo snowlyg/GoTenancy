@@ -45,17 +45,19 @@ type SysAdminInfo struct {
 	Phone     string `json:"phone" gorm:"type:char(15);default:'';comment:员工手机号" `
 	NickName  string `json:"nickName" gorm:"type:varchar(16);default:'员工姓名';comment:员工姓名" `
 	HeaderImg string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+
+	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }
 
 type SysTenancyInfo struct {
 	g.TENANCY_MODEL
-	Email        string `json:"email" gorm:"default:'';comment:员工邮箱"`
-	Phone        string `json:"phone" gorm:"type:char(15);default:'';comment:员工手机号" `
-	NickName     string `json:"nickName" gorm:"type:varchar(16);default:'员工姓名';comment:员工姓名" `
-	HeaderImg    string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
-	SysUserID    int    `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
-	SysTenancyID int    `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
+	Email     string `json:"email" gorm:"default:'';comment:员工邮箱"`
+	Phone     string `json:"phone" gorm:"type:char(15);default:'';comment:员工手机号" `
+	NickName  string `json:"nickName" gorm:"type:varchar(16);default:'员工姓名';comment:员工姓名" `
+	HeaderImg string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
+
+	SysUserID    uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysTenancyID uint `json:"sysTenancyId" form:"sysTenancyId" gorm:"column:sys_tenancy_id;comment:关联标记"`
 }
 
 const (
@@ -82,5 +84,5 @@ type SysGeneralInfo struct {
 	RealName  string    `json:"realName" form:"realName" gorm:"type:varchar(64);column:real_name;comment:真实IP"`
 	Birthday  time.Time `json:"birthday" form:"birthday" gorm:"column:birthday;comment:生日"`
 
-	SysUserID int `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }

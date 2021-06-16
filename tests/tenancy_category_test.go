@@ -31,6 +31,16 @@ func TestCategoryList(t *testing.T) {
 	first.Value("id").Number().Ge(0)
 }
 
+func TestCategorySelect(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("v1/admin/category/getCategorySelect").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+}
+
 func TestCategoryProcess(t *testing.T) {
 	data := map[string]interface{}{
 		"cateName": "数码产品",

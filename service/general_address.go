@@ -7,7 +7,7 @@ import (
 )
 
 // CreateAddress
-func CreateAddress(m request.CreateAddress, user_id int) (model.GeneralAddress, error) {
+func CreateAddress(m request.CreateAddress, user_id uint) (model.GeneralAddress, error) {
 	var address model.GeneralAddress
 	address.Name = m.Name
 	address.Phone = m.Phone
@@ -31,7 +31,7 @@ func CreateAddress(m request.CreateAddress, user_id int) (model.GeneralAddress, 
 }
 
 // GetAddressByID
-func GetAddressByID(id uint, user_id int) (model.GeneralAddress, error) {
+func GetAddressByID(id uint, user_id uint) (model.GeneralAddress, error) {
 	var address model.GeneralAddress
 	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).First(&address).Error
 	return address, err
@@ -46,13 +46,13 @@ func UpdateAddress(m request.UpdateAddress) (model.GeneralAddress, error) {
 }
 
 // DeleteAddress
-func DeleteAddress(id uint, user_id int) error {
+func DeleteAddress(id uint, user_id uint) error {
 	var address model.GeneralAddress
 	return g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).Delete(&address).Error
 }
 
 // GetAddressInfoList
-func GetAddressInfoList(info request.PageInfo, user_id int) ([]model.GeneralAddress, int64, error) {
+func GetAddressInfoList(info request.PageInfo, user_id uint) ([]model.GeneralAddress, int64, error) {
 	var addressList []model.GeneralAddress
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)

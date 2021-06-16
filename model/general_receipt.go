@@ -18,5 +18,5 @@ type GeneralReceipt struct {
 	Tel              string `json:"tel" form:"tel" gorm:"column:tel;comment:企业电话"`
 	IsDefault        bool   `json:"isDefault" form:"isDefault" gorm:"type:bool;column:is_default;comment:是否默认"`
 
-	SysUserID int `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }

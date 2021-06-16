@@ -91,6 +91,16 @@ func GetCategoryList(ctx *gin.Context) {
 	}
 }
 
+// GetCategorySelect
+func GetCategorySelect(ctx *gin.Context) {
+	if opts, err := service.GetTenacyCategoriesOptions(ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(opts, "获取成功", ctx)
+	}
+}
+
 // GetCategoryById
 func GetCategoryById(ctx *gin.Context) {
 	var reqId request.GetById
