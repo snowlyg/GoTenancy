@@ -10,6 +10,10 @@ type TenancyProductList struct {
 	BrandName      string `json:"brandName"`      // 商户名称
 }
 
+type TenancyProductFicti struct {
+	Ficti int32 `json:"ficti"`
+}
+
 type TenancyProductDetail struct {
 	TenancyResponse
 	model.BaseTenancyProduct

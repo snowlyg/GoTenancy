@@ -109,7 +109,10 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
 
 	//商品
+	{Path: "/v1/admin/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "product", Method: "GET"},
+	{Path: "/v1/admin/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "product", Method: "PUT"},
 	{Path: "/v1/admin/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "product", Method: "GET"},
+	{Path: "/v1/admin/product/changeProductStatus", Description: "上下架商品", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductList", Description: "获取商品列表", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/createProduct", Description: "添加商品", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "product", Method: "GET"},

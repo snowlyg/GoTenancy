@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -12,6 +13,22 @@ import (
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
+
+func GetEditProductFictiMap(id uint) (Form, error) {
+	var form Form
+	var formStr string
+	ficti, err := GetProductFictiByID(id)
+	if err != nil {
+		return Form{}, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"number","value":"%s","title":"现有虚拟销量","props":{"type":"text","placeholder":"请输入现有虚拟销量","readonly":true}},{"type":"radio","field":"type","value":1,"title":"修改类型","props":{},"options":[{"value":1,"label":"增加"},{"value":2,"label":"减少"}]},{"type":"inputNumber","field":"ficti","value":0,"title":"修改虚拟销量数","props":{"placeholder":"请输入修改虚拟销量数"}}],"action":"%s/%d","method":"PUT","title":"修改虚拟销量数","config":{}}`, strconv.FormatInt(int64(ficti), 10), "/admin/product/setProductFicti", id)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	return form, err
+}
 
 // 出售中 1: is_show' => 1, 'status' => 1
 // 仓库中 2:'is_show' => 2, 'status' => 1
@@ -95,6 +112,16 @@ func GetProductByID(id uint) (response.TenancyProductDetail, error) {
 	return product, err
 }
 
+// GetProductFictiByID
+func GetProductFictiByID(id uint) (int32, error) {
+	var product response.TenancyProductFicti
+	err := g.TENANCY_DB.Model(&model.TenancyProduct{}).
+		Select("ficti").
+		Where("tenancy_products.id = ?", id).
+		First(&product).Error
+	return product.Ficti, err
+}
+
 // UpdateProduct
 func UpdateProduct(req request.UpdateTenancyProduct, id uint) error {
 	content := model.TenancyProductContent{Content: req.Content, TenancyProductID: id, Type: req.ProductType}
@@ -108,6 +135,33 @@ func UpdateProduct(req request.UpdateTenancyProduct, id uint) error {
 		}
 		return nil
 	})
+	return err
+}
+
+// ChangeProductStatus
+func ChangeProductStatus(changeStatus request.ChangeProductStatus) error {
+	return g.TENANCY_DB.Model(&model.TenancyProduct{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
+}
+
+// SetProductFicti
+func SetProductFicti(req request.SetProductFicti, id uint) error {
+	ficti, err := GetProductFictiByID(id)
+	if err != nil {
+		return err
+	}
+	// 增加
+	if req.Type == 1 {
+		ficti = ficti + req.Ficti
+	} else if req.Type == 2 {
+		if ficti <= req.Ficti {
+			ficti = 0
+		} else {
+			ficti = ficti - req.Ficti
+		}
+	}
+	if err := g.TENANCY_DB.Model(&model.TenancyProduct{}).Where("id = ?", id).Updates(map[string]interface{}{"ficti": ficti}).Error; err != nil {
+		return err
+	}
 	return err
 }
 
