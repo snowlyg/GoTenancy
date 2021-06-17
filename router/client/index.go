@@ -62,3 +62,11 @@ func InitTenancyRouter(Router *gin.RouterGroup) {
 		TenancyRouter.GET("/getTenancyInfo", v1.GetTenancyInfo) // 登录商户信息
 	}
 }
+
+func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
+	MenuRouter := Router.Group("/menu")
+	{
+		MenuRouter.GET("/getMenu", v1.GetMenu) // 获取菜单树
+	}
+	return MenuRouter
+}

@@ -3,17 +3,25 @@ package service
 import (
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
 // getMenuTreeMap 获取路由总树map
-func getMenuTreeMap(authorityId string) (map[uint][]model.SysMenu, error) {
+func getMenuTreeMap(ctx *gin.Context) (map[uint][]model.SysMenu, error) {
 	var allMenus []model.SysMenu
 	treeMap := make(map[uint][]model.SysMenu, 1000)
-	err := g.TENANCY_DB.Where("authority_id = ?", authorityId).Where("is_tenancy = ?", g.StatusFalse).Where("is_menu = ?", g.StatusTrue).Order("sort desc").Find(&allMenus).Error
+	db := g.TENANCY_DB.Where("authority_id = ?", multi.GetAuthorityId(ctx))
+	if multi.IsAdmin(ctx) {
+		db = db.Where("is_tenancy = ?", g.StatusFalse)
+	} else if multi.IsTenancy(ctx) {
+		db = db.Where("is_tenancy = ?", g.StatusTrue)
+	}
+	err := db.Where("is_menu = ?", g.StatusTrue).Order("sort desc").Find(&allMenus).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +32,8 @@ func getMenuTreeMap(authorityId string) (map[uint][]model.SysMenu, error) {
 }
 
 // GetMenuTree 获取动态菜单树
-func GetMenuTree(authorityId string) ([]model.SysMenu, error) {
-	menuTree, err := getMenuTreeMap(authorityId)
+func GetMenuTree(ctx *gin.Context) ([]model.SysMenu, error) {
+	menuTree, err := getMenuTreeMap(ctx)
 	menus := menuTree[0]
 	for i := 0; i < len(menus); i++ {
 		err = getChildrenList(&menus[i], menuTree)

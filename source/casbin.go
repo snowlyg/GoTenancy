@@ -169,47 +169,53 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/deleteProduct/:id", V2: "DELETE"},
 
 	// TODO:商户用户权限
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
+
+	//菜单
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/menu/getMenu", V2: "GET"},
 	// 商户
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/tenancy/getTenancyInfo", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/tenancy/getTenancyInfo", V2: "GET"},
 	// 媒体库
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/getUpdateMediaMap/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/upload", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/getFileList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/updateMediaName/:id", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/getUpdateMediaMap/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/upload", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/aclientdmin/media/getFileList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/updateMediaName/:id", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategorySelect", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/changeCategoryStatus", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/updateCategory/:id", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/category/deleteCategory/:id", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/getCreateTenancyCategoryMap", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/getCategorySelect", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/getCategoryList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/createCategory", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/getCategoryById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/changeCategoryStatus", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/updateCategory/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/deleteCategory/:id", V2: "DELETE"},
 
 	//规格参数
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/createAttrTemplate", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateById", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/updateAttrTemplate", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/attr_template/deleteAttrTemplate", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/getAttrTemplateList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/createAttrTemplate", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/getAttrTemplateById", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/updateAttrTemplate", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/deleteAttrTemplate", V2: "DELETE"},
 
 	//商品
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getEditProductFictiMap/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/setProductFicti/:id", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductFilter", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/changeProductStatus", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/createProduct", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/getProductById/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/updateProduct/:id", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/product/deleteProduct/:id", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getEditProductFictiMap/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/setProductFicti/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getProductFilter", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/changeProductStatus", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getProductList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/createProduct", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getProductById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/updateProduct/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/deleteProduct/:id", V2: "DELETE"},
 
 	// 普通用户权限
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
+
 	// 我的地址
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/getAddressList", V2: "POST"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/general/address/createAddress", V2: "POST"},

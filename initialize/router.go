@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/router/admin"
+	"github.com/snowlyg/go-tenancy/router/client"
 	"github.com/snowlyg/go-tenancy/router/general"
 	"github.com/snowlyg/go-tenancy/router/public"
 	"github.com/snowlyg/go-tenancy/utils"
@@ -65,9 +66,9 @@ func Routers(app *gin.Engine) {
 			admin.InitCasbinRouter(AdminGroup)             // 权限相关路由
 			admin.InitAuthorityRouter(AdminGroup)          // 注册角色路由
 			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
-			admin.InitMediaRouter(ClientGroup)             // 媒体库路由
-			admin.InitCategoryRouter(ClientGroup)          // 商品分类路由
-			admin.InitProductRouter(ClientGroup)           // 商品路由
+			admin.InitMediaRouter(AdminGroup)              // 媒体库路由
+			admin.InitCategoryRouter(AdminGroup)           // 商品分类路由
+			admin.InitProductRouter(AdminGroup)            // 商品路由
 		}
 
 		// 商户和员工
