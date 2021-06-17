@@ -7,7 +7,7 @@ import (
 
 func TestCaptcha(t *testing.T) {
 	e := baseTester(t)
-	obj := e.POST("v1/public/captcha").
+	obj := e.GET("v1/public/captcha").
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")

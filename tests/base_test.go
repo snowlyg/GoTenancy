@@ -108,7 +108,7 @@ func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("v1/public/login").
-		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "authorityType": multi.GeneralAuthority}).
+		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")

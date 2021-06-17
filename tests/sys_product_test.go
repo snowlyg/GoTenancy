@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -181,7 +182,6 @@ func TestProductProcess(t *testing.T) {
 	productId := product.Value("id").Number().Raw()
 
 	update := map[string]interface{}{
-		"id":                productId,
 		"storeName":         "领立裁腰带短袖连衣裙",
 		"storeInfo":         "短袖连衣裙",
 		"keyword":           "短袖连衣裙",
@@ -222,55 +222,14 @@ func TestProductProcess(t *testing.T) {
 		"tenancyCategoryId": 1,
 	}
 
-	obj = auth.PUT("v1/admin/product/updateProduct").
+	obj = auth.PUT(fmt.Sprintf("v1/admin/product/updateProduct/%d", int(productId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("更新成功")
-	product = obj.Value("data").Object()
 
-	product.Value("id").Number().Ge(0)
-	product.Value("storeName").String().Equal(update["storeName"].(string))
-	product.Value("storeInfo").String().Equal(update["storeInfo"].(string))
-	product.Value("keyword").String().Equal(update["keyword"].(string))
-	product.Value("barCode").String().Equal(update["barCode"].(string))
-	product.Value("isShow").Number().Equal(update["isShow"].(int))
-	product.Value("status").Number().Equal(update["status"].(int))
-	product.Value("unitName").String().Equal(update["unitName"].(string))
-	product.Value("sort").Number().Equal(update["sort"].(int))
-	product.Value("rank").Number().Equal(update["rank"].(int))
-	product.Value("sales").Number().Equal(update["sales"].(int))
-	product.Value("price").Number().Equal(update["price"].(int))
-	product.Value("cost").Number().Equal(update["cost"].(int))
-	product.Value("otPrice").Number().Equal(update["otPrice"].(int))
-	product.Value("stock").Number().Equal(update["stock"].(int))
-	product.Value("isHot").Number().Equal(update["isHot"].(int))
-	product.Value("isBenefit").Number().Equal(update["isBenefit"].(int))
-	product.Value("isBest").Number().Equal(update["isBest"].(int))
-	product.Value("isNew").Number().Equal(update["isNew"].(int))
-	product.Value("isGood").Number().Equal(update["isGood"].(int))
-	product.Value("productType").Number().Equal(update["productType"].(int))
-	product.Value("ficti").Number().Equal(update["ficti"].(int))
-	product.Value("browse").Number().Equal(update["browse"].(int))
-	product.Value("codePath").String().Equal(update["codePath"].(string))
-	product.Value("videoLink").String().Equal(update["videoLink"].(string))
-	product.Value("specType").Number().Equal(update["specType"].(int))
-	product.Value("extensionType").Number().Equal(update["extensionType"].(int))
-	product.Value("refusal").String().Equal(update["refusal"].(string))
-	product.Value("rate").Number().Equal(update["rate"].(int))
-	product.Value("replyCount").Number().Equal(update["replyCount"].(int))
-	product.Value("giveCouponIds").String().Equal(update["giveCouponIds"].(string))
-	product.Value("isGiftBag").Number().Equal(update["isGiftBag"].(int))
-	product.Value("careCount").Number().Equal(update["careCount"].(int))
-	product.Value("image").String().Equal(update["image"].(string))
-	product.Value("sliderImage").String().Equal(update["sliderImage"].(string))
-	product.Value("oldId").Number().Equal(update["oldId"].(int))
-	product.Value("tempId").Number().Equal(update["tempId"].(int))
-	product.Value("sysBrandId").Number().Equal(update["sysBrandId"].(int))
-	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
-
-	obj = auth.POST("v1/admin/product/getProductById").
+	obj = auth.GET(fmt.Sprintf("v1/admin/product/getProductById/%d", int(productId))).
 		WithJSON(map[string]interface{}{"id": productId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -319,7 +278,7 @@ func TestProductProcess(t *testing.T) {
 	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
 
 	// setUserAuthority
-	obj = auth.DELETE("v1/admin/product/deleteProduct").
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/product/deleteProduct/%d", int(productId))).
 		WithJSON(map[string]interface{}{"id": productId}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -376,6 +335,6 @@ func TestProductAddError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("Key: 'CreateTenancyProduct.StoreName' Error:Field validation for 'StoreName' failed on the 'required' tag")
+	obj.Value("message").String().Equal("Key: 'TenancyProduct.BaseTenancyProduct.StoreName' Error:Field validation for 'StoreName' failed on the 'required' tag")
 
 }

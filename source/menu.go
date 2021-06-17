@@ -57,7 +57,7 @@ var menus = []model.SysBaseMenu{
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 94}, Pid: 92, Path: "/87/92/", Icon: "", MenuName: "品牌列表", Route: "/admin/product/band/brandList", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 95}, Pid: 0, Path: "/", Icon: "s-goods", MenuName: "商品", Route: "/merchant/product", Params: "", Sort: 99, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 96}, Pid: 95, Path: "/95/", Icon: "", MenuName: "商品分类", Route: "/merchant/product/classify", Params: "", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 99}, Pid: 95, Path: "/95/", Icon: "", MenuName: "商品规格", Route: "/merchant/admin/product/attr", Params: "", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 99}, Pid: 95, Path: "/95/", Icon: "", MenuName: "商品规格", Route: "/merchant/product/attr", Params: "", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 100}, Pid: 42, "/42/", "", "商户分类", "/merchant/classify", "", 10,Hidden: 2, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 101}, Pid: 0, "/", "user-solid", "用户", "/user", "", 96,Hidden: 2, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 102}, Pid: 101, "/101/", "", "用户分组", "/user/group", Params: "", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},

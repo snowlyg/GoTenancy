@@ -68,14 +68,13 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategoryId := configCategory.Value("id").Number().Raw()
 
 	// getUpdateConfigCategoryMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getUpdateConfigCategoryMap/%f", configCategoryId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getUpdateConfigCategoryMap/%d", int(configCategoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
 	update := map[string]interface{}{
-		"id":     configCategoryId,
 		"name":   "箱包1",
 		"sort":   0,
 		"key":    "xiangbao1",
@@ -84,7 +83,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 		"status": 2,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("v1/admin/configCategory/updateConfigCategory/%f", configCategoryId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/configCategory/updateConfigCategory/%d", int(configCategoryId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -99,8 +98,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	configCategory.Value("info").String().Equal(update["info"].(string))
 	configCategory.Value("status").Number().Equal(update["status"].(int))
 
-	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getConfigCategoryById/%f", configCategoryId)).
-		WithJSON(map[string]interface{}{"id": configCategoryId}).
+	obj = auth.GET(fmt.Sprintf("v1/admin/configCategory/getConfigCategoryById/%d", int(configCategoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -127,8 +125,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// deleteConfigCategory
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/configCategory/deleteConfigCategory/%f", configCategoryId)).
-		WithJSON(map[string]interface{}{"id": configCategoryId}).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/configCategory/deleteConfigCategory/%d", int(configCategoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

@@ -58,7 +58,39 @@ func list(t *testing.T, params map[string]interface{}, length int) {
 	list := data.Value("list").Array()
 	list.Length().Equal(length)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "uuid", "name", "tele", "address", "businessTime", "sysRegionCode", "status", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly(
+		"updatedAt",
+		"address",
+		"postageScore",
+		"isBroGoods",
+		"servicePhone",
+		"createdAt",
+		"name",
+		"sort",
+		"serviceScore",
+		"isBest",
+		"Keyword",
+		"mark",
+		"isTrader",
+		"businessTime",
+		"Avatar",
+		"productScore",
+		"sysRegionCode",
+		"tele",
+		"isBroRoom",
+		"uuid",
+		"Banner",
+		"Info",
+		"careCount",
+		"State",
+		"copyProductNum",
+		"id",
+		"status",
+		"sales",
+		"regAdminId",
+		"commissionRate",
+		"isAudit",
+	)
 	first.Value("id").Number().Ge(0)
 }
 
@@ -76,7 +108,7 @@ func TestTenancyByRegion(t *testing.T) {
 func TestLoginTenancy(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/admin/tenancy/loginTenancy/1").
+	obj := auth.POST("v1/admin/tenancy/loginTenancy/1").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -136,7 +168,7 @@ func TestTenancyProcess(t *testing.T) {
 		"sysRegionCode": 3,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("v1/admin/tenancy/updateTenancy/%f", tenancyId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/tenancy/updateTenancy/%d", int(tenancyId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -151,7 +183,7 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
 	tenancy.Value("status").Number().Equal(update["status"].(int))
 
-	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/getTenancyById/%f", tenancyId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/getTenancyById/%d", int(tenancyId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -190,7 +222,7 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/tenancy/deleteTenancy/%f", tenancyId)).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/tenancy/deleteTenancy/%d", int(tenancyId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

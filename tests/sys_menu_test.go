@@ -3,6 +3,8 @@ package tests
 import (
 	"net/http"
 	"testing"
+
+	"github.com/snowlyg/go-tenancy/g"
 )
 
 func TestMenu(t *testing.T) {
@@ -14,21 +16,25 @@ func TestMenu(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
-	data := obj.Value("data").Object().Value("menus").Array()
+	data := obj.Value("data").Array()
 	data.Length().Ge(0)
 	first := data.First().Object()
 	first.Keys().ContainsOnly(
-		"id",
-		"pid",
-		"menu_name",
-		"path",
-		"hidden",
-		"route",
-		"sort",
 		"authoritys",
-		"menu_id",
 		"children",
 		"createdAt",
+		"hidden",
+		"icon",
+		"id",
+		"is_menu",
+		"is_tenancy",
+		"menu_id",
+		"menu_name",
+		"params",
+		"path",
+		"pid",
+		"route",
+		"sort",
 		"updatedAt",
 	)
 	first.Value("id").Number().Ge(0)
@@ -44,23 +50,25 @@ func TestBaseMenu(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
-	data := obj.Value("data").Object().Value("menus").Array()
+	data := obj.Value("data").Array()
 	data.Length().Ge(0)
 	first := data.First().Object()
 	first.Keys().ContainsOnly(
+		"authoritys",
 		"id",
-		"pid",
+		"createdAt",
+		"icon",
 		"menu_name",
+		"route",
+		"is_tenancy",
+		"is_menu",
 		"path",
 		"hidden",
-		"route",
-		"sort",
-		"meta",
-		"authoritys",
-		"children",
-		"parameters",
-		"createdAt",
 		"updatedAt",
+		"pid",
+		"params",
+		"sort",
+		"children",
 	)
 	first.Value("id").Number().Ge(0)
 
@@ -86,19 +94,21 @@ func TestMenuList(t *testing.T) {
 	list.Length().Ge(0)
 	first := list.First().Object()
 	first.Keys().ContainsOnly(
-		"id",
+		"is_menu",
+		"updatedAt",
 		"pid",
 		"menu_name",
-		"path",
-		"hidden",
-		"route",
-		"sort",
-		"meta",
-		"authoritys",
-		"children",
-		"parameters",
+		"is_tenancy",
+		"id",
 		"createdAt",
-		"updatedAt",
+		"path",
+		"children",
+		"route",
+		"params",
+		"hidden",
+		"icon",
+		"sort",
+		"authoritys",
 	)
 	first.Value("id").Number().Ge(0)
 
@@ -106,15 +116,8 @@ func TestMenuList(t *testing.T) {
 
 func TestMenuProcess(t *testing.T) {
 	data := map[string]interface{}{
-		"route":  "view/routerHolder.vue",
-		"hidden": true,
-		"meta": map[string]interface{}{
-			"title":       "132131",
-			"icon":        "delete-solid",
-			"defaultMenu": false,
-			"closeTab":    true,
-			"keepAlive":   true,
-		},
+		"route":     "view/routerHolder.vue",
+		"hidden":    g.StatusFalse,
 		"menu_name": "test_menu_process",
 		"parameters": []map[string]interface{}{
 			{
@@ -128,7 +131,7 @@ func TestMenuProcess(t *testing.T) {
 				"value": "1",
 			},
 		},
-		"pid":  "0",
+		"pid":  0,
 		"path": "21312331",
 		"sort": 111,
 	}
@@ -169,7 +172,7 @@ func TestMenuProcess(t *testing.T) {
 	update := map[string]interface{}{
 		"id":     menuId,
 		"route":  "view/routerHolder.vue",
-		"hidden": true,
+		"hidden": g.StatusTrue,
 		"meta": map[string]interface{}{
 			"title":       "132131",
 			"icon":        "delete-solid",
@@ -190,7 +193,7 @@ func TestMenuProcess(t *testing.T) {
 				"value": "1",
 			},
 		},
-		"pid":  "0",
+		"pid":  0,
 		"path": "21312331",
 		"sort": 111,
 	}
@@ -229,9 +232,9 @@ func TestMenuProcess(t *testing.T) {
 func TestMenuAddError(t *testing.T) {
 	data := map[string]interface{}{
 		"route":     "view/routerHolder.vue",
-		"hidden":    true,
-		"menu_name": "dashboard",
-		"pid":       "0",
+		"hidden":    g.StatusFalse,
+		"menu_name": "dashboard213123",
+		"pid":       0,
 		"path":      "21312331",
 		"sort":      111,
 	}

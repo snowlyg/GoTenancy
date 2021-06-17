@@ -25,7 +25,7 @@ func TestConfigList(t *testing.T) {
 	list := data.Value("list").Array()
 	list.Length().Ge(0)
 	first := list.First().Object()
-	first.Keys().ContainsOnly("id", "configName", "configKey", "configType", "required", "configRule", "info", "sort", "userType", "status", "sysConfigCategoryId", "typeName", "createdAt", "updatedAt")
+	first.Keys().ContainsOnly("id", "configName", "configKey", "configType", "required", "value", "configRule", "info", "sort", "userType", "status", "sysConfigCategoryId", "typeName", "createdAt", "updatedAt")
 	first.Value("id").Number().Equal(1)
 	first.Value("configName").String().Equal("网站域名")
 	first.Value("configKey").String().Equal("site_url")
@@ -88,7 +88,7 @@ func TestConfigProcess(t *testing.T) {
 	obj.Value("message").String().Equal("获取成功")
 
 	// getUpdateConfigMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/config/getUpdateConfigMap/%f", configId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/config/getUpdateConfigMap/%d", int(configId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -107,7 +107,7 @@ func TestConfigProcess(t *testing.T) {
 		"userType":            2,
 	}
 
-	obj = auth.PUT(fmt.Sprintf("v1/admin/config/updateConfig/%f", configId)).
+	obj = auth.PUT(fmt.Sprintf("v1/admin/config/updateConfig/%d", int(configId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -145,7 +145,7 @@ func TestConfigProcess(t *testing.T) {
 	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
 	config.Value("userType").Number().Equal(update["userType"].(int))
 
-	obj = auth.GET(fmt.Sprintf("v1/admin/config/getConfigByID/%f", configId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/config/getConfigByID/%d", int(configId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -176,7 +176,7 @@ func TestConfigProcess(t *testing.T) {
 	obj.Value("message").String().Equal("设置成功")
 
 	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/config/deleteConfig/%f", configId)).
+	obj = auth.DELETE(fmt.Sprintf("v1/admin/config/deleteConfig/%d", int(configId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

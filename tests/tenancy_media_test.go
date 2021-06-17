@@ -40,23 +40,18 @@ func TestMediaProcess(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("上传成功")
 
-	media := obj.Value("data").Object().Value("file").Object()
-	media.Value("id").Number().Ge(0)
-	media.Value("name").String().Equal(name)
-	media.Value("url").String().NotEmpty()
-	media.Value("tag").String().Equal("jpg")
-	media.Value("key").String().NotEmpty()
-	mediaId := media.Value("id").Number().Raw()
+	obj.Value("data").Object().Value("src").String().NotEmpty()
+	mediaId := obj.Value("data").Object().Value("id").Number().Raw()
 
 	// getUpdateMediaMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/media/getUpdateMediaMap/%f", mediaId)).
+	obj = auth.GET(fmt.Sprintf("v1/admin/media/getUpdateMediaMap/%d", int(mediaId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
 	// changeTenancyStatus
-	obj = auth.POST(fmt.Sprintf("v1/admin/media/updateMediaName/%f", mediaId)).
+	obj = auth.POST(fmt.Sprintf("v1/admin/media/updateMediaName/%d", int(mediaId))).
 		WithJSON(map[string]interface{}{
 			"id":   mediaId,
 			"name": "name_jpg",

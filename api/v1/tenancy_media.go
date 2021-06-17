@@ -38,7 +38,7 @@ func UploadFile(ctx *gin.Context) {
 		response.FailWithMessage("修改数据库链接失败", ctx)
 		return
 	}
-	response.OkWithDetailed(gin.H{"src": file.Url}, "上传成功", ctx)
+	response.OkWithDetailed(gin.H{"src": file.Url, "id": file.ID}, "上传成功", ctx)
 }
 
 func DeleteFile(ctx *gin.Context) {
