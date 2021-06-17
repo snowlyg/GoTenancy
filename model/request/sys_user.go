@@ -9,11 +9,10 @@ type Register struct {
 
 // User login structure
 type Login struct {
-	Username      string `json:"username" binding:"required"`
-	Password      string `json:"password" binding:"required"`
-	Captcha       string `json:"captcha" binding:"dev-required"`
-	CaptchaId     string `json:"captchaId" binding:"dev-required"`
-	AuthorityType int    `json:"authorityType" binding:"required,gt=0"`
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	Captcha   string `json:"captcha" binding:"dev-required"`
+	CaptchaId string `json:"captchaId" binding:"dev-required"`
 }
 
 // Modify password structure

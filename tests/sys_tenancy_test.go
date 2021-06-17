@@ -73,6 +73,19 @@ func TestTenancyByRegion(t *testing.T) {
 	obj.Value("data").Array().Length().Ge(1)
 }
 
+func TestLoginTenancy(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("v1/admin/tenancy/loginTenancy/1").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("登录成功")
+	data := obj.Value("data").Object()
+	data.Value("token").String().NotEmpty()
+	data.Value("url").String().NotEmpty()
+}
+
 func TestGetTenancyCount(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)

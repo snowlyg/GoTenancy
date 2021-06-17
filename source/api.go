@@ -87,9 +87,12 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "删除配置分类", ApiGroup: "configCategory", Method: "DELETE"},
 
 	// 商户
+	{Path: "/v1/admin/tenancy/getTenancyInfo", Description: "获取登录Tenancy信息", ApiGroup: "tenancy", Method: "GET"},
+
 	{Path: "/v1/admin/tenancy/getTenancies/code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
-	{Path: "/v1/admin/tenancy/GetTenancyCount", Description: "获取Tenancy对应状态数量", ApiGroup: "tenancy", Method: "GET"},
+	{Path: "/v1/admin/tenancy/getTenancyCount", Description: "获取Tenancy对应状态数量", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/getTenancyList", Description: "获取商户列表", ApiGroup: "tenancy", Method: "POST"},
+	{Path: "/v1/admin/tenancy/loginTenancy", Description: "登录商户", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/createTenancy", Description: "添加商户", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/setTenancyRegion", Description: "设置商户地区", ApiGroup: "tenancy", Method: "POST"},
 	{Path: "/v1/admin/tenancy/changeTenancyStatus", Description: "启用/禁用商户", ApiGroup: "tenancy", Method: "POST"},

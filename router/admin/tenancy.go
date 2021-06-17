@@ -1,4 +1,4 @@
-package router
+package admin
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,9 +8,12 @@ import (
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
+		TenancyRouter.GET("/getTenancyInfo", v1.GetTenancyInfo) // 登录商户信息
+
 		TenancyRouter.GET("/getTenancies/:code", v1.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
 		TenancyRouter.GET("/getTenancyCount", v1.GetTenancyCount)          // 获取Tenancy对应状态数量
 		TenancyRouter.POST("/createTenancy", v1.CreateTenancy)             // 创建Tenancy
+		TenancyRouter.POST("/loginTenancy/:id", v1.LoginTenancy)           // 登录商户
 		TenancyRouter.POST("/getTenancyList", v1.GetTenanciesList)         // 获取Tenancy列表
 		TenancyRouter.GET("/getTenancyById/:id", v1.GetTenancyById)        // 获取单条Tenancy消息
 		TenancyRouter.POST("/setTenancyRegion", v1.SetTenancyRegion)       // 设置商户地区

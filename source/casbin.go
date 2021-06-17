@@ -71,9 +71,11 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/email/emailTest", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/api/deleteApisByIds", V2: "DELETE"},
 
+	// 商户
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/getTenancies/:code", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/getTenancyCount", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/getTenancyList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/loginTenancy/:id", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/createTenancy", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/setTenancyRegion", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/tenancy/changeTenancyStatus", V2: "POST"},
@@ -166,7 +168,9 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/updateProduct/:id", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/deleteProduct/:id", V2: "DELETE"},
 
-	//商户用户权限
+	// TODO:商户用户权限
+	// 商户
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/tenancy/getTenancyInfo", V2: "GET"},
 	// 媒体库
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/getUpdateMediaMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/admin/media/upload", V2: "POST"},

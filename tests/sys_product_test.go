@@ -11,7 +11,7 @@ func TestProductList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
 	obj := auth.POST("v1/admin/product/getProductList").
-		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
+		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10, "type": "1"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -66,12 +66,25 @@ func TestProductList(t *testing.T) {
 		"tempId",
 		"sysTenancyId",
 		"sysTenancyName",
+		"cateName",
+		"brandName",
 		"sysBrandId",
 		"tenancyCategoryId",
 		"createdAt",
 		"updatedAt",
 	)
 	first.Value("id").Number().Ge(0)
+
+}
+
+func TestGetProductFilter(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("v1/admin/product/getProductFilter").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 
 }
 

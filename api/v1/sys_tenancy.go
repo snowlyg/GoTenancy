@@ -10,6 +10,21 @@ import (
 	"go.uber.org/zap"
 )
 
+//LoginTenancy 后台登录
+func LoginTenancy(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if loginResponse, err := service.LoginTenancy(req.Id); err != nil {
+		g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
+		response.FailWithMessage(err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(loginResponse, "登录成功", ctx)
+	}
+}
+
 // CreateTenancy
 func CreateTenancy(ctx *gin.Context) {
 	var tenancy model.SysTenancy
@@ -141,6 +156,16 @@ func GetTenanciesByRegion(ctx *gin.Context) {
 // GetTenancyCount 获取Tenancy对应状态数量
 func GetTenancyCount(ctx *gin.Context) {
 	if tenancies, err := service.GetTenancyCount(); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(tenancies, "获取成功", ctx)
+	}
+}
+
+// GetTenancyInfo 获取Tenancy对应状态数量
+func GetTenancyInfo(ctx *gin.Context) {
+	if tenancies, err := service.GetTenancyInfo(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

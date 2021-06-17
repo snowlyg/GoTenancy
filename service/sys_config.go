@@ -90,6 +90,20 @@ func GetConfigByCateKey(config_key string) ([]response.SysConfig, error) {
 	return configs, err
 }
 
+// GetTenancyConfigValue
+func GetTenancyConfigValue(config_key string, sys_tenancy_id uint) (response.SysConfig, error) {
+	var config response.SysConfig
+	err := g.TENANCY_DB.
+		Select("sys_config_values.value").
+		Joins("left join sys_config_categories on sys_configs.sys_config_category_id = sys_config_categories.id").
+		Joins("left join sys_config_values on sys_configs.config_key = sys_config_values.config_key").
+		Where("sys_config_categories.key = ?", config_key).
+		Where("sys_config_values.sys_tenancy_id = ?", sys_tenancy_id).
+		First(&config).Error
+
+	return config, err
+}
+
 // GetConfigByKey
 func GetConfigByKey(config_key string) (model.SysConfig, error) {
 	var config model.SysConfig

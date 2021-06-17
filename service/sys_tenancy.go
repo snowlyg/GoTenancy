@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -9,8 +11,54 @@ import (
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
+
+func LoginTenancy(id uint) (response.LoginTenancy, error) {
+	var loginTenancy response.LoginTenancy
+	var token string
+	err := g.TENANCY_DB.Model(&model.SysUser{}).
+		Where("sys_authorities.authority_type = ?", multi.TenancyAuthority).
+		Where("sys_tenancies.id = ?", id).
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		First(&loginTenancy.Admin).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return loginTenancy, errors.New("用户名或者密码错误")
+	}
+	if err != nil {
+		return loginTenancy, err
+	}
+	claims := &multi.CustomClaims{
+		ID:            strconv.FormatUint(uint64(loginTenancy.Admin.ID), 10),
+		Username:      loginTenancy.Admin.Username,
+		TenancyId:     loginTenancy.Admin.TenancyId,
+		TenancyName:   loginTenancy.Admin.TenancyName,
+		AuthorityId:   loginTenancy.Admin.AuthorityId,
+		AuthorityType: loginTenancy.Admin.AuthorityType,
+		LoginType:     multi.LoginTypeWeb,
+		AuthType:      multi.AuthPwd,
+		CreationDate:  time.Now().Local().Unix(),
+		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+	}
+
+	if loginTenancy.Admin.ID == 0 {
+		return loginTenancy, errors.New("用户名或者密码错误")
+	}
+
+	token, exp, err := multi.AuthDriver.GenerateToken(claims)
+	if err != nil {
+		return loginTenancy, err
+	}
+	loginTenancy.Token = token
+	loginTenancy.Exp = exp
+	loginTenancy.Url = "http://localhost:9528/merchant"
+
+	return loginTenancy, nil
+}
 
 // CreateTenancy
 func CreateTenancy(tenancy model.SysTenancy) (model.SysTenancy, error) {
@@ -99,4 +147,11 @@ func GetTenancyCount() (gin.H, error) {
 		"invalid": counts.Invalid,
 		"valid":   counts.Valid,
 	}, err
+}
+
+// GetTenancyInfo
+func GetTenancyInfo(ctx *gin.Context) (response.TenancyInfo, error) {
+	var info response.TenancyInfo
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Find(&info).Error
+	return info, err
 }

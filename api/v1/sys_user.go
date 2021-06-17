@@ -13,8 +13,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// Login 用户登录
-func Login(ctx *gin.Context) {
+// AdminLogin 后台登录
+func AdminLogin(ctx *gin.Context) {
 	var L request.Login
 	if errs := ctx.ShouldBindJSON(&L); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
@@ -23,7 +23,28 @@ func Login(ctx *gin.Context) {
 
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
-		if loginResponse, err := service.Login(U, L.AuthorityType); err != nil {
+		if loginResponse, err := service.Login(U, multi.AdminAuthority); err != nil {
+			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
+			response.FailWithMessage(err.Error(), ctx)
+		} else {
+			response.OkWithDetailed(loginResponse, "登录成功", ctx)
+		}
+	} else {
+		response.FailWithMessage("验证码错误", ctx)
+	}
+}
+
+//ClientLogin 后台登录
+func ClientLogin(ctx *gin.Context) {
+	var L request.Login
+	if errs := ctx.ShouldBindJSON(&L); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+
+	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
+		U := &model.SysUser{Username: L.Username, Password: L.Password}
+		if loginResponse, err := service.Login(U, multi.TenancyAuthority); err != nil {
 			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
 			response.FailWithMessage(err.Error(), ctx)
 		} else {

@@ -51,8 +51,8 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("v1/public/login").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "authorityType": multi.AdminAuthority}).
+	obj := e.POST("v1/public/admin/login").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -78,8 +78,8 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 
 func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("v1/public/login").
-		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "authorityType": multi.TenancyAuthority}).
+	obj := e.POST("v1/public/client/login").
+		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")

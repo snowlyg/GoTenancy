@@ -35,7 +35,7 @@ func GetEditProductFictiMap(id uint) (Form, error) {
 // 3,4,5 商户才有
 // 已售罄 3:'is_show' => 1, 'stock' => 0, 'status' => 1
 // 警戒库存 4:'stock' => $stock ? $stock : 0, 'status' => 1
-// 回收站 5:'soft' => true
+// 回收站 5:'deleted_at' => not null
 // 待审核 6:'status' => 2
 // 审核未通过 7:'status' => 3
 
@@ -62,6 +62,12 @@ func GetProductFilter(ctx *gin.Context) ([]response.TenancyProductFilter, error)
 // getProductConditions
 func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
 	stock := 0
+	if config, err := GetTenancyConfigValue("mer_store_stock", multi.GetTenancyId(ctx)); err == nil {
+		if value, err := strconv.Atoi(config.Value); err == nil {
+			stock = value
+		}
+	}
+
 	conditions := []response.TenancyProductCondition{
 		{Name: "出售中", Type: 1, Conditions: map[string]interface{}{"is_show": 1, "status": 1}},
 		{Name: "仓库中", Type: 2, Conditions: map[string]interface{}{"is_show": 2, "status": 1}},

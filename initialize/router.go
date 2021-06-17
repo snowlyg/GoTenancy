@@ -6,7 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/middleware"
-	"github.com/snowlyg/go-tenancy/router"
+	"github.com/snowlyg/go-tenancy/router/admin"
+	"github.com/snowlyg/go-tenancy/router/general"
+	"github.com/snowlyg/go-tenancy/router/public"
 	"github.com/snowlyg/go-tenancy/utils"
 )
 
@@ -34,48 +36,68 @@ func Routers(app *gin.Engine) {
 	// 方便统一添加路由组前缀 多服务器上线使用
 	PublicGroup := app.Group("/v1")
 	{
-		router.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-		router.InitInitRouter(PublicGroup)   // 自动初始化相关
+		public.InitPublicRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+		public.InitInitRouter(PublicGroup)   // 自动初始化相关
 	}
 
 	V1Group := app.Group("/v1", middleware.Auth(), middleware.CasbinHandler(), middleware.OperationRecord())
 	{
 		Auth := V1Group.Group("/auth")
 		{
-			router.InitAuthRouter(Auth) // 注册用户路由
+			public.InitAuthRouter(Auth) // 注册用户路由
 		}
 
 		// 商户和员工
 		AdminGroup := V1Group.Group("/admin", middleware.IsAdmin())
 		{
-			router.InitApiRouter(AdminGroup)                // 注册功能api路由
-			router.InitUserRouter(AdminGroup)               // 注册用户路由
-			router.InitTenancyRouter(AdminGroup)            // 注册商户路由
-			router.InitMiniRouter(AdminGroup)               // 注册小程序路由
-			router.InitBrandRouter(AdminGroup)              // 注册品牌路由
-			router.InitBrandCategoryRouter(AdminGroup)      // 注册品牌分类路由
-			router.InitConfigCategoryRouter(AdminGroup)     // 注册系统配置分类路由
-			router.InitConfigRouter(AdminGroup)             // 注册系统配置路由
-			router.InitConfigValueRouter(AdminGroup)        // 注册系统配置值路由
-			router.InitMenuRouter(AdminGroup)               // 注册menu路由
-			router.InitEmailRouter(AdminGroup)              // 邮件相关路由
-			router.InitSystemRouter(AdminGroup)             // system相关路由
-			router.InitCasbinRouter(AdminGroup)             // 权限相关路由
-			router.InitAuthorityRouter(AdminGroup)          // 注册角色路由
-			router.InitSysOperationRecordRouter(AdminGroup) // 操作记录
+			admin.InitApiRouter(AdminGroup)                // 注册功能api路由
+			admin.InitUserRouter(AdminGroup)               // 注册用户路由
+			admin.InitTenancyRouter(AdminGroup)            // 注册商户路由
+			admin.InitMiniRouter(AdminGroup)               // 注册小程序路由
+			admin.InitBrandRouter(AdminGroup)              // 注册品牌路由
+			admin.InitBrandCategoryRouter(AdminGroup)      // 注册品牌分类路由
+			admin.InitConfigCategoryRouter(AdminGroup)     // 注册系统配置分类路由
+			admin.InitConfigRouter(AdminGroup)             // 注册系统配置路由
+			admin.InitConfigValueRouter(AdminGroup)        // 注册系统配置值路由
+			admin.InitMenuRouter(AdminGroup)               // 注册menu路由
+			admin.InitEmailRouter(AdminGroup)              // 邮件相关路由
+			admin.InitSystemRouter(AdminGroup)             // system相关路由
+			admin.InitCasbinRouter(AdminGroup)             // 权限相关路由
+			admin.InitAuthorityRouter(AdminGroup)          // 注册角色路由
+			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
+			admin.InitMediaRouter(ClientGroup)             // 媒体库路由
+			admin.InitCategoryRouter(ClientGroup)          // 商品分类路由
+			admin.InitProductRouter(ClientGroup)           // 商品路由
+		}
 
-			// 商户
-			router.InitMediaRouter(AdminGroup)        // 媒体库路由
-			router.InitCategoryRouter(AdminGroup)     // 商品分类路由
-			router.InitAttrTemplateRouter(AdminGroup) // 规格模板路由
-			router.InitProductRouter(AdminGroup)      // 商品路由
-
+		// 商户和员工
+		ClientGroup := V1Group.Group("/client", middleware.IsTenancy())
+		{
+			// admin.InitApiRouter(ClientGroup)                // 注册功能api路由
+			// admin.InitUserRouter(ClientGroup)               // 注册用户路由
+			client.InitTenancyRouter(ClientGroup) // 注册商户路由
+			// admin.InitMiniRouter(ClientGroup)               // 注册小程序路由
+			// admin.InitBrandRouter(ClientGroup)              // 注册品牌路由
+			// admin.InitBrandCategoryRouter(ClientGroup)      // 注册品牌分类路由
+			// admin.InitConfigCategoryRouter(ClientGroup)     // 注册系统配置分类路由
+			// admin.InitConfigRouter(ClientGroup)             // 注册系统配置路由
+			// admin.InitConfigValueRouter(ClientGroup)        // 注册系统配置值路由
+			client.InitMenuRouter(ClientGroup) // 注册menu路由
+			// admin.InitEmailRouter(ClientGroup)              // 邮件相关路由
+			// admin.InitSystemRouter(ClientGroup)             // system相关路由
+			// admin.InitCasbinRouter(ClientGroup)             // 权限相关路由
+			// admin.InitAuthorityRouter(ClientGroup)          // 注册角色路由
+			// admin.InitSysOperationRecordRouter(ClientGroup) // 操作记录
+			client.InitMediaRouter(ClientGroup)        // 媒体库路由
+			client.InitCategoryRouter(ClientGroup)     // 商品分类路由
+			client.InitAttrTemplateRouter(ClientGroup) // 规格模板路由
+			client.InitProductRouter(ClientGroup)      // 商品路由
 		}
 
 		GeneralGroup := V1Group.Group("/general", middleware.IsGeneral())
 		{
-			router.InitAddressRouter(GeneralGroup) //我的地址管理
-			router.InitReceiptRouter(GeneralGroup) //我的发票管理
+			general.InitAddressRouter(GeneralGroup) //我的地址管理
+			general.InitReceiptRouter(GeneralGroup) //我的发票管理
 		}
 	}
 }
