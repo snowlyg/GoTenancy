@@ -5,22 +5,24 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
 // GetConfigMapByCate
-func GetConfigMapByCate(cate string, token []byte) (Form, error) {
+func GetConfigMapByCate(cate string, ctx *gin.Context) (Form, error) {
 	form := Form{
 		//TODO: 添加 /sys/ 前缀，兼容前端 form-create/element-ui 组件
 		Action:  "/sys/admin/configValue/saveConfigValue/" + cate,
 		Method:  "POST",
 		Headers: nil,
 	}
-	configs, err := GetConfigByCateKey(cate)
+	configs, err := GetConfigByCateKey(cate, multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
@@ -32,7 +34,7 @@ func GetConfigMapByCate(cate string, token []byte) (Form, error) {
 			Info:  configs[i].Info,
 			Value: configs[i].Value,
 		}
-		rule.TransData(configs[i].ConfigRule, token)
+		rule.TransData(configs[i].ConfigRule, multi.GetVerifiedToken(ctx))
 		form.Rule = append(form.Rule, rule)
 		if i == 0 {
 			form.Title = GetConfigTypeName(configs[i].ConfigType)
@@ -79,13 +81,30 @@ func CreateConfig(m model.SysConfig) (model.SysConfig, error) {
 }
 
 // GetConfigByCateKey
-func GetConfigByCateKey(config_key string) ([]response.SysConfig, error) {
+func GetConfigByCateKey(config_key string, tenancyId uint) ([]response.SysConfig, error) {
 	var configs []response.SysConfig
 	err := g.TENANCY_DB.
-		Select("sys_configs.*,sys_config_values.value").
+		Select("sys_configs.*").
 		Joins("left join sys_config_categories on sys_configs.sys_config_category_id = sys_config_categories.id").
-		Joins("left join sys_config_values on sys_configs.config_key = sys_config_values.config_key").
-		Where("sys_config_categories.key = ?", config_key).Find(&configs).Error
+		Where("sys_config_categories.key = ?", config_key).
+		Find(&configs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var values []model.SysConfigValue
+	err = g.TENANCY_DB.Where("sys_tenancy_id = ?", tenancyId).Find(&values).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for _, config := range configs {
+		for _, value := range values {
+			if config.ConfigKey == value.ConfigKey {
+				config.Value = value.Value
+			}
+		}
+	}
 
 	return configs, err
 }

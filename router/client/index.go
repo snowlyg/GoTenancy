@@ -15,6 +15,14 @@ func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 		AttrTemplateRouter.DELETE("/deleteAttrTemplate", v1.DeleteAttrTemplate)
 	}
 }
+
+func InitConfigRouter(Router *gin.RouterGroup) {
+	ConfigRouter := Router.Group("/config")
+	{
+		ConfigRouter.GET("/getConfigMap/:category", v1.GetConfigMap)
+	}
+}
+
 func InitCategoryRouter(Router *gin.RouterGroup) {
 	CategoryRouter := Router.Group("/category")
 	{

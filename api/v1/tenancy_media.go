@@ -16,7 +16,7 @@ func GetUpdateMediaMap(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if form, err := service.GetMediaMap(req.Id); err != nil {
+	if form, err := service.GetMediaMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {

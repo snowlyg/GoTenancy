@@ -61,7 +61,7 @@ func TestMediaProcess(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("修改成功")
 
-	// setUserAuthority
+	// deleteFile
 	obj = auth.DELETE("v1/admin/media/deleteFile").
 		WithJSON(map[string]interface{}{"ids": []float64{mediaId}}).
 		Expect().Status(http.StatusOK).JSON().Object()

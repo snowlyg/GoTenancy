@@ -74,21 +74,21 @@ func Routers(app *gin.Engine) {
 		// 商户和员工
 		ClientGroup := V1Group.Group("/client", middleware.IsTenancy())
 		{
-			// admin.InitApiRouter(ClientGroup)                // 注册功能api路由
-			// admin.InitUserRouter(ClientGroup)               // 注册用户路由
+			// client.InitApiRouter(ClientGroup)                // 注册功能api路由
+			// client.InitUserRouter(ClientGroup)               // 注册用户路由
 			client.InitTenancyRouter(ClientGroup) // 注册商户路由
-			// admin.InitMiniRouter(ClientGroup)               // 注册小程序路由
-			// admin.InitBrandRouter(ClientGroup)              // 注册品牌路由
-			// admin.InitBrandCategoryRouter(ClientGroup)      // 注册品牌分类路由
-			// admin.InitConfigCategoryRouter(ClientGroup)     // 注册系统配置分类路由
-			// admin.InitConfigRouter(ClientGroup)             // 注册系统配置路由
-			// admin.InitConfigValueRouter(ClientGroup)        // 注册系统配置值路由
+			// client.InitMiniRouter(ClientGroup)               // 注册小程序路由
+			// client.InitBrandRouter(ClientGroup)              // 注册品牌路由
+			// client.InitBrandCategoryRouter(ClientGroup)      // 注册品牌分类路由
+			// client.InitConfigCategoryRouter(ClientGroup)     // 注册系统配置分类路由
+			client.InitConfigRouter(ClientGroup) // 注册系统配置路由
+			// client.InitConfigValueRouter(ClientGroup)        // 注册系统配置值路由
 			client.InitMenuRouter(ClientGroup) // 注册menu路由
-			// admin.InitEmailRouter(ClientGroup)              // 邮件相关路由
-			// admin.InitSystemRouter(ClientGroup)             // system相关路由
-			// admin.InitCasbinRouter(ClientGroup)             // 权限相关路由
-			// admin.InitAuthorityRouter(ClientGroup)          // 注册角色路由
-			// admin.InitSysOperationRecordRouter(ClientGroup) // 操作记录
+			// client.InitEmailRouter(ClientGroup)              // 邮件相关路由
+			// client.InitSystemRouter(ClientGroup)             // system相关路由
+			// client.InitCasbinRouter(ClientGroup)             // 权限相关路由
+			// client.InitAuthorityRouter(ClientGroup)          // 注册角色路由
+			// client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 			client.InitMediaRouter(ClientGroup)        // 媒体库路由
 			client.InitCategoryRouter(ClientGroup)     // 商品分类路由
 			client.InitAttrTemplateRouter(ClientGroup) // 规格模板路由

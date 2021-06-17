@@ -91,6 +91,7 @@ var carbines = []gormadapter.CasbinRule{
 
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configValue/saveConfigValue/:category", V2: "POST"},
 
+	// 配置
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getConfigMap/:category", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getCreateConfigMap", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/config/getUpdateConfigMap/:id", V2: "GET"},
@@ -172,6 +173,8 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
 
+	// 配置
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/config/getConfigMap/:category", V2: "GET"},
 	//菜单
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/menu/getMenu", V2: "GET"},
 	// 商户
@@ -179,7 +182,7 @@ var carbines = []gormadapter.CasbinRule{
 	// 媒体库
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/getUpdateMediaMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/upload", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/aclientdmin/media/getFileList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/getFileList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/updateMediaName/:id", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/media/deleteFile", V2: "DELETE"},
 
