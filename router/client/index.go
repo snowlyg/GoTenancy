@@ -67,7 +67,9 @@ func InitProductRouter(Router *gin.RouterGroup) {
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
-		TenancyRouter.GET("/getTenancyInfo", v1.GetTenancyInfo) // 登录商户信息
+		TenancyRouter.GET("/getTenancyInfo", v1.GetTenancyInfo)           // 登录商户信息
+		TenancyRouter.GET("/getUpdateTenancyMap", v1.GetUpdateTenancyMap) // 获取商户编辑表单
+		TenancyRouter.PUT("/updateTenancy/:id", v1.UpdateClientTenancy)   // 获取商户编辑表单
 	}
 }
 

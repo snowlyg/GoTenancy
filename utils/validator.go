@@ -13,7 +13,7 @@ func RegisterValidation() {
 }
 
 var ValidateDevRequired validator.Func = func(fl validator.FieldLevel) bool {
-	if g.TENANCY_CONFIG.System.Env == "dev" {
+	if g.TENANCY_CONFIG.System.Env != "pro" {
 		return true
 	}
 	return fl.Field().String() != ""

@@ -52,7 +52,7 @@ func baseTester(t *testing.T) *httpexpect.Expect {
 func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("v1/public/admin/login").
-		WithJSON(map[string]interface{}{"username": "admin", "password": "123456"}).
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "captcha": "", "captchaId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -79,7 +79,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("v1/public/client/login").
-		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456"}).
+		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "captcha": "", "captchaId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -108,7 +108,7 @@ func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 func generalWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
 	obj := e.POST("v1/public/login").
-		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456"}).
+		WithJSON(map[string]interface{}{"username": "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", "password": "123456", "captcha": "", "captchaId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
 
 	obj.Keys().ContainsOnly("status", "data", "message")

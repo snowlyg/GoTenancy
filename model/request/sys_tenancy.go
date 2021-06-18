@@ -11,3 +11,11 @@ type TenancyPageInfo struct {
 	Status  string `json:"status"`
 	Keyword string `json:"keyword"`
 }
+
+type UpdateClientTenancy struct {
+	Avatar string `json:"avatar"`
+	Banner string `json:"banner"`
+	Info   string `json:"info"`
+	State  int    `json:"state"`
+	Tele   string `json:"tele"`
+}

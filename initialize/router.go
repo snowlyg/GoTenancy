@@ -16,12 +16,15 @@ import (
 // 初始化总路由
 
 func App() *gin.Engine {
+	if g.TENANCY_CONFIG.System.Env != "dev" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	App := gin.Default()
+
 	// 注册已定义验证方法
 	utils.RegisterValidation()
 	// 注册路由
 	Routers(App)
-	g.TENANCY_LOG.Info("router register success")
 	return App
 }
 

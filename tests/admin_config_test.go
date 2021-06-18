@@ -38,7 +38,16 @@ func TestConfigList(t *testing.T) {
 	first.Value("userType").Number().Equal(2)
 	first.Value("status").Number().Equal(1)
 	first.Value("sysConfigCategoryId").Number().Equal(2)
+}
 
+func TestGetConfigMap(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("v1/admin/config/getConfigMap/alipay").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
 }
 
 func TestConfigProcess(t *testing.T) {

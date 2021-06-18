@@ -1,7 +1,9 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -99,6 +101,15 @@ func UpdateTenancy(tenancy model.SysTenancy, id uint) (model.SysTenancy, error) 
 	return tenancy, err
 }
 
+// UpdateClientTenancy
+func UpdateClientTenancy(req request.UpdateClientTenancy, id uint) error {
+
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).
+		Where("id = ?", id).Omit("uuid").
+		Updates(map[string]interface{}{"avatar": req.Avatar, "banner": req.Banner, "info": req.Info, "tele": req.Tele, "state": req.State}).Error
+	return err
+}
+
 // DeleteTenancy
 func DeleteTenancy(id uint) error {
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.SysTenancy{}).Error
@@ -154,4 +165,22 @@ func GetTenancyInfo(ctx *gin.Context) (response.TenancyInfo, error) {
 	var info response.TenancyInfo
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Find(&info).Error
 	return info, err
+}
+
+// GetUpdateTenancyMap
+func GetUpdateTenancyMap(ctx *gin.Context) (Form, error) {
+	var form Form
+	var formStr string
+	id := multi.GetTenancyId(ctx)
+	tenancy, err := GetTenancyByID(id)
+	if err != nil {
+		return form, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"info","value":"%s","title":"店铺简介","props":{"type":"textarea","placeholder":"请输入店铺简介"},"validate":[{"message":"请输入店铺简介","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"tele","value":"%s","title":"服务电话","props":{"type":"text","placeholder":"请输入服务电话"},"validate":[{"message":"请输入服务电话","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"banner","value":"%s","title":"店铺Banner(710*200px)","props":{"type":"image","maxLength":1,"title":"请选择店铺Banner(710*200px)","src":"\/merchant\/setting\/uploadPicture?field=banner&type=1","modal":{"modal":false},"width":"896px","height":"480px","footer":false}},{"type":"frame","field":"avatar","value":"%s","title":"店铺头像(120*120px)","props":{"type":"image","maxLength":1,"title":"请选择店铺头像(120*120px)","src":"\/merchant\/setting\/uploadPicture?field=avatar&type=1","modal":{"modal":false},"width":"896px","height":"480px","footer":false}},{"type":"switch","field":"state","value":%d,"title":"是否开启","col":{"span":12},"props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s/%d","method":"POST","title":"编辑店铺信息","config":{}}`, tenancy.Info, tenancy.Tele, tenancy.Banner, tenancy.Avatar, tenancy.State, "/client/tenancy/updateTenancy", id)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	return form, err
 }
