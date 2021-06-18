@@ -5,6 +5,7 @@ import (
 	v1 "github.com/snowlyg/go-tenancy/api/v1"
 )
 
+// 规格参数
 func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 	AttrTemplateRouter := Router.Group("/attrTemplate")
 	{
@@ -16,6 +17,7 @@ func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 系统配置
 func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")
 	{
@@ -23,6 +25,7 @@ func InitConfigRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 系统配置数值
 func InitConfigValueRouter(Router *gin.RouterGroup) {
 	ConfigValueRouter := Router.Group("/configValue")
 	{
@@ -30,6 +33,7 @@ func InitConfigValueRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 商品分类
 func InitCategoryRouter(Router *gin.RouterGroup) {
 	CategoryRouter := Router.Group("/category")
 	{
@@ -45,6 +49,7 @@ func InitCategoryRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 多媒体
 func InitMediaRouter(Router *gin.RouterGroup) {
 	MediaGroup := Router.Group("/media")
 	{
@@ -56,6 +61,7 @@ func InitMediaRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 商品
 func InitProductRouter(Router *gin.RouterGroup) {
 	ProductRouter := Router.Group("/product")
 	{
@@ -71,6 +77,7 @@ func InitProductRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 商户
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
