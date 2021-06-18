@@ -64,8 +64,11 @@ func FindSysOperationRecord(ctx *gin.Context) {
 // GetSysOperationRecordList 分页获取SysOperationRecord列表
 func GetSysOperationRecordList(ctx *gin.Context) {
 	var pageInfo request.SysOperationRecordSearch
-	_ = ctx.ShouldBindQuery(&pageInfo)
-	if list, total, err := service.GetSysOperationRecordInfoList(pageInfo); err != nil {
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if list, total, err := service.GetSysOperationRecordInfoList(pageInfo, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

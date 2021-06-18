@@ -1,33 +1,32 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "init db",
-            "type": "shell",
-            "command": "go test -v -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
-        },
-        {
-            "label": "test all",
-            "type": "shell",
-            "command": "go test -timeout 60s -run [^TestInitDB$] github.com/snowlyg/go-tenancy/tests"
-        },
-        {
-            "label": "tidy",
-            "type": "shell",
-            "command": "go mod tidy"
-        },
-        {
-            "label": "build",
-            "type": "shell",
-            "command": "go build -o ./tmp/main.exe main.go"
-        },
-        {
-            "label": "git push gitee",
-            "type": "shell",
-            "command": "git push gitee master"
-        }
-
-    ]
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "init db",
+      "type": "shell",
+      "command": "go test -v -run ^TestInitDB$ github.com/snowlyg/go-tenancy/tests"
+    },
+    {
+      "label": "test all",
+      "type": "shell",
+      "command": "go test -timeout 60s -run [^TestInitDB$] github.com/snowlyg/go-tenancy/tests"
+    },
+    {
+      "label": "tidy",
+      "type": "shell",
+      "command": "go mod tidy"
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "go build -o ./tmp/main.exe main.go"
+    },
+    {
+      "label": "git push gitee",
+      "type": "shell",
+      "command": "git push gitee main"
+    }
+  ]
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func InitAttrTemplateRouter(Router *gin.RouterGroup) {
-	AttrTemplateRouter := Router.Group("/attr_template")
+	AttrTemplateRouter := Router.Group("/attrTemplate")
 	{
 		AttrTemplateRouter.POST("/createAttrTemplate", v1.CreateAttrTemplate)
 		AttrTemplateRouter.POST("/getAttrTemplateList", v1.GetAttrTemplateList)
@@ -20,6 +20,13 @@ func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")
 	{
 		ConfigRouter.GET("/getConfigMap/:category", v1.GetConfigMap)
+	}
+}
+
+func InitConfigValueRouter(Router *gin.RouterGroup) {
+	ConfigValueRouter := Router.Group("/configValue")
+	{
+		ConfigValueRouter.POST("/saveConfigValue/:category", v1.SaveConfigValue)
 	}
 }
 
@@ -79,4 +86,12 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 		MenuRouter.GET("/getMenu", v1.GetMenu) // 获取菜单树
 	}
 	return MenuRouter
+}
+
+func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
+	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
+	{
+		SysOperationRecordRouter.POST("/getSysOperationRecordList", v1.GetSysOperationRecordList) // 获取SysOperationRecord列表
+
+	}
 }

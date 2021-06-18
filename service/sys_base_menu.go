@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -10,23 +11,26 @@ import (
 
 // DeleteBaseMenu 删除基础路由
 func DeleteBaseMenu(id uint) error {
-	err := g.TENANCY_DB.Preload("Parameters").Where("parent_id = ?", id).First(&model.SysBaseMenu{}).Error
+	err := g.TENANCY_DB.Where("pid = ?", id).First(&model.SysBaseMenu{}).Error
 	if err != nil {
 		var menu model.SysBaseMenu
-		err := g.TENANCY_DB.Preload("SysAuthoritys").Where("id = ?", id).First(&menu).Delete(&menu).Error
+		err := g.TENANCY_DB.Preload("SysAuthoritys").Where("id = ?", id).First(&menu).Error
 		if err != nil {
-			return err
+			return fmt.Errorf("not found menu %w", err)
 		}
 		if len(menu.SysAuthoritys) > 0 {
-			err = g.TENANCY_DB.Model(&menu).Association("SysAuthoritys").Delete(&menu.SysAuthoritys)
-			if err != nil {
-				return err
+			if err = g.TENANCY_DB.Model(&menu).Association("SysAuthoritys").Delete(&menu.SysAuthoritys); err != nil {
+				return fmt.Errorf("del SysAuthoritys %w", err)
 			}
 		}
+		if err := g.TENANCY_DB.Delete(&menu).Error; err != nil {
+			return fmt.Errorf("del menu %w", err)
+		}
+
 	} else {
 		return errors.New("此菜单存在子菜单不可删除")
 	}
-	return err
+	return nil
 }
 
 // UpdateBaseMenu 更新路由

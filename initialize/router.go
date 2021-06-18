@@ -84,18 +84,18 @@ func Routers(app *gin.Engine) {
 			// client.InitBrandRouter(ClientGroup)              // 注册品牌路由
 			// client.InitBrandCategoryRouter(ClientGroup)      // 注册品牌分类路由
 			// client.InitConfigCategoryRouter(ClientGroup)     // 注册系统配置分类路由
-			client.InitConfigRouter(ClientGroup) // 注册系统配置路由
-			// client.InitConfigValueRouter(ClientGroup)        // 注册系统配置值路由
-			client.InitMenuRouter(ClientGroup) // 注册menu路由
+			client.InitConfigRouter(ClientGroup)      // 注册系统配置路由
+			client.InitConfigValueRouter(ClientGroup) // 注册系统配置值路由
+			client.InitMenuRouter(ClientGroup)        // 注册menu路由
 			// client.InitEmailRouter(ClientGroup)              // 邮件相关路由
 			// client.InitSystemRouter(ClientGroup)             // system相关路由
 			// client.InitCasbinRouter(ClientGroup)             // 权限相关路由
 			// client.InitAuthorityRouter(ClientGroup)          // 注册角色路由
-			// client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
-			client.InitMediaRouter(ClientGroup)        // 媒体库路由
-			client.InitCategoryRouter(ClientGroup)     // 商品分类路由
-			client.InitAttrTemplateRouter(ClientGroup) // 规格模板路由
-			client.InitProductRouter(ClientGroup)      // 商品路由
+			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
+			client.InitMediaRouter(ClientGroup)              // 媒体库路由
+			client.InitCategoryRouter(ClientGroup)           // 商品分类路由
+			client.InitAttrTemplateRouter(ClientGroup)       // 规格模板路由
+			client.InitProductRouter(ClientGroup)            // 商品路由
 		}
 
 		GeneralGroup := V1Group.Group("/general", middleware.IsGeneral())

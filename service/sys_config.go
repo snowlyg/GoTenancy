@@ -17,11 +17,17 @@ import (
 // GetConfigMapByCate
 func GetConfigMapByCate(cate string, ctx *gin.Context) (Form, error) {
 	form := Form{
-		//TODO: 添加 /sys/ 前缀，兼容前端 form-create/element-ui 组件
-		Action:  "/sys/admin/configValue/saveConfigValue/" + cate,
 		Method:  "POST",
 		Headers: nil,
 	}
+
+	//TODO: 添加 /sys/ 前缀，兼容前端 form-create/element-ui 组件
+	if multi.IsTenancy(ctx) {
+		form.Action = "/sys/client/configValue/saveConfigValue/" + cate
+	} else if multi.IsAdmin(ctx) {
+		form.Action = "/sys/admin/configValue/saveConfigValue/" + cate
+	}
+
 	configs, err := GetConfigByCateKey(cate, multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
@@ -98,10 +104,11 @@ func GetConfigByCateKey(config_key string, tenancyId uint) ([]response.SysConfig
 		return nil, err
 	}
 
-	for _, config := range configs {
+	for i := 0; i < len(configs); i++ {
 		for _, value := range values {
-			if config.ConfigKey == value.ConfigKey {
-				config.Value = value.Value
+			if configs[i].ConfigKey == value.ConfigKey {
+				configs[i].Value = value.Value
+				continue
 			}
 		}
 	}

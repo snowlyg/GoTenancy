@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +17,6 @@ import (
 func OperationRecord() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var body []byte
-		var userId uint
 		if ctx.Request.Method != http.MethodGet {
 			var err error
 			body, err = ioutil.ReadAll(ctx.Request.Body)
@@ -29,28 +27,16 @@ func OperationRecord() gin.HandlerFunc {
 				ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 			}
 		}
-		waitUse := multi.Get(ctx)
-		if waitUse != nil {
-			id, err := strconv.Atoi(waitUse.ID)
-			if err != nil {
-				userId = 0
-			}
-			userId = uint(id)
-		} else {
-			id, err := strconv.Atoi(ctx.GetHeader("X-USER-ID"))
-			if err != nil {
-				userId = 0
-			}
-			userId = uint(id)
-		}
 
 		record := model.SysOperationRecord{
-			Ip:     ctx.ClientIP(),
-			Method: ctx.Request.Method,
-			Path:   ctx.Request.URL.Path,
-			Agent:  ctx.Request.UserAgent(),
-			Body:   string(body),
-			UserID: userId,
+			BaseOperationRecord: model.BaseOperationRecord{
+				Ip:     ctx.ClientIP(),
+				Method: ctx.Request.Method,
+				Path:   ctx.Request.URL.Path,
+				Agent:  ctx.Request.UserAgent(),
+				Body:   string(body),
+				UserID: multi.GetUserId(ctx),
+			},
 		}
 
 		writer := responseBodyWriter{

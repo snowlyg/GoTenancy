@@ -143,7 +143,7 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	MenuRouter := Router.Group("/menu")
 	{
 		MenuRouter.GET("/getMenu", v1.GetMenu)                    // 获取菜单树
-		MenuRouter.POST("/getMenuList", v1.GetMenuList)           // 分页获取基础menu列表
+		MenuRouter.GET("/getMenuList", v1.GetMenuList)            // 分页获取基础menu列表
 		MenuRouter.POST("/addBaseMenu", v1.AddBaseMenu)           // 新增菜单
 		MenuRouter.POST("/getBaseMenuTree", v1.GetBaseMenuTree)   // 获取用户动态路由
 		MenuRouter.POST("/addMenuAuthority", v1.AddMenuAuthority) // 增加menu和角色关联关系
@@ -151,7 +151,19 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 		MenuRouter.DELETE("/deleteBaseMenu", v1.DeleteBaseMenu)   // 删除菜单
 		MenuRouter.POST("/updateBaseMenu", v1.UpdateBaseMenu)     // 更新菜单
 		MenuRouter.POST("/getBaseMenuById", v1.GetBaseMenuById)   // 根据id获取菜单
+		ClientMenuRouter := MenuRouter.Group("/client")
+		{
+			ClientMenuRouter.GET("/getClientMenuList", v1.GetClientMenuList) // 分页获取基础menu列表
+			ClientMenuRouter.POST("/addBaseMenu", v1.AddBaseMenu)            // 新增菜单
+			ClientMenuRouter.POST("/getBaseMenuTree", v1.GetBaseMenuTree)    // 获取用户动态路由
+			ClientMenuRouter.POST("/addMenuAuthority", v1.AddMenuAuthority)  // 增加menu和角色关联关系
+			ClientMenuRouter.POST("/getMenuAuthority", v1.GetMenuAuthority)  // 获取指定角色menu
+			ClientMenuRouter.DELETE("/deleteBaseMenu", v1.DeleteBaseMenu)    // 删除菜单
+			ClientMenuRouter.POST("/updateBaseMenu", v1.UpdateBaseMenu)      // 更新菜单
+			ClientMenuRouter.POST("/getBaseMenuById", v1.GetBaseMenuById)    // 根据id获取菜单
+		}
 	}
+
 	return MenuRouter
 }
 
@@ -169,11 +181,11 @@ func InitMiniRouter(Router *gin.RouterGroup) {
 func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
+		SysOperationRecordRouter.POST("/getSysOperationRecordList", v1.GetSysOperationRecordList)           // 获取SysOperationRecord列表
 		SysOperationRecordRouter.POST("/createSysOperationRecord", v1.CreateSysOperationRecord)             // 新建SysOperationRecord
 		SysOperationRecordRouter.DELETE("/deleteSysOperationRecord", v1.DeleteSysOperationRecord)           // 删除SysOperationRecord
 		SysOperationRecordRouter.DELETE("/deleteSysOperationRecordByIds", v1.DeleteSysOperationRecordByIds) // 批量删除SysOperationRecord
 		SysOperationRecordRouter.GET("/findSysOperationRecord", v1.FindSysOperationRecord)                  // 根据ID获取SysOperationRecord
-		SysOperationRecordRouter.GET("/getSysOperationRecordList", v1.GetSysOperationRecordList)            // 获取SysOperationRecord列表
 
 	}
 }

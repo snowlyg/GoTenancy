@@ -29,11 +29,13 @@ func ErrorToEmail() gin.HandlerFunc {
 		}
 		body, _ := ioutil.ReadAll(ctx.Request.Body)
 		record := model.SysOperationRecord{
-			Ip:     ctx.ClientIP(),
-			Method: ctx.Request.Method,
-			Path:   ctx.Request.URL.Path,
-			Agent:  ctx.Request.UserAgent(),
-			Body:   string(body),
+			BaseOperationRecord: model.BaseOperationRecord{
+				Ip:     ctx.ClientIP(),
+				Method: ctx.Request.Method,
+				Path:   ctx.Request.URL.Path,
+				Agent:  ctx.Request.UserAgent(),
+				Body:   string(body),
+			},
 		}
 		now := time.Now()
 

@@ -23,7 +23,7 @@ func SaveConfigValue(ctx *gin.Context) {
 		return
 	}
 
-	if err := service.SaveConfigValue(config, req.Cate); err != nil {
+	if err := service.SaveConfigValue(config, req.Cate, ctx); err != nil {
 		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {

@@ -123,20 +123,30 @@ func GetBaseMenuById(ctx *gin.Context) {
 
 // GetMenuList 分页获取基础menu列表
 func GetMenuList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
-	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if menuList, err := service.GetInfoList(); err != nil {
+	if menuList, err := service.GetInfoList(1); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     menuList,
 			Total:    0,
-			Page:     pageInfo.Page,
-			PageSize: pageInfo.PageSize,
+			Page:     1,
+			PageSize: 10,
+		}, "获取成功", ctx)
+	}
+}
+
+// GetClientMenuList 分页获取基础menu列表
+func GetClientMenuList(ctx *gin.Context) {
+	if menuList, err := service.GetInfoList(2); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     menuList,
+			Total:    0,
+			Page:     1,
+			PageSize: 10,
 		}, "获取成功", ctx)
 	}
 }

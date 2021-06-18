@@ -34,9 +34,9 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/authority/setDataAuthority", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/authority/updateAuthority", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/authority/copyAuthority", V2: "POST"},
-
+	// 菜单
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/getMenu", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/getMenuList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/getMenuList", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/addBaseMenu", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/getBaseMenuTree", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/addMenuAuthority", V2: "POST"},
@@ -44,6 +44,8 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/deleteBaseMenu", V2: "DELETE"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/updateBaseMenu", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/getBaseMenuById", V2: "POST"},
+
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/menu/client/getClientMenuList", V2: "GET"},
 
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/changePassword", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/getAdminList", V2: "POST"},
@@ -64,7 +66,7 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/deleteSysOperationRecord", V2: "DELETE"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/updateSysOperationRecord", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/findSysOperationRecord", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/getSysOperationRecordList", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/getSysOperationRecordList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/sysOperationRecord/deleteSysOperationRecordByIds", V2: "DELETE"},
 
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/user/setUserInfo/:user_id", V2: "PUT"},
@@ -151,13 +153,6 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/updateCategory/:id", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/deleteCategory/:id", V2: "DELETE"},
 
-	//规格参数
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateList", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/createAttrTemplate", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/getAttrTemplateById", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/updateAttrTemplate", V2: "PUT"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/attr_template/deleteAttrTemplate", V2: "DELETE"},
-
 	//商品
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getEditProductFictiMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/setProductFicti/:id", V2: "PUT"},
@@ -172,9 +167,10 @@ var carbines = []gormadapter.CasbinRule{
 	// TODO:商户用户权限
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
-
 	// 配置
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/config/getConfigMap/:category", V2: "GET"},
+	// 配置值保存
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/configValue/saveConfigValue/:category", V2: "POST"},
 	//菜单
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/menu/getMenu", V2: "GET"},
 	// 商户
@@ -200,11 +196,11 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/category/deleteCategory/:id", V2: "DELETE"},
 
 	//规格参数
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/getAttrTemplateList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/createAttrTemplate", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/getAttrTemplateById", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/updateAttrTemplate", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attr_template/deleteAttrTemplate", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attrTemplate/getAttrTemplateList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attrTemplate/createAttrTemplate", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attrTemplate/getAttrTemplateById", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attrTemplate/updateAttrTemplate", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/attrTemplate/deleteAttrTemplate", V2: "DELETE"},
 
 	//商品
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getEditProductFictiMap/:id", V2: "GET"},
@@ -216,8 +212,9 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/getProductById/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/updateProduct/:id", V2: "PUT"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/product/deleteProduct/:id", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/client/sysOperationRecord/getSysOperationRecordList", V2: "POST"},
 
-	// 普通用户权限
+	// TODO:普通用户权限
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: GeneralAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
 

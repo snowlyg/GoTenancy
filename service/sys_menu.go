@@ -54,9 +54,9 @@ func getChildrenList(menu *model.SysMenu, treeMap map[uint][]model.SysMenu) erro
 }
 
 // GetInfoList 获取路由分页
-func GetInfoList() ([]model.SysBaseMenu, error) {
+func GetInfoList(userType int) ([]model.SysBaseMenu, error) {
 	var menuList []model.SysBaseMenu
-	treeMap, err := getBaseMenuTreeMap()
+	treeMap, err := getBaseMenuTreeMap(userType)
 	menuList = treeMap[0]
 	for i := 0; i < len(menuList); i++ {
 		err = getBaseChildrenList(&menuList[i], treeMap)
@@ -75,19 +75,25 @@ func getBaseChildrenList(menu *model.SysBaseMenu, treeMap map[uint][]model.SysBa
 
 // AddBaseMenu 添加基础路由
 func AddBaseMenu(menu model.SysBaseMenu) (model.SysBaseMenu, error) {
-	err := g.TENANCY_DB.Where("menu_name = ?", menu.MenuName).First(&model.SysBaseMenu{}).Error
+	err := g.TENANCY_DB.Where("route = ?", menu.Route).First(&model.SysBaseMenu{}).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return model.SysBaseMenu{}, errors.New("存在重复name，请修改name")
+		return model.SysBaseMenu{}, errors.New("存在重复route，请修改route")
 	}
 	err = g.TENANCY_DB.Create(&menu).Error
 	return menu, err
 }
 
 // getBaseMenuTreeMap 获取路由总树map
-func getBaseMenuTreeMap() (map[uint][]model.SysBaseMenu, error) {
+func getBaseMenuTreeMap(userType int) (map[uint][]model.SysBaseMenu, error) {
 	var allMenus []model.SysBaseMenu
 	treeMap := make(map[uint][]model.SysBaseMenu)
-	err := g.TENANCY_DB.Where("is_tenancy = ?", g.StatusFalse).Where("is_menu = ?", g.StatusTrue).Order("sort desc").Find(&allMenus).Error
+	db := g.TENANCY_DB.Where("is_menu = ?", g.StatusTrue)
+	if userType == multi.AdminAuthority {
+		db = db.Where("is_tenancy = ? ", g.StatusFalse)
+	} else if userType == multi.TenancyAuthority {
+		db = db.Where("is_tenancy = ? ", g.StatusTrue)
+	}
+	err := db.Order("sort desc").Find(&allMenus).Error
 	for _, v := range allMenus {
 		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}
@@ -96,7 +102,7 @@ func getBaseMenuTreeMap() (map[uint][]model.SysBaseMenu, error) {
 
 // GetBaseMenuTree 获取基础路由树
 func GetBaseMenuTree() ([]model.SysBaseMenu, error) {
-	treeMap, err := getBaseMenuTreeMap()
+	treeMap, err := getBaseMenuTreeMap(1)
 	if err != nil {
 		return nil, err
 	}

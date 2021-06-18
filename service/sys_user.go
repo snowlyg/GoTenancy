@@ -248,20 +248,22 @@ func ChangePassword(u *model.SysUser, newPassword string, authorityType int) err
 func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, error) {
 	var userList []response.SysAdminUser
 	var adminAuthorityIds []int
+	var total int64
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.AdminAuthority).Select("authority_id").Find(&adminAuthorityIds).Error
 	if err != nil {
 		return userList, 0, err
 	}
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", adminAuthorityIds)
-
-	var total int64
-	err = db.Count(&total).Error
-	if err != nil {
-		return userList, total, err
+	if limit > 0 {
+		err = db.Count(&total).Error
+		if err != nil {
+			return userList, total, err
+		}
+		db = db.Limit(limit).Offset(offset)
 	}
-	err = db.Limit(limit).Offset(offset).
+	err = db.
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
 		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
@@ -273,20 +275,22 @@ func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, er
 func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64, error) {
 	var userList []response.SysTenancyUser
 	var tenancyAuthorityIds []int
+	var total int64
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.TenancyAuthority).Select("authority_id").Find(&tenancyAuthorityIds).Error
 	if err != nil {
 		return userList, 0, err
 	}
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", tenancyAuthorityIds)
-
-	var total int64
-	err = db.Count(&total).Error
-	if err != nil {
-		return userList, total, err
+	if limit > 0 {
+		err = db.Count(&total).Error
+		if err != nil {
+			return userList, total, err
+		}
+		db = db.Limit(limit).Offset(offset)
 	}
-	err = db.Limit(limit).Offset(offset).
+	err = db.
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
 		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
@@ -299,20 +303,22 @@ func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64
 func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64, error) {
 	var userList []response.SysGeneralUser
 	var generalAuthorityIds []int
+	var total int64
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
 	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.GeneralAuthority).Select("authority_id").Find(&generalAuthorityIds).Error
 	if err != nil {
 		return userList, 0, err
 	}
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", generalAuthorityIds)
-
-	var total int64
-	err = db.Count(&total).Error
-	if err != nil {
-		return userList, total, err
+	if limit > 0 {
+		err = db.Count(&total).Error
+		if err != nil {
+			return userList, total, err
+		}
+		db = db.Limit(limit).Offset(offset)
 	}
-	err = db.Limit(limit).Offset(offset).
+	err = db.
 		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.avatar_url,sys_general_infos.sex, sys_general_infos.subscribe,sys_general_infos.open_id,sys_general_infos.union_id,sys_general_infos.country,sys_general_infos.province,sys_general_infos.city,sys_general_infos.id_card,sys_general_infos.is_auth,sys_general_infos.real_name,sys_general_infos.birthday,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").

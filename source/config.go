@@ -34,7 +34,7 @@ var configs = []model.SysConfig{
 	// 195	0	二级分销比例	extension_two_rate	input		0	设置分销员二级分销比例, 最大为1(1=100%)	0	0	1	2020-05-08 15:39:03
 	// 196	0	开启分销	extension_status	radio	1:开启
 	// 0:关闭	1	是否开启分销,关闭后不进行返佣	1	0	1	2020-05-08 15:41:04
-	// 197	5	警戒库存	mer_store_stock	input		0	设置商品的警戒库存	0	1	1	2020-05-18 11:23:43
+	{SysConfigCategoryID: 5, ConfigName: "警戒库存", ConfigKey: "mer_store_stock", ConfigType: "input", ConfigRule: "", Required: 0, Info: "设置商品的警戒库存", Sort: 0, UserType: 1, Status: 1},
 	// 198	0	短信平台账号	sms_account	input		0	设置短信平台账号	0	0	0	2020-05-18 15:33:58
 	// 199	0	短信平台密码	sms_token	input		0	设置短信平台密码	0	0	0	2020-05-18 15:34:22
 	{SysConfigCategoryID: 6, ConfigName: "Appid", ConfigKey: "pay_weixin_appid", ConfigType: "input", ConfigRule: "", Required: 2, Info: "微信公众号身份的唯一标识。审核通过后，在微信发送的邮件中查看。", Sort: 0, UserType: 2, Status: 1},
@@ -46,14 +46,14 @@ var configs = []model.SysConfig{
 	{SysConfigCategoryID: 6, ConfigName: "开启", ConfigKey: "pay_weixin_open", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否启用微信支付", Sort: 0, UserType: 2, Status: 1},
 	// 215	12	充值注意事项	recharge_attention	textarea		0	充值注意事项	0	0	1	2020-06-03 09:49:01
 	{SysConfigCategoryID: 1, ConfigName: "订单自动关闭时间", ConfigKey: "auto_close_order_timer", ConfigType: "number", ConfigRule: "", Required: 2, Info: "订单自动关闭时间(单位:分钟)", Sort: 0, UserType: 2, Status: 1},
-	// 217	5	默认退货收货地址	mer_refund_address	input		0	设置默认退货收货地址	0	1	1	2020-06-12 16:28:41
-	// 218	5	默认退货收货人	mer_refund_user	input		0	设置默认退货收货人	0	1	1	2020-06-12 16:29:15
+	{SysConfigCategoryID: 5, ConfigName: "默认退货收货地址", ConfigKey: "mer_refund_address", ConfigType: "input", ConfigRule: "", Required: 2, Info: "设置默认退货收货地址", Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "默认退货收货人", ConfigKey: "mer_refund_user", ConfigType: "input", ConfigRule: "", Required: 2, Info: "设置默认退货收货人", Sort: 0, UserType: 1, Status: 1},
 	{SysConfigCategoryID: 1, ConfigName: "退款理由", ConfigKey: "refund_message", ConfigType: "textarea", ConfigRule: "", Required: 2, Info: "设置退款理由", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 1, ConfigName: "商户自动处理退款订单期限（天）", ConfigKey: "mer_refund_order_agree", ConfigType: "number", ConfigRule: "", Required: 1, Info: "申请退款的订单超过期限，将自动退款处理。", Sort: 0, UserType: 2, Status: 1},
-	// 221	5	银行卡开户行	bank	input		1		0	1	1	2020-06-15 10:56:52
-	// 222	5	银行卡卡号	bank_number	input		1		0	1	1	2020-06-15 10:57:20
-	// 223	5	银行卡持卡人姓名	bank_name	input		1		0	1	1	2020-06-15 10:57:50
-	// 224	5	银行卡开户行地址	bank_address	input		1		0	1	1	2020-06-15 10:58:16
+	{SysConfigCategoryID: 5, ConfigName: "银行卡开户行", ConfigKey: "bank", ConfigType: "input", ConfigRule: "", Required: 1, Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "银行卡卡号", ConfigKey: "bank_number", ConfigType: "input", ConfigRule: "", Required: 1, Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "银行卡持卡人姓名", ConfigKey: "bank_name", ConfigType: "input", ConfigRule: "", Required: 1, Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "银行卡开户行地址", ConfigKey: "bank_address", ConfigType: "input", ConfigRule: "", Required: 1, Sort: 0, UserType: 1, Status: 1},
 	// 225	13	佣金最低提现金额	user_extract_min	number	佣金达到最低额才可以提现	1		0	0	1	2020-06-16 14:53:52
 	// 226	13	佣金冻结时间	lock_brokerage_timer	number		0	设置佣金冻结时间(天)	0	0	1	2020-06-17 14:36:16
 	{SysConfigCategoryID: 1, ConfigName: "快递查询密钥", ConfigKey: "express_app_code", ConfigType: "input", ConfigRule: "", Required: 2, Info: "阿里云快递查询接口密钥购买地址：https://market.aliyun.com/products/56928004/cmapi021863.html", Sort: 0, UserType: 2, Status: 1},

@@ -39,8 +39,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/authority/updateAuthority", Description: "更新角色信息", ApiGroup: "authority", Method: "PUT"},
 	{Path: "/v1/admin/authority/copyAuthority", Description: "拷贝角色", ApiGroup: "authority", Method: "POST"},
 
-	{Path: "/v1/admin/menu/getMenu", Description: "获取菜单树", ApiGroup: "menu", Method: "POST"},
-	{Path: "/v1/admin/menu/getMenuList", Description: "分页获取基础menu列表", ApiGroup: "menu", Method: "POST"},
+	{Path: "/v1/admin/menu/getMenu", Description: "获取菜单树", ApiGroup: "menu", Method: "GET"},
+	{Path: "/v1/admin/menu/getMenuList", Description: "分页获取基础menu列表", ApiGroup: "menu", Method: "GET"},
 	{Path: "/v1/admin/menu/addBaseMenu", Description: "新增菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getBaseMenuTree", Description: "获取用户动态路由", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/addMenuAuthority", Description: "增加menu和角色关联关系", ApiGroup: "menu", Method: "POST"},
@@ -48,6 +48,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/menu/deleteBaseMenu", Description: "删除菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/updateBaseMenu", Description: "更新菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getBaseMenuById", Description: "根据id获取菜单", ApiGroup: "menu", Method: "POST"},
+
+	{Path: "/v1/admin/menu/client/getClientMenuList", Description: "获取商户菜单", ApiGroup: "menu", Method: "GET"},
 
 	{Path: "/v1/admin/media/getUpdateMediaMap/:id", Description: "获取媒体文件表单", ApiGroup: "media", Method: "GET"},
 	{Path: "/v1/admin/media/upload", Description: "上传媒体文件", ApiGroup: "media", Method: "POST"},
@@ -63,7 +65,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/system/setSystemConfig", Description: "设置配置文件内容", ApiGroup: "system", Method: "POST"},
 	{Path: "/v1/admin/system/getServerInfo", Description: "获取服务器信息", ApiGroup: "system", Method: "POST"},
 
-	{Path: "/v1/admin/configValue/saveConfigValue/:category", Description: "获取配置表单", ApiGroup: "configValue", Method: "POST"},
+	{Path: "/v1/admin/configValue/saveConfigValue/:category", Description: "保持配置表单", ApiGroup: "configValue", Method: "POST"},
+
 	// 配置
 	{Path: "/v1/admin/config/getConfigMap/:category", Description: "获取配置表单", ApiGroup: "config", Method: "GET"},
 	{Path: "/v1/admin/config/getCreateConfigMap", Description: "获取配置创建表单", ApiGroup: "config", Method: "GET"},
@@ -87,8 +90,6 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "删除配置分类", ApiGroup: "configCategory", Method: "DELETE"},
 
 	// 商户
-	{Path: "/v1/admin/tenancy/getTenancyInfo", Description: "获取登录Tenancy信息", ApiGroup: "tenancy", Method: "GET"},
-
 	{Path: "/v1/admin/tenancy/getTenancies/code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/getTenancyCount", Description: "获取Tenancy对应状态数量", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/getTenancyList", Description: "获取商户列表", ApiGroup: "tenancy", Method: "POST"},
@@ -156,8 +157,56 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/sysOperationRecord/createSysOperationRecord", Description: "新增操作记录", ApiGroup: "sysOperationRecord", Method: "POST"},
 	{Path: "/v1/admin/sysOperationRecord/deleteSysOperationRecord", Description: "删除操作记录", ApiGroup: "sysOperationRecord", Method: "DELETE"},
 	{Path: "/v1/admin/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录", ApiGroup: "sysOperationRecord", Method: "GET"},
-	{Path: "/v1/admin/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecord", Method: "GET"},
+	{Path: "/v1/admin/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecord", Method: "POST"},
 	{Path: "/v1/admin/sysOperationRecord/deleteSysOperationRecordByIds", Description: "批量删除操作历史", ApiGroup: "sysOperationRecord", Method: "DELETE"},
+
+	// TODO:商户用户权限
+	{Path: "/v1/client/config/getConfigMap/:category", Description: "获取配置表单", ApiGroup: "configClient", Method: "GET"},
+	// 配置值保存
+	{Path: "/v1/client/configValue/saveConfigValue/:category", Description: "保持配置表单", ApiGroup: "configValueClient", Method: "POST"},
+	//菜单
+	{Path: "/v1/client/menu/getMenu", Description: "获取菜单树", ApiGroup: "menuClient", Method: "GET"},
+	// 商户
+	{Path: "/v1/client/tenancy/getTenancyInfo", Description: "获取登录商户信息", ApiGroup: "tenancyClient", Method: "GET"},
+	{Path: "/v1/client/tenancy/getUpdateTenancyMap", Description: "获取登录商户信息表单", ApiGroup: "tenancyClient", Method: "GET"},
+	{Path: "/v1/client/tenancy/updateTenancy/:id", Description: "保存登录商户信息", ApiGroup: "tenancyClient", Method: "PUT"},
+	// 媒体库
+	{Path: "/v1/client/media/getUpdateMediaMap/:id", Description: "获取媒体文件表单", ApiGroup: "mediaClient", Method: "GET"},
+	{Path: "/v1/client/media/upload", Description: "上传文件", ApiGroup: "mediaClient", Method: "POST"},
+	{Path: "/v1/client/media/getFileList", Description: "getFileList", ApiGroup: "mediaClient", Method: "POST"},
+	{Path: "/v1/client/media/updateMediaName/:id", Description: "修改媒体文件名称", ApiGroup: "mediaClient", Method: "POST"},
+	{Path: "/v1/client/media/deleteFile", Description: "删除媒体文件", ApiGroup: "mediaClient", Method: "DELETE"},
+
+	//商品分类
+	{Path: "/v1/client/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/client/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/client/category/getCategorySelect", Description: "获取商品分类选项", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/client/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/client/category/createCategory", Description: "添加商品分类", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/client/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/client/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/client/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "categoryClient", Method: "PUT"},
+	{Path: "/v1/client/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "categoryClient", Method: "DELETE"},
+
+	//规格参数
+	{Path: "/v1/client/attrTemplate/getAttrTemplateList", Description: "获取规格参数列表", ApiGroup: "attrTemplateClient", Method: "POST"},
+	{Path: "/v1/client/attrTemplate/createAttrTemplate", Description: "添加规格参数", ApiGroup: "attrTemplateClient", Method: "POST"},
+	{Path: "/v1/client/attrTemplate/getAttrTemplateById", Description: "获取规格参数详情", ApiGroup: "attrTemplateClient", Method: "POST"},
+	{Path: "/v1/client/attrTemplate/updateAttrTemplate", Description: "更新规格参数", ApiGroup: "attrTemplateClient", Method: "PUT"},
+	{Path: "/v1/client/attrTemplate/deleteAttrTemplate", Description: "删除规格参数", ApiGroup: "attrTemplateClient", Method: "DELETE"},
+
+	//商品
+	{Path: "/v1/client/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "productClient", Method: "GET"},
+	{Path: "/v1/client/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "productClient", Method: "PUT"},
+	{Path: "/v1/client/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "productClient", Method: "GET"},
+	{Path: "/v1/client/product/changeProductStatus", Description: "上下架商品", ApiGroup: "productClient", Method: "POST"},
+	{Path: "/v1/client/product/getProductList", Description: "获取商品列表", ApiGroup: "productClient", Method: "POST"},
+	{Path: "/v1/client/product/createProduct", Description: "添加商品", ApiGroup: "productClient", Method: "POST"},
+	{Path: "/v1/client/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "productClient", Method: "GET"},
+	{Path: "/v1/client/product/updateProduct/:id", Description: "编辑商品", ApiGroup: "productClient", Method: "PUT"},
+	{Path: "/v1/client/product/deleteProduct/:id", Description: "删除商品", ApiGroup: "productClient", Method: "DELETE"},
+
+	{Path: "/v1/client/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecordClient", Method: "POST"},
 
 	{Path: "/v1/admin/email/emailTest", Description: "发送测试邮件", ApiGroup: "email", Method: "POST"},
 	{Path: "/v1/admin/api/deleteApisByIds", Description: "批量删除api", ApiGroup: "api", Method: "DELETE"},
