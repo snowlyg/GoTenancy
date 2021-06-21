@@ -11,7 +11,7 @@ import (
 func TestClientCategoryList(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/merchant/category/getCategoryList").
+	obj := auth.POST("v1/merchant/productCategory/getProductCategoryList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -29,7 +29,7 @@ func TestClientCategoryList(t *testing.T) {
 func TestClientCategorySelect(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/merchant/category/getCategorySelect").
+	obj := auth.GET("v1/merchant/productCategory/getProductCategorySelect").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -39,7 +39,7 @@ func TestClientCategorySelect(t *testing.T) {
 func TestGetAdminCategorySelect(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/merchant/category/getAdminCategorySelect").
+	obj := auth.GET("v1/merchant/productCategory/getAdminProductCategorySelect").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -59,7 +59,7 @@ func TestClientCategoryProcess(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
 
-	obj := auth.POST("v1/merchant/category/createCategory").
+	obj := auth.POST("v1/merchant/productCategory/createProductCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -87,7 +87,7 @@ func TestClientCategoryProcess(t *testing.T) {
 		"pic":      "http://qmplusimg.henrongyi.top/head.png",
 	}
 
-	obj = auth.PUT(fmt.Sprintf("v1/merchant/category/updateCategory/%d", int(categoryId))).
+	obj = auth.PUT(fmt.Sprintf("v1/merchant/productCategory/updateProductCategory/%d", int(categoryId))).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -103,7 +103,7 @@ func TestClientCategoryProcess(t *testing.T) {
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.GET(fmt.Sprintf("v1/merchant/category/getCategoryById/%d", int(categoryId))).
+	obj = auth.GET(fmt.Sprintf("v1/merchant/productCategory/getProductCategoryById/%d", int(categoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -119,7 +119,7 @@ func TestClientCategoryProcess(t *testing.T) {
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("v1/merchant/category/changeCategoryStatus").
+	obj = auth.POST("v1/merchant/productCategory/changeProductCategoryStatus").
 		WithJSON(map[string]interface{}{
 			"id":     categoryId,
 			"status": g.StatusTrue,
@@ -129,20 +129,20 @@ func TestClientCategoryProcess(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("设置成功")
 
-	obj = auth.GET("v1/merchant/category/getCreateTenancyCategoryMap").
+	obj = auth.GET("v1/merchant/productCategory/getCreateProductCategoryMap").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
-	obj = auth.GET(fmt.Sprintf("v1/merchant/category/getUpdateTenancyCategoryMap/%d", int(categoryId))).
+	obj = auth.GET(fmt.Sprintf("v1/merchant/productCategory/getUpdateProductCategoryMap/%d", int(categoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 
 	// deleteCategory
-	obj = auth.DELETE(fmt.Sprintf("v1/merchant/category/deleteCategory/%d", int(categoryId))).
+	obj = auth.DELETE(fmt.Sprintf("v1/merchant/productCategory/deleteProductCategory/%d", int(categoryId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

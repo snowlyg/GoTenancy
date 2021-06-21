@@ -218,8 +218,8 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 	if info.Keyword != "" {
 		db = db.Where(g.TENANCY_DB.Where("tenancy_products.store_name like ?", info.Keyword+"%").Or("tenancy_products.store_info like ?", info.Keyword+"%").Or("tenancy_products.keyword like ?", info.Keyword+"%").Or("tenancy_products.bar_code like ?", info.Keyword+"%"))
 	}
-	if info.TenancyCategoryId > 0 {
-		db = db.Where("tenancy_products.tenancy_category_id = ?", info.TenancyCategoryId)
+	if info.ProductCategoryId > 0 {
+		db = db.Where("Product_products.tenancy_category_id = ?", info.ProductCategoryId)
 	}
 
 	err = db.Count(&total).Error

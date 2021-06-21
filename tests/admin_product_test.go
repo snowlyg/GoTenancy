@@ -83,7 +83,7 @@ func productlist(t *testing.T, params map[string]interface{}, length int) {
 		"cateName",
 		"brandName",
 		"sysBrandId",
-		"tenancyCategoryId",
+		"productCategoryId",
 		"createdAt",
 		"updatedAt",
 	)
@@ -175,6 +175,6 @@ func TestProductProcess(t *testing.T) {
 	product.Value("oldId").Number().Equal(update["oldId"].(int))
 	product.Value("tempId").Number().Equal(update["tempId"].(int))
 	product.Value("sysBrandId").Number().Equal(update["sysBrandId"].(int))
-	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
+	product.Value("productCategoryId").Number().Equal(update["productCategoryId"].(int))
 
 }

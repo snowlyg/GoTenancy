@@ -143,15 +143,15 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCreateTenancyCategoryMap", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategorySelect", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryList", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/createCategory", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/getCategoryById/:id", V2: "GET"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/changeCategoryStatus", V2: "POST"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/updateCategory/:id", V2: "PUT"},
-	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/category/deleteCategory/:id", V2: "DELETE"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/getCreateProductCategoryMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/getUpdateProductCategoryMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/getProductCategorySelect", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/getProductCategoryList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/createProductCategory", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/getProductCategoryById/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/changeProductCategoryStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/updateProductCategory/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/productCategory/deleteProductCategory/:id", V2: "DELETE"},
 
 	//商品
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/product/getEditProductFictiMap/:id", V2: "GET"},
@@ -185,16 +185,16 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/media/deleteFile", V2: "DELETE"},
 
 	//商品分类
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getCreateTenancyCategoryMap", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getUpdateTenancyCategoryMap/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getCategorySelect", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getAdminCategorySelect", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getCategoryList", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/createCategory", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/getCategoryById/:id", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/changeCategoryStatus", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/updateCategory/:id", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/category/deleteCategory/:id", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getCreateProductCategoryMap", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getUpdateProductCategoryMap/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getProductCategorySelect", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getAdminProductCategorySelect", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getProductCategoryList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/createProductCategory", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/getProductCategoryById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/changeProductCategoryStatus", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/updateProductCategory/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/productCategory/deleteProductCategory/:id", V2: "DELETE"},
 
 	//规格参数
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/getAttrTemplateList", V2: "POST"},

@@ -139,7 +139,7 @@ func InitDB(conf request.InitDB) error {
 		model.ProductCategory{},
 		model.AttrTemplate{},
 		model.TenancyProduct{},
-		model.TenancyProductCate{},
+		model.ProductCate{},
 		model.TenancyProductContent{},
 		model.TenancyProductAttr{},
 		model.TenancyProductAttrValue{},

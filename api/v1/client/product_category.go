@@ -1,4 +1,4 @@
-package admin
+package client
 
 import (
 	"github.com/gin-gonic/gin"
@@ -94,6 +94,16 @@ func GetClientProductCategoryList(ctx *gin.Context) {
 
 // GetProductCategorySelect
 func GetProductCategorySelect(ctx *gin.Context) {
+	if opts, err := service.GetProductCategoriesOptions(multi.GetTenancyId(ctx)); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(opts, "获取成功", ctx)
+	}
+}
+
+// GetAdminProductCategorySelect
+func GetAdminProductCategorySelect(ctx *gin.Context) {
 	if opts, err := service.GetProductCategoriesOptions(0); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)

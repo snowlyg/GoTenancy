@@ -71,6 +71,6 @@ type BaseTenancyProduct struct {
 	SysTenancyID uint `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
 	SysBrandID   uint `gorm:"column:sys_brand_id;type:int" json:"sysBrandId"`                                   // 品牌 id
 
-	TenancyCategoryID uint `gorm:"index:tenancy_category_id;column:tenancy_category_id;type:int;not null" json:"tenancyCategoryId"` // 分类id
+	ProductCategoryID uint `gorm:"index:product_category_id;column:product_category_id;type:int;not null" json:"productCategoryId"` // 分类id
 
 }

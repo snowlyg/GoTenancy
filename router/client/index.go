@@ -42,18 +42,18 @@ func InitConfigValueRouter(Router *gin.RouterGroup) {
 
 // 商品分类
 func InitCategoryRouter(Router *gin.RouterGroup) {
-	CategoryRouter := Router.Group("/category")
+	CategoryRouter := Router.Group("/productCategory")
 	{
-		CategoryRouter.GET("/getCreateTenancyCategoryMap", client.GetCreateTenancyCategoryMap)
-		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", client.GetUpdateTenancyCategoryMap)
-		CategoryRouter.GET("/getCategorySelect", client.GetClientCategorySelect)
-		CategoryRouter.GET("/getAdminCategorySelect", client.GetCategorySelect)
-		CategoryRouter.POST("/createCategory", client.CreateCategory)
-		CategoryRouter.POST("/getCategoryList", client.GetClientCategoryList)
-		CategoryRouter.GET("/getCategoryById/:id", client.GetCategoryById)
-		CategoryRouter.POST("/changeCategoryStatus", client.ChangeCategoryStatus)
-		CategoryRouter.PUT("/updateCategory/:id", client.UpdateCategory)
-		CategoryRouter.DELETE("/deleteCategory/:id", client.DeleteCategory)
+		CategoryRouter.GET("/getCreateProductCategoryMap", client.GetCreateProductCategoryMap)
+		CategoryRouter.GET("/getUpdateProductCategoryMap/:id", client.GetUpdateProductCategoryMap)
+		CategoryRouter.GET("/getProductCategorySelect", client.GetProductCategorySelect)
+		CategoryRouter.GET("/getAdminProductCategorySelect", client.GetAdminProductCategorySelect)
+		CategoryRouter.POST("/createProductCategory", client.CreateProductCategory)
+		CategoryRouter.POST("/getProductCategoryList", client.GetProductCategoryList)
+		CategoryRouter.GET("/getProductCategoryById/:id", client.GetProductCategoryById)
+		CategoryRouter.POST("/changeProductCategoryStatus", client.ChangeProductCategoryStatus)
+		CategoryRouter.PUT("/updateProductCategory/:id", client.UpdateProductCategory)
+		CategoryRouter.DELETE("/deleteProductCategory/:id", client.DeleteProductCategory)
 	}
 }
 
@@ -73,9 +73,7 @@ func InitMediaRouter(Router *gin.RouterGroup) {
 func InitProductRouter(Router *gin.RouterGroup) {
 	ProductRouter := Router.Group("/product")
 	{
-		ProductRouter.GET("/getEditProductFictiMap/:id", client.GetEditProductFictiMap)
 		ProductRouter.GET("/getProductFilter", client.GetProductFilter)
-		ProductRouter.PUT("/setProductFicti/:id", client.SetProductFicti)
 		ProductRouter.POST("/createProduct", client.CreateProduct)
 		ProductRouter.POST("/changeProductStatus", client.ChangeProductStatus)
 		ProductRouter.POST("/getProductList", client.GetProductList)

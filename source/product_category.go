@@ -11,14 +11,14 @@ var ProductCate = new(productCate)
 
 type productCate struct{}
 
-var productCates = []model.TenancyProductCate{
-	{TenancyProductID: 1, TenancyCategoryID: 174, SysTenancyID: 1},
-	{TenancyProductID: 1, TenancyCategoryID: 173, SysTenancyID: 1},
+var productCates = []model.ProductCate{
+	{ProductID: 1, ProductCategoryID: 174, SysTenancyID: 1},
+	{ProductID: 1, ProductCategoryID: 173, SysTenancyID: 1},
 }
 
 func (m *productCate) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
-		if tx.Where("id IN ?", []int{1}).Find(&[]model.TenancyProductCate{}).RowsAffected == 1 {
+		if tx.Where("id IN ?", []int{1}).Find(&[]model.ProductCate{}).RowsAffected == 1 {
 			color.Danger.Println("\n[Mysql] --> tenancy_product_cates 表的初始数据已存在!")
 			return nil
 		}

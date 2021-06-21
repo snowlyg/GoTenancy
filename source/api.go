@@ -102,15 +102,15 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/tenancy/deleteTenancy/:id", Description: "删除商户", ApiGroup: "tenancy", Method: "DELETE"},
 
 	//商品分类
-	{Path: "/v1/admin/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/getCategorySelect", Description: "获取商品分类选项", ApiGroup: "category", Method: "GET"},
-	{Path: "/v1/admin/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/createCategory", Description: "添加商品分类", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "category", Method: "GET"},
-	{Path: "/v1/admin/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "category", Method: "POST"},
-	{Path: "/v1/admin/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "category", Method: "PUT"},
-	{Path: "/v1/admin/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
+	{Path: "/v1/admin/productCategory/getCreateProductCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/productCategory/getUpdateProductCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/productCategory/getProductCategorySelect", Description: "获取商品分类选项", ApiGroup: "category", Method: "GET"},
+	{Path: "/v1/admin/productCategory/getProductCategoryList", Description: "获取商品分类列表", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/productCategory/createProductCategory", Description: "添加商品分类", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/productCategory/getProductCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "category", Method: "GET"},
+	{Path: "/v1/admin/productCategory/changeProductCategoryStatus", Description: "修改商品分类状态", ApiGroup: "category", Method: "POST"},
+	{Path: "/v1/admin/productCategory/updateProductCategory/:id", Description: "更新商品分类", ApiGroup: "category", Method: "PUT"},
+	{Path: "/v1/admin/productCategory/deleteProductCategory/:id", Description: "删除商品分类", ApiGroup: "category", Method: "DELETE"},
 
 	//商品
 	{Path: "/v1/admin/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "product", Method: "GET"},
@@ -177,16 +177,16 @@ var baseApis = []model.SysApi{
 	//品牌
 	{Path: "/v1/merchant/brand/getBrandList", Description: "获取品牌列表", ApiGroup: "brandClient", Method: "GET"},
 	//商品分类
-	{Path: "/v1/merchant/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "categoryClient", Method: "GET"},
-	{Path: "/v1/merchant/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "categoryClient", Method: "GET"},
-	{Path: "/v1/merchant/category/getCategorySelect", Description: "获取商品分类选项", ApiGroup: "categoryClient", Method: "GET"},
-	{Path: "/v1/merchant/category/getAdminCategorySelect", Description: "获取平台商品分类选项", ApiGroup: "categoryClient", Method: "GET"},
-	{Path: "/v1/merchant/category/getCategoryList", Description: "获取商品分类列表", ApiGroup: "categoryClient", Method: "POST"},
-	{Path: "/v1/merchant/category/createCategory", Description: "添加商品分类", ApiGroup: "categoryClient", Method: "POST"},
-	{Path: "/v1/merchant/category/getCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "categoryClient", Method: "GET"},
-	{Path: "/v1/merchant/category/changeCategoryStatus", Description: "修改商品分类状态", ApiGroup: "categoryClient", Method: "POST"},
-	{Path: "/v1/merchant/category/updateCategory/:id", Description: "更新商品分类", ApiGroup: "categoryClient", Method: "PUT"},
-	{Path: "/v1/merchant/category/deleteCategory/:id", Description: "删除商品分类", ApiGroup: "categoryClient", Method: "DELETE"},
+	{Path: "/v1/merchant/productCategory/getCreateProductCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/merchant/productCategory/getUpdateProductCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/merchant/productCategory/getProductCategorySelect", Description: "获取商品分类选项", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/merchant/productCategory/getAdminProductCategorySelect", Description: "获取平台商品分类选项", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/merchant/productCategory/getProductCategoryList", Description: "获取商品分类列表", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/merchant/productCategory/createProductCategory", Description: "添加商品分类", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/merchant/productCategory/getProductCategoryById/:id", Description: "获取根据id商品分类", ApiGroup: "categoryClient", Method: "GET"},
+	{Path: "/v1/merchant/productCategory/changeProductCategoryStatus", Description: "修改商品分类状态", ApiGroup: "categoryClient", Method: "POST"},
+	{Path: "/v1/merchant/productCategory/updateProductCategory/:id", Description: "更新商品分类", ApiGroup: "categoryClient", Method: "PUT"},
+	{Path: "/v1/merchant/productCategory/deleteProductCategory/:id", Description: "删除商品分类", ApiGroup: "categoryClient", Method: "DELETE"},
 
 	//规格参数
 	{Path: "/v1/merchant/attrTemplate/getAttrTemplateList", Description: "获取规格参数列表", ApiGroup: "attrTemplateClient", Method: "POST"},

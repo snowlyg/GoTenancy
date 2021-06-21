@@ -20,7 +20,7 @@ func GetProductCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	var formStr string
 	uploadUrl := SetUrl("/setting/uploadPicture?field=pic&type=1", ctx)
 	if id > 0 {
-		cate, err := GetCategoryByID(id)
+		cate, err := GetProductCategoryByID(id)
 		if err != nil {
 			return form, err
 		}
@@ -32,7 +32,7 @@ func GetProductCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	if err != nil {
 		return form, err
 	}
-	opts, err := GetTenacyCategoriesOptions(multi.GetTenancyId(ctx))
+	opts, err := GetProductCategoriesOptions(multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
@@ -90,10 +90,10 @@ func DeleteProductCategory(id uint) error {
 // GetCategoryInfoList
 func GetProductCategoryInfoList(tenancyId uint) ([]response.ProductCategory, error) {
 	var productCategoryList []response.ProductCategory
-	treeMap, err := getCategoryMap(tenancyId)
+	treeMap, err := getProductCategoryMap(tenancyId)
 	productCategoryList = treeMap[0]
 	for i := 0; i < len(productCategoryList); i++ {
-		err = getCategoryBaseChildrenList(&productCategoryList[i], treeMap)
+		err = getProductCategoryBaseChildrenList(&productCategoryList[i], treeMap)
 	}
 	return productCategoryList, err
 }

@@ -70,17 +70,17 @@ func InitCasbinRouter(Router *gin.RouterGroup) {
 }
 
 func InitCategoryRouter(Router *gin.RouterGroup) {
-	CategoryRouter := Router.Group("/category")
+	CategoryRouter := Router.Group("/productCategory")
 	{
-		CategoryRouter.GET("/getCreateTenancyCategoryMap", admin.GetCreateTenancyCategoryMap)
-		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", admin.GetUpdateTenancyCategoryMap)
-		CategoryRouter.GET("/getCategorySelect", admin.GetCategorySelect)
-		CategoryRouter.POST("/createCategory", admin.CreateCategory)
-		CategoryRouter.POST("/getCategoryList", admin.GetCategoryList)
-		CategoryRouter.GET("/getCategoryById/:id", admin.GetCategoryById)
-		CategoryRouter.POST("/changeCategoryStatus", admin.ChangeCategoryStatus)
-		CategoryRouter.PUT("/updateCategory/:id", admin.UpdateCategory)
-		CategoryRouter.DELETE("/deleteCategory/:id", admin.DeleteCategory)
+		CategoryRouter.GET("/getCreateProductCategoryMap", admin.GetCreateProductCategoryMap)
+		CategoryRouter.GET("/getUpdateProductCategoryMap/:id", admin.GetUpdateProductCategoryMap)
+		CategoryRouter.GET("/getProductCategorySelect", admin.GetProductCategorySelect)
+		CategoryRouter.POST("/createProductCategory", admin.CreateProductCategory)
+		CategoryRouter.POST("/getProductCategoryList", admin.GetProductCategoryList)
+		CategoryRouter.GET("/getProductCategoryById/:id", admin.GetProductCategoryById)
+		CategoryRouter.POST("/changeProductCategoryStatus", admin.ChangeProductCategoryStatus)
+		CategoryRouter.PUT("/updateProductCategory/:id", admin.UpdateProductCategory)
+		CategoryRouter.DELETE("/deleteProductCategory/:id", admin.DeleteProductCategory)
 	}
 }
 
@@ -216,7 +216,6 @@ func InitSystemRouter(Router *gin.RouterGroup) {
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
-		TenancyRouter.GET("/getTenancyInfo", admin.GetTenancyInfo)            // 登录商户信息
 		TenancyRouter.GET("/getTenancies/:code", admin.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
 		TenancyRouter.GET("/getTenancyCount", admin.GetTenancyCount)          // 获取Tenancy对应状态数量
 		TenancyRouter.POST("/createTenancy", admin.CreateTenancy)             // 创建Tenancy

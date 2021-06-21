@@ -1,27 +1,14 @@
-package admin
+package client
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
 	"go.uber.org/zap"
 )
-
-func GetEditProductFictiMap(ctx *gin.Context) {
-	var req request.GetById
-	if errs := ctx.ShouldBindUri(&req); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if rules, err := service.GetEditProductFictiMap(req.Id, ctx); err != nil {
-		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
-	} else {
-		response.OkWithDetailed(rules, "获取成功", ctx)
-	}
-}
 
 // GetProductFilter
 func GetProductFilter(ctx *gin.Context) {
@@ -30,6 +17,22 @@ func GetProductFilter(ctx *gin.Context) {
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(filters, "获取成功", ctx)
+	}
+}
+
+// CreateProduct
+func CreateProduct(ctx *gin.Context) {
+	var product model.TenancyProduct
+	if errs := ctx.ShouldBindJSON(&product); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+
+	if returnProduct, err := service.CreateProduct(product, ctx); err != nil {
+		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(returnProduct, "创建成功", ctx)
 	}
 }
 
@@ -51,27 +54,6 @@ func UpdateProduct(ctx *gin.Context) {
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("更新成功", ctx)
-	}
-}
-
-// SetProductFicti
-func SetProductFicti(ctx *gin.Context) {
-	var req request.GetById
-	if errs := ctx.ShouldBindUri(&req); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	var productFicti request.SetProductFicti
-	if errs := ctx.ShouldBindJSON(&productFicti); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-
-	if err := service.SetProductFicti(productFicti, req.Id); err != nil {
-		g.TENANCY_LOG.Error("设置失败!", zap.Any("err", err))
-		response.FailWithMessage("设置失败:"+err.Error(), ctx)
-	} else {
-		response.OkWithMessage("设置成功", ctx)
 	}
 }
 
@@ -124,5 +106,20 @@ func GetProductById(ctx *gin.Context) {
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithData(product, ctx)
+	}
+}
+
+// DeleteProduct
+func DeleteProduct(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteProduct(req.Id); err != nil {
+		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("删除成功", ctx)
 	}
 }

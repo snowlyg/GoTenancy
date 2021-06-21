@@ -84,7 +84,7 @@ func clinetProductList(t *testing.T, params map[string]interface{}, length int) 
 		"cateName",
 		"brandName",
 		"sysBrandId",
-		"tenancyCategoryId",
+		"productCategoryId",
 		"createdAt",
 		"updatedAt",
 	)
@@ -142,7 +142,7 @@ func TestClinetProductProcess(t *testing.T) {
 		"oldId":             0,
 		"tempId":            0,
 		"sysBrandId":        1,
-		"tenancyCategoryId": 1,
+		"productCategoryId": 1,
 	}
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
@@ -192,7 +192,7 @@ func TestClinetProductProcess(t *testing.T) {
 	product.Value("oldId").Number().Equal(data["oldId"].(int))
 	product.Value("tempId").Number().Equal(data["tempId"].(int))
 	product.Value("sysBrandId").Number().Equal(data["sysBrandId"].(int))
-	product.Value("tenancyCategoryId").Number().Equal(data["tenancyCategoryId"].(int))
+	product.Value("productCategoryId").Number().Equal(data["productCategoryId"].(int))
 	productId := product.Value("id").Number().Raw()
 
 	update := map[string]interface{}{
@@ -233,7 +233,7 @@ func TestClinetProductProcess(t *testing.T) {
 		"oldId":             0,
 		"tempId":            0,
 		"sysBrandId":        1,
-		"tenancyCategoryId": 1,
+		"productCategoryId": 1,
 	}
 
 	obj = auth.PUT(fmt.Sprintf("v1/merchant/product/updateProduct/%d", int(productId))).
@@ -289,7 +289,7 @@ func TestClinetProductProcess(t *testing.T) {
 	product.Value("oldId").Number().Equal(update["oldId"].(int))
 	product.Value("tempId").Number().Equal(update["tempId"].(int))
 	product.Value("sysBrandId").Number().Equal(update["sysBrandId"].(int))
-	product.Value("tenancyCategoryId").Number().Equal(update["tenancyCategoryId"].(int))
+	product.Value("productCategoryId").Number().Equal(update["productCategoryId"].(int))
 
 	// setUserAuthority
 	obj = auth.DELETE(fmt.Sprintf("v1/merchant/product/deleteProduct/%d", int(productId))).
@@ -340,7 +340,7 @@ func TestClinetProductAddError(t *testing.T) {
 		"oldId":             0,
 		"tempId":            0,
 		"sysBrandId":        1,
-		"tenancyCategoryId": 1,
+		"productCategoryId": 1,
 	}
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)

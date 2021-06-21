@@ -5,7 +5,7 @@ import "github.com/snowlyg/go-tenancy/model"
 type TenancyProductPageInfo struct {
 	Page              int    `json:"page" form:"page" binding:"required"`
 	PageSize          int    `json:"pageSize" form:"pageSize" binding:"required"`
-	TenancyCategoryId int    `json:"tenancyCategoryId" form:"tenancyCategoryId"`
+	ProductCategoryId int    `json:"productCategoryId" form:"productCategoryId"`
 	CateId            int    `json:"cateId" form:"cateId"`
 	Type              string `json:"type" form:"type"  binding:"required"`
 	Keyword           string `json:"keyword" form:"keyword"`
