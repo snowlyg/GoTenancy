@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -12,7 +13,7 @@ import (
 )
 
 // GetBrandMap
-func GetBrandMap(id uint) (Form, error) {
+func GetBrandMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	if id > 0 {
@@ -20,13 +21,19 @@ func GetBrandMap(id uint) (Form, error) {
 		if err != nil {
 			return form, err
 		}
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s/%d","method":"PUT","title":"添加品牌","config":{}}`, brand.BrandCategoryID, brand.BrandName, brand.Pic, brand.Status, brand.Sort, "/admin/brand/updateBrand", id)
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"PUT","title":"添加品牌","config":{}}`, brand.BrandCategoryID, brand.BrandName, brand.Pic, brand.Status, brand.Sort)
+
 	} else {
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s","method":"POST","title":"添加品牌","config":{}}`, 0, "", "", 2, 0, "/admin/brand/createBrand")
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"brandCategoryId","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"emitPath":false}}},{"type":"input","field":"brandName","value":"%s","title":"品牌名称","props":{"type":"text","placeholder":"请输入品牌名称"},"validate":[{"message":"请输入品牌名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"POST","title":"添加品牌","config":{}}`, 0, "", "", 2, 0)
 	}
 	err := json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
 		return form, err
+	}
+	if id > 0 {
+		form.SetAction(fmt.Sprintf("/brand/updateBrand/%d", id), ctx)
+	} else {
+		form.SetAction("/brand/createBrand", ctx)
 	}
 	opts, err := GetBrandCategoriesOptions()
 	if err != nil {

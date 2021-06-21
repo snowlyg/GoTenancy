@@ -8,7 +8,7 @@ import (
 func TestGetTenancyInfo(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/client/tenancy/getTenancyInfo").
+	obj := auth.GET("v1/merchant/tenancy/getTenancyInfo").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -25,7 +25,7 @@ func TestUpdateClientTenancy(t *testing.T) {
 		"state":  1,
 		"tele":   "15109234132",
 	}
-	obj := auth.PUT("v1/client/tenancy/updateTenancy/1").
+	obj := auth.PUT("v1/merchant/tenancy/updateTenancy/1").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

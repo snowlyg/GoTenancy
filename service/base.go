@@ -4,6 +4,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
@@ -35,6 +38,19 @@ type Form struct {
 	Title   string                   `json:"title"`
 	Config  Config                   `json:"config"`
 	Headers []map[string]interface{} `json:"headers,omitempty"`
+}
+
+func (form *Form) SetAction(uri string, ctx *gin.Context) {
+	form.Action = SetUrl(uri, ctx)
+}
+
+func SetUrl(uri string, ctx *gin.Context) string {
+	if multi.IsAdmin(ctx) {
+		return g.TENANCY_CONFIG.System.AdminPreix + uri
+	} else if multi.IsTenancy(ctx) {
+		return g.TENANCY_CONFIG.System.ClientPreix + uri
+	}
+	return ""
 }
 
 type Config struct {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -13,7 +14,7 @@ import (
 )
 
 // GetBrandCategoryMap
-func GetBrandCategoryMap(id uint) (Form, error) {
+func GetBrandCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	if id > 0 {
@@ -21,13 +22,19 @@ func GetBrandCategoryMap(id uint) (Form, error) {
 		if err != nil {
 			return form, err
 		}
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s/%d","method":"PUT","title":"添加分类","config":{}}`, cate.Pid, cate.CateName, cate.Status, cate.Sort, "/admin/brandCategory/updateBrandCategory", id)
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"PUT","title":"添加分类","config":{}}`, cate.Pid, cate.CateName, cate.Status, cate.Sort)
+
 	} else {
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s","method":"POST","title":"添加分类","config":{}}`, 0, "", 2, 0, "/admin/brandCategory/createBrandCategory")
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"POST","title":"添加分类","config":{}}`, 0, "", 2, 0)
 	}
 	err := json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
 		return form, err
+	}
+	if id > 0 {
+		form.SetAction(fmt.Sprintf("/brandCategory/updateBrandCategory/%d", id), ctx)
+	} else {
+		form.SetAction("/brandCategory/createBrandCategory", ctx)
 	}
 	opts, err := GetBrandCategoriesOptions()
 	if err != nil {

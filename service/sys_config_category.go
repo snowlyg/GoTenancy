@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
@@ -12,7 +13,7 @@ import (
 )
 
 // GetConfigCategoryMap
-func GetConfigCategoryMap(id uint) (Form, error) {
+func GetConfigCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	if id > 0 {
@@ -20,13 +21,18 @@ func GetConfigCategoryMap(id uint) (Form, error) {
 		if err != nil {
 			return form, err
 		}
-		formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"配置分类名称","props":{"type":"text","placeholder":"请输入配置分类名称"},"validate":[{"message":"请输入配置分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"key","value":"%s","title":"配置分类key","props":{"type":"text","placeholder":"请输入配置分类key"},"validate":[{"message":"请输入配置分类key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"配置分类说明","props":{"type":"text","placeholder":"请输入配置分类说明"}},{"type":"frame","field":"icon","value":"%s","title":"配置分类图标","props":{"type":"input","maxLength":1,"title":"请选择配置分类图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s/%d","method":"PUT","title":"添加配置分类","config":{}}`, cate.Name, cate.Key, cate.Key, cate.Icon, cate.Sort, cate.Status, "/admin/configCategory/updateConfigCategory", id)
+		formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"配置分类名称","props":{"type":"text","placeholder":"请输入配置分类名称"},"validate":[{"message":"请输入配置分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"key","value":"%s","title":"配置分类key","props":{"type":"text","placeholder":"请输入配置分类key"},"validate":[{"message":"请输入配置分类key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"配置分类说明","props":{"type":"text","placeholder":"请输入配置分类说明"}},{"type":"frame","field":"icon","value":"%s","title":"配置分类图标","props":{"type":"input","maxLength":1,"title":"请选择配置分类图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}}],"action":"","method":"PUT","title":"添加配置分类","config":{}}`, cate.Name, cate.Key, cate.Key, cate.Icon, cate.Sort, cate.Status)
 	} else {
-		formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"配置分类名称","props":{"type":"text","placeholder":"请输入配置分类名称"},"validate":[{"message":"请输入配置分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"key","value":"%s","title":"配置分类key","props":{"type":"text","placeholder":"请输入配置分类key"},"validate":[{"message":"请输入配置分类key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"配置分类说明","props":{"type":"text","placeholder":"请输入配置分类说明"}},{"type":"frame","field":"icon","value":"%s","title":"配置分类图标","props":{"type":"input","maxLength":1,"title":"请选择配置分类图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}}],"action":"%s","method":"POST","title":"添加配置分类","config":{}}`, "", "", "", "", 0, 1, "/admin/configCategory/createConfigCategory")
+		formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"name","value":"%s","title":"配置分类名称","props":{"type":"text","placeholder":"请输入配置分类名称"},"validate":[{"message":"请输入配置分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"key","value":"%s","title":"配置分类key","props":{"type":"text","placeholder":"请输入配置分类key"},"validate":[{"message":"请输入配置分类key","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"info","value":"%s","title":"配置分类说明","props":{"type":"text","placeholder":"请输入配置分类说明"}},{"type":"frame","field":"icon","value":"%s","title":"配置分类图标","props":{"type":"input","maxLength":1,"title":"请选择配置分类图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}}],"action":"","method":"POST","title":"添加配置分类","config":{}}`, "", "", "", "", 0, 1)
 	}
 	err := json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
 		return form, err
+	}
+	if id > 0 {
+		form.SetAction(fmt.Sprintf("/configCategory/updateConfigCategory/%d", id), ctx)
+	} else {
+		form.SetAction("/configCategory/createConfigCategory", ctx)
 	}
 	return form, err
 }

@@ -75,7 +75,7 @@ func Routers(app *gin.Engine) {
 		}
 
 		// 商户和员工
-		ClientGroup := V1Group.Group("/client", middleware.IsTenancy())
+		ClientGroup := V1Group.Group("/merchant", middleware.IsTenancy())
 		{
 			// client.InitApiRouter(ClientGroup)                // 注册功能api路由
 			// client.InitUserRouter(ClientGroup)               // 注册用户路由

@@ -151,7 +151,7 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 		MenuRouter.DELETE("/deleteBaseMenu", v1.DeleteBaseMenu)   // 删除菜单
 		MenuRouter.POST("/updateBaseMenu", v1.UpdateBaseMenu)     // 更新菜单
 		MenuRouter.POST("/getBaseMenuById", v1.GetBaseMenuById)   // 根据id获取菜单
-		ClientMenuRouter := MenuRouter.Group("/client")
+		ClientMenuRouter := MenuRouter.Group("/merchant")
 		{
 			ClientMenuRouter.GET("/getClientMenuList", v1.GetClientMenuList) // 分页获取基础menu列表
 			ClientMenuRouter.POST("/addBaseMenu", v1.AddBaseMenu)            // 新增菜单

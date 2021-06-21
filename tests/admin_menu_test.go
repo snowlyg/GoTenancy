@@ -115,7 +115,7 @@ func TestMenuList(t *testing.T) {
 func TestClientMenuList(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/admin/menu/client/getClientMenuList").
+	obj := auth.GET("v1/admin/menu/merchant/getClientMenuList").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

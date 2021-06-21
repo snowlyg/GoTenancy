@@ -78,7 +78,7 @@ func baseWithLoginTester(t *testing.T) *httpexpect.Expect {
 
 func tenancyWithLoginTester(t *testing.T) *httpexpect.Expect {
 	e := baseTester(t)
-	obj := e.POST("v1/public/client/login").
+	obj := e.POST("v1/public/merchant/login").
 		WithJSON(map[string]interface{}{"username": "a303176530", "password": "123456", "captcha": "", "captchaId": ""}).
 		Expect().Status(http.StatusOK).JSON().Object()
 

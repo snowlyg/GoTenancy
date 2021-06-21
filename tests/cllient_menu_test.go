@@ -8,7 +8,7 @@ import (
 func TestClientMenu(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/client/menu/getMenu").
+	obj := auth.GET("v1/merchant/menu/getMenu").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)

@@ -12,7 +12,7 @@ import (
 
 // GetCreateBrandMap
 func GetCreateBrandMap(ctx *gin.Context) {
-	if form, err := service.GetBrandMap(0); err != nil {
+	if form, err := service.GetBrandMap(0, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -27,7 +27,7 @@ func GetUpdateBrandMap(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if form, err := service.GetBrandMap(req.Id); err != nil {
+	if form, err := service.GetBrandMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {

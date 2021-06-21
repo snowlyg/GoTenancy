@@ -8,7 +8,7 @@ import (
 func TestClientOperationRecode(t *testing.T) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/client/sysOperationRecord/getSysOperationRecordList").
+	obj := auth.POST("v1/merchant/sysOperationRecord/getSysOperationRecordList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

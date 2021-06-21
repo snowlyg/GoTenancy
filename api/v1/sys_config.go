@@ -27,7 +27,7 @@ func GetConfigMap(ctx *gin.Context) {
 
 // GetCreateConfigMap
 func GetCreateConfigMap(ctx *gin.Context) {
-	if form, err := service.GetConfigMap(0); err != nil {
+	if form, err := service.GetConfigMap(0, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -42,7 +42,7 @@ func GetUpdateConfigMap(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if form, err := service.GetConfigMap(req.Id); err != nil {
+	if form, err := service.GetConfigMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {

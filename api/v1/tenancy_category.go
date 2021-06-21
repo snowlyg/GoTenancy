@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -73,27 +74,37 @@ func UpdateCategory(ctx *gin.Context) {
 
 // GetCategoryList
 func GetCategoryList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
-	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if list, err := service.GetCategoryInfoList(ctx); err != nil {
+	if list, err := service.GetCategoryInfoList(0); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(response.PageResult{
-			List:     list,
-			Total:    0,
-			Page:     pageInfo.Page,
-			PageSize: pageInfo.PageSize,
-		}, "获取成功", ctx)
+		response.OkWithDetailed(list, "获取成功", ctx)
+	}
+}
+
+// GetClientCategoryList
+func GetClientCategoryList(ctx *gin.Context) {
+	if list, err := service.GetCategoryInfoList(multi.GetTenancyId(ctx)); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(list, "获取成功", ctx)
 	}
 }
 
 // GetCategorySelect
 func GetCategorySelect(ctx *gin.Context) {
-	if opts, err := service.GetTenacyCategoriesOptions(ctx); err != nil {
+	if opts, err := service.GetTenacyCategoriesOptions(0); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(opts, "获取成功", ctx)
+	}
+}
+
+// GetClientCategorySelect
+func GetClientCategorySelect(ctx *gin.Context) {
+	if opts, err := service.GetTenacyCategoriesOptions(multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

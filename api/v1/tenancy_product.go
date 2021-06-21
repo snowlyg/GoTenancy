@@ -16,7 +16,7 @@ func GetEditProductFictiMap(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if rules, err := service.GetEditProductFictiMap(req.Id); err != nil {
+	if rules, err := service.GetEditProductFictiMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

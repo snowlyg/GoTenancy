@@ -14,19 +14,20 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetEditProductFictiMap(id uint) (Form, error) {
+func GetEditProductFictiMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	ficti, err := GetProductFictiByID(id)
 	if err != nil {
 		return Form{}, err
 	}
-	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"number","value":"%s","title":"现有虚拟销量","props":{"type":"text","placeholder":"请输入现有虚拟销量","readonly":true}},{"type":"radio","field":"type","value":1,"title":"修改类型","props":{},"options":[{"value":1,"label":"增加"},{"value":2,"label":"减少"}]},{"type":"inputNumber","field":"ficti","value":0,"title":"修改虚拟销量数","props":{"placeholder":"请输入修改虚拟销量数"}}],"action":"%s/%d","method":"PUT","title":"修改虚拟销量数","config":{}}`, strconv.FormatInt(int64(ficti), 10), "/admin/product/setProductFicti", id)
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"number","value":"%s","title":"现有虚拟销量","props":{"type":"text","placeholder":"请输入现有虚拟销量","readonly":true}},{"type":"radio","field":"type","value":1,"title":"修改类型","props":{},"options":[{"value":1,"label":"增加"},{"value":2,"label":"减少"}]},{"type":"inputNumber","field":"ficti","value":0,"title":"修改虚拟销量数","props":{"placeholder":"请输入修改虚拟销量数"}}],"action":"","method":"PUT","title":"修改虚拟销量数","config":{}}`, strconv.FormatInt(int64(ficti), 10))
 
 	err = json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
 		return form, err
 	}
+	form.SetAction(fmt.Sprintf("%s/%d", "product/setProductFicti", id), ctx)
 	return form, err
 }
 

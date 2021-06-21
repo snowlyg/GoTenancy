@@ -18,23 +18,31 @@ import (
 func GetTenancyCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
+	uploadUrl := SetUrl("/setting/uploadPicture?field=pic&type=1", ctx)
 	if id > 0 {
 		cate, err := GetCategoryByID(id)
 		if err != nil {
 			return form, err
 		}
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false},"filterable":true},"validate":[{"required":true,"type":"integer","trigger":"change"}]},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s/%d","method":"PUT","title":"编辑分类","config":{}}`, cate.Pid, cate.CateName, cate.Pic, cate.Status, cate.Sort, "/admin/category/updateCategory", id)
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false},"filterable":true},"validate":[{"required":true,"type":"integer","trigger":"change"}]},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"%s","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"PUT","title":"编辑分类","config":{}}`, cate.Pid, cate.CateName, cate.Pic, uploadUrl, cate.Status, cate.Sort)
 	} else {
-		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false},"filterable":true},"validate":[{"required":true,"type":"integer","trigger":"change"}]},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"\/admin\/setting\/uploadPicture?field=pic&type=1","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"%s","method":"POST","title":"添加分类","config":{}}`, 0, "", "", 2, 0, "/admin/category/createCategory")
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"上级分类","props":{"type":"other","options":[],"placeholder":"请选择上级分类","props":{"checkStrictly":true,"emitPath":false},"filterable":true},"validate":[{"required":true,"type":"integer","trigger":"change"}]},{"type":"input","field":"cateName","value":"%s","title":"分类名称","props":{"type":"text","placeholder":"请输入分类名称"},"validate":[{"message":"请输入分类名称","required":true,"type":"string","trigger":"change"}]},{"type":"frame","field":"pic","value":"%s","title":"分类图片(110*110px)","props":{"type":"image","maxLength":1,"title":"请选择分类图片(110*110px)","src":"%s","width":"896px","height":"480px","footer":false,"modal":{"modal":false,"custom-class":"suibian-modal"}}},{"type":"switch","field":"status","value":%d,"title":"是否显示","props":{"activeValue":1,"inactiveValue":2,"inactiveText":"关闭","activeText":"开启"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"POST","title":"添加分类","config":{}}`, 0, "", "", uploadUrl, 2, 0)
 	}
 	err := json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
 		return form, err
 	}
-	opts, err := GetTenacyCategoriesOptions(ctx)
+	opts, err := GetTenacyCategoriesOptions(multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
+
+	if id > 0 {
+		form.SetAction(fmt.Sprintf("/category/updateCategory/%d", id), ctx)
+	} else {
+		form.SetAction("/category/createCategory", ctx)
+	}
+
 	form.Rule[0].Props["options"] = opts
 	return form, err
 }
@@ -80,9 +88,9 @@ func DeleteCategory(id uint) error {
 }
 
 // GetCategoryInfoList
-func GetCategoryInfoList(ctx *gin.Context) ([]response.TenancyCategory, error) {
+func GetCategoryInfoList(tenancyId uint) ([]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
-	treeMap, err := getCategoryMap(ctx)
+	treeMap, err := getCategoryMap(tenancyId)
 	brandCategoryList = treeMap[0]
 	for i := 0; i < len(brandCategoryList); i++ {
 		err = getCategoryBaseChildrenList(&brandCategoryList[i], treeMap)
@@ -91,12 +99,12 @@ func GetCategoryInfoList(ctx *gin.Context) ([]response.TenancyCategory, error) {
 }
 
 // getCategoryMap
-func getCategoryMap(ctx *gin.Context) (map[int32][]response.TenancyCategory, error) {
+func getCategoryMap(tenancyId uint) (map[int32][]response.TenancyCategory, error) {
 	var brandCategoryList []response.TenancyCategory
 	treeMap := make(map[int32][]response.TenancyCategory)
 	db := g.TENANCY_DB.Model(&model.TenancyCategory{})
-	if multi.IsTenancy(ctx) {
-		db = db.Where("sys_tenancy_id = ?", multi.GetTenancyId(ctx))
+	if tenancyId >= 0 {
+		db = db.Where("sys_tenancy_id = ?", tenancyId)
 	}
 	err := db.Order("sort").Find(&brandCategoryList).Error
 	for _, v := range brandCategoryList {
@@ -115,10 +123,10 @@ func getCategoryBaseChildrenList(cate *response.TenancyCategory, treeMap map[int
 }
 
 // GetTenacyCategoriesOptions
-func GetTenacyCategoriesOptions(ctx *gin.Context) ([]Option, error) {
+func GetTenacyCategoriesOptions(tenancyId uint) ([]Option, error) {
 	var options []Option
 	options = append(options, Option{Label: "请选择", Value: 0})
-	treeMap, err := getCategoryMap(ctx)
+	treeMap, err := getCategoryMap(tenancyId)
 
 	for _, opt := range treeMap[0] {
 		options = append(options, Option{Label: opt.CateName, Value: opt.ID})

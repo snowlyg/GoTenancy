@@ -12,7 +12,7 @@ import (
 
 // GetCreateBrandCategoryMap
 func GetCreateBrandCategoryMap(ctx *gin.Context) {
-	if form, err := service.GetBrandCategoryMap(0); err != nil {
+	if form, err := service.GetBrandCategoryMap(0, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -27,7 +27,7 @@ func GetUpdateBrandCategoryMap(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if form, err := service.GetBrandCategoryMap(req.Id); err != nil {
+	if form, err := service.GetBrandCategoryMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -89,20 +89,13 @@ func UpdateBrandCategory(ctx *gin.Context) {
 
 // GetBrandCategoryList
 func GetBrandCategoryList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
-	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
 	if list, err := service.GetBrandCategoryInfoList(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithDetailed(response.PageResult{
-			List:     list,
-			Total:    0,
-			Page:     pageInfo.Page,
-			PageSize: pageInfo.PageSize,
+			List:  list,
+			Total: 0,
 		}, "获取成功", ctx)
 	}
 }

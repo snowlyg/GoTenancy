@@ -39,9 +39,10 @@ func InitCategoryRouter(Router *gin.RouterGroup) {
 	{
 		CategoryRouter.GET("/getCreateTenancyCategoryMap", v1.GetCreateTenancyCategoryMap)
 		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", v1.GetUpdateTenancyCategoryMap)
-		CategoryRouter.GET("/getCategorySelect", v1.GetCategorySelect)
+		CategoryRouter.GET("/getCategorySelect", v1.GetClientCategorySelect)
+		CategoryRouter.GET("/getAdminCategorySelect", v1.GetCategorySelect)
 		CategoryRouter.POST("/createCategory", v1.CreateCategory)
-		CategoryRouter.POST("/getCategoryList", v1.GetCategoryList)
+		CategoryRouter.POST("/getCategoryList", v1.GetClientCategoryList)
 		CategoryRouter.GET("/getCategoryById/:id", v1.GetCategoryById)
 		CategoryRouter.POST("/changeCategoryStatus", v1.ChangeCategoryStatus)
 		CategoryRouter.PUT("/updateCategory/:id", v1.UpdateCategory)

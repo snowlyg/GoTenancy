@@ -29,11 +29,8 @@ func GetMediaMap(id uint, ctx *gin.Context) (Form, error) {
 	if err != nil {
 		return form, err
 	}
-	if multi.IsAdmin(ctx) {
-		form.Action = fmt.Sprintf("%s/%d", "/admin/media/updateMediaName", id)
-	} else if multi.IsTenancy(ctx) {
-		form.Action = fmt.Sprintf("%s/%d", "/client/media/updateMediaName", id)
-	}
+
+	form.SetAction(fmt.Sprintf("%s/%d", "/media/updateMediaName", id), ctx)
 	return form, err
 }
 
