@@ -82,7 +82,7 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch, ctx *g
 	if err != nil {
 		return nil, total, err
 	}
-	err = db.Order("id desc").Limit(limit).Omit("tenancy_name,user_name,nick_name,resp,body").Offset(offset).Find(&sysOperationRecords).Error
+	err = db.Order("id desc").Limit(limit).Omit("tenancy_name,user_name,nick_name").Offset(offset).Find(&sysOperationRecords).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, total, err
 	}

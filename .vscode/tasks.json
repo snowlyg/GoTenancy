@@ -26,7 +26,7 @@
     {
       "label": "git push gitee",
       "type": "shell",
-      "command": "git push gitee main"
+      "command": "git push gitee master"
     }
   ]
 }

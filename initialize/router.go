@@ -68,10 +68,10 @@ func Routers(app *gin.Engine) {
 			admin.InitSystemRouter(AdminGroup)             // system相关路由
 			admin.InitCasbinRouter(AdminGroup)             // 权限相关路由
 			admin.InitAuthorityRouter(AdminGroup)          // 注册角色路由
-			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 			admin.InitMediaRouter(AdminGroup)              // 媒体库路由
 			admin.InitCategoryRouter(AdminGroup)           // 商品分类路由
 			admin.InitProductRouter(AdminGroup)            // 商品路由
+			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 		}
 
 		// 商户和员工
@@ -91,11 +91,11 @@ func Routers(app *gin.Engine) {
 			// client.InitSystemRouter(ClientGroup)             // system相关路由
 			// client.InitCasbinRouter(ClientGroup)             // 权限相关路由
 			// client.InitAuthorityRouter(ClientGroup)          // 注册角色路由
-			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 			client.InitMediaRouter(ClientGroup)              // 媒体库路由
 			client.InitCategoryRouter(ClientGroup)           // 商品分类路由
 			client.InitAttrTemplateRouter(ClientGroup)       // 规格模板路由
 			client.InitProductRouter(ClientGroup)            // 商品路由
+			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 		}
 
 		GeneralGroup := V1Group.Group("/general", middleware.IsGeneral())
