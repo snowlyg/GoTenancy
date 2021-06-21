@@ -17,16 +17,9 @@ func TestCategoryList(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
-
-	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
-	data.Value("pageSize").Number().Equal(10)
-	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Ge(0)
-
-	list := data.Value("list").Array()
-	list.Length().Ge(0)
-	first := list.First().Object()
+	data := obj.Value("data").Array()
+	data.Length().Ge(0)
+	first := data.First().Object()
 	first.Keys().ContainsOnly("id", "pid", "cateName", "status", "path", "sort", "level", "children", "pic", "createdAt", "updatedAt")
 	first.Value("id").Number().Ge(0)
 }
