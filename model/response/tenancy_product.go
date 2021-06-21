@@ -33,4 +33,5 @@ type TenancyProductCondition struct {
 	Type       int                    `json:"type"`
 	Name       string                 `json:"name"`
 	Conditions map[string]interface{} `json:"conditions"`
+	IsDeleted  bool                   `json:"is_deleted"`
 }

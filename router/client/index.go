@@ -17,6 +17,13 @@ func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 	}
 }
 
+func InitBrandRouter(Router *gin.RouterGroup) {
+	BrandRouter := Router.Group("/brand")
+	{
+		BrandRouter.GET("/getBrandList", v1.GetBrandList)
+	}
+}
+
 // 系统配置
 func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")

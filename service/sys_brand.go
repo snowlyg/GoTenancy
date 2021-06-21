@@ -97,3 +97,16 @@ func GetBrandInfoList(info request.BrandPageInfo) ([]model.SysBrand, int64, erro
 	err = db.Limit(limit).Offset(offset).Find(&brandList).Error
 	return brandList, total, err
 }
+
+// GetBrandOptions
+func GetBrandOptions() ([]Option, error) {
+	var options []Option
+	brandList, _, err := GetBrandInfoList(request.BrandPageInfo{})
+	if err != nil {
+		return options, err
+	}
+	for _, opt := range brandList {
+		options = append(options, Option{Label: opt.BrandName, Value: opt.ID})
+	}
+	return options, err
+}

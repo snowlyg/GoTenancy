@@ -9,10 +9,24 @@ import (
 )
 
 func TestClinetProductList(t *testing.T) {
+	params := []param{
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1"}, length: 3},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "2"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "3"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "4"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "5"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "6"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "7"}, length: 1},
+	}
+	for _, param := range params {
+		clinetProductList(t, param.args, param.length)
+	}
+}
+func clinetProductList(t *testing.T, params map[string]interface{}, length int) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
 	obj := auth.POST("v1/merchant/product/getProductList").
-		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10, "type": "1"}).
+		WithJSON(params).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -22,7 +36,7 @@ func TestClinetProductList(t *testing.T) {
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
-	data.Value("total").Number().Ge(0)
+	data.Value("total").Number().Equal(length)
 
 	list := data.Value("list").Array()
 	list.Length().Ge(0)

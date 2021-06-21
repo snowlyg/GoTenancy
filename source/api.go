@@ -116,12 +116,10 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "product", Method: "GET"},
 	{Path: "/v1/admin/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "product", Method: "PUT"},
 	{Path: "/v1/admin/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "product", Method: "GET"},
-	{Path: "/v1/admin/product/changeProductStatus", Description: "上下架商品", ApiGroup: "product", Method: "POST"},
+	{Path: "/v1/admin/product/changeProductStatus", Description: "强制下架，重新审核", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductList", Description: "获取商品列表", ApiGroup: "product", Method: "POST"},
-	{Path: "/v1/admin/product/createProduct", Description: "添加商品", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "product", Method: "GET"},
 	{Path: "/v1/admin/product/updateProduct/:id", Description: "编辑商品", ApiGroup: "product", Method: "PUT"},
-	{Path: "/v1/admin/product/deleteProduct/:id", Description: "删除商品", ApiGroup: "product", Method: "DELETE"},
 
 	//品牌分类
 	{Path: "/v1/admin/category/getCreateBrandCategoryMap", Description: "获取品牌分类添加表单", ApiGroup: "brandCategory", Method: "POST"},
@@ -134,9 +132,9 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/brandCategory/deleteBrandCategory/:id", Description: "删除品牌分类", ApiGroup: "brandCategory", Method: "DELETE"},
 
 	//品牌
+	{Path: "/v1/admin/brand/getBrandList", Description: "获取品牌列表", ApiGroup: "brand", Method: "POST"},
 	{Path: "/v1/admin/brand/getCreateBrandMap", Description: "获取品牌添加表单", ApiGroup: "brand", Method: "GET"},
 	{Path: "/v1/admin/brand/getUpdateBrandMap/:id", Description: "获取品牌编辑表单", ApiGroup: "brand", Method: "GET"},
-	{Path: "/v1/admin/brand/getBrandList", Description: "获取品牌列表", ApiGroup: "brand", Method: "POST"},
 	{Path: "/v1/admin/brand/createBrand", Description: "添加品牌", ApiGroup: "brand", Method: "POST"},
 	{Path: "/v1/admin/brand/getBrandById/:id", Description: "获取根据id品牌", ApiGroup: "brand", Method: "GET"},
 	{Path: "/v1/admin/brand/changeBrandStatus", Description: "修改品牌分类状态", ApiGroup: "brand", Method: "POST"},
@@ -176,7 +174,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/media/getFileList", Description: "getFileList", ApiGroup: "mediaClient", Method: "POST"},
 	{Path: "/v1/merchant/media/updateMediaName/:id", Description: "修改媒体文件名称", ApiGroup: "mediaClient", Method: "POST"},
 	{Path: "/v1/merchant/media/deleteFile", Description: "删除媒体文件", ApiGroup: "mediaClient", Method: "DELETE"},
-
+	//品牌
+	{Path: "/v1/merchant/brand/getBrandList", Description: "获取品牌列表", ApiGroup: "brandClient", Method: "GET"},
 	//商品分类
 	{Path: "/v1/merchant/category/getCreateTenancyCategoryMap", Description: "获取商品分类添加表单", ApiGroup: "categoryClient", Method: "GET"},
 	{Path: "/v1/merchant/category/getUpdateTenancyCategoryMap/:id", Description: "获取商品分类编辑表单", ApiGroup: "categoryClient", Method: "GET"},

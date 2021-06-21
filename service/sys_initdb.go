@@ -139,6 +139,7 @@ func InitDB(conf request.InitDB) error {
 		model.TenancyCategory{},
 		model.TenancyAttrTemplate{},
 		model.TenancyProduct{},
+		model.TenancyProductCate{},
 		model.TenancyProductContent{},
 		model.TenancyProductAttr{},
 		model.TenancyProductAttrValue{},
@@ -173,6 +174,7 @@ func InitDB(conf request.InitDB) error {
 		source.Category,
 		source.AttrTemplate,
 		source.TenancyProduct,
+		source.ProductCate,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)

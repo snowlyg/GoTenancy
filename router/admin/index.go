@@ -2,165 +2,165 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	v1 "github.com/snowlyg/go-tenancy/api/v1"
+	admin "github.com/snowlyg/go-tenancy/api/v1/admin"
 )
 
 func InitApiRouter(Router *gin.RouterGroup) {
 	ApiRouter := Router.Group("/api")
 	{
-		ApiRouter.POST("/createApi", v1.CreateApi)               // 创建Api
-		ApiRouter.DELETE("/deleteApi", v1.DeleteApi)             // 删除Api
-		ApiRouter.POST("/getApiList", v1.GetApiList)             // 获取Api列表
-		ApiRouter.POST("/getApiById", v1.GetApiById)             // 获取单条Api消息
-		ApiRouter.POST("/updateApi", v1.UpdateApi)               // 更新api
-		ApiRouter.POST("/getAllApis", v1.GetAllApis)             // 获取所有api
-		ApiRouter.DELETE("/deleteApisByIds", v1.DeleteApisByIds) // 删除选中api
+		ApiRouter.POST("/createApi", admin.CreateApi)               // 创建Api
+		ApiRouter.DELETE("/deleteApi", admin.DeleteApi)             // 删除Api
+		ApiRouter.POST("/getApiList", admin.GetApiList)             // 获取Api列表
+		ApiRouter.POST("/getApiById", admin.GetApiById)             // 获取单条Api消息
+		ApiRouter.POST("/updateApi", admin.UpdateApi)               // 更新api
+		ApiRouter.POST("/getAllApis", admin.GetAllApis)             // 获取所有api
+		ApiRouter.DELETE("/deleteApisByIds", admin.DeleteApisByIds) // 删除选中api
 	}
 }
 
 func InitAuthorityRouter(Router *gin.RouterGroup) {
 	AuthorityRouter := Router.Group("/authority")
 	{
-		AuthorityRouter.POST("/createAuthority", v1.CreateAuthority)                 // 创建角色
-		AuthorityRouter.DELETE("/deleteAuthority", v1.DeleteAuthority)               // 删除角色
-		AuthorityRouter.PUT("/updateAuthority", v1.UpdateAuthority)                  // 更新角色
-		AuthorityRouter.POST("/copyAuthority", v1.CopyAuthority)                     // 更新角色
-		AuthorityRouter.POST("/getAuthorityList", v1.GetAuthorityList)               // 获取角色列表
-		AuthorityRouter.POST("/getAdminAuthorityList", v1.GetAdminAuthorityList)     // 获取员工角色列表
-		AuthorityRouter.POST("/getTenancyAuthorityList", v1.GetTenancyAuthorityList) // 获取商户角色列表
-		AuthorityRouter.POST("/getGeneralAuthorityList", v1.GetGeneralAuthorityList) // 获取普通用户角色列表
-		AuthorityRouter.POST("/setDataAuthority", v1.SetDataAuthority)               // 设置角色资源权限
+		AuthorityRouter.POST("/createAuthority", admin.CreateAuthority)                 // 创建角色
+		AuthorityRouter.DELETE("/deleteAuthority", admin.DeleteAuthority)               // 删除角色
+		AuthorityRouter.PUT("/updateAuthority", admin.UpdateAuthority)                  // 更新角色
+		AuthorityRouter.POST("/copyAuthority", admin.CopyAuthority)                     // 更新角色
+		AuthorityRouter.POST("/getAuthorityList", admin.GetAuthorityList)               // 获取角色列表
+		AuthorityRouter.POST("/getAdminAuthorityList", admin.GetAdminAuthorityList)     // 获取员工角色列表
+		AuthorityRouter.POST("/getTenancyAuthorityList", admin.GetTenancyAuthorityList) // 获取商户角色列表
+		AuthorityRouter.POST("/getGeneralAuthorityList", admin.GetGeneralAuthorityList) // 获取普通用户角色列表
+		AuthorityRouter.POST("/setDataAuthority", admin.SetDataAuthority)               // 设置角色资源权限
 	}
 }
 
 func InitBrandCategoryRouter(Router *gin.RouterGroup) {
 	BrandCategoryRouter := Router.Group("/brandCategory")
 	{
-		BrandCategoryRouter.GET("/getCreateBrandCategoryMap", v1.GetCreateBrandCategoryMap)
-		BrandCategoryRouter.GET("/getUpdateBrandCategoryMap/:id", v1.GetUpdateBrandCategoryMap)
-		BrandCategoryRouter.POST("/createBrandCategory", v1.CreateBrandCategory)
-		BrandCategoryRouter.POST("/getBrandCategoryList", v1.GetBrandCategoryList)
-		BrandCategoryRouter.GET("/getBrandCategoryById/:id", v1.GetBrandCategoryById)
-		BrandCategoryRouter.POST("/changeBrandCategoryStatus", v1.ChangeBrandCategoryStatus)
-		BrandCategoryRouter.PUT("/updateBrandCategory/:id", v1.UpdateBrandCategory)
-		BrandCategoryRouter.DELETE("/deleteBrandCategory/:id", v1.DeleteBrandCategory)
+		BrandCategoryRouter.POST("/getBrandCategoryList", admin.GetBrandCategoryList)
+		BrandCategoryRouter.GET("/getCreateBrandCategoryMap", admin.GetCreateBrandCategoryMap)
+		BrandCategoryRouter.GET("/getUpdateBrandCategoryMap/:id", admin.GetUpdateBrandCategoryMap)
+		BrandCategoryRouter.POST("/createBrandCategory", admin.CreateBrandCategory)
+		BrandCategoryRouter.GET("/getBrandCategoryById/:id", admin.GetBrandCategoryById)
+		BrandCategoryRouter.POST("/changeBrandCategoryStatus", admin.ChangeBrandCategoryStatus)
+		BrandCategoryRouter.PUT("/updateBrandCategory/:id", admin.UpdateBrandCategory)
+		BrandCategoryRouter.DELETE("/deleteBrandCategory/:id", admin.DeleteBrandCategory)
 	}
 }
 
 func InitBrandRouter(Router *gin.RouterGroup) {
 	BrandRouter := Router.Group("/brand")
 	{
-		BrandRouter.GET("/getCreateBrandMap", v1.GetCreateBrandMap)
-		BrandRouter.GET("/getUpdateBrandMap/:id", v1.GetUpdateBrandMap)
-		BrandRouter.POST("/createBrand", v1.CreateBrand)
-		BrandRouter.POST("/getBrandList", v1.GetBrandList)
-		BrandRouter.GET("/getBrandById/:id", v1.GetBrandById)
-		BrandRouter.POST("/changeBrandStatus", v1.ChangeBrandStatus)
-		BrandRouter.PUT("/updateBrand/:id", v1.UpdateBrand)
-		BrandRouter.DELETE("/deleteBrand/:id", v1.DeleteBrand)
+		BrandRouter.POST("/getBrandList", admin.GetBrandList)
+		BrandRouter.GET("/getCreateBrandMap", admin.GetCreateBrandMap)
+		BrandRouter.GET("/getUpdateBrandMap/:id", admin.GetUpdateBrandMap)
+		BrandRouter.POST("/createBrand", admin.CreateBrand)
+		BrandRouter.GET("/getBrandById/:id", admin.GetBrandById)
+		BrandRouter.POST("/changeBrandStatus", admin.ChangeBrandStatus)
+		BrandRouter.PUT("/updateBrand/:id", admin.UpdateBrand)
+		BrandRouter.DELETE("/deleteBrand/:id", admin.DeleteBrand)
 	}
 }
 
 func InitCasbinRouter(Router *gin.RouterGroup) {
 	CasbinRouter := Router.Group("/casbin")
 	{
-		CasbinRouter.POST("/updateCasbin", v1.UpdateCasbin)
-		CasbinRouter.POST("/getPolicyPathByAuthorityId", v1.GetPolicyPathByAuthorityId)
+		CasbinRouter.POST("/updateCasbin", admin.UpdateCasbin)
+		CasbinRouter.POST("/getPolicyPathByAuthorityId", admin.GetPolicyPathByAuthorityId)
 	}
 }
 
 func InitCategoryRouter(Router *gin.RouterGroup) {
 	CategoryRouter := Router.Group("/category")
 	{
-		CategoryRouter.GET("/getCreateTenancyCategoryMap", v1.GetCreateTenancyCategoryMap)
-		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", v1.GetUpdateTenancyCategoryMap)
-		CategoryRouter.GET("/getCategorySelect", v1.GetCategorySelect)
-		CategoryRouter.POST("/createCategory", v1.CreateCategory)
-		CategoryRouter.POST("/getCategoryList", v1.GetCategoryList)
-		CategoryRouter.GET("/getCategoryById/:id", v1.GetCategoryById)
-		CategoryRouter.POST("/changeCategoryStatus", v1.ChangeCategoryStatus)
-		CategoryRouter.PUT("/updateCategory/:id", v1.UpdateCategory)
-		CategoryRouter.DELETE("/deleteCategory/:id", v1.DeleteCategory)
+		CategoryRouter.GET("/getCreateTenancyCategoryMap", admin.GetCreateTenancyCategoryMap)
+		CategoryRouter.GET("/getUpdateTenancyCategoryMap/:id", admin.GetUpdateTenancyCategoryMap)
+		CategoryRouter.GET("/getCategorySelect", admin.GetCategorySelect)
+		CategoryRouter.POST("/createCategory", admin.CreateCategory)
+		CategoryRouter.POST("/getCategoryList", admin.GetCategoryList)
+		CategoryRouter.GET("/getCategoryById/:id", admin.GetCategoryById)
+		CategoryRouter.POST("/changeCategoryStatus", admin.ChangeCategoryStatus)
+		CategoryRouter.PUT("/updateCategory/:id", admin.UpdateCategory)
+		CategoryRouter.DELETE("/deleteCategory/:id", admin.DeleteCategory)
 	}
 }
 
 func InitConfigCategoryRouter(Router *gin.RouterGroup) {
 	ConfigCategoryRouter := Router.Group("/configCategory")
 	{
-		ConfigCategoryRouter.GET("/getCreateConfigCategoryMap", v1.GetCreateConfigCategoryMap)
-		ConfigCategoryRouter.GET("/getUpdateConfigCategoryMap/:id", v1.GetUpdateConfigCategoryMap)
-		ConfigCategoryRouter.GET("/getConfigCategoryList", v1.GetConfigCategoryList)
-		ConfigCategoryRouter.POST("/createConfigCategory", v1.CreateConfigCategory)
-		ConfigCategoryRouter.GET("/getConfigCategoryById/:id", v1.GetConfigCategoryById)
-		ConfigCategoryRouter.PUT("/updateConfigCategory/:id", v1.UpdateConfigCategory)
-		ConfigCategoryRouter.POST("/changeConfigCategoryStatus", v1.ChangeConfigCategoryStatus)
-		ConfigCategoryRouter.DELETE("/deleteConfigCategory/:id", v1.DeleteConfigCategory)
+		ConfigCategoryRouter.GET("/getCreateConfigCategoryMap", admin.GetCreateConfigCategoryMap)
+		ConfigCategoryRouter.GET("/getUpdateConfigCategoryMap/:id", admin.GetUpdateConfigCategoryMap)
+		ConfigCategoryRouter.GET("/getConfigCategoryList", admin.GetConfigCategoryList)
+		ConfigCategoryRouter.POST("/createConfigCategory", admin.CreateConfigCategory)
+		ConfigCategoryRouter.GET("/getConfigCategoryById/:id", admin.GetConfigCategoryById)
+		ConfigCategoryRouter.PUT("/updateConfigCategory/:id", admin.UpdateConfigCategory)
+		ConfigCategoryRouter.POST("/changeConfigCategoryStatus", admin.ChangeConfigCategoryStatus)
+		ConfigCategoryRouter.DELETE("/deleteConfigCategory/:id", admin.DeleteConfigCategory)
 	}
 }
 
 func InitConfigValueRouter(Router *gin.RouterGroup) {
 	ConfigValueRouter := Router.Group("/configValue")
 	{
-		ConfigValueRouter.POST("/saveConfigValue/:category", v1.SaveConfigValue)
+		ConfigValueRouter.POST("/saveConfigValue/:category", admin.SaveConfigValue)
 	}
 }
 
 func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")
 	{
-		ConfigRouter.GET("/getConfigMap/:category", v1.GetConfigMap)
-		ConfigRouter.GET("/getCreateConfigMap", v1.GetCreateConfigMap)
-		ConfigRouter.GET("/getUpdateConfigMap/:id", v1.GetUpdateConfigMap)
-		ConfigRouter.POST("/getConfigList", v1.GetConfigList)
-		ConfigRouter.POST("/createConfig", v1.CreateConfig)
-		ConfigRouter.GET("/getConfigByKey/:key", v1.GetConfigByKey)
-		ConfigRouter.GET("/getConfigByID/:id", v1.GetConfigByID)
-		ConfigRouter.POST("/changeConfigStatus", v1.ChangeConfigStatus)
-		ConfigRouter.PUT("/updateConfig/:id", v1.UpdateConfig)
-		ConfigRouter.DELETE("/deleteConfig/:id", v1.DeleteConfig)
+		ConfigRouter.GET("/getConfigMap/:category", admin.GetConfigMap)
+		ConfigRouter.GET("/getCreateConfigMap", admin.GetCreateConfigMap)
+		ConfigRouter.GET("/getUpdateConfigMap/:id", admin.GetUpdateConfigMap)
+		ConfigRouter.POST("/getConfigList", admin.GetConfigList)
+		ConfigRouter.POST("/createConfig", admin.CreateConfig)
+		ConfigRouter.GET("/getConfigByKey/:key", admin.GetConfigByKey)
+		ConfigRouter.GET("/getConfigByID/:id", admin.GetConfigByID)
+		ConfigRouter.POST("/changeConfigStatus", admin.ChangeConfigStatus)
+		ConfigRouter.PUT("/updateConfig/:id", admin.UpdateConfig)
+		ConfigRouter.DELETE("/deleteConfig/:id", admin.DeleteConfig)
 	}
 }
 
 func InitEmailRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/email")
 	{
-		UserRouter.POST("/emailTest", v1.EmailTest) // 发送测试邮件
+		UserRouter.POST("/emailTest", admin.EmailTest) // 发送测试邮件
 	}
 }
 
 func InitMediaRouter(Router *gin.RouterGroup) {
 	MediaGroup := Router.Group("/media")
 	{
-		MediaGroup.GET("/getUpdateMediaMap/:id", v1.GetUpdateMediaMap) // 修改名称表单
-		MediaGroup.POST("/upload", v1.UploadFile)                      // 上传文件
-		MediaGroup.POST("/getFileList", v1.GetFileList)                // 获取上传文件列表
-		MediaGroup.POST("/updateMediaName/:id", v1.UpdateMediaName)    // 修改名称
-		MediaGroup.DELETE("/deleteFile", v1.DeleteFile)                // 删除指定文件
+		MediaGroup.GET("/getUpdateMediaMap/:id", admin.GetUpdateMediaMap) // 修改名称表单
+		MediaGroup.POST("/upload", admin.UploadFile)                      // 上传文件
+		MediaGroup.POST("/getFileList", admin.GetFileList)                // 获取上传文件列表
+		MediaGroup.POST("/updateMediaName/:id", admin.UpdateMediaName)    // 修改名称
+		MediaGroup.DELETE("/deleteFile", admin.DeleteFile)                // 删除指定文件
 	}
 }
 
 func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	MenuRouter := Router.Group("/menu")
 	{
-		MenuRouter.GET("/getMenu", v1.GetMenu)                    // 获取菜单树
-		MenuRouter.GET("/getMenuList", v1.GetMenuList)            // 分页获取基础menu列表
-		MenuRouter.POST("/addBaseMenu", v1.AddBaseMenu)           // 新增菜单
-		MenuRouter.POST("/getBaseMenuTree", v1.GetBaseMenuTree)   // 获取用户动态路由
-		MenuRouter.POST("/addMenuAuthority", v1.AddMenuAuthority) // 增加menu和角色关联关系
-		MenuRouter.POST("/getMenuAuthority", v1.GetMenuAuthority) // 获取指定角色menu
-		MenuRouter.DELETE("/deleteBaseMenu", v1.DeleteBaseMenu)   // 删除菜单
-		MenuRouter.POST("/updateBaseMenu", v1.UpdateBaseMenu)     // 更新菜单
-		MenuRouter.POST("/getBaseMenuById", v1.GetBaseMenuById)   // 根据id获取菜单
+		MenuRouter.GET("/getMenu", admin.GetMenu)                    // 获取菜单树
+		MenuRouter.GET("/getMenuList", admin.GetMenuList)            // 分页获取基础menu列表
+		MenuRouter.POST("/addBaseMenu", admin.AddBaseMenu)           // 新增菜单
+		MenuRouter.POST("/getBaseMenuTree", admin.GetBaseMenuTree)   // 获取用户动态路由
+		MenuRouter.POST("/addMenuAuthority", admin.AddMenuAuthority) // 增加menu和角色关联关系
+		MenuRouter.POST("/getMenuAuthority", admin.GetMenuAuthority) // 获取指定角色menu
+		MenuRouter.DELETE("/deleteBaseMenu", admin.DeleteBaseMenu)   // 删除菜单
+		MenuRouter.POST("/updateBaseMenu", admin.UpdateBaseMenu)     // 更新菜单
+		MenuRouter.POST("/getBaseMenuById", admin.GetBaseMenuById)   // 根据id获取菜单
 		ClientMenuRouter := MenuRouter.Group("/merchant")
 		{
-			ClientMenuRouter.GET("/getClientMenuList", v1.GetClientMenuList) // 分页获取基础menu列表
-			ClientMenuRouter.POST("/addBaseMenu", v1.AddBaseMenu)            // 新增菜单
-			ClientMenuRouter.POST("/getBaseMenuTree", v1.GetBaseMenuTree)    // 获取用户动态路由
-			ClientMenuRouter.POST("/addMenuAuthority", v1.AddMenuAuthority)  // 增加menu和角色关联关系
-			ClientMenuRouter.POST("/getMenuAuthority", v1.GetMenuAuthority)  // 获取指定角色menu
-			ClientMenuRouter.DELETE("/deleteBaseMenu", v1.DeleteBaseMenu)    // 删除菜单
-			ClientMenuRouter.POST("/updateBaseMenu", v1.UpdateBaseMenu)      // 更新菜单
-			ClientMenuRouter.POST("/getBaseMenuById", v1.GetBaseMenuById)    // 根据id获取菜单
+			ClientMenuRouter.GET("/getClientMenuList", admin.GetClientMenuList) // 分页获取基础menu列表
+			ClientMenuRouter.POST("/addBaseMenu", admin.AddBaseMenu)            // 新增菜单
+			ClientMenuRouter.POST("/getBaseMenuTree", admin.GetBaseMenuTree)    // 获取用户动态路由
+			ClientMenuRouter.POST("/addMenuAuthority", admin.AddMenuAuthority)  // 增加menu和角色关联关系
+			ClientMenuRouter.POST("/getMenuAuthority", admin.GetMenuAuthority)  // 获取指定角色menu
+			ClientMenuRouter.DELETE("/deleteBaseMenu", admin.DeleteBaseMenu)    // 删除菜单
+			ClientMenuRouter.POST("/updateBaseMenu", admin.UpdateBaseMenu)      // 更新菜单
+			ClientMenuRouter.POST("/getBaseMenuById", admin.GetBaseMenuById)    // 根据id获取菜单
 		}
 	}
 
@@ -170,22 +170,22 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 func InitMiniRouter(Router *gin.RouterGroup) {
 	MiniRouter := Router.Group("/mini")
 	{
-		MiniRouter.POST("/createMini", v1.CreateMini)
-		MiniRouter.POST("/getMiniList", v1.GetMiniList)
-		MiniRouter.POST("/getMiniById", v1.GetMiniById)
-		MiniRouter.PUT("/updateMini", v1.UpdateMini)
-		MiniRouter.DELETE("/deleteMini", v1.DeleteMini)
+		MiniRouter.POST("/createMini", admin.CreateMini)
+		MiniRouter.POST("/getMiniList", admin.GetMiniList)
+		MiniRouter.POST("/getMiniById", admin.GetMiniById)
+		MiniRouter.PUT("/updateMini", admin.UpdateMini)
+		MiniRouter.DELETE("/deleteMini", admin.DeleteMini)
 	}
 }
 
 func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
-		SysOperationRecordRouter.POST("/getSysOperationRecordList", v1.GetSysOperationRecordList)           // 获取SysOperationRecord列表
-		SysOperationRecordRouter.POST("/createSysOperationRecord", v1.CreateSysOperationRecord)             // 新建SysOperationRecord
-		SysOperationRecordRouter.DELETE("/deleteSysOperationRecord", v1.DeleteSysOperationRecord)           // 删除SysOperationRecord
-		SysOperationRecordRouter.DELETE("/deleteSysOperationRecordByIds", v1.DeleteSysOperationRecordByIds) // 批量删除SysOperationRecord
-		SysOperationRecordRouter.GET("/findSysOperationRecord", v1.FindSysOperationRecord)                  // 根据ID获取SysOperationRecord
+		SysOperationRecordRouter.POST("/getSysOperationRecordList", admin.GetSysOperationRecordList)           // 获取SysOperationRecord列表
+		SysOperationRecordRouter.POST("/createSysOperationRecord", admin.CreateSysOperationRecord)             // 新建SysOperationRecord
+		SysOperationRecordRouter.DELETE("/deleteSysOperationRecord", admin.DeleteSysOperationRecord)           // 删除SysOperationRecord
+		SysOperationRecordRouter.DELETE("/deleteSysOperationRecordByIds", admin.DeleteSysOperationRecordByIds) // 批量删除SysOperationRecord
+		SysOperationRecordRouter.GET("/findSysOperationRecord", admin.FindSysOperationRecord)                  // 根据ID获取SysOperationRecord
 
 	}
 }
@@ -193,56 +193,54 @@ func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 func InitProductRouter(Router *gin.RouterGroup) {
 	ProductRouter := Router.Group("/product")
 	{
-		ProductRouter.GET("/getEditProductFictiMap/:id", v1.GetEditProductFictiMap)
-		ProductRouter.GET("/getProductFilter", v1.GetProductFilter)
-		ProductRouter.PUT("/setProductFicti/:id", v1.SetProductFicti)
-		ProductRouter.POST("/createProduct", v1.CreateProduct)
-		ProductRouter.POST("/changeProductStatus", v1.ChangeProductStatus)
-		ProductRouter.POST("/getProductList", v1.GetProductList)
-		ProductRouter.GET("/getProductById/:id", v1.GetProductById)
-		ProductRouter.PUT("/updateProduct/:id", v1.UpdateProduct)
-		ProductRouter.DELETE("/deleteProduct/:id", v1.DeleteProduct)
+		ProductRouter.GET("/getEditProductFictiMap/:id", admin.GetEditProductFictiMap)
+		ProductRouter.GET("/getProductFilter", admin.GetProductFilter)
+		ProductRouter.PUT("/setProductFicti/:id", admin.SetProductFicti)      //设置虚拟销量
+		ProductRouter.POST("/changeProductStatus", admin.ChangeProductStatus) // 强制下架，重新审核
+		ProductRouter.POST("/getProductList", admin.GetProductList)
+		ProductRouter.GET("/getProductById/:id", admin.GetProductById)
+		ProductRouter.PUT("/updateProduct/:id", admin.UpdateProduct)
 	}
 }
 
 func InitSystemRouter(Router *gin.RouterGroup) {
 	SystemRouter := Router.Group("/system")
 	{
-		SystemRouter.POST("/getSystemConfig", v1.GetSystemConfig) // 获取配置文件内容
-		SystemRouter.POST("/setSystemConfig", v1.SetSystemConfig) // 设置配置文件内容
-		SystemRouter.POST("/getServerInfo", v1.GetServerInfo)     // 获取服务器信息
-		SystemRouter.POST("/reloadSystem", v1.ReloadSystem)       // 重启服务
+		SystemRouter.POST("/getSystemConfig", admin.GetSystemConfig) // 获取配置文件内容
+		SystemRouter.POST("/setSystemConfig", admin.SetSystemConfig) // 设置配置文件内容
+		SystemRouter.POST("/getServerInfo", admin.GetServerInfo)     // 获取服务器信息
+		SystemRouter.POST("/reloadSystem", admin.ReloadSystem)       // 重启服务
 	}
 }
 
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
-		TenancyRouter.GET("/getTenancyInfo", v1.GetTenancyInfo)            // 登录商户信息
-		TenancyRouter.GET("/getTenancies/:code", v1.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
-		TenancyRouter.GET("/getTenancyCount", v1.GetTenancyCount)          // 获取Tenancy对应状态数量
-		TenancyRouter.POST("/createTenancy", v1.CreateTenancy)             // 创建Tenancy
-		TenancyRouter.POST("/loginTenancy/:id", v1.LoginTenancy)           // 登录商户
-		TenancyRouter.POST("/getTenancyList", v1.GetTenanciesList)         // 获取Tenancy列表
-		TenancyRouter.GET("/getTenancyById/:id", v1.GetTenancyById)        // 获取单条Tenancy消息
-		TenancyRouter.POST("/setTenancyRegion", v1.SetTenancyRegion)       // 设置商户地区
-		TenancyRouter.POST("/changeTenancyStatus", v1.ChangeTenancyStatus) // 设置商户显示/隐藏
-		TenancyRouter.PUT("/updateTenancy/:id", v1.UpdateTenancy)          // 更新Tenancy
-		TenancyRouter.DELETE("/deleteTenancy/:id", v1.DeleteTenancy)       // 删除Tenancy
+		TenancyRouter.GET("/getTenancyInfo", admin.GetTenancyInfo)            // 登录商户信息
+		TenancyRouter.GET("/getTenancies/:code", admin.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
+		TenancyRouter.GET("/getTenancyCount", admin.GetTenancyCount)          // 获取Tenancy对应状态数量
+		TenancyRouter.POST("/createTenancy", admin.CreateTenancy)             // 创建Tenancy
+		TenancyRouter.POST("/loginTenancy/:id", admin.LoginTenancy)           // 登录商户
+		TenancyRouter.POST("/getTenancyList", admin.GetTenanciesList)         // 获取Tenancy列表
+		TenancyRouter.GET("/getTenancyById/:id", admin.GetTenancyById)        // 获取单条Tenancy消息
+		TenancyRouter.POST("/setTenancyRegion", admin.SetTenancyRegion)       // 设置商户地区
+		TenancyRouter.POST("/changeTenancyStatus", admin.ChangeTenancyStatus) // 设置商户显示/隐藏
+		TenancyRouter.PUT("/updateTenancy/:id", admin.UpdateTenancy)          // 更新Tenancy
+		TenancyRouter.DELETE("/deleteTenancy/:id", admin.DeleteTenancy)       // 删除Tenancy
 	}
 }
 
 func InitUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/user")
 	{
-		UserRouter.POST("/registerAdmin", v1.RegisterAdmin)       // 注册
-		UserRouter.POST("/registerTenancy", v1.RegisterTenancy)   // 注册
-		UserRouter.POST("/changePassword", v1.ChangePassword)     // 修改密码
-		UserRouter.POST("/getAdminList", v1.GetAdminList)         // 分页获取管理员列表
-		UserRouter.POST("/getTenancyList", v1.GetTenancyList)     // 分页获取商户列表
-		UserRouter.POST("/getGeneralList", v1.GetGeneralList)     // 分页获取普通用户列表
-		UserRouter.POST("/setUserAuthority", v1.SetUserAuthority) // 设置用户权限
-		UserRouter.DELETE("/deleteUser", v1.DeleteUser)           // 删除用户
-		UserRouter.PUT("/setUserInfo/:user_id", v1.SetUserInfo)   // 设置用户信息
+		UserRouter.POST("/registerAdmin", admin.RegisterAdmin)       // 注册
+		UserRouter.POST("/registerTenancy", admin.RegisterTenancy)   // 注册
+		UserRouter.POST("/changePassword", admin.ChangePassword)     // 修改密码
+		UserRouter.POST("/getAdminList", admin.GetAdminList)         // 分页获取管理员列表
+		UserRouter.POST("/getTenancyList", admin.GetTenancyList)     // 分页获取商户列表
+		UserRouter.POST("/getGeneralList", admin.GetGeneralList)     // 分页获取普通用户列表
+		UserRouter.POST("/setUserAuthority", admin.SetUserAuthority) // 设置用户权限
+		UserRouter.DELETE("/deleteUser", admin.DeleteUser)           // 删除用户
+		UserRouter.PUT("/setUserInfo/:user_id", admin.SetUserInfo)   // 设置用户信息
 	}
 }

@@ -47,9 +47,21 @@ func GetProductFilter(ctx *gin.Context) ([]response.TenancyProductFilter, error)
 	for _, where := range wheres {
 		filter := response.TenancyProductFilter{Name: where.Name, Type: where.Type}
 		db := g.TENANCY_DB.Model(&model.TenancyProduct{})
-		for key, cn := range where.Conditions {
-			db = db.Where(fmt.Sprintf("%s = ?", key), cn)
+		// 显示软删除数据
+		if where.IsDeleted {
+			db = db.Unscoped()
 		}
+
+		if where.Conditions != nil && len(where.Conditions) > 0 {
+			for key, cn := range where.Conditions {
+				if cn == nil {
+					db = db.Where(key)
+				} else {
+					db = db.Where(fmt.Sprintf("%s = ?", key), cn)
+				}
+			}
+		}
+
 		err := db.Count(&filter.Count).Error
 		if err != nil {
 			return filters, err
@@ -78,9 +90,9 @@ func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
 	}
 
 	if multi.IsTenancy(ctx) {
-		other := []response.TenancyProductCondition{{Name: "已售罄", Type: 3, Conditions: map[string]interface{}{"is_show": 1, "stock": 0, "status": 1}},
+		other := []response.TenancyProductCondition{{Name: "已售罄", Type: 3, Conditions: map[string]interface{}{"is_show": 1, "stock": stock, "status": 1}},
 			{Name: "警戒库存", Type: 4, Conditions: map[string]interface{}{"stock": stock, "status": 1}},
-			{Name: "回收站", Type: 5, Conditions: map[string]interface{}{"is_show": 1, "status": 11}},
+			{Name: "回收站", Type: 5, Conditions: map[string]interface{}{"deleted_at is not null": nil}, IsDeleted: true},
 		}
 		conditions = append(conditions, other...)
 	}
@@ -190,8 +202,15 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 		return tenancyList, total, err
 	}
 	cond := getProductConditionByType(ctx, t)
+	if cond.IsDeleted {
+		db = db.Unscoped()
+	}
 	for key, cn := range cond.Conditions {
-		db = db.Where(fmt.Sprintf("%s%s = ?", "tenancy_products.", key), cn)
+		if cn == nil {
+			db = db.Where(fmt.Sprintf("%s%s", "tenancy_products.", key))
+		} else {
+			db = db.Where(fmt.Sprintf("%s%s = ?", "tenancy_products.", key), cn)
+		}
 	}
 	if multi.IsTenancy(ctx) {
 		db = db.Where("tenancy_products.sys_tenancy_id = ?", multi.GetTenancyId(ctx))

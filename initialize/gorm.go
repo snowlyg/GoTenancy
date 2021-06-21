@@ -47,6 +47,7 @@ func MysqlTables(db *gorm.DB) {
 		model.TenancyCategory{},
 		model.TenancyAttrTemplate{},
 		model.TenancyProduct{},
+		model.TenancyProductCate{},
 		model.TenancyProductContent{},
 		model.TenancyProductAttr{},
 		model.TenancyProductAttrValue{},
@@ -78,9 +79,6 @@ func GormMysql() *gorm.DB {
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), gormConfig(m.LogMode)); err != nil {
-		//global.TENANCY_LOG.Error("MySQL启动异常", zap.Any("err", err))
-		//os.Exit(0)
-		//return nil
 		return nil
 	} else {
 		sqlDB, _ := db.DB()

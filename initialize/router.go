@@ -52,7 +52,7 @@ func Routers(app *gin.Engine) {
 		}
 
 		// 商户和员工
-		AdminGroup := V1Group.Group("/admin", middleware.IsAdmin())
+		AdminGroup := V1Group.Group(g.TENANCY_CONFIG.System.AdminPreix, middleware.IsAdmin())
 		{
 			admin.InitApiRouter(AdminGroup)                // 注册功能api路由
 			admin.InitUserRouter(AdminGroup)               // 注册用户路由
@@ -75,13 +75,13 @@ func Routers(app *gin.Engine) {
 		}
 
 		// 商户和员工
-		ClientGroup := V1Group.Group("/merchant", middleware.IsTenancy())
+		ClientGroup := V1Group.Group(g.TENANCY_CONFIG.System.ClientPreix, middleware.IsTenancy())
 		{
 			// client.InitApiRouter(ClientGroup)                // 注册功能api路由
 			// client.InitUserRouter(ClientGroup)               // 注册用户路由
 			client.InitTenancyRouter(ClientGroup) // 注册商户路由
 			// client.InitMiniRouter(ClientGroup)               // 注册小程序路由
-			// client.InitBrandRouter(ClientGroup)              // 注册品牌路由
+			client.InitBrandRouter(ClientGroup) // 注册品牌路由
 			// client.InitBrandCategoryRouter(ClientGroup)      // 注册品牌分类路由
 			// client.InitConfigCategoryRouter(ClientGroup)     // 注册系统配置分类路由
 			client.InitConfigRouter(ClientGroup)      // 注册系统配置路由
