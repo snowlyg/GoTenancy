@@ -1,4 +1,4 @@
-package admin
+package client
 
 import (
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ import (
 
 // CreateAttrTemplate
 func CreateAttrTemplate(ctx *gin.Context) {
-	var attrTemplate model.TenancyAttrTemplate
+	var attrTemplate model.AttrTemplate
 	if errs := ctx.ShouldBindJSON(&attrTemplate); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -28,7 +28,7 @@ func CreateAttrTemplate(ctx *gin.Context) {
 
 // UpdateAttrTemplate
 func UpdateAttrTemplate(ctx *gin.Context) {
-	var attrTemplate model.TenancyAttrTemplate
+	var attrTemplate model.AttrTemplate
 	if errs := ctx.ShouldBindJSON(&attrTemplate); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -42,7 +42,7 @@ func UpdateAttrTemplate(ctx *gin.Context) {
 }
 
 // getAttrTemplateMap
-func getAttrTemplateMap(returnAttrTemplate model.TenancyAttrTemplate) gin.H {
+func getAttrTemplateMap(returnAttrTemplate model.AttrTemplate) gin.H {
 	return gin.H{
 		"id":            returnAttrTemplate.ID,
 		"templateName":  returnAttrTemplate.TemplateName,

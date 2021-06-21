@@ -136,8 +136,8 @@ func InitDB(conf request.InitDB) error {
 		model.SysBrand{},
 
 		model.TenancyMedia{},
-		model.TenancyCategory{},
-		model.TenancyAttrTemplate{},
+		model.ProductCategory{},
+		model.AttrTemplate{},
 		model.TenancyProduct{},
 		model.TenancyProductCate{},
 		model.TenancyProductContent{},

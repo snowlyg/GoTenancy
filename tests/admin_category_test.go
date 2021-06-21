@@ -155,6 +155,6 @@ func TestCategoryRegisterError(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("Key: 'TenancyCategory.BaseTenancyCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
+	obj.Value("message").String().Equal("Key: 'ProductCategory.BaseProductCategory.CateName' Error:Field validation for 'CateName' failed on the 'required' tag")
 
 }

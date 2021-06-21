@@ -11,9 +11,9 @@ import (
 	"go.uber.org/zap"
 )
 
-// GetCreateTenancyCategoryMap
-func GetCreateTenancyCategoryMap(ctx *gin.Context) {
-	if form, err := service.GetTenancyCategoryMap(0, ctx); err != nil {
+// GetCreateProductCategoryMap
+func GetCreateProductCategoryMap(ctx *gin.Context) {
+	if form, err := service.GetProductCategoryMap(0, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -21,14 +21,14 @@ func GetCreateTenancyCategoryMap(ctx *gin.Context) {
 	}
 }
 
-// GetUpdateTenancyCategoryMap
-func GetUpdateTenancyCategoryMap(ctx *gin.Context) {
+// GetUpdateProductCategoryMap
+func GetUpdateProductCategoryMap(ctx *gin.Context) {
 	var req request.GetById
 	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if form, err := service.GetTenancyCategoryMap(req.Id, ctx); err != nil {
+	if form, err := service.GetProductCategoryMap(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取表单失败!", zap.Any("err", err))
 		response.FailWithMessage("获取表单失败:"+err.Error(), ctx)
 	} else {
@@ -38,13 +38,13 @@ func GetUpdateTenancyCategoryMap(ctx *gin.Context) {
 
 // CreateCategory
 func CreateCategory(ctx *gin.Context) {
-	var category model.TenancyCategory
+	var category model.ProductCategory
 	if errs := ctx.ShouldBindJSON(&category); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	if returnCategory, err := service.CreateCategory(category, ctx); err != nil {
+	if returnCategory, err := service.CreateProductCategory(category, ctx); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
@@ -59,12 +59,12 @@ func UpdateCategory(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	var category model.TenancyCategory
+	var category model.ProductCategory
 	if errs := ctx.ShouldBindJSON(&category); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnCategory, err := service.UpdateCategory(category, req.Id); err != nil {
+	if returnCategory, err := service.UpdateProductCategory(category, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -72,9 +72,9 @@ func UpdateCategory(ctx *gin.Context) {
 	}
 }
 
-// GetCategoryList
-func GetCategoryList(ctx *gin.Context) {
-	if list, err := service.GetCategoryInfoList(0); err != nil {
+// GetProductCategoryList
+func GetProductCategoryList(ctx *gin.Context) {
+	if list, err := service.GetProductCategoryInfoList(0); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -112,14 +112,14 @@ func GetClientCategorySelect(ctx *gin.Context) {
 	}
 }
 
-// GetCategoryById
-func GetCategoryById(ctx *gin.Context) {
+// GetProductCategoryById
+func GetProductCategoryById(ctx *gin.Context) {
 	var reqId request.GetById
 	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	category, err := service.GetCategoryByID(reqId.Id)
+	category, err := service.GetProductCategoryByID(reqId.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -128,14 +128,14 @@ func GetCategoryById(ctx *gin.Context) {
 	}
 }
 
-// ChangeCategoryStatus
-func ChangeCategoryStatus(ctx *gin.Context) {
+// ChangeProductCategoryStatus
+func ChangeProductCategoryStatus(ctx *gin.Context) {
 	var changeStatus request.ChangeStatus
 	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := service.ChangeCategoryStatus(changeStatus)
+	err := service.ChangeProductCategoryStatus(changeStatus)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -144,14 +144,14 @@ func ChangeCategoryStatus(ctx *gin.Context) {
 	}
 }
 
-// DeleteCategory
-func DeleteCategory(ctx *gin.Context) {
+// DeleteProductCategory
+func DeleteProductCategory(ctx *gin.Context) {
 	var reqId request.GetById
 	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteCategory(reqId.Id); err != nil {
+	if err := service.DeleteProductCategory(reqId.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

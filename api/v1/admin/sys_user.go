@@ -13,29 +13,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// AdminLogin 后台登录
-func AdminLogin(ctx *gin.Context) {
-	var L request.Login
-	if errs := ctx.ShouldBindJSON(&L); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-
-	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "test" {
-		U := &model.SysUser{Username: L.Username, Password: L.Password}
-		if loginResponse, err := service.Login(U, multi.AdminAuthority); err != nil {
-			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
-			response.FailWithMessage(err.Error(), ctx)
-		} else {
-			response.OkWithDetailed(loginResponse, "登录成功", ctx)
-		}
-	} else {
-		response.FailWithMessage("验证码错误", ctx)
-	}
-}
-
-
-
 // RegisterAdmin 员工注册
 func RegisterAdmin(ctx *gin.Context) {
 	var R request.Register

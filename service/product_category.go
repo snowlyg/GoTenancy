@@ -14,8 +14,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetTenancyCategoryMap
-func GetTenancyCategoryMap(id uint, ctx *gin.Context) (Form, error) {
+// GetProductCategoryMap
+func GetProductCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	uploadUrl := SetUrl("/setting/uploadPicture?field=pic&type=1", ctx)
@@ -38,115 +38,115 @@ func GetTenancyCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	}
 
 	if id > 0 {
-		form.SetAction(fmt.Sprintf("/category/updateCategory/%d", id), ctx)
+		form.SetAction(fmt.Sprintf("/category/updateProductCategory/%d", id), ctx)
 	} else {
-		form.SetAction("/category/createCategory", ctx)
+		form.SetAction("/category/createProductCategory", ctx)
 	}
 
 	form.Rule[0].Props["options"] = opts
 	return form, err
 }
 
-// CreateCategory
-func CreateCategory(brandCategory model.TenancyCategory, ctx *gin.Context) (model.TenancyCategory, error) {
-	err := g.TENANCY_DB.Where("cate_name = ?", brandCategory.CateName).First(&brandCategory).Error
+// CreateProductCategory
+func CreateProductCategory(productCategory model.ProductCategory, ctx *gin.Context) (model.ProductCategory, error) {
+	err := g.TENANCY_DB.Where("cate_name = ?", productCategory.CateName).First(&productCategory).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return brandCategory, errors.New("名称已被注冊")
+		return productCategory, errors.New("名称已被注冊")
 	}
 
-	brandCategory.SysTenancyID = multi.GetTenancyId(ctx)
-	err = g.TENANCY_DB.Create(&brandCategory).Error
-	return brandCategory, err
+	productCategory.SysTenancyID = multi.GetTenancyId(ctx)
+	err = g.TENANCY_DB.Create(&productCategory).Error
+	return productCategory, err
 }
 
-// GetCategoryByID
-func GetCategoryByID(id uint) (model.TenancyCategory, error) {
-	var brandCategory model.TenancyCategory
-	err := g.TENANCY_DB.Where("id = ?", id).First(&brandCategory).Error
-	return brandCategory, err
+// GetProductCategoryByID
+func GetProductCategoryByID(id uint) (model.ProductCategory, error) {
+	var productCategory model.ProductCategory
+	err := g.TENANCY_DB.Where("id = ?", id).First(&productCategory).Error
+	return productCategory, err
 }
 
-// ChangeCategoryStatus
-func ChangeCategoryStatus(changeStatus request.ChangeStatus) error {
-	return g.TENANCY_DB.Model(&model.TenancyCategory{}).Where("id = ?", changeStatus.Id).Update("status", changeStatus.Status).Error
+// ChangeProductCategoryStatus
+func ChangeProductCategoryStatus(changeStatus request.ChangeStatus) error {
+	return g.TENANCY_DB.Model(&model.ProductCategory{}).Where("id = ?", changeStatus.Id).Update("status", changeStatus.Status).Error
 }
 
-// UpdateCategory
-func UpdateCategory(brandCategory model.TenancyCategory, id uint) (model.TenancyCategory, error) {
-	err := g.TENANCY_DB.Where("cate_name = ?", brandCategory.CateName).Where("id <> ?", id).First(&brandCategory).Error
+// UpdateProductCategory
+func UpdateProductCategory(productCategory model.ProductCategory, id uint) (model.ProductCategory, error) {
+	err := g.TENANCY_DB.Where("cate_name = ?", productCategory.CateName).Where("id <> ?", id).First(&productCategory).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return brandCategory, errors.New("名称已被注冊")
+		return productCategory, errors.New("名称已被注冊")
 	}
-	err = g.TENANCY_DB.Where("id = ?", id).Updates(brandCategory).Error
-	return brandCategory, err
+	err = g.TENANCY_DB.Where("id = ?", id).Updates(productCategory).Error
+	return productCategory, err
 }
 
-// DeleteCategory
-func DeleteCategory(id uint) error {
-	var brandCategory model.TenancyCategory
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&brandCategory).Error
+// DeleteProductCategory
+func DeleteProductCategory(id uint) error {
+	var productCategory model.ProductCategory
+	return g.TENANCY_DB.Where("id = ?", id).Delete(&productCategory).Error
 }
 
 // GetCategoryInfoList
-func GetCategoryInfoList(tenancyId uint) ([]response.TenancyCategory, error) {
-	var brandCategoryList []response.TenancyCategory
+func GetProductCategoryInfoList(tenancyId uint) ([]response.ProductCategory, error) {
+	var productCategoryList []response.ProductCategory
 	treeMap, err := getCategoryMap(tenancyId)
-	brandCategoryList = treeMap[0]
-	for i := 0; i < len(brandCategoryList); i++ {
-		err = getCategoryBaseChildrenList(&brandCategoryList[i], treeMap)
+	productCategoryList = treeMap[0]
+	for i := 0; i < len(productCategoryList); i++ {
+		err = getCategoryBaseChildrenList(&productCategoryList[i], treeMap)
 	}
-	return brandCategoryList, err
+	return productCategoryList, err
 }
 
 // getCategoryMap
-func getCategoryMap(tenancyId uint) (map[int32][]response.TenancyCategory, error) {
-	var brandCategoryList []response.TenancyCategory
-	treeMap := make(map[int32][]response.TenancyCategory)
-	db := g.TENANCY_DB.Model(&model.TenancyCategory{})
+func getProductCategoryMap(tenancyId uint) (map[int32][]response.ProductCategory, error) {
+	var productCategoryList []response.ProductCategory
+	treeMap := make(map[int32][]response.ProductCategory)
+	db := g.TENANCY_DB.Model(&model.ProductCategory{})
 	if tenancyId >= 0 {
 		db = db.Where("sys_tenancy_id = ?", tenancyId)
 	}
-	err := db.Order("sort").Find(&brandCategoryList).Error
-	for _, v := range brandCategoryList {
+	err := db.Order("sort").Find(&productCategoryList).Error
+	for _, v := range productCategoryList {
 		treeMap[v.Pid] = append(treeMap[v.Pid], v)
 	}
 	return treeMap, err
 }
 
-// getCategoryBaseChildrenList
-func getCategoryBaseChildrenList(cate *response.TenancyCategory, treeMap map[int32][]response.TenancyCategory) (err error) {
+// getProductCategoryBaseChildrenList
+func getProductCategoryBaseChildrenList(cate *response.ProductCategory, treeMap map[int32][]response.ProductCategory) (err error) {
 	cate.Children = treeMap[int32(cate.ID)]
 	for i := 0; i < len(cate.Children); i++ {
-		err = getCategoryBaseChildrenList(&cate.Children[i], treeMap)
+		err = getProductCategoryBaseChildrenList(&cate.Children[i], treeMap)
 	}
 	return err
 }
 
-// GetTenacyCategoriesOptions
-func GetTenacyCategoriesOptions(tenancyId uint) ([]Option, error) {
+// GetProductCategoriesOptions
+func GetProductCategoriesOptions(tenancyId uint) ([]Option, error) {
 	var options []Option
 	options = append(options, Option{Label: "请选择", Value: 0})
-	treeMap, err := getCategoryMap(tenancyId)
+	treeMap, err := getProductCategoryMap(tenancyId)
 
 	for _, opt := range treeMap[0] {
 		options = append(options, Option{Label: opt.CateName, Value: opt.ID})
 	}
 	for i := 0; i < len(options); i++ {
-		getCategoriesOption(&options[i], treeMap)
+		getProductCategoriesOption(&options[i], treeMap)
 	}
 
 	return options, err
 }
 
-// getCategoriesOption
-func getCategoriesOption(op *Option, treeMap map[int32][]response.TenancyCategory) {
+// getProductCategoriesOption
+func getProductCategoriesOption(op *Option, treeMap map[int32][]response.ProductCategory) {
 	id, ok := op.Value.(uint)
 	if ok {
 		for _, opt := range treeMap[int32(id)] {
 			op.Children = append(op.Children, Option{Label: opt.CateName, Value: opt.ID})
 		}
 		for i := 0; i < len(op.Children); i++ {
-			getCategoriesOption(&op.Children[i], treeMap)
+			getProductCategoriesOption(&op.Children[i], treeMap)
 		}
 	}
 }

@@ -1,5 +1,16 @@
 package public
 
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
+	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
+	"go.uber.org/zap"
+)
+
 //ClientLogin 后台登录
 func ClientLogin(ctx *gin.Context) {
 	var L request.Login
@@ -11,6 +22,27 @@ func ClientLogin(ctx *gin.Context) {
 	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "dev" {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
 		if loginResponse, err := service.Login(U, multi.TenancyAuthority); err != nil {
+			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
+			response.FailWithMessage(err.Error(), ctx)
+		} else {
+			response.OkWithDetailed(loginResponse, "登录成功", ctx)
+		}
+	} else {
+		response.FailWithMessage("验证码错误", ctx)
+	}
+}
+
+// AdminLogin 后台登录
+func AdminLogin(ctx *gin.Context) {
+	var L request.Login
+	if errs := ctx.ShouldBindJSON(&L); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+
+	if store.Verify(L.CaptchaId, L.Captcha, true) || g.TENANCY_CONFIG.System.Env == "test" {
+		U := &model.SysUser{Username: L.Username, Password: L.Password}
+		if loginResponse, err := service.Login(U, multi.AdminAuthority); err != nil {
 			g.TENANCY_LOG.Error("登陆失败!", zap.Any("err", err))
 			response.FailWithMessage(err.Error(), ctx)
 		} else {

@@ -1,6 +1,6 @@
 package response
 
-type TenancyAttrTemplate struct {
+type AttrTemplate struct {
 	TenancyResponse
 	TemplateName  string `json:"templateName"`  // 规格名称
 	TemplateValue string `json:"templateValue"` // 规格值

@@ -2,14 +2,14 @@ package model
 
 import "github.com/snowlyg/go-tenancy/g"
 
-type TenancyCategory struct {
+type ProductCategory struct {
 	g.TENANCY_MODEL
-	BaseTenancyCategory
+	BaseProductCategory
 
 	SysTenancyID uint `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int unsigned;not null" json:"sysTenancyId"` // 商户 id
 }
 
-type BaseTenancyCategory struct {
+type BaseProductCategory struct {
 	Pid      int32  `gorm:"index:pid;column:pid;type:mediumint;not null" json:"pid"`                        // 父id
 	CateName string `gorm:"column:cate_name;type:varchar(100);not null" json:"cateName" binding:"required"` // 分类名称
 	Path     string `gorm:"column:path;type:varchar(255);not null;default:''" json:"path"`                  // 路径
