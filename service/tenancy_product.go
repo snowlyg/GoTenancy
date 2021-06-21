@@ -121,10 +121,10 @@ func CreateProduct(product model.TenancyProduct, ctx *gin.Context) (model.Tenanc
 func GetProductByID(id uint) (response.TenancyProductDetail, error) {
 	var product response.TenancyProductDetail
 	err := g.TENANCY_DB.Model(&model.TenancyProduct{}).
-		Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,tenancy_categories.cate_name as cate_name,tenancy_product_contents.content as content").
+		Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name,tenancy_product_contents.content as content").
 		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_brands on tenancy_products.sys_brand_id = sys_brands.id").
-		Joins("left join tenancy_categories on tenancy_products.tenancy_category_id = tenancy_categories.id").
+		Joins("left join product_categories on tenancy_products.product_category_id = product_categories.id").
 		Joins("left join tenancy_product_contents on tenancy_product_contents.tenancy_product_id = tenancy_products.id").
 		Where("tenancy_products.id = ?", id).
 		First(&product).Error
@@ -219,17 +219,17 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 		db = db.Where(g.TENANCY_DB.Where("tenancy_products.store_name like ?", info.Keyword+"%").Or("tenancy_products.store_info like ?", info.Keyword+"%").Or("tenancy_products.keyword like ?", info.Keyword+"%").Or("tenancy_products.bar_code like ?", info.Keyword+"%"))
 	}
 	if info.ProductCategoryId > 0 {
-		db = db.Where("Product_products.tenancy_category_id = ?", info.ProductCategoryId)
+		db = db.Where("tenancy_products.product_category_id = ?", info.ProductCategoryId)
 	}
 
 	err = db.Count(&total).Error
 	if err != nil {
 		return tenancyList, total, err
 	}
-	err = db.Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,tenancy_categories.cate_name as cate_name").
+	err = db.Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name").
 		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_brands on tenancy_products.sys_brand_id = sys_brands.id").
-		Joins("left join tenancy_categories on tenancy_products.tenancy_category_id = tenancy_categories.id").
+		Joins("left join product_categories on tenancy_products.product_category_id = product_categories.id").
 		Limit(limit).Offset(offset).Find(&tenancyList).Error
 	return tenancyList, total, err
 }

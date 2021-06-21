@@ -11,9 +11,9 @@ func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 	{
 		AttrTemplateRouter.POST("/createAttrTemplate", client.CreateAttrTemplate)
 		AttrTemplateRouter.POST("/getAttrTemplateList", client.GetAttrTemplateList)
-		AttrTemplateRouter.POST("/getAttrTemplateById", client.GetAttrTemplateById)
-		AttrTemplateRouter.PUT("/updateAttrTemplate", client.UpdateAttrTemplate)
-		AttrTemplateRouter.DELETE("/deleteAttrTemplate", client.DeleteAttrTemplate)
+		AttrTemplateRouter.GET("/getAttrTemplateById/:id", client.GetAttrTemplateById)
+		AttrTemplateRouter.PUT("/updateAttrTemplate/:id", client.UpdateAttrTemplate)
+		AttrTemplateRouter.DELETE("/deleteAttrTemplate/:id", client.DeleteAttrTemplate)
 	}
 }
 

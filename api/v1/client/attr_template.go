@@ -22,7 +22,7 @@ func CreateAttrTemplate(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getAttrTemplateMap(returnAttrTemplate), "创建成功", ctx)
+		response.OkWithDetailed(returnAttrTemplate, "创建成功", ctx)
 	}
 }
 
@@ -37,17 +37,7 @@ func UpdateAttrTemplate(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getAttrTemplateMap(returnAttrTemplate), "更新成功", ctx)
-	}
-}
-
-// getAttrTemplateMap
-func getAttrTemplateMap(returnAttrTemplate model.AttrTemplate) gin.H {
-	return gin.H{
-		"id":            returnAttrTemplate.ID,
-		"templateName":  returnAttrTemplate.TemplateName,
-		"templateValue": returnAttrTemplate.TemplateValue,
-		"sysTenancyId":  returnAttrTemplate.SysTenancyID,
+		response.OkWithDetailed(returnAttrTemplate, "更新成功", ctx)
 	}
 }
 

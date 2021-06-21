@@ -191,9 +191,9 @@ var baseApis = []model.SysApi{
 	//规格参数
 	{Path: "/v1/merchant/attrTemplate/getAttrTemplateList", Description: "获取规格参数列表", ApiGroup: "attrTemplateClient", Method: "POST"},
 	{Path: "/v1/merchant/attrTemplate/createAttrTemplate", Description: "添加规格参数", ApiGroup: "attrTemplateClient", Method: "POST"},
-	{Path: "/v1/merchant/attrTemplate/getAttrTemplateById", Description: "获取规格参数详情", ApiGroup: "attrTemplateClient", Method: "POST"},
-	{Path: "/v1/merchant/attrTemplate/updateAttrTemplate", Description: "更新规格参数", ApiGroup: "attrTemplateClient", Method: "PUT"},
-	{Path: "/v1/merchant/attrTemplate/deleteAttrTemplate", Description: "删除规格参数", ApiGroup: "attrTemplateClient", Method: "DELETE"},
+	{Path: "/v1/merchant/attrTemplate/getAttrTemplateById/:id", Description: "获取规格参数详情", ApiGroup: "attrTemplateClient", Method: "GET"},
+	{Path: "/v1/merchant/attrTemplate/updateAttrTemplate/:id", Description: "更新规格参数", ApiGroup: "attrTemplateClient", Method: "PUT"},
+	{Path: "/v1/merchant/attrTemplate/deleteAttrTemplate/:id", Description: "删除规格参数", ApiGroup: "attrTemplateClient", Method: "DELETE"},
 
 	//商品
 	{Path: "/v1/merchant/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "productClient", Method: "GET"},

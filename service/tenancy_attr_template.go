@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -37,15 +39,30 @@ func DeleteAttrTemplate(id uint) error {
 
 // GetAttrTemplateInfoList
 func GetAttrTemplateInfoList(info request.PageInfo) ([]response.AttrTemplate, int64, error) {
-	var brandAttrTemplateList []response.AttrTemplate
+	var attrTemplateList []response.AttrTemplate
+	var attrTemplates []model.AttrTemplate
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.AttrTemplate{})
 	var total int64
 	err := db.Count(&total).Error
 	if err != nil {
-		return brandAttrTemplateList, total, err
+		return attrTemplateList, total, err
 	}
-	err = db.Limit(limit).Offset(offset).Find(&brandAttrTemplateList).Error
-	return brandAttrTemplateList, total, err
+	err = db.Limit(limit).Offset(offset).Find(&attrTemplates).Error
+	if err != nil {
+		return attrTemplateList, total, err
+	}
+
+	for _, attrTemplate := range attrTemplates {
+		attrT := response.AttrTemplate{
+			TenancyResponse: response.TenancyResponse{
+				ID: attrTemplate.ID, CreatedAt: attrTemplate.CreatedAt, UpdatedAt: attrTemplate.UpdatedAt,
+			}, TemplateName: attrTemplate.TemplateName, SysTenancyID: int(attrTemplate.SysTenancyID)}
+
+		_ = json.Unmarshal([]byte(attrTemplate.TemplateValue), &attrT.TemplateValue)
+		attrTemplateList = append(attrTemplateList, attrT)
+	}
+
+	return attrTemplateList, total, err
 }

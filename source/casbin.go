@@ -199,9 +199,9 @@ var carbines = []gormadapter.CasbinRule{
 	//规格参数
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/getAttrTemplateList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/createAttrTemplate", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/getAttrTemplateById", V2: "POST"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/updateAttrTemplate", V2: "PUT"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/deleteAttrTemplate", V2: "DELETE"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/getAttrTemplateById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/updateAttrTemplate/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/deleteAttrTemplate/:id", V2: "DELETE"},
 
 	//商品
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getEditProductFictiMap/:id", V2: "GET"},

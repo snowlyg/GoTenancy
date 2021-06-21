@@ -6,8 +6,8 @@ type TenancyProductPageInfo struct {
 	Page              int    `json:"page" form:"page" binding:"required"`
 	PageSize          int    `json:"pageSize" form:"pageSize" binding:"required"`
 	ProductCategoryId int    `json:"productCategoryId" form:"productCategoryId"`
-	CateId            int    `json:"cateId" form:"cateId"`
 	Type              string `json:"type" form:"type"  binding:"required"`
+	CateId            int    `json:"cateId" form:"cateId"`
 	Keyword           string `json:"keyword" form:"keyword"`
 	IsGiftBag         int    `json:"isGiftBag" form:"isGiftBag"`
 }
