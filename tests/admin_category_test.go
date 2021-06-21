@@ -107,7 +107,7 @@ func TestCategoryProcess(t *testing.T) {
 	category.Value("pic").String().Equal(update["pic"].(string))
 	category.Value("level").Number().Equal(update["level"].(int))
 
-	obj = auth.POST("v1/admin/category/changeProductCategoryStatus").
+	obj = auth.POST("v1/admin/productCategory/changeProductCategoryStatus").
 		WithJSON(map[string]interface{}{
 			"id":     categoryId,
 			"status": g.StatusTrue,
@@ -150,7 +150,7 @@ func TestCategoryRegisterError(t *testing.T) {
 	}
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/admin/category/createProductCategory").
+	obj := auth.POST("v1/admin/productCategory/createProductCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

@@ -162,7 +162,7 @@ func TestClientCategoryRegisterError(t *testing.T) {
 	}
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/merchant/category/createCategory").
+	obj := auth.POST("v1/merchant/productCategory/createProductCategory").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
