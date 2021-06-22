@@ -124,7 +124,7 @@ var baseApis = []model.SysApi{
 	//品牌分类
 	{Path: "/v1/admin/category/getCreateBrandCategoryMap", Description: "获取品牌分类添加表单", ApiGroup: "brandCategory", Method: "POST"},
 	{Path: "/v1/admin/category/getUpdateBrandCategoryMap/:id", Description: "获取品牌分类编辑表单", ApiGroup: "brandCategory", Method: "POST"},
-	{Path: "/v1/admin/brandCategory/getBrandCategoryList", Description: "获取品牌分类列表", ApiGroup: "brandCategory", Method: "POST"},
+	{Path: "/v1/admin/brandCategory/getBrandCategoryList", Description: "获取品牌分类列表", ApiGroup: "brandCategory", Method: "GET"},
 	{Path: "/v1/admin/brandCategory/createBrandCategory", Description: "添加品牌分类", ApiGroup: "brandCategory", Method: "POST"},
 	{Path: "/v1/admin/brandCategory/getBrandCategoryById/:id", Description: "获取根据id品牌分类", ApiGroup: "brandCategory", Method: "GET"},
 	{Path: "/v1/admin/brandCategory/changeBrandCategoryStatus", Description: "修改品牌分类状态", ApiGroup: "brandCategory", Method: "POST"},

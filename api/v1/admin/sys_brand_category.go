@@ -93,10 +93,7 @@ func GetBrandCategoryList(ctx *gin.Context) {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(response.PageResult{
-			List:  list,
-			Total: 0,
-		}, "获取成功", ctx)
+		response.OkWithDetailed(list, "获取成功", ctx)
 	}
 }
 

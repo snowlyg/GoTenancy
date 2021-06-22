@@ -36,7 +36,7 @@ func InitAuthorityRouter(Router *gin.RouterGroup) {
 func InitBrandCategoryRouter(Router *gin.RouterGroup) {
 	BrandCategoryRouter := Router.Group("/brandCategory")
 	{
-		BrandCategoryRouter.POST("/getBrandCategoryList", admin.GetBrandCategoryList)
+		BrandCategoryRouter.GET("/getBrandCategoryList", admin.GetBrandCategoryList)
 		BrandCategoryRouter.GET("/getCreateBrandCategoryMap", admin.GetCreateBrandCategoryMap)
 		BrandCategoryRouter.GET("/getUpdateBrandCategoryMap/:id", admin.GetUpdateBrandCategoryMap)
 		BrandCategoryRouter.POST("/createBrandCategory", admin.CreateBrandCategory)
