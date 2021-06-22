@@ -3,7 +3,6 @@ package client
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
-	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
@@ -12,7 +11,7 @@ import (
 
 // CreateAttrTemplate
 func CreateAttrTemplate(ctx *gin.Context) {
-	var attrTemplate model.AttrTemplate
+	var attrTemplate request.AttrTemplate
 	if errs := ctx.ShouldBindJSON(&attrTemplate); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -28,16 +27,21 @@ func CreateAttrTemplate(ctx *gin.Context) {
 
 // UpdateAttrTemplate
 func UpdateAttrTemplate(ctx *gin.Context) {
-	var attrTemplate model.AttrTemplate
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var attrTemplate request.AttrTemplate
 	if errs := ctx.ShouldBindJSON(&attrTemplate); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnAttrTemplate, err := service.UpdateAttrTemplate(attrTemplate); err != nil {
+	if err := service.UpdateAttrTemplate(attrTemplate, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(returnAttrTemplate, "更新成功", ctx)
+		response.OkWithMessage("更新成功", ctx)
 	}
 }
 
@@ -63,12 +67,12 @@ func GetAttrTemplateList(ctx *gin.Context) {
 
 // GetAttrTemplateById
 func GetAttrTemplateById(ctx *gin.Context) {
-	var reqId request.GetById
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	attrTemplate, err := service.GetAttrTemplateByID(reqId.Id)
+	attrTemplate, err := service.GetAttrTemplateByID(req.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -79,12 +83,12 @@ func GetAttrTemplateById(ctx *gin.Context) {
 
 // DeleteAttrTemplate
 func DeleteAttrTemplate(ctx *gin.Context) {
-	var reqId request.GetById
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteAttrTemplate(reqId.Id); err != nil {
+	if err := service.DeleteAttrTemplate(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
