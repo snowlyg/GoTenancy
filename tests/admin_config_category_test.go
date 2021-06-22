@@ -77,7 +77,7 @@ func TestConfigCategoryProcess(t *testing.T) {
 	update := map[string]interface{}{
 		"name":   "箱包1",
 		"sort":   0,
-		"key":    "xiangbao1",
+		"key":    "xiangbao1sdfsdf",
 		"icon":   "",
 		"info":   "箱包1",
 		"status": 2,

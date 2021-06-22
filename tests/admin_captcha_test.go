@@ -12,7 +12,7 @@ func TestCaptcha(t *testing.T) {
 
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("验证码获取成功")
+	obj.Value("message").String().Equal("获取成功")
 	data := obj.Value("data").Object()
 	data.Keys().ContainsOnly("captchaId", "picPath")
 

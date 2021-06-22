@@ -84,7 +84,7 @@ func UpdateConfigCategory(cate model.SysConfigCategory, id string) (model.SysCon
 
 // DeleteConfigCategory
 func DeleteConfigCategory(id uint) error {
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.SysConfigCategory{}).Error
+	return g.TENANCY_DB.Unscoped().Where("id = ?", id).Delete(&model.SysConfigCategory{}).Error
 }
 
 // GetConfigCategoriesInfoList
