@@ -10,6 +10,7 @@ import (
 )
 
 type param struct {
+	name   string
 	args   map[string]interface{}
 	length int
 }
@@ -24,17 +25,19 @@ func TestTenancyList(t *testing.T) {
 	year, month, _ := time.Now().Date()
 	date := fmt.Sprintf("%d/%02d/01-%d/%02d/28", year, month, year, month)
 	params := []param{
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": ""}, length: 4},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "today"}, length: 1},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "yesterday"}, length: 1},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately7"}, length: 3},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately30"}, length: 4},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "month"}, length: ml},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "year"}, length: 4},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "2", "keyword": "", "date": ""}, length: 1},
-		{args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": date}, length: ml},
+		{name: "no_date", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": ""}, length: 4},
+		{name: "today", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "today"}, length: 1},
+		{name: "yesterday", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "yesterday"}, length: 1},
+		{name: "lately7", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately7"}, length: 3},
+		{name: "lately30", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "lately30"}, length: 4},
+		{name: "month", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "month"}, length: ml},
+		{name: "year", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": "year"}, length: 4},
+		{name: "status_2", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "2", "keyword": "", "date": ""}, length: 1},
+		{name: "status_1", args: map[string]interface{}{"page": 1, "pageSize": 10, "status": "1", "keyword": "", "date": date}, length: ml},
 	}
+
 	for _, param := range params {
+		fmt.Println(param.name)
 		list(t, param.args, param.length)
 	}
 }

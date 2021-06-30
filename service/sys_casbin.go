@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
@@ -65,18 +66,21 @@ func ClearCasbin(v int, p ...string) bool {
 	return success
 }
 
+var (
+	e    *casbin.SyncedEnforcer
+	once sync.Once
+)
+
 // Casbin 持久化到数据库  引入自定义规则
-func Casbin() (*casbin.Enforcer, error) {
-	a, err := gormadapter.NewAdapterByDB(g.TENANCY_DB)
-	if err != nil {
-		return nil, fmt.Errorf("casbin new adapter by db err %w", err)
-	}
-	e, err := casbin.NewEnforcer(g.TENANCY_CONFIG.Casbin.ModelPath, a)
-	if err != nil {
-		return nil, fmt.Errorf("casbin new enforcer err %w", err)
-	}
-	e.AddFunction("ParamsMatch", ParamsMatchFunc)
-	err = e.LoadPolicy()
+func Casbin() (*casbin.SyncedEnforcer, error) {
+	once.Do(func() {
+		a, _ := gormadapter.NewAdapterByDB(g.TENANCY_DB)
+		e, _ = casbin.NewSyncedEnforcer(g.TENANCY_CONFIG.Casbin.ModelPath, a)
+
+		e.AddFunction("ParamsMatch", ParamsMatchFunc)
+	})
+
+	err := e.LoadPolicy()
 	if err != nil {
 		return nil, fmt.Errorf("casbin load policy err %w", err)
 	}

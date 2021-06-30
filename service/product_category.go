@@ -150,3 +150,24 @@ func getProductCategoriesOption(op *Option, treeMap map[int32][]response.Product
 		}
 	}
 }
+
+func getProductCatesByProductId(productId, tenancyId uint) ([]response.ProductCate, error) {
+	var productCates []response.ProductCate
+	err := g.TENANCY_DB.Model(&model.ProductCategory{}).Select("product_categories.*").
+		Joins("left join product_product_cates on product_product_cates.product_category_id = product_categories.id and product_product_cates.sys_tenancy_id = product_categories.sys_tenancy_id").
+		Where("product_categories.sys_tenancy_id = ?", tenancyId).
+		Where("product_product_cates.product_id = ?", productId).
+		Find(&productCates).Error
+
+	return productCates, err
+}
+
+func getProductIdsByProductCategoryId(productCategoryId, tenancyId uint) ([]uint, error) {
+	var productIds []uint
+	err := g.TENANCY_DB.Model(&model.ProductProductCate{}).Select("product_id").
+		Where("product_category_id = ?", productCategoryId).
+		Where("sys_tenancy_id = ?", tenancyId).
+		Find(&productIds).Error
+
+	return productIds, err
+}

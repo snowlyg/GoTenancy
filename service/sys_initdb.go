@@ -73,7 +73,7 @@ func InitDB(conf request.InitDB) error {
 		conf.Port = "3306"
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/", conf.UserName, conf.Password, conf.Host, conf.Port)
-	createSql := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;", conf.DBName)
+	createSql := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;", conf.DBName)
 
 	if err := createTable(dsn, "mysql", createSql); err != nil {
 		return err
@@ -139,7 +139,7 @@ func InitDB(conf request.InitDB) error {
 		model.ProductCategory{},
 		model.AttrTemplate{},
 		model.TenancyProduct{},
-		model.ProductCate{},
+		model.ProductProductCate{},
 		model.TenancyProductContent{},
 		model.TenancyProductAttr{},
 		model.TenancyProductAttrValue{},
@@ -174,7 +174,7 @@ func InitDB(conf request.InitDB) error {
 		source.Category,
 		source.AttrTemplate,
 		source.TenancyProduct,
-		source.ProductCate,
+		source.ProductProductCate,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)

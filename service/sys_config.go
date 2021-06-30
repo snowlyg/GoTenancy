@@ -113,7 +113,7 @@ func GetConfigByCateKey(config_key string, tenancyId uint) ([]response.SysConfig
 		for _, value := range values {
 			if configs[i].ConfigKey == value.ConfigKey {
 				configs[i].Value = value.Value
-				continue
+				break
 			}
 		}
 	}

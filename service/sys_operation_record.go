@@ -94,7 +94,7 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch, ctx *g
 					sysOperationRecords[i].NickName = tenancyUser.NickName
 					sysOperationRecords[i].TenancyName = tenancyUser.TenancyName
 					sysOperationRecords[i].UserName = tenancyUser.Username
-					continue
+					break
 				}
 			}
 		}
@@ -106,7 +106,7 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch, ctx *g
 				if adminUser.ID == sysOperationRecords[i].UserID {
 					sysOperationRecords[i].NickName = adminUser.NickName
 					sysOperationRecords[i].UserName = adminUser.Username
-					continue
+					break
 				}
 			}
 		}

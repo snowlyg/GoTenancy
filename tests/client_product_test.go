@@ -11,6 +11,10 @@ import (
 func TestClinetProductList(t *testing.T) {
 	params := []param{
 		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1"}, length: 3},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1", "keyword": "领立"}, length: 1},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1", "isGiftBag": "1"}, length: 0},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1", "cateId": 185}, length: 0},
+		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "1", "tenancyCategoryId": 173}, length: 1},
 		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "2"}, length: 1},
 		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "3"}, length: 1},
 		{args: map[string]interface{}{"page": 1, "pageSize": 10, "type": "4"}, length: 1},
@@ -22,6 +26,7 @@ func TestClinetProductList(t *testing.T) {
 		clinetProductList(t, param.args, param.length)
 	}
 }
+
 func clinetProductList(t *testing.T, params map[string]interface{}, length int) {
 	auth := tenancyWithLoginTester(t)
 	defer baseLogOut(auth)
@@ -37,58 +42,60 @@ func clinetProductList(t *testing.T, params map[string]interface{}, length int) 
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
 	data.Value("total").Number().Equal(length)
-
-	list := data.Value("list").Array()
-	list.Length().Ge(0)
-	first := list.First().Object()
-	first.Keys().ContainsOnly(
-		"id",
-		"storeName",
-		"storeInfo",
-		"keyword",
-		"barCode",
-		"isShow",
-		"status",
-		"unitName",
-		"sort",
-		"rank",
-		"sales",
-		"price",
-		"cost",
-		"otPrice",
-		"stock",
-		"isHot",
-		"isBenefit",
-		"isBest",
-		"isNew",
-		"isGood",
-		"productType",
-		"ficti",
-		"browse",
-		"codePath",
-		"videoLink",
-		"specType",
-		"extensionType",
-		"refusal",
-		"rate",
-		"replyCount",
-		"giveCouponIds",
-		"isGiftBag",
-		"careCount",
-		"image",
-		"sliderImage",
-		"oldId",
-		"tempId",
-		"sysTenancyId",
-		"sysTenancyName",
-		"cateName",
-		"brandName",
-		"sysBrandId",
-		"productCategoryId",
-		"createdAt",
-		"updatedAt",
-	)
-	first.Value("id").Number().Ge(0)
+	if length > 0 {
+		list := data.Value("list").Array()
+		list.Length().Ge(0)
+		first := list.First().Object()
+		first.Keys().ContainsOnly(
+			"id",
+			"storeName",
+			"storeInfo",
+			"keyword",
+			"barCode",
+			"isShow",
+			"status",
+			"unitName",
+			"sort",
+			"rank",
+			"sales",
+			"price",
+			"cost",
+			"otPrice",
+			"stock",
+			"isHot",
+			"isBenefit",
+			"isBest",
+			"isNew",
+			"isGood",
+			"productType",
+			"ficti",
+			"browse",
+			"codePath",
+			"videoLink",
+			"productCates",
+			"specType",
+			"extensionType",
+			"refusal",
+			"rate",
+			"replyCount",
+			"giveCouponIds",
+			"isGiftBag",
+			"careCount",
+			"image",
+			"sliderImage",
+			"oldId",
+			"tempId",
+			"sysTenancyId",
+			"sysTenancyName",
+			"cateName",
+			"brandName",
+			"sysBrandId",
+			"productCategoryId",
+			"createdAt",
+			"updatedAt",
+		)
+		first.Value("id").Number().Ge(0)
+	}
 
 }
 

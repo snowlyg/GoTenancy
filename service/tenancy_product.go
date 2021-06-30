@@ -192,14 +192,14 @@ func DeleteProduct(id uint) error {
 
 // GetProductInfoList
 func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) ([]response.TenancyProductList, int64, error) {
-	var tenancyList []response.TenancyProductList
+	var productList []response.TenancyProductList
 	var total int64
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.TenancyProduct{})
 	t, err := strconv.Atoi(info.Type)
 	if err != nil {
-		return tenancyList, total, err
+		return productList, total, err
 	}
 	cond := getProductConditionByType(ctx, t)
 	if cond.IsDeleted {
@@ -218,18 +218,42 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 	if info.Keyword != "" {
 		db = db.Where(g.TENANCY_DB.Where("tenancy_products.store_name like ?", info.Keyword+"%").Or("tenancy_products.store_info like ?", info.Keyword+"%").Or("tenancy_products.keyword like ?", info.Keyword+"%").Or("tenancy_products.bar_code like ?", info.Keyword+"%"))
 	}
+
+	// 平台分类id
 	if info.ProductCategoryId > 0 {
-		db = db.Where("tenancy_products.product_category_id = ?", info.ProductCategoryId)
+		productIds, err := getProductIdsByProductCategoryId(info.ProductCategoryId, multi.GetTenancyId(ctx))
+		if err != nil {
+			return productList, total, err
+		}
+		db = db.Where("tenancy_products.id in ?", productIds)
+	}
+
+	// 平台分类id
+	if info.CateId > 0 {
+		db = db.Where("tenancy_products.product_category_id = ?", info.CateId)
+	}
+	// 平台分类id
+	if info.IsGiftBag != "" {
+		db = db.Where("tenancy_products.is_gift_bag = ?", info.IsGiftBag)
 	}
 
 	err = db.Count(&total).Error
 	if err != nil {
-		return tenancyList, total, err
+		return productList, total, err
 	}
 	err = db.Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name").
 		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_brands on tenancy_products.sys_brand_id = sys_brands.id").
 		Joins("left join product_categories on tenancy_products.product_category_id = product_categories.id").
-		Limit(limit).Offset(offset).Find(&tenancyList).Error
-	return tenancyList, total, err
+		Limit(limit).Offset(offset).Find(&productList).Error
+
+	for i := 0; i < len(productList); i++ {
+		productCates, err := getProductCatesByProductId(productList[i].ID, productList[i].SysTenancyID)
+		if err != nil {
+			continue
+		}
+		productList[i].ProductCates = productCates
+	}
+
+	return productList, total, err
 }

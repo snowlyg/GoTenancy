@@ -47,7 +47,7 @@ func MysqlTables(db *gorm.DB) {
 		model.ProductCategory{},
 		model.AttrTemplate{},
 		model.TenancyProduct{},
-		model.ProductCate{},
+		model.ProductProductCate{},
 		model.TenancyProductContent{},
 		model.TenancyProductAttr{},
 		model.TenancyProductAttrValue{},
