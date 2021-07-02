@@ -150,6 +150,23 @@ type Result struct {
 	Age  int
 }
 
+func ChangeCopyMap(id uint, ctx *gin.Context) (Form, error) {
+	var form Form
+	var formStr string
+	tenancy, err := GetTenancyByID(id)
+	if err != nil {
+		return Form{}, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"copyNum","value":%d,"title":"复制次数","props":{"type":"text","placeholder":"请输入复制次数","disabled":true,"readonly":true}},{"type":"radio","field":"type","value":1,"title":"修改类型","props":{},"options":[{"value":1,"label":"增加"},{"value":2,"label":"减少"}]},{"type":"inputNumber","field":"num","value":0,"title":"修改数量","props":{"placeholder":"请输入修改数量"},"validate":[{"message":"请输入修改数量","required":true,"type":"number","trigger":"change"}]}],"action":"","method":"POST","title":"修改复制商品次数","config":{}}`, tenancy.CopyProductNum)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	form.SetAction(fmt.Sprintf("%s/%d", "/tenancy/setCopyProductNum", id), ctx)
+	return form, err
+}
+
 // GetTenancyCount
 func GetTenancyCount() (gin.H, error) {
 	var counts response.Counts
@@ -183,4 +200,28 @@ func GetUpdateTenancyMap(ctx *gin.Context) (Form, error) {
 	}
 	form.SetAction(fmt.Sprintf("/tenancy/updateTenancy/%d", id), ctx)
 	return form, err
+}
+
+// SetCopyProductNum
+func SetCopyProductNum(req request.SetCopyProductNum, id uint) error {
+	tenancy, err := GetTenancyByID(id)
+	if err != nil {
+		return err
+	}
+	copyNum := tenancy.CopyProductNum
+	// 增加
+	if req.Type == 1 {
+		copyNum = copyNum + req.Num
+	} else if req.Type == 2 {
+		fmt.Println(copyNum, req.Num)
+		if copyNum <= req.Num {
+			copyNum = 0
+		} else {
+			copyNum = copyNum - req.Num
+		}
+	}
+	if err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", id).Updates(map[string]interface{}{"copy_product_num": copyNum}).Error; err != nil {
+		return err
+	}
+	return err
 }

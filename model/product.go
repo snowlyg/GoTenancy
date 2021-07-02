@@ -27,8 +27,7 @@ const (
 type Product struct {
 	g.TENANCY_MODEL
 	BaseProduct
-	GiveCouponIDs string `gorm:"column:give_coupon_ids;type:varchar(500)" json:"giveCouponIds"`      // 赠送优惠券
-	SliderImage   string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
+	SliderImage string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
 }
 
 type BaseProduct struct {

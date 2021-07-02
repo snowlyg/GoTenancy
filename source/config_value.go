@@ -26,7 +26,7 @@ var configValues = []model.SysConfigValue{
 	{ConfigKey: "wechat_encode", Value: "0", SysTenancyID: 0},
 	{ConfigKey: "extension_one_rate", Value: "0.02", SysTenancyID: 0},
 	{ConfigKey: "extension_two_rate", Value: "0.01", SysTenancyID: 0},
-	{ConfigKey: "extension_status", Value: "1", SysTenancyID: 0},
+	// {ConfigKey: "extension_status", Value: "1", SysTenancyID: 0},
 	{ConfigKey: "mer_store_stock", Value: "10", SysTenancyID: 55},
 	{ConfigKey: "sms_user_pay_status", Value: "1", SysTenancyID: 0},
 	{ConfigKey: "sms_user_postage_status", Value: "1", SysTenancyID: 0},

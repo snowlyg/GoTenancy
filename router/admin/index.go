@@ -216,9 +216,11 @@ func InitSystemRouter(Router *gin.RouterGroup) {
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
+		TenancyRouter.GET("/changeCopyMap/:id", admin.ChangeCopyMap)          // 获取修改商品复制次数map
 		TenancyRouter.GET("/getTenancies/:code", admin.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
 		TenancyRouter.GET("/getTenancyCount", admin.GetTenancyCount)          // 获取Tenancy对应状态数量
 		TenancyRouter.POST("/createTenancy", admin.CreateTenancy)             // 创建Tenancy
+		TenancyRouter.POST("/setCopyProductNum/:id", admin.SetCopyProductNum) // 设置商品复制次数
 		TenancyRouter.POST("/loginTenancy/:id", admin.LoginTenancy)           // 登录商户
 		TenancyRouter.POST("/getTenancyList", admin.GetTenanciesList)         // 获取Tenancy列表
 		TenancyRouter.GET("/getTenancyById/:id", admin.GetTenancyById)        // 获取单条Tenancy消息

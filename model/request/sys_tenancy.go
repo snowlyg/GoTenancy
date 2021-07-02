@@ -19,3 +19,9 @@ type UpdateClientTenancy struct {
 	State  int    `json:"state"`
 	Tele   string `json:"tele"`
 }
+
+type SetCopyProductNum struct {
+	CopyNum int `json:"copyNum"`
+	Num     int `json:"num"`
+	Type    int `json:"type" binding:"required"` // 1:+ ,2:-
+}

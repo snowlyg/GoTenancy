@@ -162,3 +162,37 @@ func GetTenancyCount(ctx *gin.Context) {
 		response.OkWithDetailed(tenancies, "获取成功", ctx)
 	}
 }
+
+func ChangeCopyMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if rules, err := service.ChangeCopyMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(rules, "获取成功", ctx)
+	}
+}
+
+func SetCopyProductNum(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var copyProductNum request.SetCopyProductNum
+	if errs := ctx.ShouldBindJSON(&copyProductNum); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+
+	if err := service.SetCopyProductNum(copyProductNum, req.Id); err != nil {
+		g.TENANCY_LOG.Error("设置失败!", zap.Any("err", err))
+		response.FailWithMessage("设置失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
+	}
+}

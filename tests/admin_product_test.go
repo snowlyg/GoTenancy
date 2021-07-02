@@ -71,7 +71,6 @@ func productlist(t *testing.T, params map[string]interface{}, length int) {
 		"refusal",
 		"rate",
 		"replyCount",
-		"giveCouponIds",
 		"isGiftBag",
 		"careCount",
 		"image",
@@ -167,7 +166,6 @@ func TestProductProcess(t *testing.T) {
 	product.Value("refusal").String().Equal(update["refusal"].(string))
 	product.Value("rate").Number().Equal(update["rate"].(int))
 	product.Value("replyCount").Number().Equal(update["replyCount"].(int))
-	product.Value("giveCouponIds").String().Equal(update["giveCouponIds"].(string))
 	product.Value("isGiftBag").Number().Equal(update["isGiftBag"].(int))
 	product.Value("careCount").Number().Equal(update["careCount"].(int))
 	product.Value("image").String().Equal(update["image"].(string))

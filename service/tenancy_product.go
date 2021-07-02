@@ -116,7 +116,6 @@ func CreateProduct(req request.CreateProduct, ctx *gin.Context) (model.Product, 
 	var product model.Product
 	product.BaseProduct = req.BaseProduct
 	product.SysTenancyID = multi.GetTenancyId(ctx)
-	product.GiveCouponIDs = strings.Join(req.GiveCouponID, ",")
 	product.SliderImage = strings.Join(req.SliderImages, ",")
 	product.ProductCategoryID = req.CateId
 	product.IsHot = g.StatusFalse
@@ -156,19 +155,23 @@ func GetProductByID(id uint) (response.ProductDetail, error) {
 	if err != nil {
 		return response.ProductDetail{}, err
 	}
-	product.GiveCouponID = strings.Split(product.GiveCouponIDs, ",")
 	product.SliderImages = strings.Split(product.SliderImage, ",")
-	// product.Attr = strings.Split(product.SliderImage, ",")
-	// product.AttrValue = strings.Split(product.SliderImage, ",")
-	// product.Coupon = strings.Split(product.SliderImage, ",")
 
 	var attrs []model.ProductAttr
-	err = g.TENANCY_DB.Model(&model.ProductAttr{}).Where("product_product_cates.product_id = ?", id).
+	err = g.TENANCY_DB.Model(&model.ProductAttr{}).Where("product_id = ?", id).
 		Find(&attrs).Error
 	if err != nil {
 		return response.ProductDetail{}, err
 	}
 	product.Attr = attrs
+
+	var attrValues []model.ProductAttrValue
+	err = g.TENANCY_DB.Model(&model.ProductAttrValue{}).Where("product_id = ?", id).
+		Find(&attrValues).Error
+	if err != nil {
+		return response.ProductDetail{}, err
+	}
+	product.AttrValue = attrValues
 
 	return product, err
 }

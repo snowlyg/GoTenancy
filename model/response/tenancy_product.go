@@ -22,14 +22,11 @@ type ProductDetail struct {
 	CateName       string `json:"cateName"`       // 分类名称
 	BrandName      string `json:"brandName"`      // 商户名称
 	Content        string `json:"content"`
-	GiveCouponIDs  string `json:"giveCouponIds"` // 赠送优惠券
-	SliderImage    string `json:"sliderImage"`   // 轮播图
+	SliderImage    string `json:"sliderImage"` // 轮播图
 	// ProductCates   []ProductCate `gorm:"-" json:"productCates"`  // 商户分类
-	GiveCouponID []string                 `gorm:"-" json:"giveCouponId"` // 赠送优惠券
 	SliderImages []string                 `gorm:"-" json:"sliderImages"` // 轮播图
-	Attr         []string                 `gorm:"-" json:"attr"`
+	Attr         []model.ProductAttr      `gorm:"-" json:"attr"`
 	AttrValue    []model.ProductAttrValue `gorm:"-" json:"attrValue"`
-	Coupon       []string                 `gorm:"-" json:"coupon"`
 }
 
 type ProductFilter struct {

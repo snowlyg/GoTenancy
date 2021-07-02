@@ -76,7 +76,6 @@ func clinetProductList(t *testing.T, params map[string]interface{}, length int) 
 			"refusal",
 			"rate",
 			"replyCount",
-			"giveCouponIds",
 			"isGiftBag",
 			"careCount",
 			"image",
@@ -118,9 +117,7 @@ func TestClinetProductProcess(t *testing.T) {
 		},
 		"cateId":        183,
 		"content":       "<p>是的发生的发sad</p>",
-		"couponData":    []string{},
 		"extensionType": 2,
-		"giveCouponIds": []string{},
 		"image":         "http://127.0.0.1:8089/uploads/file/b39024efbc6de61976f585c8421c6bba_20210702150027.png",
 		"isGiftBag":     2,
 		"isGood":        1,
@@ -180,7 +177,6 @@ func TestClinetProductProcess(t *testing.T) {
 	product.Value("refusal").String().Equal("")
 	product.Value("rate").Number().Equal(5)
 	product.Value("replyCount").Number().Equal(0)
-	product.Value("giveCouponIds").String().Empty()
 	product.Value("isGiftBag").Number().Equal(2)
 	product.Value("careCount").Number().Equal(0)
 	product.Value("image").String().NotEmpty()
@@ -221,7 +217,6 @@ func TestClinetProductProcess(t *testing.T) {
 	// 	"refusal":           "",
 	// 	"rate":              5,
 	// 	"replyCount":        0,
-	// 	"giveCouponIds":     "",
 	// 	"isGiftBag":         2,
 	// 	"careCount":         0,
 	// 	"image":             "",
@@ -277,7 +272,6 @@ func TestClinetProductProcess(t *testing.T) {
 	// product.Value("refusal").String().Equal(update["refusal"].(string))
 	// product.Value("rate").Number().Equal(update["rate"].(int))
 	// product.Value("replyCount").Number().Equal(update["replyCount"].(int))
-	// product.Value("giveCouponIds").String().Equal(update["giveCouponIds"].(string))
 	// product.Value("isGiftBag").Number().Equal(update["isGiftBag"].(int))
 	// product.Value("careCount").Number().Equal(update["careCount"].(int))
 	// product.Value("image").String().Equal(update["image"].(string))
