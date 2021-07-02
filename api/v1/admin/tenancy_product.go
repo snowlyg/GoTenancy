@@ -40,7 +40,7 @@ func UpdateProduct(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	var product request.UpdateTenancyProduct
+	var product request.UpdateProduct
 	if errs := ctx.ShouldBindJSON(&product); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -93,7 +93,7 @@ func ChangeProductStatus(ctx *gin.Context) {
 
 // GetProductList
 func GetProductList(ctx *gin.Context) {
-	var pageInfo request.TenancyProductPageInfo
+	var pageInfo request.ProductPageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return

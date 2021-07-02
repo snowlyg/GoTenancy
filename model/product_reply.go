@@ -6,8 +6,8 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 )
 
-// TenancyProductReply 商品评论表
-type TenancyProductReply struct {
+// ProductReply 商品评论表
+type ProductReply struct {
 	g.TENANCY_MODEL
 
 	ProductScore         int       `gorm:"column:product_score;type:tinyint(1);not null" json:"productScore"`           // 商品分数
@@ -24,10 +24,10 @@ type TenancyProductReply struct {
 	Nickname             string    `gorm:"column:nickname;type:varchar(64);not null" json:"nickname"`                   // 用户名称
 	Avatar               string    `gorm:"column:avatar;type:varchar(255);not null" json:"avatar"`                      // 用户头像
 
-	SysUserID             int    `gorm:"index:sys_user_id;column:sys_user_id;type:int;not null" json:"sysUserId"`                               // 用户ID
-	SysTenancyID          int    `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"`                      // 商户 id
-	TenancyProductID      int    `gorm:"index:tenancy_product_id;column:tenancy_product_id;type:int;not null" json:"tenancyProductId"`          // 商品id
-	TenancyOrderProductID int    `gorm:"index:tenancy_order_id;column:tenancy_order_product_id;type:int;not null" json:"tenancyOrderProductId"` // 订单商品ID
-	Unique                string `gorm:"uniqueIndex:order_id;column:unique;type:char(12)" json:"unique"`                                        // 商品 sku
-	ProductType           int8   `gorm:"column:product_type;type:tinyint;not null;default:1" json:"productType"`                                // 1=普通商品
+	SysUserID      int    `gorm:"index:sys_user_id;column:sys_user_id;type:int;not null" json:"sysUserId"`          // 用户ID
+	SysTenancyID   int    `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
+	ProductID      uint   `gorm:"index:product_id;column:product_id;type:int;not null" json:"productId"`            // 商品id  // 商品id
+	OrderProductID int    `gorm:"index:order_id;column:order_product_id;type:int;not null" json:"orderProductId"`   // 订单商品ID
+	Unique         string `gorm:"uniqueIndex:order_id;column:unique;type:char(12)" json:"unique"`                   // 商品 sku
+	ProductType    int8   `gorm:"column:product_type;type:tinyint;not null;default:1" json:"productType"`           // 1=普通商品
 }

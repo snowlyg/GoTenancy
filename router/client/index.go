@@ -101,6 +101,19 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	return MenuRouter
 }
 
+// 运费模板
+func InitShippingTemplateRouter(Router *gin.RouterGroup) {
+	ShippingTemplateRouter := Router.Group("/shippingTemplate")
+	{
+		ShippingTemplateRouter.GET("/getShippingTemplateSelect", client.GetShippingTemplateSelect)
+		ShippingTemplateRouter.POST("/getShippingTemplateList", client.GetShippingTemplateList)
+		ShippingTemplateRouter.POST("/createShippingTemplate", client.CreateShippingTemplate)
+		ShippingTemplateRouter.GET("/getShippingTemplateById/:id", client.GetShippingTemplateById)
+		ShippingTemplateRouter.PUT("/updateShippingTemplate/:id", client.UpdateShippingTemplate)
+		ShippingTemplateRouter.DELETE("/deleteShippingTemplate/:id", client.DeleteShippingTemplate)
+	}
+}
+
 func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{

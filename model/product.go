@@ -24,12 +24,14 @@ const (
 	CustomExtensionType      //佣金比例 自定义
 )
 
-type TenancyProduct struct {
+type Product struct {
 	g.TENANCY_MODEL
-	BaseTenancyProduct
+	BaseProduct
+	GiveCouponIDs string `gorm:"column:give_coupon_ids;type:varchar(500)" json:"giveCouponIds"`      // 赠送优惠券
+	SliderImage   string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
 }
 
-type BaseTenancyProduct struct {
+type BaseProduct struct {
 	StoreName     string  `gorm:"column:store_name;type:varchar(128);not null" json:"storeName" binding:"required"` // 商品名称
 	StoreInfo     string  `gorm:"column:store_info;type:varchar(256);not null" json:"storeInfo" `                   // 商品简介
 	Keyword       string  `gorm:"column:keyword;type:varchar(128);not null" json:"keyword"`                         // 关键字
@@ -59,12 +61,11 @@ type BaseTenancyProduct struct {
 	Refusal       string  `gorm:"column:refusal;type:varchar(255)" json:"refusal"`                                  // 审核拒绝理由
 	Rate          float64 `gorm:"column:rate;type:decimal(2,1);default:5.0" json:"rate"`                            // 评价分数
 	ReplyCount    uint    `gorm:"column:reply_count;type:int unsigned;default:0" json:"replyCount"`                 // 评论数
-	GiveCouponIDs string  `gorm:"column:give_coupon_ids;type:varchar(500)" json:"giveCouponIds"`                    // 赠送优惠券
-	IsGiftBag     int     `gorm:"column:is_gift_bag;type:tinyint;default:2" json:"isGiftBag"`                       // 是否为礼包
-	CareCount     int     `gorm:"column:care_count;type:int;not null;default:0" json:"careCount"`                   // 收藏数
+
+	IsGiftBag int `gorm:"column:is_gift_bag;type:tinyint;default:2" json:"isGiftBag"`     // 是否为礼包
+	CareCount int `gorm:"column:care_count;type:int;not null;default:0" json:"careCount"` // 收藏数
 	// 原商品ID
-	Image       string `gorm:"column:image;type:varchar(256);not null" json:"image"`               // 商品图片
-	SliderImage string `gorm:"column:slider_image;type:varchar(2000);not null" json:"sliderImage"` // 轮播图
+	Image string `gorm:"column:image;type:varchar(256);not null" json:"image"` // 商品图片
 
 	OldID        uint `gorm:"column:old_id;type:int;default:0" json:"oldId"`
 	TempID       uint `gorm:"column:temp_id;type:int;not null;default:0" json:"tempId"`                         // 运费模板ID

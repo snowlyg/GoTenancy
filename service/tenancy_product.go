@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
@@ -41,12 +42,12 @@ func GetEditProductFictiMap(id uint, ctx *gin.Context) (Form, error) {
 // 审核未通过 7:'status' => 3
 
 // GetProductFilter
-func GetProductFilter(ctx *gin.Context) ([]response.TenancyProductFilter, error) {
+func GetProductFilter(ctx *gin.Context) ([]response.ProductFilter, error) {
 	wheres := getProductConditions(ctx)
-	var filters []response.TenancyProductFilter
+	var filters []response.ProductFilter
 	for _, where := range wheres {
-		filter := response.TenancyProductFilter{Name: where.Name, Type: where.Type}
-		db := g.TENANCY_DB.Model(&model.TenancyProduct{})
+		filter := response.ProductFilter{Name: where.Name, Type: where.Type}
+		db := g.TENANCY_DB.Model(&model.Product{})
 		// 显示软删除数据
 		if where.IsDeleted {
 			db = db.Unscoped()
@@ -73,7 +74,7 @@ func GetProductFilter(ctx *gin.Context) ([]response.TenancyProductFilter, error)
 }
 
 // getProductConditions
-func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
+func getProductConditions(ctx *gin.Context) []response.ProductCondition {
 	stock := 0
 	if config, err := GetTenancyConfigValue("mer_store_stock", multi.GetTenancyId(ctx)); err == nil {
 		if value, err := strconv.Atoi(config.Value); err == nil {
@@ -81,7 +82,7 @@ func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
 		}
 	}
 
-	conditions := []response.TenancyProductCondition{
+	conditions := []response.ProductCondition{
 		{Name: "出售中", Type: 1, Conditions: map[string]interface{}{"is_show": 1, "status": 1}},
 		{Name: "仓库中", Type: 2, Conditions: map[string]interface{}{"is_show": 2, "status": 1}},
 
@@ -90,7 +91,7 @@ func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
 	}
 
 	if multi.IsTenancy(ctx) {
-		other := []response.TenancyProductCondition{{Name: "已售罄", Type: 3, Conditions: map[string]interface{}{"is_show": 1, "stock": stock, "status": 1}},
+		other := []response.ProductCondition{{Name: "已售罄", Type: 3, Conditions: map[string]interface{}{"is_show": 1, "stock": stock, "status": 1}},
 			{Name: "警戒库存", Type: 4, Conditions: map[string]interface{}{"stock": stock, "status": 1}},
 			{Name: "回收站", Type: 5, Conditions: map[string]interface{}{"deleted_at is not null": nil}, IsDeleted: true},
 		}
@@ -100,7 +101,7 @@ func getProductConditions(ctx *gin.Context) []response.TenancyProductCondition {
 }
 
 // getProductConditionByType
-func getProductConditionByType(ctx *gin.Context, t int) response.TenancyProductCondition {
+func getProductConditionByType(ctx *gin.Context, t int) response.ProductCondition {
 	conditions := getProductConditions(ctx)
 	for _, condition := range conditions {
 		if condition.Type == t {
@@ -111,45 +112,86 @@ func getProductConditionByType(ctx *gin.Context, t int) response.TenancyProductC
 }
 
 // CreateProduct
-func CreateProduct(product model.TenancyProduct, ctx *gin.Context) (model.TenancyProduct, error) {
+func CreateProduct(req request.CreateProduct, ctx *gin.Context) (model.Product, error) {
+	var product model.Product
+	product.BaseProduct = req.BaseProduct
 	product.SysTenancyID = multi.GetTenancyId(ctx)
+	product.GiveCouponIDs = strings.Join(req.GiveCouponID, ",")
+	product.SliderImage = strings.Join(req.SliderImages, ",")
+	product.ProductCategoryID = req.CateId
+	product.IsHot = g.StatusFalse
+	product.IsBenefit = g.StatusFalse
+	product.IsBest = g.StatusFalse
+	product.IsNew = g.StatusFalse
+	product.ProductType = model.GeneralSale
 	err := g.TENANCY_DB.Create(&product).Error
+	if err != nil {
+		return model.Product{}, err
+	}
+
+	var productCates []model.ProductProductCate
+	for _, categoryId := range req.CategoryIds {
+		productCate := model.ProductProductCate{ProductID: int(product.ID), ProductCategoryID: categoryId, SysTenancyID: product.SysTenancyID}
+		productCates = append(productCates, productCate)
+	}
+
+	err = g.TENANCY_DB.Model(&model.ProductProductCate{}).Create(&productCates).Error
+	if err != nil {
+		return model.Product{}, err
+	}
 	return product, err
 }
 
 // GetProductByID
-func GetProductByID(id uint) (response.TenancyProductDetail, error) {
-	var product response.TenancyProductDetail
-	err := g.TENANCY_DB.Model(&model.TenancyProduct{}).
-		Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name,tenancy_product_contents.content as content").
-		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
-		Joins("left join sys_brands on tenancy_products.sys_brand_id = sys_brands.id").
-		Joins("left join product_categories on tenancy_products.product_category_id = product_categories.id").
-		Joins("left join tenancy_product_contents on tenancy_product_contents.tenancy_product_id = tenancy_products.id").
-		Where("tenancy_products.id = ?", id).
+func GetProductByID(id uint) (response.ProductDetail, error) {
+	var product response.ProductDetail
+	err := g.TENANCY_DB.Model(&model.Product{}).
+		Select("products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name,product_contents.content as content").
+		Joins("left join sys_tenancies on products.sys_tenancy_id = sys_tenancies.id").
+		Joins("left join sys_brands on products.sys_brand_id = sys_brands.id").
+		Joins("left join product_categories on products.product_category_id = product_categories.id").
+		Joins("left join product_contents on product_contents.product_id = products.id").
+		Where("products.id = ?", id).
 		First(&product).Error
+	if err != nil {
+		return response.ProductDetail{}, err
+	}
+	product.GiveCouponID = strings.Split(product.GiveCouponIDs, ",")
+	product.SliderImages = strings.Split(product.SliderImage, ",")
+	// product.Attr = strings.Split(product.SliderImage, ",")
+	// product.AttrValue = strings.Split(product.SliderImage, ",")
+	// product.Coupon = strings.Split(product.SliderImage, ",")
+
+	var attrs []model.ProductAttr
+	err = g.TENANCY_DB.Model(&model.ProductAttr{}).Where("product_product_cates.product_id = ?", id).
+		Find(&attrs).Error
+	if err != nil {
+		return response.ProductDetail{}, err
+	}
+	product.Attr = attrs
+
 	return product, err
 }
 
 // GetProductFictiByID
 func GetProductFictiByID(id uint) (int32, error) {
-	var product response.TenancyProductFicti
-	err := g.TENANCY_DB.Model(&model.TenancyProduct{}).
+	var product response.ProductFicti
+	err := g.TENANCY_DB.Model(&model.Product{}).
 		Select("ficti").
-		Where("tenancy_products.id = ?", id).
+		Where("products.id = ?", id).
 		First(&product).Error
 	return product.Ficti, err
 }
 
 // UpdateProduct
-func UpdateProduct(req request.UpdateTenancyProduct, id uint) error {
-	content := model.TenancyProductContent{Content: req.Content, TenancyProductID: id, Type: req.ProductType}
-	product := model.TenancyProduct{BaseTenancyProduct: model.BaseTenancyProduct{StoreName: req.StoreName, Ficti: req.Ficti, IsBenefit: req.IsBenefit, IsBest: req.IsBest, IsHot: req.IsHot, IsNew: req.IsNew}}
+func UpdateProduct(req request.UpdateProduct, id uint) error {
+	content := model.ProductContent{Content: req.Content, ProductID: id, Type: req.ProductType}
+	product := model.Product{BaseProduct: model.BaseProduct{StoreName: req.StoreName, Ficti: req.Ficti, IsBenefit: req.IsBenefit, IsBest: req.IsBest, IsHot: req.IsHot, IsNew: req.IsNew}}
 	err := g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("id = ?", id).Updates(&product).Error; err != nil {
 			return err
 		}
-		if err := tx.Where("tenancy_product_id = ?", id).FirstOrCreate(&content).Error; err != nil {
+		if err := tx.Where("product_id = ?", id).FirstOrCreate(&content).Error; err != nil {
 			return err
 		}
 		return nil
@@ -159,7 +201,7 @@ func UpdateProduct(req request.UpdateTenancyProduct, id uint) error {
 
 // ChangeProductStatus
 func ChangeProductStatus(changeStatus request.ChangeProductStatus) error {
-	return g.TENANCY_DB.Model(&model.TenancyProduct{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
+	return g.TENANCY_DB.Model(&model.Product{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
 }
 
 // SetProductFicti
@@ -178,7 +220,7 @@ func SetProductFicti(req request.SetProductFicti, id uint) error {
 			ficti = ficti - req.Ficti
 		}
 	}
-	if err := g.TENANCY_DB.Model(&model.TenancyProduct{}).Where("id = ?", id).Updates(map[string]interface{}{"ficti": ficti}).Error; err != nil {
+	if err := g.TENANCY_DB.Model(&model.Product{}).Where("id = ?", id).Updates(map[string]interface{}{"ficti": ficti}).Error; err != nil {
 		return err
 	}
 	return err
@@ -186,17 +228,17 @@ func SetProductFicti(req request.SetProductFicti, id uint) error {
 
 // DeleteProduct
 func DeleteProduct(id uint) error {
-	var product model.TenancyProduct
+	var product model.Product
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&product).Error
 }
 
 // GetProductInfoList
-func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) ([]response.TenancyProductList, int64, error) {
-	var productList []response.TenancyProductList
+func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]response.ProductList, int64, error) {
+	var productList []response.ProductList
 	var total int64
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.TenancyProduct{})
+	db := g.TENANCY_DB.Model(&model.Product{})
 	t, err := strconv.Atoi(info.Type)
 	if err != nil {
 		return productList, total, err
@@ -207,16 +249,16 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 	}
 	for key, cn := range cond.Conditions {
 		if cn == nil {
-			db = db.Where(fmt.Sprintf("%s%s", "tenancy_products.", key))
+			db = db.Where(fmt.Sprintf("%s%s", "products.", key))
 		} else {
-			db = db.Where(fmt.Sprintf("%s%s = ?", "tenancy_products.", key), cn)
+			db = db.Where(fmt.Sprintf("%s%s = ?", "products.", key), cn)
 		}
 	}
 	if multi.IsTenancy(ctx) {
-		db = db.Where("tenancy_products.sys_tenancy_id = ?", multi.GetTenancyId(ctx))
+		db = db.Where("products.sys_tenancy_id = ?", multi.GetTenancyId(ctx))
 	}
 	if info.Keyword != "" {
-		db = db.Where(g.TENANCY_DB.Where("tenancy_products.store_name like ?", info.Keyword+"%").Or("tenancy_products.store_info like ?", info.Keyword+"%").Or("tenancy_products.keyword like ?", info.Keyword+"%").Or("tenancy_products.bar_code like ?", info.Keyword+"%"))
+		db = db.Where(g.TENANCY_DB.Where("products.store_name like ?", info.Keyword+"%").Or("products.store_info like ?", info.Keyword+"%").Or("products.keyword like ?", info.Keyword+"%").Or("products.bar_code like ?", info.Keyword+"%"))
 	}
 
 	// 平台分类id
@@ -225,26 +267,26 @@ func GetProductInfoList(info request.TenancyProductPageInfo, ctx *gin.Context) (
 		if err != nil {
 			return productList, total, err
 		}
-		db = db.Where("tenancy_products.id in ?", productIds)
+		db = db.Where("products.id in ?", productIds)
 	}
 
 	// 平台分类id
 	if info.CateId > 0 {
-		db = db.Where("tenancy_products.product_category_id = ?", info.CateId)
+		db = db.Where("products.product_category_id = ?", info.CateId)
 	}
 	// 平台分类id
 	if info.IsGiftBag != "" {
-		db = db.Where("tenancy_products.is_gift_bag = ?", info.IsGiftBag)
+		db = db.Where("products.is_gift_bag = ?", info.IsGiftBag)
 	}
 
 	err = db.Count(&total).Error
 	if err != nil {
 		return productList, total, err
 	}
-	err = db.Select("tenancy_products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name").
-		Joins("left join sys_tenancies on tenancy_products.sys_tenancy_id = sys_tenancies.id").
-		Joins("left join sys_brands on tenancy_products.sys_brand_id = sys_brands.id").
-		Joins("left join product_categories on tenancy_products.product_category_id = product_categories.id").
+	err = db.Select("products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name").
+		Joins("left join sys_tenancies on products.sys_tenancy_id = sys_tenancies.id").
+		Joins("left join sys_brands on products.sys_brand_id = sys_brands.id").
+		Joins("left join product_categories on products.product_category_id = product_categories.id").
 		Limit(limit).Offset(offset).Find(&productList).Error
 
 	for i := 0; i < len(productList); i++ {

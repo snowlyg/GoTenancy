@@ -195,6 +195,14 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/attrTemplate/updateAttrTemplate/:id", Description: "更新规格参数", ApiGroup: "attrTemplateClient", Method: "PUT"},
 	{Path: "/v1/merchant/attrTemplate/deleteAttrTemplate/:id", Description: "删除规格参数", ApiGroup: "attrTemplateClient", Method: "DELETE"},
 
+	//运费模板
+	{Path: "/v1/merchant/shippingTemplate/getShippingTemplateSelect", Description: "获取运费模板下拉", ApiGroup: "shippingTemplateClient", Method: "GET"},
+	{Path: "/v1/merchant/shippingTemplate/getShippingTemplateList", Description: "获取运费模板列表", ApiGroup: "shippingTemplateClient", Method: "POST"},
+	{Path: "/v1/merchant/shippingTemplate/createShippingTemplate", Description: "添加运费模板", ApiGroup: "shippingTemplateClient", Method: "POST"},
+	{Path: "/v1/merchant/shippingTemplate/getShippingTemplateById/:id", Description: "获取运费模板详情", ApiGroup: "shippingTemplateClient", Method: "GET"},
+	{Path: "/v1/merchant/shippingTemplate/updateShippingTemplate/:id", Description: "更新运费模板", ApiGroup: "shippingTemplateClient", Method: "PUT"},
+	{Path: "/v1/merchant/shippingTemplate/deleteShippingTemplate/:id", Description: "删除运费模板", ApiGroup: "attrTemplateClient", Method: "DELETE"},
+
 	//商品
 	{Path: "/v1/merchant/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "productClient", Method: "GET"},
 	{Path: "/v1/merchant/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "productClient", Method: "PUT"},

@@ -3,52 +3,43 @@ package client
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
 	"go.uber.org/zap"
 )
 
-// GetProductFilter
-func GetProductFilter(ctx *gin.Context) {
-	if filters, err := service.GetProductFilter(ctx); err != nil {
-		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
-	} else {
-		response.OkWithDetailed(filters, "获取成功", ctx)
-	}
-}
-
-// CreateProduct
-func CreateProduct(ctx *gin.Context) {
-	var product request.CreateProduct
+// CreateShippingTemplate
+func CreateShippingTemplate(ctx *gin.Context) {
+	var product model.ShippingTemplate
 	if errs := ctx.ShouldBindJSON(&product); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	if returnProduct, err := service.CreateProduct(product, ctx); err != nil {
+	if returnShippingTemplate, err := service.CreateShippingTemplate(product, ctx); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(returnProduct, "创建成功", ctx)
+		response.OkWithDetailed(returnShippingTemplate, "创建成功", ctx)
 	}
 }
 
-// UpdateProduct
-func UpdateProduct(ctx *gin.Context) {
+// UpdateShippingTemplate
+func UpdateShippingTemplate(ctx *gin.Context) {
 	var req request.GetById
 	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	var product request.UpdateProduct
+	var product request.UpdateShippingTemplate
 	if errs := ctx.ShouldBindJSON(&product); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	if err := service.UpdateProduct(product, req.Id); err != nil {
+	if err := service.UpdateShippingTemplate(product, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -56,30 +47,24 @@ func UpdateProduct(ctx *gin.Context) {
 	}
 }
 
-// ChangeProductStatus
-func ChangeProductStatus(ctx *gin.Context) {
-	var changeStatus request.ChangeProductStatus
-	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	err := service.ChangeProductStatus(changeStatus)
-	if err != nil {
+// GetShippingTemplateSelect
+func GetShippingTemplateSelect(ctx *gin.Context) {
+	if data, err := service.GetShippingTemplateInfoSelect(); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithMessage("设置成功", ctx)
+		response.OkWithDetailed(data, "获取成功", ctx)
 	}
 }
 
-// GetProductList
-func GetProductList(ctx *gin.Context) {
-	var pageInfo request.ProductPageInfo
+// GetShippingTemplateList
+func GetShippingTemplateList(ctx *gin.Context) {
+	var pageInfo request.ShippingTemplatePageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetProductInfoList(pageInfo, ctx); err != nil {
+	if list, total, err := service.GetShippingTemplateInfoList(pageInfo); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -92,14 +77,14 @@ func GetProductList(ctx *gin.Context) {
 	}
 }
 
-// GetProductById
-func GetProductById(ctx *gin.Context) {
+// GetShippingTemplateById
+func GetShippingTemplateById(ctx *gin.Context) {
 	var req request.GetById
 	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	product, err := service.GetProductByID(req.Id)
+	product, err := service.GetShippingTemplateByID(req.Id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
@@ -108,14 +93,14 @@ func GetProductById(ctx *gin.Context) {
 	}
 }
 
-// DeleteProduct
-func DeleteProduct(ctx *gin.Context) {
+// DeleteShippingTemplate
+func DeleteShippingTemplate(ctx *gin.Context) {
 	var req request.GetById
 	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteProduct(req.Id); err != nil {
+	if err := service.DeleteShippingTemplate(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

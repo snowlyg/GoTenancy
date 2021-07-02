@@ -2,7 +2,7 @@ package request
 
 import "github.com/snowlyg/go-tenancy/model"
 
-type TenancyProductPageInfo struct {
+type ProductPageInfo struct {
 	Page              int    `json:"page" form:"page" binding:"required"`
 	PageSize          int    `json:"pageSize" form:"pageSize" binding:"required"`
 	ProductCategoryId uint   `json:"tenancyCategoryId" form:"tenancyCategoryId"`
@@ -12,9 +12,9 @@ type TenancyProductPageInfo struct {
 	IsGiftBag         string `json:"isGiftBag" form:"isGiftBag"`
 }
 
-type UpdateTenancyProduct struct {
+type UpdateProduct struct {
 	Id uint `json:"id"`
-	model.BaseTenancyProduct
+	model.BaseProduct
 	Content string `json:"content"`
 }
 type SetProductFicti struct {
@@ -26,4 +26,12 @@ type ChangeProductStatus struct {
 	Id      []uint `json:"id" form:"id" binding:"required,gt=0"`
 	Status  int    `json:"status" binding:"required"`
 	Refusal string `json:"refusal" `
+}
+
+type CreateProduct struct {
+	model.BaseProduct
+	GiveCouponID []string `json:"giveCouponId"`      // 赠送优惠券
+	SliderImages []string `json:"sliderImages"`      // 轮播图
+	CateId       uint     `json:"cateId"`            // 平台分类id
+	CategoryIds  []uint   `json:"tenancyCategoryId"` // 平台分类id
 }

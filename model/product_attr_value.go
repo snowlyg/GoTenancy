@@ -2,8 +2,8 @@ package model
 
 import "github.com/snowlyg/go-tenancy/g"
 
-// TenancyProductAttrValue 商品属性值表
-type TenancyProductAttrValue struct {
+// ProductAttrValue 商品属性值表
+type ProductAttrValue struct {
 	g.TENANCY_MODEL
 
 	Detail       string  `gorm:"column:detail;type:varchar(1000);not null;default:''" json:"detail"`
@@ -22,5 +22,5 @@ type TenancyProductAttrValue struct {
 	ExtensionTwo float64 `gorm:"column:extension_two;type:decimal(8,2);default:0.00" json:"extensionTwo"` // 二级佣金
 	Unique       string  `gorm:"index;column:unique;type:char(12);not null;default:''" json:"unique"`     // 唯一值
 
-	TenancyProductID uint `gorm:"index:tenancy_product_id;column:tenancy_product_id;type:int;not null" json:"tenancyProductId"` // 商品id
+	ProductID uint `gorm:"index:product_id;column:product_id;type:int;not null" json:"productId"` // 商品id
 }

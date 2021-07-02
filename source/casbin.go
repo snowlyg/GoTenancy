@@ -203,6 +203,14 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/updateAttrTemplate/:id", V2: "PUT"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/attrTemplate/deleteAttrTemplate/:id", V2: "DELETE"},
 
+	//运费模板
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/getShippingTemplateSelect", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/getShippingTemplateList", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/createShippingTemplate", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/getShippingTemplateById/:id", V2: "GET"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/updateShippingTemplate/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/shippingTemplate/deleteShippingTemplate/:id", V2: "DELETE"},
+
 	//商品
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getEditProductFictiMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/setProductFicti/:id", V2: "PUT"},
