@@ -22,6 +22,7 @@ require (
 	github.com/go-redis/redis/v8 v8.8.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
+	github.com/google/uuid v1.2.0 // indirect
 	github.com/gookit/color v1.4.2
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
@@ -36,8 +37,9 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/shirou/gopsutil v3.21.3+incompatible
-	github.com/snowlyg/multi v0.0.0-20210531095654-1e9c8b05dbbe
+	github.com/snowlyg/multi v0.0.0-20210617034456-78c1e847cda0
 	github.com/spf13/cast v1.3.1 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.25
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
@@ -52,10 +54,12 @@ require (
 	go.uber.org/zap v1.16.0
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8 // indirect
 	golang.org/x/sys v0.0.0-20210521203332-0cec03c779c1 // indirect
+	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
+	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/datatypes v1.0.1
 	gorm.io/driver/mysql v1.1.0
 	gorm.io/gorm v1.21.10
 )
 
-replace github.com/snowlyg/multi v0.0.0-20210531095654-1e9c8b05dbbe => D:\go\src\github.com\snowlyg\multi
+// replace github.com/snowlyg/multi v0.0.0-20210531095654-1e9c8b05dbbe => D:\go\src\github.com\snowlyg\multi

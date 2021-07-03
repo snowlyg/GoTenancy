@@ -16,3 +16,4 @@ latest_log
 # ext
 *.log
 *.exe
+.air.toml
