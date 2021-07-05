@@ -116,6 +116,36 @@ func DeleteProduct(ctx *gin.Context) {
 		return
 	}
 	if err := service.DeleteProduct(req.Id); err != nil {
+		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
+	}
+}
+
+// RestoreProduct
+func RestoreProduct(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.RestoreProduct(req.Id); err != nil {
+		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
+	}
+}
+
+// DestoryProduct
+func DestoryProduct(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.ForceDeleteProduct(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

@@ -298,6 +298,17 @@ func DeleteProduct(id uint) error {
 	return g.TENANCY_DB.Where("id = ?", id).Delete(&product).Error
 }
 
+// RestoreProduct
+func RestoreProduct(id uint) error {
+	return g.TENANCY_DB.Model(&model.Product{}).Unscoped().Where("id = ?", id).Updates(map[string]interface{}{"deleted_at": nil}).Error
+}
+
+// ForceDeleteProduct
+func ForceDeleteProduct(id uint) error {
+	var product model.Product
+	return g.TENANCY_DB.Unscoped().Where("id = ?", id).Delete(&product).Error
+}
+
 // GetProductInfoList
 func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]response.ProductList, int64, error) {
 	var productList []response.ProductList

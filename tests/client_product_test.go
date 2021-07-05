@@ -321,9 +321,20 @@ func TestClinetProductProcess(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("设置成功")
 
-	// setUserAuthority
 	obj = auth.DELETE(fmt.Sprintf("v1/merchant/product/deleteProduct/%d", int(productId))).
-		WithJSON(map[string]interface{}{"id": productId}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
+
+	obj = auth.GET(fmt.Sprintf("v1/merchant/product/restoreProduct/%d", int(productId))).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
+
+	// setUserAuthority
+	obj = auth.DELETE(fmt.Sprintf("v1/merchant/product/destoryProduct/%d", int(productId))).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
