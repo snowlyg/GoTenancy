@@ -210,7 +210,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/product/getEditProductFictiMap/:id", Description: "获取设置虚拟销量表单", ApiGroup: "productClient", Method: "GET"},
 	{Path: "/v1/merchant/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "productClient", Method: "PUT"},
 	{Path: "/v1/merchant/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "productClient", Method: "GET"},
-	{Path: "/v1/merchant/product/changeProductStatus", Description: "上下架商品", ApiGroup: "productClient", Method: "POST"},
+	{Path: "/v1/merchant/product/changeProductIsShow", Description: "上下架商品", ApiGroup: "productClient", Method: "POST"},
 	{Path: "/v1/merchant/product/getProductList", Description: "获取商品列表", ApiGroup: "productClient", Method: "POST"},
 	{Path: "/v1/merchant/product/createProduct", Description: "添加商品", ApiGroup: "productClient", Method: "POST"},
 	{Path: "/v1/merchant/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "productClient", Method: "GET"},

@@ -56,17 +56,17 @@ func UpdateProduct(ctx *gin.Context) {
 	}
 }
 
-// ChangeProductStatus
-func ChangeProductStatus(ctx *gin.Context) {
-	var changeStatus request.ChangeProductStatus
+// ChangeProductIsShow
+func ChangeProductIsShow(ctx *gin.Context) {
+	var changeStatus request.ChangeProductIsShow
 	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := service.ChangeProductStatus(changeStatus)
+	err := service.ChangeProductIsShow(changeStatus)
 	if err != nil {
-		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+		g.TENANCY_LOG.Error("设置失败!", zap.Any("err", err))
+		response.FailWithMessage("设置失败:"+err.Error(), ctx)
 	} else {
 		response.OkWithMessage("设置成功", ctx)
 	}

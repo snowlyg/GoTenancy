@@ -75,7 +75,7 @@ func InitProductRouter(Router *gin.RouterGroup) {
 	{
 		ProductRouter.GET("/getProductFilter", client.GetProductFilter)
 		ProductRouter.POST("/createProduct", client.CreateProduct)
-		ProductRouter.POST("/changeProductStatus", client.ChangeProductStatus)
+		ProductRouter.POST("/changeProductIsShow", client.ChangeProductIsShow)
 		ProductRouter.POST("/getProductList", client.GetProductList)
 		ProductRouter.GET("/getProductById/:id", client.GetProductById)
 		ProductRouter.PUT("/updateProduct/:id", client.UpdateProduct)

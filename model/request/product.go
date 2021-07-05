@@ -29,6 +29,11 @@ type ChangeProductStatus struct {
 	Refusal string `json:"refusal" `
 }
 
+type ChangeProductIsShow struct {
+	Id     uint `json:"id" form:"id" binding:"required,gt=0"`
+	IsShow int  `json:"isShow" binding:"required"`
+}
+
 type CreateProduct struct {
 	model.BaseProduct
 	SliderImages []string           `json:"sliderImages"`      // 轮播图

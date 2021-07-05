@@ -218,7 +218,7 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getEditProductFictiMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/setProductFicti/:id", V2: "PUT"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getProductFilter", V2: "GET"},
-	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/changeProductStatus", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/changeProductIsShow", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getProductList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/createProduct", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/getProductById/:id", V2: "GET"},

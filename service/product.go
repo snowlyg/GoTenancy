@@ -265,6 +265,11 @@ func ChangeProductStatus(changeStatus request.ChangeProductStatus) error {
 	return g.TENANCY_DB.Model(&model.Product{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
 }
 
+// ChangeProductIsShow
+func ChangeProductIsShow(changeStatus request.ChangeProductIsShow) error {
+	return g.TENANCY_DB.Model(&model.Product{}).Where("id = ?", changeStatus.Id).Updates(map[string]interface{}{"is_show": changeStatus.IsShow}).Error
+}
+
 // SetProductFicti
 func SetProductFicti(req request.SetProductFicti, id uint) error {
 	ficti, err := GetProductFictiByID(id)
