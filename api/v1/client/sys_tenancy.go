@@ -29,6 +29,18 @@ func UpdateClientTenancy(ctx *gin.Context) {
 	}
 }
 
+// GetTenancyCopyCount
+func GetTenancyCopyCount(ctx *gin.Context) {
+	if copyProductNum, err := service.GetTenancyCopyCount(ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(gin.H{
+			"count": copyProductNum,
+		}, "获取成功", ctx)
+	}
+}
+
 // GetTenancyInfo 获取Tenancy对应状态数量
 func GetTenancyInfo(ctx *gin.Context) {
 	if tenancies, err := service.GetTenancyInfo(ctx); err != nil {

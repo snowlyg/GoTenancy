@@ -31,7 +31,16 @@ type ChangeProductStatus struct {
 
 type CreateProduct struct {
 	model.BaseProduct
-	SliderImages []string `json:"sliderImages"`      // 轮播图
-	CateId       uint     `json:"cateId"`            // 平台分类id
-	CategoryIds  []uint   `json:"tenancyCategoryId"` // 平台分类id
+	SliderImages []string           `json:"sliderImages"`      // 轮播图
+	CateId       uint               `json:"cateId"`            // 平台分类id
+	CategoryIds  []uint             `json:"tenancyCategoryId"` // 平台分类id
+	Content      string             `json:"content"`           // 商品内容
+	Attr         []Value            `json:"attr"`              //规格参数
+	AttrValue    []ProductAttrValue `json:"attrValue"`         // 商品内容
+}
+
+type ProductAttrValue struct {
+	model.BaseProductAttrValue
+	Detail map[string]interface{} `json:"detail"`
+	Value0 string                 `json:"value0"`
 }

@@ -103,7 +103,6 @@ func UpdateTenancy(tenancy model.SysTenancy, id uint) (model.SysTenancy, error) 
 
 // UpdateClientTenancy
 func UpdateClientTenancy(req request.UpdateClientTenancy, id uint) error {
-
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).
 		Where("id = ?", id).Omit("uuid").
 		Updates(map[string]interface{}{"avatar": req.Avatar, "banner": req.Banner, "info": req.Info, "tele": req.Tele, "state": req.State}).Error
@@ -182,6 +181,13 @@ func GetTenancyInfo(ctx *gin.Context) (response.TenancyInfo, error) {
 	var info response.TenancyInfo
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Find(&info).Error
 	return info, err
+}
+
+// GetTenancyCopyCount
+func GetTenancyCopyCount(ctx *gin.Context) (int64, error) {
+	var copyProductNum int64
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Select("copy_product_num").Find(&copyProductNum).Error
+	return copyProductNum, err
 }
 
 // GetUpdateTenancyMap

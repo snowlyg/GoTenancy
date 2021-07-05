@@ -213,6 +213,25 @@ func TestTenancyProcess(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("设置成功")
 
+	// changeCopyMap
+	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/changeCopyMap/%d", int(tenancyId))).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+	// setCopyProductNum
+	obj = auth.POST(fmt.Sprintf("v1/admin/tenancy/setCopyProductNum/%d", int(tenancyId))).
+		WithJSON(map[string]interface{}{
+			"copyNum": 0,
+			"num":     2,
+			"type":    1,
+		}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
+
 	// changeTenancyStatus
 	obj = auth.POST("v1/admin/tenancy/changeTenancyStatus").
 		WithJSON(map[string]interface{}{

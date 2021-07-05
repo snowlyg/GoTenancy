@@ -9,8 +9,8 @@ import (
 func InitAttrTemplateRouter(Router *gin.RouterGroup) {
 	AttrTemplateRouter := Router.Group("/attrTemplate")
 	{
-		AttrTemplateRouter.POST("/createAttrTemplate", client.CreateAttrTemplate)
 		AttrTemplateRouter.POST("/getAttrTemplateList", client.GetAttrTemplateList)
+		AttrTemplateRouter.POST("/createAttrTemplate", client.CreateAttrTemplate)
 		AttrTemplateRouter.GET("/getAttrTemplateById/:id", client.GetAttrTemplateById)
 		AttrTemplateRouter.PUT("/updateAttrTemplate/:id", client.UpdateAttrTemplate)
 		AttrTemplateRouter.DELETE("/deleteAttrTemplate/:id", client.DeleteAttrTemplate)
@@ -90,6 +90,7 @@ func InitTenancyRouter(Router *gin.RouterGroup) {
 		TenancyRouter.GET("/getTenancyInfo", client.GetTenancyInfo)           // 登录商户信息
 		TenancyRouter.GET("/getUpdateTenancyMap", client.GetUpdateTenancyMap) // 获取商户编辑表单
 		TenancyRouter.PUT("/updateTenancy/:id", client.UpdateClientTenancy)   // 获取商户编辑表单
+		TenancyRouter.GET("/getTenancyCopyCount", client.GetTenancyCopyCount) // 获取商户复制商品次数
 	}
 }
 

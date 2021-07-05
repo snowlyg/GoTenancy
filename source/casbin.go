@@ -179,6 +179,7 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/tenancy/getTenancyInfo", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/tenancy/getUpdateTenancyMap", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/tenancy/updateTenancy/:id", V2: "PUT"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/tenancy/getTenancyCopyCount", V2: "GET"},
 	// 媒体库
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/media/getUpdateMediaMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/media/upload", V2: "POST"},

@@ -169,6 +169,7 @@ var baseApis = []model.SysApi{
 	// 商户
 	{Path: "/v1/merchant/tenancy/getTenancyInfo", Description: "获取登录商户信息", ApiGroup: "tenancyClient", Method: "GET"},
 	{Path: "/v1/merchant/tenancy/getUpdateTenancyMap", Description: "获取登录商户信息表单", ApiGroup: "tenancyClient", Method: "GET"},
+	{Path: "/v1/merchant/tenancy/getTenancyCopyCount", Description: "获取商户商品复制次数", ApiGroup: "tenancyClient", Method: "GET"},
 	{Path: "/v1/merchant/tenancy/updateTenancy/:id", Description: "保存登录商户信息", ApiGroup: "tenancyClient", Method: "PUT"},
 	// 媒体库
 	{Path: "/v1/merchant/media/getUpdateMediaMap/:id", Description: "获取媒体文件表单", ApiGroup: "mediaClient", Method: "GET"},

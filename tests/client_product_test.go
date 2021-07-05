@@ -122,7 +122,7 @@ func TestClinetProductProcess(t *testing.T) {
 		"isGiftBag":     2,
 		"isGood":        1,
 		"keyword":       "",
-		"sliderImage": []string{
+		"sliderImages": []string{
 			"http://127.0.0.1:8089/uploads/file/b39024efbc6de61976f585c8421c6bba_20210702150027.png",
 			"http://127.0.0.1:8089/uploads/file/0701aa317da5a004fbf6111545678a6c_20210702150036.png",
 		},
@@ -180,7 +180,8 @@ func TestClinetProductProcess(t *testing.T) {
 	product.Value("isGiftBag").Number().Equal(2)
 	product.Value("careCount").Number().Equal(0)
 	product.Value("image").String().NotEmpty()
-	product.Value("sliderImage").String().NotEmpty()
+	product.Value("sliderImages").String().NotEmpty()
+	product.Value("content").String().Equal(data["content"].(string))
 	product.Value("oldId").Number().Equal(0)
 	product.Value("tempId").Number().Equal(data["tempId"].(int))
 	product.Value("sysBrandId").Number().Equal(data["sysBrandId"].(int))

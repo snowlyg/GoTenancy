@@ -1,6 +1,9 @@
 package response
 
-import "github.com/snowlyg/go-tenancy/model"
+import (
+	"github.com/snowlyg/go-tenancy/model"
+	"github.com/snowlyg/go-tenancy/model/request"
+)
 
 type ProductList struct {
 	TenancyResponse
@@ -9,6 +12,7 @@ type ProductList struct {
 	CateName       string        `json:"cateName"`              // 分类名称
 	BrandName      string        `json:"brandName"`             // 商户名称
 	ProductCates   []ProductCate `gorm:"-" json:"productCates"` // 商户分类
+
 }
 
 type ProductFicti struct {
@@ -24,9 +28,11 @@ type ProductDetail struct {
 	Content        string `json:"content"`
 	SliderImage    string `json:"sliderImage"` // 轮播图
 	// ProductCates   []ProductCate `gorm:"-" json:"productCates"`  // 商户分类
-	SliderImages []string                 `gorm:"-" json:"sliderImages"` // 轮播图
-	Attr         []model.ProductAttr      `gorm:"-" json:"attr"`
-	AttrValue    []model.ProductAttrValue `gorm:"-" json:"attrValue"`
+	SliderImages []string                   `gorm:"-" json:"sliderImages"` // 轮播图
+	Attr         []request.Value            `gorm:"-" json:"attr"`
+	AttrValue    []request.ProductAttrValue `gorm:"-" json:"attrValue"`
+	CateId       uint                       `gorm:"-" json:"cateId"`            // 平台分类id
+	CategoryIds  []uint                     `gorm:"-" json:"tenancyCategoryId"` // 商户分类
 }
 
 type ProductFilter struct {
