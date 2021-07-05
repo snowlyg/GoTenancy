@@ -119,6 +119,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/product/setProductFicti/:id", Description: "设置虚拟销量", ApiGroup: "product", Method: "PUT"},
 	{Path: "/v1/admin/product/getProductFilter", Description: "获取商品过滤参数", ApiGroup: "product", Method: "GET"},
 	{Path: "/v1/admin/product/changeProductStatus", Description: "强制下架，重新审核", ApiGroup: "product", Method: "POST"},
+	{Path: "/v1/admin/product/changeMutilProductStatus", Description: "批量强制下架，重新审核", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductList", Description: "获取商品列表", ApiGroup: "product", Method: "POST"},
 	{Path: "/v1/admin/product/getProductById/:id", Description: "获取商品详情", ApiGroup: "product", Method: "GET"},
 	{Path: "/v1/admin/product/updateProduct/:id", Description: "编辑商品", ApiGroup: "product", Method: "PUT"},

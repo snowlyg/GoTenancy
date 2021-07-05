@@ -124,6 +124,7 @@ func CreateProduct(req request.CreateProduct, ctx *gin.Context) (model.Product, 
 	product.IsBest = g.StatusFalse
 	product.IsNew = g.StatusFalse
 	product.ProductType = model.GeneralSale
+	product.Status = model.AuditProductStatus
 	err := g.TENANCY_DB.Create(&product).Error
 	if err != nil {
 		return model.Product{}, fmt.Errorf("create product %w", err)
@@ -179,11 +180,12 @@ func CreateProduct(req request.CreateProduct, ctx *gin.Context) (model.Product, 
 func GetProductByID(id uint) (response.ProductDetail, error) {
 	var product response.ProductDetail
 	err := g.TENANCY_DB.Model(&model.Product{}).
-		Select("products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name,product_contents.content as content").
+		Select("products.*,sys_tenancies.name as sys_tenancy_name,sys_brands.brand_name as brand_name,product_categories.cate_name as cate_name,product_contents.content as content,shipping_templates.name as temp_name").
 		Joins("left join sys_tenancies on products.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_brands on products.sys_brand_id = sys_brands.id").
 		Joins("left join product_categories on products.product_category_id = product_categories.id").
 		Joins("left join product_contents on product_contents.product_id = products.id").
+		Joins("left join shipping_templates on products.temp_id = shipping_templates.id").
 		Where("products.id = ?", id).
 		First(&product).Error
 	if err != nil {
@@ -224,10 +226,15 @@ func GetProductByID(id uint) (response.ProductDetail, error) {
 	product.CateId = product.ProductCategoryID
 	product.SliderImages = strings.Split(product.SliderImage, ",")
 
-	var categoryIds []uint
-	err = g.TENANCY_DB.Model(&model.ProductProductCate{}).Where("product_id = ?", id).Select("product_category_id").Find(&categoryIds).Error
+	productCates, err := getProductCatesByProductId(product.ID, product.SysTenancyID)
 	if err != nil {
 		return response.ProductDetail{}, err
+	}
+	product.ProductCates = productCates
+
+	var categoryIds []uint
+	for _, productCate := range productCates {
+		categoryIds = append(categoryIds, productCate.ID)
 	}
 	product.CategoryIds = categoryIds
 
@@ -246,15 +253,30 @@ func GetProductFictiByID(id uint) (int32, error) {
 
 // UpdateProduct
 func UpdateProduct(req request.UpdateProduct, id uint) error {
-	content := model.ProductContent{Content: req.Content, ProductID: id, Type: req.ProductType}
-	product := model.Product{BaseProduct: model.BaseProduct{StoreName: req.StoreName, Ficti: req.Ficti, IsBenefit: req.IsBenefit, IsBest: req.IsBest, IsHot: req.IsHot, IsNew: req.IsNew}}
+
+	product := model.Product{
+		BaseProduct: model.BaseProduct{StoreName: req.StoreName, Ficti: req.Ficti, IsBenefit: req.IsBenefit, IsBest: req.IsBest, IsHot: req.IsHot, IsNew: req.IsNew, Status: model.AuditProductStatus}}
+
+	var content model.ProductContent
+	if err := g.TENANCY_DB.Model(&model.ProductContent{}).Where("product_id = ?", id).First(&content).Error; err != nil {
+		return err
+	}
+
 	err := g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("id = ?", id).Updates(&product).Error; err != nil {
 			return err
 		}
-		if err := tx.Where("product_id = ?", id).FirstOrCreate(&content).Error; err != nil {
-			return err
+		if content.ProductID > 0 {
+			if err := tx.Model(&model.ProductContent{}).Where("product_id = ?", content.ProductID).Updates(map[string]interface{}{"content": req.Content}).Error; err != nil {
+				return err
+			}
+		} else {
+			content = model.ProductContent{Content: req.Content, ProductID: id, Type: req.ProductType}
+			if err := tx.Model(&model.ProductContent{}).Create(&content).Error; err != nil {
+				return err
+			}
 		}
+
 		return nil
 	})
 	return err
@@ -262,7 +284,12 @@ func UpdateProduct(req request.UpdateProduct, id uint) error {
 
 // ChangeProductStatus
 func ChangeProductStatus(changeStatus request.ChangeProductStatus) error {
-	return g.TENANCY_DB.Model(&model.Product{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
+	return g.TENANCY_DB.Model(&model.Product{}).Where("id = ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status, "refusal": changeStatus.Refusal}).Error
+}
+
+// ChangeMutilProductStatus
+func ChangeMutilProductStatus(changeStatus request.ChangeMutilProductStatus) error {
+	return g.TENANCY_DB.Model(&model.Product{}).Where("id in ?", changeStatus.Id).Updates(map[string]interface{}{"status": changeStatus.Status}).Error
 }
 
 // ChangeProductIsShow

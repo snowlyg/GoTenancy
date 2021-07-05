@@ -24,6 +24,13 @@ const (
 	CustomExtensionType      //佣金比例 自定义
 )
 
+const (
+	UnknownProductStatus int = iota
+	SuccessProductStatus     // 审核通过
+	AuditProductStatus       //审核中
+	FailProductStatus        // 未通过
+)
+
 type Product struct {
 	g.TENANCY_MODEL
 	BaseProduct

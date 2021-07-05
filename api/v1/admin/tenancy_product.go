@@ -91,6 +91,22 @@ func ChangeProductStatus(ctx *gin.Context) {
 	}
 }
 
+// ChangeMutilProductStatus
+func ChangeMutilProductStatus(ctx *gin.Context) {
+	var changeStatus request.ChangeMutilProductStatus
+	if errs := ctx.ShouldBindJSON(&changeStatus); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	err := service.ChangeMutilProductStatus(changeStatus)
+	if err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
+	}
+}
+
 // GetProductList
 func GetProductList(ctx *gin.Context) {
 	var pageInfo request.ProductPageInfo

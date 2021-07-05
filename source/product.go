@@ -65,6 +65,26 @@ var products = []model.Product{
 	// 202	55	行李箱	行李箱			116	1	1	0	1	349	个	10	0	0	599.00	300.00	799.00	10000	0	0	0	0	0	1	100	0			48	0	0		5.0	0		0	2020-09-12 15:49:58	0	1	190	http://mer.crmeb.net/uploads/def/20200912/f38e0d2fe50db1e764e6400e3984dce5.jpg	http://mer.crmeb.net/uploads/def/20200912/f38e0d2fe50db1e764e6400e3984dce5.jpg,http://mer.crmeb.net/uploads/def/20200912/091e9b3cfa4d343937eede03d296ac58.jpg
 }
 
+var productContents = []model.ProductContent{
+	{Content: "<p>好手机</p>", ProductID: 1, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 2, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 3, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 4, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 5, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 6, Type: 1},
+	{Content: "<p>好手机</p>", ProductID: 7, Type: 1},
+}
+var productAttrValues = []model.ProductAttrValue{
+	{ProductID: 2, Detail: "", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "", Stock: 99, Sales: 1, Image: "http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "12444", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 4, Detail: "", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "", Stock: 99, Sales: 1, Image: "	http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "15454545", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 1, Detail: "{\"\u5c3a\u5bf8\": \"S\"}", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "S", Stock: 99, Sales: 1, Image: "	http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "123456", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 1, Detail: "{\"\u5c3a\u5bf8\": \"L\"}", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "L", Stock: 100, Sales: 0, Image: "	http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "123456", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 1, Detail: "{\"\u5c3a\u5bf8\": \"XL\"}", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "XL", Stock: 100, Sales: 0, Image: "	http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "123456", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 1, Detail: "{\"\u5c3a\u5bf8\": \"XXL\"}", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "XXL", Stock: 100, Sales: 0, Image: "	http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "123456", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 6, Detail: "", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "", Stock: 99, Sales: 1, Image: "http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "1774575", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+	{ProductID: 7, Detail: "", BaseProductAttrValue: model.BaseProductAttrValue{Sku: "", Stock: 98, Sales: 2, Image: "http://mer.crmeb.net/uploads/def/20200816/9a6a2e1231fb19517ed1de71206a0657.jpg", BarCode: "10024242", Cost: 50.00, OtPrice: 180.00, Price: 160.00, Volume: 1.00, Weight: 1.00, ExtensionOne: 0.00, ExtensionTwo: 0.00, Unique: "e2fe28308fd0"}, Type: 1},
+}
+
 func (m *product) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
 		if tx.Where("id IN ?", []int{1}).Find(&[]model.Product{}).RowsAffected == 1 {
@@ -72,6 +92,12 @@ func (m *product) Init() error {
 			return nil
 		}
 		if err := tx.Create(&products).Error; err != nil { // 遇到错误时回滚事务
+			return err
+		}
+		if err := tx.Model(&model.ProductContent{}).Create(&productContents).Error; err != nil { // 遇到错误时回滚事务
+			return err
+		}
+		if err := tx.Model(&model.ProductAttrValue{}).Create(&productAttrValues).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
 		color.Info.Println("\n[Mysql] --> sys_products 表初始数据成功!")
