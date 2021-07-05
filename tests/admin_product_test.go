@@ -68,13 +68,13 @@ func productlist(t *testing.T, params map[string]interface{}, length int) {
 		"videoLink",
 		"specType",
 		"extensionType",
+		"productCates",
 		"refusal",
 		"rate",
 		"replyCount",
 		"isGiftBag",
 		"careCount",
 		"image",
-		"sliderImage",
 		"oldId",
 		"tempId",
 		"sysTenancyId",
@@ -108,14 +108,14 @@ func TestProductProcess(t *testing.T) {
 
 	update := map[string]interface{}{
 		"storeName": "领立裁腰带短袖连衣裙",
-		"isHot":     0,
-		"isBenefit": 0,
-		"isBest":    0,
-		"isNew":     0,
+		"isHot":     2,
+		"isBenefit": 2,
+		"isBest":    2,
+		"isNew":     2,
 		"content":   "dsfsafasfasfas",
 	}
 
-	obj := auth.PUT(fmt.Sprintf("v1/admin/product/updateProduct/%d", int(productId))).
+	obj := auth.PUT(fmt.Sprintf("v1/admin/product/updateProduct/%d", productId)).
 		WithJSON(update).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -127,9 +127,16 @@ func TestProductProcess(t *testing.T) {
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
+	obj.Value("message").String().Equal("设置成功")
 
-	obj = auth.GET(fmt.Sprintf("v1/admin/product/getProductById/%d", int(productId))).
+	obj = auth.POST("v1/admin/product/changeMutilProductStatus").
+		WithJSON(map[string]interface{}{"id": []int{productId}, "status": 3}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("设置成功")
+
+	obj = auth.GET(fmt.Sprintf("v1/admin/product/getProductById/%d", productId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -138,41 +145,9 @@ func TestProductProcess(t *testing.T) {
 
 	product.Value("id").Number().Ge(0)
 	product.Value("storeName").String().Equal(update["storeName"].(string))
-	product.Value("storeInfo").String().Equal(update["storeInfo"].(string))
-	product.Value("keyword").String().Equal(update["keyword"].(string))
-	product.Value("barCode").String().Equal(update["barCode"].(string))
-	product.Value("isShow").Number().Equal(update["isShow"].(int))
-	product.Value("status").Number().Equal(update["status"].(int))
-	product.Value("unitName").String().Equal(update["unitName"].(string))
-	product.Value("sort").Number().Equal(update["sort"].(int))
-	product.Value("rank").Number().Equal(update["rank"].(int))
-	product.Value("sales").Number().Equal(update["sales"].(int))
-	product.Value("price").Number().Equal(update["price"].(int))
-	product.Value("cost").Number().Equal(update["cost"].(int))
-	product.Value("otPrice").Number().Equal(update["otPrice"].(int))
-	product.Value("stock").Number().Equal(update["stock"].(int))
 	product.Value("isHot").Number().Equal(update["isHot"].(int))
 	product.Value("isBenefit").Number().Equal(update["isBenefit"].(int))
 	product.Value("isBest").Number().Equal(update["isBest"].(int))
 	product.Value("isNew").Number().Equal(update["isNew"].(int))
-	product.Value("isGood").Number().Equal(update["isGood"].(int))
-	product.Value("productType").Number().Equal(update["productType"].(int))
-	product.Value("ficti").Number().Equal(update["ficti"].(int))
-	product.Value("browse").Number().Equal(update["browse"].(int))
-	product.Value("codePath").String().Equal(update["codePath"].(string))
-	product.Value("videoLink").String().Equal(update["videoLink"].(string))
-	product.Value("specType").Number().Equal(update["specType"].(int))
-	product.Value("extensionType").Number().Equal(update["extensionType"].(int))
-	product.Value("refusal").String().Equal(update["refusal"].(string))
-	product.Value("rate").Number().Equal(update["rate"].(int))
-	product.Value("replyCount").Number().Equal(update["replyCount"].(int))
-	product.Value("isGiftBag").Number().Equal(update["isGiftBag"].(int))
-	product.Value("careCount").Number().Equal(update["careCount"].(int))
-	product.Value("image").String().Equal(update["image"].(string))
-	product.Value("sliderImage").String().Equal(update["sliderImage"].(string))
-	product.Value("oldId").Number().Equal(update["oldId"].(int))
-	product.Value("tempId").Number().Equal(update["tempId"].(int))
-	product.Value("sysBrandId").Number().Equal(update["sysBrandId"].(int))
-	product.Value("productCategoryId").Number().Equal(update["productCategoryId"].(int))
-
+	product.Value("content").String().Equal(update["content"].(string))
 }
