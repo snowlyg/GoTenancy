@@ -1,0 +1,35 @@
+package response
+
+import (
+	"github.com/snowlyg/go-tenancy/model"
+	"gorm.io/datatypes"
+)
+
+type OrderList struct {
+	TenancyResponse
+
+	model.BaseOrder
+
+	GroupOrderSn     string         `json:"groupOrderSn" form:"groupOrderSn"`
+	TenancyName      string         `json:"tenancyName" form:"tenancyName"`
+	IsTrader         int            `json:"isTrader" form:"isTrader"`
+	SysUserID        uint           `json:"sysUserId" form:"sysUserId"`
+	SysTenancyID     uint           `json:"sysTenancyId"`
+	GroupOrderID     int            `json:"groupOrderId"`
+	ReconciliationID uint8          `json:"reconciliationId"`
+	CartID           uint           `json:"cartId"`
+	OrderProduct     []OrderProduct `gorm:"-" json:"orderProduct"`
+}
+
+type OrderProduct struct {
+	CartInfo datatypes.JSON `json:"cartInfo"`
+	model.BaseOrderProduct
+	OrderID uint `json:"orderID"`
+}
+
+type OrderCondition struct {
+	Type       int                    `json:"type"`
+	Name       string                 `json:"name"`
+	Conditions map[string]interface{} `json:"conditions"`
+	IsDeleted  bool                   `json:"is_deleted"`
+}

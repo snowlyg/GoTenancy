@@ -123,8 +123,9 @@ func GetTenanciesInfoList(info request.TenancyPageInfo) ([]response.SysTenancy, 
 	if info.Keyword != "" {
 		db = db.Where(g.TENANCY_DB.Where("name like ?", info.Keyword+"%").Or("tele like ?", info.Keyword+"%"))
 	}
+
 	if info.Date != "" {
-		db = filterDate(db, info.Date)
+		db = filterDate(db, info.Date, "")
 	}
 
 	var total int64
@@ -141,6 +142,17 @@ func GetTenanciesByRegion(p_code string) ([]response.SysTenancy, error) {
 	var tenancyList []response.SysTenancy
 	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("sys_region_code = ?", p_code).Find(&tenancyList).Error
 	return tenancyList, err
+}
+
+// GetTenancySelect
+func GetTenancySelect() ([]response.TenancySelect, error) {
+	selects := []response.TenancySelect{
+		{ID: 0, Name: "请选择"},
+	}
+	var tenancySelects []response.TenancySelect
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Select("id,name").Where("status = ?", g.StatusTrue).Where("state = ?", g.StatusTrue).Find(&tenancySelects).Error
+	selects = append(selects, tenancySelects...)
+	return selects, err
 }
 
 type Result struct {

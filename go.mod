@@ -8,6 +8,7 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.8+incompatible
 	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/casbin/casbin/v2 v2.28.4
 	github.com/casbin/gorm-adapter/v3 v3.2.9
 	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
@@ -62,4 +63,4 @@ require (
 	gorm.io/gorm v1.21.10
 )
 
-// replace github.com/snowlyg/multi v0.0.0-20210531095654-1e9c8b05dbbe => D:\go\src\github.com\snowlyg\multi
+replace github.com/snowlyg/multi v0.0.0-20210617034456-78c1e847cda0 => D:\go\src\github.com\snowlyg\multi

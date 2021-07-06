@@ -153,6 +153,16 @@ func GetTenanciesByRegion(ctx *gin.Context) {
 	}
 }
 
+// GetTenancySelect 获取商户下拉列表
+func GetTenancySelect(ctx *gin.Context) {
+	if tenancies, err := service.GetTenancySelect(); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(tenancies, "获取成功", ctx)
+	}
+}
+
 // GetTenancyCount 获取Tenancy对应状态数量
 func GetTenancyCount(ctx *gin.Context) {
 	if tenancies, err := service.GetTenancyCount(); err != nil {

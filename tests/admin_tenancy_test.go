@@ -271,3 +271,14 @@ func TestTenancyRegisterError(t *testing.T) {
 	obj.Value("message").String().Equal("添加失败:名称已被注冊")
 
 }
+
+func TestTenancySelect(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET("v1/admin/tenancy/getTenancySelect").
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("获取成功")
+
+}

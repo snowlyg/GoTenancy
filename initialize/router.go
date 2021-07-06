@@ -71,6 +71,7 @@ func Routers(app *gin.Engine) {
 			admin.InitMediaRouter(AdminGroup)              // 媒体库路由
 			admin.InitCategoryRouter(AdminGroup)           // 商品分类路由
 			admin.InitProductRouter(AdminGroup)            // 商品路由
+			admin.InitOrderRouter(AdminGroup)              // 订单路由
 			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 		}
 
@@ -88,6 +89,7 @@ func Routers(app *gin.Engine) {
 			client.InitAttrTemplateRouter(ClientGroup)       // 规格模板路由
 			client.InitProductRouter(ClientGroup)            // 商品路由
 			client.InitShippingTemplateRouter(ClientGroup)   // 运费模板路由
+			client.InitOrderRouter(ClientGroup)              // 订单路由
 			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 		}
 

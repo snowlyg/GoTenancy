@@ -343,21 +343,24 @@ func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]respo
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.Product{})
-	t, err := strconv.Atoi(info.Type)
-	if err != nil {
-		return productList, total, err
-	}
-	cond := getProductConditionByType(ctx, t)
-	if cond.IsDeleted {
-		db = db.Unscoped()
-	}
-	for key, cn := range cond.Conditions {
-		if cn == nil {
-			db = db.Where(fmt.Sprintf("%s%s", "products.", key))
-		} else {
-			db = db.Where(fmt.Sprintf("%s%s = ?", "products.", key), cn)
+	if info.Type != "" {
+		t, err := strconv.Atoi(info.Type)
+		if err != nil {
+			return productList, total, err
+		}
+		cond := getProductConditionByType(ctx, t)
+		if cond.IsDeleted {
+			db = db.Unscoped()
+		}
+		for key, cn := range cond.Conditions {
+			if cn == nil {
+				db = db.Where(fmt.Sprintf("%s%s", "products.", key))
+			} else {
+				db = db.Where(fmt.Sprintf("%s%s = ?", "products.", key), cn)
+			}
 		}
 	}
+
 	if multi.IsTenancy(ctx) {
 		db = db.Where("products.sys_tenancy_id = ?", multi.GetTenancyId(ctx))
 	}
@@ -383,7 +386,7 @@ func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]respo
 		db = db.Where("products.is_gift_bag = ?", info.IsGiftBag)
 	}
 
-	err = db.Count(&total).Error
+	err := db.Count(&total).Error
 	if err != nil {
 		return productList, total, err
 	}

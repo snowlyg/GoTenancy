@@ -6,8 +6,8 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 )
 
-// EbStoreOrderReceipt 订单发票信息
-type EbStoreOrderReceipt struct {
+// OrderReceipt 订单发票信息
+type OrderReceipt struct {
 	g.TENANCY_MODEL
 
 	ReceiptInfo  string    `gorm:"column:receipt_info;type:varchar(500);default:''" json:"receiptInfo"` // 发票类型：1.普通发票，2.增值税发票

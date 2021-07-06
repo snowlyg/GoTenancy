@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -135,12 +136,16 @@ type Opt struct {
 }
 
 // filterDate
-func filterDate(db *gorm.DB, date string) *gorm.DB {
+func filterDate(db *gorm.DB, date, perfix string) *gorm.DB {
+	field := "created_at"
+	if perfix != "" {
+		field = fmt.Sprintf("%s.created_at", perfix)
+	}
 	dates := strings.Split(date, "-")
 	if len(dates) == 2 {
 		start, _ := time.Parse("2006/01/02", dates[0])
 		end, _ := time.Parse("2006/01/02", dates[1])
-		return db.Where("created_at BETWEEN ? AND ?", start, end)
+		return db.Where(fmt.Sprintf("%s BETWEEN ? AND ?", field), start, end)
 	}
 	if len(dates) == 1 {
 		// { text: '今天', val: 'today' },
@@ -152,17 +157,17 @@ func filterDate(db *gorm.DB, date string) *gorm.DB {
 		// TODO: 使用内置函数，可能造成索引失效
 		switch dates[0] {
 		case "today":
-			return db.Where("TO_DAYS(NOW()) - TO_DAYS(created_at) < 1")
+			return db.Where(fmt.Sprintf("TO_DAYS(NOW()) - TO_DAYS(%s) < 1", field))
 		case "yesterday":
-			return db.Where("TO_DAYS(NOW()) - TO_DAYS(created_at) = 1")
+			return db.Where(fmt.Sprintf("TO_DAYS(NOW()) - TO_DAYS(%s) = 1", field))
 		case "lately7":
-			return db.Where("DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= DATE(created_at)")
+			return db.Where(fmt.Sprintf("DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= DATE(%s)", field))
 		case "lately30":
-			return db.Where("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(created_at)")
+			return db.Where(fmt.Sprintf("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(%s)", field))
 		case "month":
-			return db.Where("DATE_FORMAT( created_at, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )")
+			return db.Where(fmt.Sprintf("DATE_FORMAT( %s, '%%Y%%m' ) = DATE_FORMAT( CURDATE() , '%%Y%%m' )", field))
 		case "year":
-			return db.Where("YEAR(created_at)=YEAR(NOW())")
+			return db.Where(fmt.Sprintf("YEAR(%s)=YEAR(NOW())", field))
 		}
 	}
 	return db

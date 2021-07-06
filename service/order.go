@@ -1,0 +1,275 @@
+package service
+
+import (
+	"fmt"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/go-tenancy/g"
+	"github.com/snowlyg/go-tenancy/model"
+	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/multi"
+	"gorm.io/gorm"
+)
+
+// getOrderCount
+func getOrderCount(name string) (int64, error) {
+	var count int64
+	wheres := getOrderConditions()
+	for _, where := range wheres {
+		if where.Name == name {
+			db := g.TENANCY_DB.Model(&model.Order{})
+			if where.Conditions != nil && len(where.Conditions) > 0 {
+				for key, cn := range where.Conditions {
+					if cn == nil {
+						db = db.Where(key)
+					} else {
+						db = db.Where(fmt.Sprintf("%s = ?", key), cn)
+					}
+				}
+			}
+
+			err := db.Count(&count).Error
+			if err != nil {
+				return count, err
+			}
+		}
+	}
+
+	return count, nil
+}
+
+func GetChart() (map[string]interface{}, error) {
+	charts := map[string]interface{}{
+		"all":        0,
+		"complete":   0,
+		"del":        0,
+		"refund":     0,
+		"statusAll":  0,
+		"unevaluate": 0,
+		"unpaid":     0,
+		"unshipped":  0,
+		"untake":     0,
+	}
+	for name, _ := range charts {
+		if cc, err := getOrderCount(name); err != nil {
+			return nil, err
+		} else {
+			charts[name] = cc
+		}
+
+	}
+
+	return charts, nil
+}
+
+//1: 未支付 2: 未发货 3: 待收货 4: 待评价 5: 交易完成 6: 已退款 7: 已删除
+// getOrderConditions
+func getOrderConditions() []response.OrderCondition {
+	conditions := []response.OrderCondition{
+		{Name: "all", Type: 0, Conditions: nil},
+		{Name: "unpaid", Type: 1, Conditions: map[string]interface{}{"paid": 2, "is_del": 2}},
+		{Name: "unshipped", Type: 2, Conditions: map[string]interface{}{"paid": 1, "status": 1, "is_del": 2}},
+		{Name: "untake", Type: 3, Conditions: map[string]interface{}{"status": 2, "is_del": 2}},
+		{Name: "unevaluate", Type: 4, Conditions: map[string]interface{}{"status": 3, "is_del": 2}},
+		{Name: "complete", Type: 5, Conditions: map[string]interface{}{"status": 4, "is_del": 2}},
+		{Name: "refund", Type: 6, Conditions: map[string]interface{}{"status": 5, "is_del": 2}},
+		{Name: "del", Type: 7, Conditions: map[string]interface{}{"is_del": 1}},
+	}
+	return conditions
+}
+
+// getOrderConditionByType
+func getOrderConditionByType(t int) response.OrderCondition {
+	conditions := getOrderConditions()
+	for _, condition := range conditions {
+		if condition.Type == t {
+			return condition
+		}
+	}
+	return conditions[0]
+}
+
+// GetOrderInfoList
+func GetOrderInfoList(info request.OrderPageInfo, ctx *gin.Context) ([]response.OrderList, []map[string]interface{}, int64, error) {
+	stat := []map[string]interface{}{
+		{"className": "el-icon-s-goods", "count": 0, "field": "件", "name": "已支付订单数量"},
+		{"className": "el-icon-s-order", "count": 0, "field": "元", "name": "实际支付金额"},
+		{"className": "el-icon-s-cooperation", "count": 0, "field": "元", "name": "已退款金额"},
+		{"className": "el-icon-s-cooperation", "count": 0, "field": "元", "name": "微信支付金额"},
+		{"className": "el-icon-s-finance", "count": 0, "field": "元", "name": "余额支付金额"},
+		{"className": "el-icon-s-cooperation", "count": 0, "field": "元", "name": "支付宝支付金额"},
+	}
+	var orderList []response.OrderList
+	var total int64
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := g.TENANCY_DB.Model(&model.Order{}).
+		Select("orders.*,sys_tenancies.name as tenancy_name,sys_tenancies.is_trader as is_trader,group_orders.group_order_sn as group_order_sn").
+		Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id").
+		Joins("left join group_orders on orders.group_order_id = group_orders.id")
+
+	db, err := getSearch(info, ctx, db)
+	if err != nil {
+		return orderList, stat, total, err
+	}
+
+	stat, err = getStat(info, ctx, stat)
+	if err != nil {
+		return orderList, stat, total, err
+	}
+
+	err = db.Count(&total).Error
+	if err != nil {
+		return orderList, stat, total, err
+	}
+	err = db.
+		Limit(limit).Offset(offset).Find(&orderList).Error
+	if err != nil {
+		return orderList, stat, total, err
+	}
+
+	if len(orderList) > 0 {
+		var orderIds []uint
+		for _, order := range orderList {
+			orderIds = append(orderIds, order.ID)
+		}
+
+		var orderProducts []response.OrderProduct
+		err = g.TENANCY_DB.Model(&model.OrderProduct{}).Where("order_id in ?", orderIds).Find(&orderProducts).Error
+		if err != nil {
+			return orderList, stat, total, err
+		}
+
+		for i := 0; i < len(orderList); i++ {
+			for _, orderProduct := range orderProducts {
+				if orderList[i].ID == orderProduct.OrderID {
+					orderList[i].OrderProduct = append(orderList[i].OrderProduct, orderProduct)
+				}
+			}
+		}
+	}
+
+	return orderList, stat, total, nil
+}
+
+func getSearch(info request.OrderPageInfo, ctx *gin.Context, db *gorm.DB) (*gorm.DB, error) {
+	if info.Status != "" {
+		status, err := strconv.Atoi(info.Status)
+		if err != nil {
+			return db, err
+		}
+		cond := getOrderConditionByType(status)
+		if cond.IsDeleted {
+			db = db.Unscoped()
+		}
+
+		for key, cn := range cond.Conditions {
+			if cn == nil {
+				db = db.Where(fmt.Sprintf("%s%s", "orders.", key))
+			} else {
+				db = db.Where(fmt.Sprintf("%s%s = ?", "orders.", key), cn)
+			}
+		}
+	}
+
+	if multi.IsTenancy(ctx) {
+		db = db.Where("orders.sys_tenancy_id = ?", multi.GetTenancyId(ctx))
+	} else {
+		if info.SysTenancyId > 0 {
+			db = db.Where("orders.sys_tenancy_id = ?", info.SysTenancyId)
+		}
+	}
+
+	if info.Date != "" {
+		db = filterDate(db, info.Date, "orders")
+	}
+
+	if info.IsTrader != "" {
+		db = db.Where("sys_tenancies.is_trader = ?", info.IsTrader)
+	}
+
+	if info.Keywords != "" {
+		db = db.Where(g.TENANCY_DB.Where("orders.order_sn like ?", info.Keywords+"%").Or("orders.real_name like ?", info.Keywords+"%").Or("orders.user_phone like ?", info.Keywords+"%"))
+	}
+	return db, nil
+}
+
+func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]interface{}) ([]map[string]interface{}, error) {
+
+	// 已支付订单数量
+	var all int64
+	db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Where("paid =?", 1))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Where("paid =?", 1).Count(&all).Error
+	if err != nil {
+		return nil, err
+	}
+	stat[0]["count"] = all
+
+	//实际支付金额
+	var payPrice request.Result
+	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).First(&payPrice).Error
+	if err != nil {
+		return nil, err
+	}
+	stat[1]["count"] = payPrice
+
+	//已退款金额
+	var returnPayPrice request.Result
+	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).First(&returnPayPrice).Error
+	if err != nil {
+		return nil, err
+	}
+	stat[2]["count"] = returnPayPrice
+
+	//微信支付金额
+	var wxPayPrice request.Result
+	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type in ?", []int{model.PayTypeWx, model.PayTypeRoutine, model.PayTypeH5}).First(&wxPayPrice).Error
+	if err != nil {
+		return nil, err
+	}
+	stat[3]["count"] = returnPayPrice
+
+	//余额支付金额
+	var blanPayPrice request.Result
+	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type = ?", model.PayTypeBalance).First(&blanPayPrice).Error
+	if err != nil {
+		return nil, err
+	}
+	stat[3]["count"] = blanPayPrice
+
+	//支付宝支付金额
+	var aliPayPrice request.Result
+	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
+	if err != nil {
+		return nil, err
+	} else {
+		err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type = ?", model.PayTypeAlipay).First(&aliPayPrice).Error
+		if err != nil {
+			return nil, err
+		}
+		stat[3]["count"] = aliPayPrice
+	}
+
+	return stat, nil
+}

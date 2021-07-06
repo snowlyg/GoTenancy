@@ -149,6 +149,12 @@ func InitDB(conf request.InitDB) error {
 		model.ShippingTemplateRegion{},
 		model.ShippingTemplateUndelivery{},
 
+		model.Order{},
+		model.OrderStatus{},
+		model.OrderReceipt{},
+		model.OrderProduct{},
+		model.GroupOrder{},
+
 		model.GeneralAddress{},
 		model.GeneralReceipt{},
 	)
@@ -183,6 +189,8 @@ func InitDB(conf request.InitDB) error {
 		source.ShippingTemplateFree,
 		source.ShippingTemplateRegion,
 		source.ShippingTemplateUndelivery,
+
+		source.Order,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)

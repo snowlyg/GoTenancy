@@ -6,6 +6,10 @@ type SysTenancy struct {
 	TenancyResponse
 	model.BaseTenancy
 }
+type TenancySelect struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
 
 type Counts struct {
 	Invalid int

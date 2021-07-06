@@ -25,4 +25,8 @@ type GetAuthorityId struct {
 	AuthorityId string `json:"authorityId" form:"authorityId" binding:"required"`
 }
 
+type Result struct {
+	Count float64
+}
+
 type Empty struct{}

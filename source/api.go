@@ -90,6 +90,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/configCategory/deleteConfigCategory/:id", Description: "删除配置分类", ApiGroup: "configCategory", Method: "DELETE"},
 
 	// 商户
+	{Path: "/v1/admin/tenancy/getTenancySelect", Description: "获取下拉列表", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/changeCopyMap/:id", Description: "获取修改商品复制次数map", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/getTenancies/:code", Description: "根据地区获取商户", ApiGroup: "tenancy", Method: "GET"},
 	{Path: "/v1/admin/tenancy/getTenancyCount", Description: "获取Tenancy对应状态数量", ApiGroup: "tenancy", Method: "GET"},
@@ -160,6 +161,10 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录", ApiGroup: "sysOperationRecord", Method: "GET"},
 	{Path: "/v1/admin/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecord", Method: "POST"},
 	{Path: "/v1/admin/sysOperationRecord/deleteSysOperationRecordByIds", Description: "批量删除操作历史", ApiGroup: "sysOperationRecord", Method: "DELETE"},
+
+	//订单
+	{Path: "/v1/admin/order/getOrderList", Description: "订单列表", ApiGroup: "order", Method: "POST"},
+	{Path: "/v1/admin/order/getOrderChart", Description: "订单表头数量", ApiGroup: "order", Method: "GET"},
 
 	// TODO:商户用户权限
 	{Path: "/v1/merchant/config/getConfigMap/:category", Description: "获取配置表单", ApiGroup: "configClient", Method: "GET"},

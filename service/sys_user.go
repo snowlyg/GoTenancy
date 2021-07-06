@@ -99,8 +99,6 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 		}, err
 	}
 
-	println(token)
-
 	return response.LoginResponse{
 		User:  admin,
 		Token: token,

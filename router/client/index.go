@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/go-tenancy/api/v1/admin"
 	client "github.com/snowlyg/go-tenancy/api/v1/client"
 )
 
@@ -121,6 +122,19 @@ func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
 		SysOperationRecordRouter.POST("/getSysOperationRecordList", client.GetSysOperationRecordList) // 获取SysOperationRecord列表
+	}
+}
 
+func InitOrderRouter(Router *gin.RouterGroup) {
+	OrderRouter := Router.Group("/order")
+	{
+		OrderRouter.POST("/getOrderList", admin.GetOrderList)
+		// OrderRouter.GET("/getCreateOrderMap", admin.GetCreateOrderMap)
+		// OrderRouter.GET("/getUpdateOrderMap/:id", admin.GetUpdateOrderMap)
+		// OrderRouter.POST("/createOrder", admin.CreateOrder)
+		// OrderRouter.GET("/getOrderById/:id", admin.GetOrderById)
+		// OrderRouter.POST("/changeOrderStatus", admin.ChangeOrderStatus)
+		// OrderRouter.PUT("/updateOrder/:id", admin.UpdateOrder)
+		// OrderRouter.DELETE("/deleteOrder/:id", admin.DeleteOrder)
 	}
 }

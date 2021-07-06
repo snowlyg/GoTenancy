@@ -217,6 +217,7 @@ func InitSystemRouter(Router *gin.RouterGroup) {
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
+		TenancyRouter.GET("/getTenancySelect", admin.GetTenancySelect)        // 获取Tenancy列表(不分页)
 		TenancyRouter.GET("/changeCopyMap/:id", admin.ChangeCopyMap)          // 获取修改商品复制次数map
 		TenancyRouter.GET("/getTenancies/:code", admin.GetTenanciesByRegion)  // 获取Tenancy列表(不分页)
 		TenancyRouter.GET("/getTenancyCount", admin.GetTenancyCount)          // 获取Tenancy对应状态数量
@@ -244,5 +245,19 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/setUserAuthority", admin.SetUserAuthority) // 设置用户权限
 		UserRouter.DELETE("/deleteUser", admin.DeleteUser)           // 删除用户
 		UserRouter.PUT("/setUserInfo/:user_id", admin.SetUserInfo)   // 设置用户信息
+	}
+}
+
+func InitOrderRouter(Router *gin.RouterGroup) {
+	OrderRouter := Router.Group("/order")
+	{
+		OrderRouter.POST("/getOrderList", admin.GetOrderList)
+		OrderRouter.GET("/getOrderChart", admin.GetOrderChart)
+		// OrderRouter.GET("/getUpdateOrderMap/:id", admin.GetUpdateOrderMap)
+		// OrderRouter.POST("/createOrder", admin.CreateOrder)
+		// OrderRouter.GET("/getOrderById/:id", admin.GetOrderById)
+		// OrderRouter.POST("/changeOrderStatus", admin.ChangeOrderStatus)
+		// OrderRouter.PUT("/updateOrder/:id", admin.UpdateOrder)
+		// OrderRouter.DELETE("/deleteOrder/:id", admin.DeleteOrder)
 	}
 }
