@@ -57,11 +57,17 @@ func MysqlTables(db *gorm.DB) {
 		model.ShippingTemplateRegion{},
 		model.ShippingTemplateUndelivery{},
 
+		model.Cart{},
+
 		model.Order{},
 		model.OrderStatus{},
 		model.OrderReceipt{},
 		model.OrderProduct{},
 		model.GroupOrder{},
+
+		model.RefundOrder{},
+		model.RefundProduct{},
+		model.RefundStatus{},
 
 		model.GeneralAddress{},
 		model.GeneralReceipt{},

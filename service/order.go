@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -89,6 +90,21 @@ func getOrderConditionByType(t int) response.OrderCondition {
 		}
 	}
 	return conditions[0]
+}
+
+func GetOrderById(id uint) (response.OrderDetail, error) {
+	var order response.OrderDetail
+	err := g.TENANCY_DB.Model(&model.Order{}).
+		Select("orders.*,sys_general_infos.nick_name as user_nick_name").
+		Joins("left join sys_users on orders.sys_user_id = sys_users.id").
+		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
+		Joins(fmt.Sprintf("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id and sys_authorities.authority_type = %d", multi.GeneralAuthority)).
+		Where("orders.id = ?", id).
+		First(&order).Error
+	if err != nil {
+		return response.OrderDetail{}, err
+	}
+	return order, nil
 }
 
 // GetOrderInfoList
@@ -197,78 +213,80 @@ func getSearch(info request.OrderPageInfo, ctx *gin.Context, db *gorm.DB) (*gorm
 }
 
 func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]interface{}) ([]map[string]interface{}, error) {
-
 	// 已支付订单数量
 	var all int64
-	db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Where("paid =?", 1))
-	if err != nil {
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
+	} else {
+		err = db.Where("paid =?", 1).Count(&all).Error
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		stat[0]["count"] = all
 	}
-	err = db.Where("paid =?", 1).Count(&all).Error
-	if err != nil {
-		return nil, err
-	}
-	stat[0]["count"] = all
 
 	//实际支付金额
 	var payPrice request.Result
-	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
-	if err != nil {
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
+	} else {
+
+		err = db.Select("sum(pay_price) as count").Where("paid =?", 1).First(&payPrice).Error
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		stat[1]["count"] = payPrice.Count
 	}
-	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).First(&payPrice).Error
-	if err != nil {
-		return nil, err
-	}
-	stat[1]["count"] = payPrice
 
 	//已退款金额
-	var returnPayPrice request.Result
-	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
-	if err != nil {
+	var orderIds []uint
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
+	} else {
+
+		err = db.Select("orders.id").Find(&orderIds).Error
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		if len(orderIds) > 0 {
+			stat[2]["count"], _ = GetRefundOrder(orderIds)
+		}
 	}
-	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).First(&returnPayPrice).Error
-	if err != nil {
-		return nil, err
-	}
-	stat[2]["count"] = returnPayPrice
 
 	//微信支付金额
 	var wxPayPrice request.Result
-	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
-	if err != nil {
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
+	} else {
+		err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type in ?", []int{model.PayTypeWx, model.PayTypeRoutine, model.PayTypeH5}).First(&wxPayPrice).Error
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		stat[3]["count"] = wxPayPrice.Count
 	}
-	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type in ?", []int{model.PayTypeWx, model.PayTypeRoutine, model.PayTypeH5}).First(&wxPayPrice).Error
-	if err != nil {
-		return nil, err
-	}
-	stat[3]["count"] = returnPayPrice
 
 	//余额支付金额
 	var blanPayPrice request.Result
-	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
-	if err != nil {
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
+	} else {
+		err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type = ?", model.PayTypeBalance).First(&blanPayPrice).Error
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		stat[4]["count"] = blanPayPrice.Count
 	}
-	err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type = ?", model.PayTypeBalance).First(&blanPayPrice).Error
-	if err != nil {
-		return nil, err
-	}
-	stat[3]["count"] = blanPayPrice
 
 	//支付宝支付金额
 	var aliPayPrice request.Result
-	db, err = getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}))
-	if err != nil {
+	if db, err := getSearch(info, ctx, g.TENANCY_DB.Model(&model.Order{}).Joins("left join sys_tenancies on orders.sys_tenancy_id = sys_tenancies.id")); err != nil {
 		return nil, err
 	} else {
 		err = db.Select("sum(pay_price) as count").Where("paid =?", 1).Where("pay_type = ?", model.PayTypeAlipay).First(&aliPayPrice).Error
-		if err != nil {
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
-		stat[3]["count"] = aliPayPrice
+		stat[5]["count"] = aliPayPrice.Count
 	}
 
 	return stat, nil

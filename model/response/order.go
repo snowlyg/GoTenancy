@@ -33,3 +33,17 @@ type OrderCondition struct {
 	Conditions map[string]interface{} `json:"conditions"`
 	IsDeleted  bool                   `json:"is_deleted"`
 }
+
+type OrderDetail struct {
+	TenancyResponse
+
+	model.BaseOrder
+
+	SysUserID        uint   `json:"sysUserId" form:"sysUserId"`
+	SysTenancyID     uint   `json:"sysTenancyId"`
+	GroupOrderID     int    `json:"groupOrderId"`
+	ReconciliationID uint8  `json:"reconciliationId"`
+	CartID           uint   `json:"cartId"`
+	UserNickName     string `json:"userNickName" form:"userNickName"`
+	UserRealName     string `json:"userRealName" form:"userRealName"`
+}

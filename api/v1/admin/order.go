@@ -40,3 +40,18 @@ func GetOrderChart(ctx *gin.Context) {
 		response.OkWithData(chart, ctx)
 	}
 }
+
+// GetOrderById
+func GetOrderById(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if chart, err := service.GetOrderById(req.Id); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithData(chart, ctx)
+	}
+}

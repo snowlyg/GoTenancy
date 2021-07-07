@@ -165,6 +165,7 @@ var baseApis = []model.SysApi{
 	//订单
 	{Path: "/v1/admin/order/getOrderList", Description: "订单列表", ApiGroup: "order", Method: "POST"},
 	{Path: "/v1/admin/order/getOrderChart", Description: "订单表头数量", ApiGroup: "order", Method: "GET"},
+	{Path: "/v1/admin/order/getOrderById/:id", Description: "订单详情", ApiGroup: "order", Method: "GET"},
 
 	// TODO:商户用户权限
 	{Path: "/v1/merchant/config/getConfigMap/:category", Description: "获取配置表单", ApiGroup: "configClient", Method: "GET"},

@@ -56,8 +56,7 @@ type Order struct {
 }
 
 type BaseOrder struct {
-	// 订单组 id
-	OrderSn        string    `gorm:"column:order_sn;type:varchar(32);not null" json:"orderSn"`                                        // 订单号
+	OrderSn        string    `gorm:"column:order_sn;type:varchar(36);not null" json:"orderSn"`                                        // 订单号
 	RealName       string    `gorm:"column:real_name;type:varchar(32);not null" json:"realName"`                                      // 用户姓名
 	UserPhone      string    `gorm:"column:user_phone;type:varchar(18);not null" json:"userPhone"`                                    // 用户电话
 	UserAddress    string    `gorm:"column:user_address;type:varchar(128);not null" json:"userAddress"`                               // 详细地址
@@ -68,7 +67,7 @@ type BaseOrder struct {
 	PayPostage     float64   `gorm:"column:pay_postage;type:decimal(8,2) unsigned;not null;default:0.00" json:"payPostage"`           // 支付邮费
 	CommissionRate float64   `gorm:"column:commission_rate;type:decimal(6,4) unsigned;not null;default:0.0000" json:"commissionRate"` // 平台手续费
 	OrderType      int       `gorm:"column:order_type;type:tinyint unsigned;default:1" json:"orderType"`                              // 1普通 2自提
-	Paid           uint8     `gorm:"column:paid;type:tinyint unsigned;not null;default:0" json:"paid"`                                // 支付状态
+	Paid           int       `gorm:"column:paid;type:tinyint unsigned;not null;default:0" json:"paid"`                                // 支付状态
 	PayTime        time.Time `gorm:"column:pay_time;type:timestamp" json:"payTime"`                                                   // 支付时间
 	PayType        int       `gorm:"column:pay_type;type:tinyint(1);not null" json:"payType"`                                         // 支付方式  1=微信 2=小程序 3=h5 4=余额 5=支付宝
 	Status         int       `gorm:"column:status;type:tinyint(1);not null;default:0" json:"status"`                                  // 订单状态（1:待发货 2：待收货 3：待评价 4：已完成 5：已退款）
@@ -83,8 +82,5 @@ type BaseOrder struct {
 	ActivityType   int32     `gorm:"column:activity_type;type:tinyint unsigned;not null;default:1" json:"activityType"`               // 1：普通 2:秒杀 3:预售 4:助力
 	Cost           float64   `gorm:"column:cost;type:decimal(8,2) unsigned;not null" json:"cost"`                                     // 成本价
 	IsDel          int       `gorm:"column:is_del;type:tinyint unsigned;not null;default:2" json:"isDel"`                             // 是否删除
-
-	// ExtensionOne   float64 `gorm:"column:extension_one;type:decimal(8,2) unsigned;not null;default:0.00" json:"extensionOne"`       // 一级佣金
-	// ExtensionTwo   float64 `gorm:"column:extension_two;type:decimal(8,2) unsigned;not null;default:0.00" json:"extensionTwo"`       // 二级佣金
-	// CouponPrice    float64   `gorm:"column:coupon_price;type:decimal(8,2) unsigned;not null;default:0.00" json:"couponPrice"`         // 优惠券金额
+	IsSystemDel    int       `gorm:"column:is_system_del;type:tinyint(1);default:2" json:"isSystemDel"`                               // 后台是否删除
 }

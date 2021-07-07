@@ -168,6 +168,7 @@ var carbines = []gormadapter.CasbinRule{
 	//订单
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/order/getOrderList", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/order/getOrderChart", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/order/getOrderById/:id", V2: "GET"},
 
 	// TODO:商户用户权限
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
