@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -100,61 +101,21 @@ func orderlist(t *testing.T, params map[string]interface{}, length int) {
 func TestGetOrderFilter(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.GET("v1/admin/order/getOrderFilter").
+	obj := auth.GET("v1/admin/order/getOrderChart").
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
+	obj.Value("message").String().Equal("操作成功")
 
 }
 
-// func TestOrderProcess(t *testing.T) {
-// 	orderId := 1
-// 	auth := baseWithLoginTester(t)
-// 	defer baseLogOut(auth)
-
-// 	update := map[string]interface{}{
-// 		"storeName": "领立裁腰带短袖连衣裙",
-// 		"isHot":     2,
-// 		"isBenefit": 2,
-// 		"isBest":    2,
-// 		"isNew":     2,
-// 		"content":   "dsfsafasfasfas",
-// 	}
-
-// 	obj := auth.PUT(fmt.Sprintf("v1/admin/order/updateOrder/%d", orderId)).
-// 		WithJSON(update).
-// 		Expect().Status(http.StatusOK).JSON().Object()
-// 	obj.Keys().ContainsOnly("status", "data", "message")
-// 	obj.Value("status").Number().Equal(200)
-// 	obj.Value("message").String().Equal("更新成功")
-
-// 	obj = auth.POST("v1/admin/order/changeOrderStatus").
-// 		WithJSON(map[string]interface{}{"id": orderId, "status": 3}).
-// 		Expect().Status(http.StatusOK).JSON().Object()
-// 	obj.Keys().ContainsOnly("status", "data", "message")
-// 	obj.Value("status").Number().Equal(200)
-// 	obj.Value("message").String().Equal("设置成功")
-
-// 	obj = auth.POST("v1/admin/order/changeMutilOrderStatus").
-// 		WithJSON(map[string]interface{}{"id": []int{orderId}, "status": 3}).
-// 		Expect().Status(http.StatusOK).JSON().Object()
-// 	obj.Keys().ContainsOnly("status", "data", "message")
-// 	obj.Value("status").Number().Equal(200)
-// 	obj.Value("message").String().Equal("设置成功")
-
-// 	obj = auth.GET(fmt.Sprintf("v1/admin/order/getOrderById/%d", orderId)).
-// 		Expect().Status(http.StatusOK).JSON().Object()
-// 	obj.Keys().ContainsOnly("status", "data", "message")
-// 	obj.Value("status").Number().Equal(200)
-// 	obj.Value("message").String().Equal("操作成功")
-// 	order := obj.Value("data").Object()
-
-// 	order.Value("id").Number().Ge(0)
-// 	order.Value("storeName").String().Equal(update["storeName"].(string))
-// 	order.Value("isHot").Number().Equal(update["isHot"].(int))
-// 	order.Value("isBenefit").Number().Equal(update["isBenefit"].(int))
-// 	order.Value("isBest").Number().Equal(update["isBest"].(int))
-// 	order.Value("isNew").Number().Equal(update["isNew"].(int))
-// 	order.Value("content").String().Equal(update["content"].(string))
-// }
+func TestOrderDetail(t *testing.T) {
+	orderId := 1
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET(fmt.Sprintf("v1/admin/order/getOrderById/%d", orderId)).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
+}

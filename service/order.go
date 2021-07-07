@@ -140,8 +140,7 @@ func GetOrderInfoList(info request.OrderPageInfo, ctx *gin.Context) ([]response.
 	if err != nil {
 		return orderList, stat, total, err
 	}
-	err = db.
-		Limit(limit).Offset(offset).Find(&orderList).Error
+	err = db.Limit(limit).Offset(offset).Find(&orderList).Error
 	if err != nil {
 		return orderList, stat, total, err
 	}
@@ -204,6 +203,9 @@ func getSearch(info request.OrderPageInfo, ctx *gin.Context, db *gorm.DB) (*gorm
 
 	if info.IsTrader != "" {
 		db = db.Where("sys_tenancies.is_trader = ?", info.IsTrader)
+	}
+	if info.OrderSn != "" {
+		db = db.Where("orders.order_sn like ?", info.OrderSn+"%")
 	}
 
 	if info.Keywords != "" {
