@@ -45,5 +45,4 @@ type OrderDetail struct {
 	ReconciliationID uint8  `json:"reconciliationId"`
 	CartID           uint   `json:"cartId"`
 	UserNickName     string `json:"userNickName" form:"userNickName"`
-	UserRealName     string `json:"userRealName" form:"userRealName"`
 }

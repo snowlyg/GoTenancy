@@ -254,10 +254,13 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 		OrderRouter.POST("/getOrderList", admin.GetOrderList)
 		OrderRouter.GET("/getOrderChart", admin.GetOrderChart)
 		OrderRouter.GET("/getOrderById/:id", admin.GetOrderById)
-		// OrderRouter.GET("/getUpdateOrderMap/:id", admin.GetUpdateOrderMap)
-		// OrderRouter.POST("/createOrder", admin.CreateOrder)
-		// OrderRouter.POST("/changeOrderStatus", admin.ChangeOrderStatus)
-		// OrderRouter.PUT("/updateOrder/:id", admin.UpdateOrder)
-		// OrderRouter.DELETE("/deleteOrder/:id", admin.DeleteOrder)
+	}
+}
+
+func InitRefundOrderRouter(Router *gin.RouterGroup) {
+	OrderRouter := Router.Group("/refundOrder")
+	{
+		OrderRouter.POST("/getRefundOrderList", admin.GetRefundOrderList)
+		// OrderRouter.GET("/getRefundOrderById/:id", admin.GetRefundOrderById)
 	}
 }

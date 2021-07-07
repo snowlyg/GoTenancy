@@ -25,7 +25,14 @@ const (
 // RefundOrder 订单退款表
 type RefundOrder struct {
 	g.TENANCY_MODEL
+	BaseRefundOrder
+	ReconciliationID uint `gorm:"column:reconciliation_id;type:int unsigned;default:0" json:"reconciliationId"` // 对账id
+	OrderID          uint `gorm:"index:oid;column:order_id;type:int unsigned;not null" json:"orderId"`          // 订单id
+	SysUserID        uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	SysTenancyID     uint `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
+}
 
+type BaseRefundOrder struct {
 	RefundOrderSn      string    `gorm:"unique;column:refund_order_sn;type:varchar(32);not null" json:"refundOrderSn"`           // 退款单号
 	DeliveryType       string    `gorm:"column:delivery_type;type:varchar(32)" json:"deliveryType"`                              // 快递公司
 	DeliveryID         string    `gorm:"column:delivery_id;type:varchar(32)" json:"deliveryId"`                                  // 快递单号
@@ -49,9 +56,4 @@ type RefundOrder struct {
 
 	IsDel       int `gorm:"column:is_del;type:tinyint unsigned;not null;default:2" json:"isDel"`
 	IsSystemDel int `gorm:"column:is_system_del;type:tinyint(1);default:2" json:"isSystemDel"` // 商户删除
-
-	ReconciliationID uint `gorm:"column:reconciliation_id;type:int unsigned;default:0" json:"reconciliationId"` // 对账id
-	OrderID          uint `gorm:"index:oid;column:order_id;type:int unsigned;not null" json:"orderId"`          // 订单id
-	SysUserID        uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
-	SysTenancyID     uint `gorm:"index:sys_tenancy_id;column:sys_tenancy_id;type:int;not null" json:"sysTenancyId"` // 商户 id
 }

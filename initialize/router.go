@@ -72,6 +72,7 @@ func Routers(app *gin.Engine) {
 			admin.InitCategoryRouter(AdminGroup)           // 商品分类路由
 			admin.InitProductRouter(AdminGroup)            // 商品路由
 			admin.InitOrderRouter(AdminGroup)              // 订单路由
+			admin.InitRefundOrderRouter(AdminGroup)        // 退款订单路由
 			admin.InitSysOperationRecordRouter(AdminGroup) // 操作记录
 		}
 
