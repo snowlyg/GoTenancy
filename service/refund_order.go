@@ -14,7 +14,10 @@ import (
 
 func GetRefundOrder(orderIds []uint) (float64, error) {
 	var refundPayPrice request.Result
-	err := g.TENANCY_DB.Model(&model.RefundOrder{}).Select("sum(refund_price) as count").Where("order_id in ?", orderIds).Where("status = ?", model.RefundStatusEnd).First(&refundPayPrice).Error
+	err := g.TENANCY_DB.Model(&model.RefundOrder{}).
+		Select("sum(refund_price) as count").
+		Where("order_id in ?", orderIds).Where("status = ?", model.RefundStatusEnd).
+		First(&refundPayPrice).Error
 	if err != nil {
 		return 0, err
 	}
@@ -38,11 +41,11 @@ func getRefundOrderSearch(info request.RefundOrderPageInfo, ctx *gin.Context, db
 		db = db.Where("sys_tenancies.is_trader = ?", info.IsTrader)
 	}
 	if info.OrderSn != "" {
-		db = db.Where("refund_orders.order_sn like ?", info.OrderSn+"%")
+		db = db.Where("orders.order_sn like ?", info.OrderSn+"%")
 	}
 
 	if info.RefundOrderSn != "" {
-		db = db.Where("refund_orders.order_sn like ?", info.RefundOrderSn+"%")
+		db = db.Where("refund_orders.refund_order_sn like ?", info.RefundOrderSn+"%")
 	}
 
 	return db, nil
@@ -63,7 +66,8 @@ func GetRefundOrderInfoList(info request.RefundOrderPageInfo, ctx *gin.Context) 
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.RefundOrder{}).
-		Select("refund_orders.*,sys_tenancies.name as tenancy_name,sys_tenancies.is_trader as is_trader,sys_general_infos.nick_name as user_nick_name").
+		Select("refund_orders.*,sys_tenancies.name as tenancy_name,sys_tenancies.is_trader as is_trader,sys_general_infos.nick_name as user_nick_name,orders.order_sn as order_sn").
+		Joins("left join orders on refund_orders.order_id = orders.id").
 		Joins("left join sys_tenancies on refund_orders.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_users on refund_orders.sys_user_id = sys_users.id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id")
