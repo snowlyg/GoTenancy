@@ -65,3 +65,28 @@ func GetOrderById(ctx *gin.Context) {
 		response.OkWithData(chart, ctx)
 	}
 }
+
+// GetOrderRecord
+func GetOrderRecord(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var pageInfo request.PageInfo
+	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if records, total, err := service.GetOrderRecord(req.Id, pageInfo); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(gin.H{
+			"list":     records,
+			"total":    total,
+			"page":     pageInfo.Page,
+			"pageSize": pageInfo.PageSize,
+		}, "获取成功", ctx)
+	}
+}

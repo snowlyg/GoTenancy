@@ -131,5 +131,6 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 		OrderRouter.GET("/getOrderChart", client.GetOrderChart)
 		OrderRouter.GET("/getOrderFilter", client.GetOrderFilter)
 		OrderRouter.GET("/getOrderById/:id", client.GetOrderById)
+		OrderRouter.POST("/getOrderRecord/:id", client.GetOrderRecord)
 	}
 }

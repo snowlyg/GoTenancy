@@ -126,9 +126,26 @@ func GetOrderById(id uint) (response.OrderDetail, error) {
 		Where("orders.id = ?", id).
 		First(&order).Error
 	if err != nil {
-		return response.OrderDetail{}, err
+		return order, err
 	}
 	return order, nil
+}
+
+func GetOrderRecord(id uint, info request.PageInfo) ([]model.OrderStatus, int64, error) {
+	var orderRecord []model.OrderStatus
+	var total int64
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := g.TENANCY_DB.Model(&model.OrderStatus{}).Where("order_id = ?", id)
+	err := db.Count(&total).Error
+	if err != nil {
+		return orderRecord, total, err
+	}
+	err = db.Limit(limit).Offset(offset).Find(&orderRecord).Error
+	if err != nil {
+		return orderRecord, total, err
+	}
+	return orderRecord, total, nil
 }
 
 // GetOrderInfoList
