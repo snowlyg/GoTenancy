@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -13,6 +14,29 @@ import (
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
+
+func GetOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
+	var form Form
+	var formStr string
+	remark, err := GetOrderRemarkByID(id)
+	if err != nil {
+		return Form{}, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"remark","value":"%s","title":"备注","props":{"type":"text","placeholder":"请输入备注"},"validate":[{"message":"请输入备注","required":true,"type":"string","trigger":"change"}]}],"action":"","method":"POST","title":"修改备注","config":{}}`, remark)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	form.SetAction(fmt.Sprintf("%s/%d", "/order/remarkOrder", id), ctx)
+	return form, err
+}
+
+func GetOrderRemarkByID(id uint) (string, error) {
+	var remark string
+	err := g.TENANCY_DB.Model(&model.Order{}).Select("remark").Where("id = ?", id).First(&remark).Error
+	return remark, err
+}
 
 // getOrderCount
 func getOrderCount(name string) (int64, error) {
@@ -146,6 +170,10 @@ func GetOrderRecord(id uint, info request.PageInfo) ([]model.OrderStatus, int64,
 		return orderRecord, total, err
 	}
 	return orderRecord, total, nil
+}
+
+func RemarkOrder(id uint, remark map[string]interface{}) error {
+	return g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Updates(remark).Error
 }
 
 // GetOrderInfoList

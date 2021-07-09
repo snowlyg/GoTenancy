@@ -47,3 +47,5 @@ type CartInfoProductAttr struct {
 	OtPrice   float64 `json:"otPrice,omitempty" form:"otPrice"`
 	Cost      float64 `json:"cost,omitempty" form:"cost"`
 }
+
+type OrderRemark map[string]interface{}

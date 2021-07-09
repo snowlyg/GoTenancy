@@ -9,6 +9,20 @@ import (
 	"go.uber.org/zap"
 )
 
+func GetOrderRemarkMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if chart, err := service.GetOrderRemarkMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithData(chart, ctx)
+	}
+}
+
 // GetOrderList
 func GetOrderList(ctx *gin.Context) {
 	var pageInfo request.OrderPageInfo
@@ -88,5 +102,25 @@ func GetOrderRecord(ctx *gin.Context) {
 			"page":     pageInfo.Page,
 			"pageSize": pageInfo.PageSize,
 		}, "获取成功", ctx)
+	}
+}
+
+// RemarkOrder
+func RemarkOrder(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var remark request.OrderRemark
+	if errs := ctx.ShouldBindJSON(&remark); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.RemarkOrder(req.Id, remark); err != nil {
+		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
 	}
 }
