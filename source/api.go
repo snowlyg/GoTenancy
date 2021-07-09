@@ -227,6 +227,11 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/product/restoreProduct/:id", Description: "还原商品", ApiGroup: "productClient", Method: "GET"},
 	{Path: "/v1/merchant/product/deleteProduct/:id", Description: "加入回收站", ApiGroup: "productClient", Method: "DELETE"},
 	{Path: "/v1/merchant/product/destoryProduct/:id", Description: "删除商品", ApiGroup: "productClient", Method: "DELETE"},
+	//订单
+	{Path: "/v1/merchant/order/getOrderList", Description: "订单列表", ApiGroup: "orderClient", Method: "POST"},
+	{Path: "/v1/merchant/order/getOrderChart", Description: "订单表头数量", ApiGroup: "orderClient", Method: "GET"},
+	{Path: "/v1/merchant/order/getOrderFilter", Description: "订单分类统计", ApiGroup: "orderClient", Method: "GET"},
+	{Path: "/v1/merchant/order/getOrderById/:id", Description: "订单详情", ApiGroup: "orderClient", Method: "GET"},
 
 	{Path: "/v1/merchant/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecordClient", Method: "POST"},
 

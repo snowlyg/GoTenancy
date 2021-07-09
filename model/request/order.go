@@ -12,6 +12,8 @@ type OrderPageInfo struct {
 	OrderSn      string `json:"orderSn" form:"orderSn"`
 	Status       string `json:"status" form:"status"`
 	Username     string `json:"username" form:"username"`
+	OrderType    string `json:"orderType" form:"orderType"`
+	ActivityType string `json:"activityType" form:"activityType"`
 }
 
 type CartInfo struct {
