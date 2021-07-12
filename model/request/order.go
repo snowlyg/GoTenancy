@@ -50,7 +50,7 @@ type CartInfoProductAttr struct {
 
 type OrderRemark map[string]interface{}
 type DeliveryOrder struct {
-	DeliveryId   string `json:"deliveryId" form:"deliveryId"`
-	DeliveryName string `json:"deliveryName" form:"deliveryName"`
-	DeliveryType int    `json:"deliveryType" form:"deliveryType"`
+	DeliveryId   string      `json:"deliveryId" form:"deliveryId"`
+	DeliveryName interface{} `json:"deliveryName" form:"deliveryName"`
+	DeliveryType int         `json:"deliveryType" form:"deliveryType"`
 }

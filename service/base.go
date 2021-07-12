@@ -65,8 +65,23 @@ type Rule struct {
 	Value    interface{}              `json:"value"`
 	Props    map[string]interface{}   `json:"props"`
 	Options  []Option                 `json:"options,omitempty"`
-	Control  []map[string]interface{} `json:"control,omitempty"`
+	Control  []Control                `json:"control,omitempty"`
 	Validate []map[string]interface{} `json:"validate,omitempty"`
+}
+type ControlRule struct {
+	Title    string                   `json:"title"`
+	Type     string                   `json:"type"`
+	Field    string                   `json:"field"`
+	Info     string                   `json:"info"`
+	Value    interface{}              `json:"value"`
+	Props    map[string]interface{}   `json:"props"`
+	Options  []Option                 `json:"options,omitempty"`
+	Validate []map[string]interface{} `json:"validate,omitempty"`
+}
+
+type Control struct {
+	Value int    `json:"value"`
+	Rule  []Rule `json:"rule"`
 }
 
 func (r *Rule) TransData(rule string, token []byte) {

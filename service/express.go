@@ -38,6 +38,23 @@ func GetExpressMap(id uint, ctx *gin.Context) (Form, error) {
 	return form, err
 }
 
+// GetExpressOptions
+func GetExpressOptions() ([]Option, error) {
+	var options []Option
+	var opts []Opt
+	err := g.TENANCY_DB.Model(&model.Express{}).Select("id as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
+	if err != nil {
+		return options, err
+	}
+	options = append(options, Option{Label: "请选择", Value: 0})
+
+	for _, opt := range opts {
+		options = append(options, Option{Label: opt.Label, Value: opt.Value})
+	}
+
+	return options, err
+}
+
 // CreateExpress
 func CreateExpress(express model.Express) (model.Express, error) {
 	err := g.TENANCY_DB.Where("code = ?", express.Code).First(&express).Error
