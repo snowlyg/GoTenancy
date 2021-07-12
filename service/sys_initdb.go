@@ -151,6 +151,8 @@ func InitDB(conf request.InitDB) error {
 
 		model.Cart{},
 
+		model.Express{},
+
 		model.Order{},
 		model.OrderStatus{},
 		model.OrderReceipt{},
@@ -199,6 +201,8 @@ func InitDB(conf request.InitDB) error {
 		source.Cart,
 		source.Order,
 		source.RefundOrder,
+
+		source.Express,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)

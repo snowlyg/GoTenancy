@@ -118,6 +118,16 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configCategory/updateConfigCategory/:id", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/configCategory/deleteConfigCategory/:id", V2: "DELETE"},
 
+	// 物流公司
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/getCreateExpressMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/getUpdateExpressMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/getExpressList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/createExpress", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/getExpressById/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/changeExpressStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/updateExpress/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/express/deleteExpress/:id", V2: "DELETE"},
+
 	// 品牌
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getCreateBrandMap", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/brand/getUpdateBrandMap/:id", V2: "GET"},
@@ -236,12 +246,14 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/product/destoryProduct/:id", V2: "DELETE"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/sysOperationRecord/getSysOperationRecordList", V2: "POST"},
 	//订单
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/deliveryOrderMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderRemarkMap/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderChart", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderFilter", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderById/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/getOrderRecord/:id", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/deliveryOrder/:id", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/order/remarkOrder/:id", V2: "POST"},
 
 	// TODO:普通用户权限

@@ -65,6 +65,7 @@ type Rule struct {
 	Value    interface{}              `json:"value"`
 	Props    map[string]interface{}   `json:"props"`
 	Options  []Option                 `json:"options,omitempty"`
+	Control  []map[string]interface{} `json:"control,omitempty"`
 	Validate []map[string]interface{} `json:"validate,omitempty"`
 }
 

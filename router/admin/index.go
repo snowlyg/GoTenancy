@@ -257,6 +257,20 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 	}
 }
 
+func InitExpressRouter(Router *gin.RouterGroup) {
+	ExpressRouter := Router.Group("/express")
+	{
+		ExpressRouter.POST("/getExpressList", admin.GetExpressList)
+		ExpressRouter.GET("/getCreateExpressMap", admin.GetCreateExpressMap)
+		ExpressRouter.GET("/getUpdateExpressMap/:id", admin.GetUpdateExpressMap)
+		ExpressRouter.POST("/createExpress", admin.CreateExpress)
+		ExpressRouter.GET("/getExpressById/:id", admin.GetExpressById)
+		ExpressRouter.POST("/changeExpressStatus", admin.ChangeExpressStatus)
+		ExpressRouter.PUT("/updateExpress/:id", admin.UpdateExpress)
+		ExpressRouter.DELETE("/deleteExpress/:id", admin.DeleteExpress)
+	}
+}
+
 func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	OrderRouter := Router.Group("/refundOrder")
 	{

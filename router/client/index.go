@@ -127,12 +127,14 @@ func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 func InitOrderRouter(Router *gin.RouterGroup) {
 	OrderRouter := Router.Group("/order")
 	{
+		OrderRouter.GET("/deliveryOrderMap/:id", client.DeliveryOrderMap)
 		OrderRouter.GET("/getOrderRemarkMap/:id", client.GetOrderRemarkMap)
 		OrderRouter.POST("/getOrderList", client.GetOrderList)
 		OrderRouter.GET("/getOrderChart", client.GetOrderChart)
 		OrderRouter.GET("/getOrderFilter", client.GetOrderFilter)
 		OrderRouter.GET("/getOrderById/:id", client.GetOrderById)
 		OrderRouter.POST("/getOrderRecord/:id", client.GetOrderRecord)
+		OrderRouter.POST("/deliveryOrder/:id", client.DeliveryOrder)
 		OrderRouter.POST("/remarkOrder/:id", client.RemarkOrder)
 	}
 }

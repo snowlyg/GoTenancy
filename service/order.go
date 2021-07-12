@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
@@ -14,6 +15,18 @@ import (
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
+
+func DeliveryOrderMap(id uint, ctx *gin.Context) (Form, error) {
+	var form Form
+	formStr := `{"rule":[{"type":"radio","field":"deliveryType","value":1,"title":"发货类型","props":{},"control":[{"value":1,"rule":[{"type":"select","field":"deliveryName","value":"","title":"快递名称","props":{"multiple":false,"placeholder":"请选择快递名称"},"options":[]},{"type":"input","field":"deliveryId","value":"","title":"快递单号","props":{"type":"text","placeholder":"请输入快递单号"},"validate":[{"message":"请输入快递单号","required":true,"type":"string","trigger":"change"}]}]},{"value":2,"rule":[{"type":"input","field":"deliveryName","value":"","title":"送货人姓名","props":{"type":"text","placeholder":"请输入送货人姓名"},"validate":[{"message":"请输入送货人姓名","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"deliveryId","value":"","title":"手机号","props":{"type":"text","placeholder":"请输入手机号"},"validate":[{"message":"请输入手机号","required":true,"type":"string","trigger":"change"}]}]},{"value":3,"rule":[]}],"options":[{"value":1,"label":"发货"},{"value":2,"label":"送货"},{"value":3,"label":"无需物流"}]}],"action":"","method":"POST","title":"添加发货信息","config":{}}`
+	// {"label":"顺丰速运","value":188},{"label":"圆通速递","value":243},{"label":"中通快递","value":252},{"label":"EMS","value":254},{"label":"申通快递","value":266},{"label":"众邦快递","value":429}
+	err := json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	form.SetAction(fmt.Sprintf("%s/%d", "/order/deliveryOrder", id), ctx)
+	return form, err
+}
 
 func GetOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
@@ -174,6 +187,41 @@ func GetOrderRecord(id uint, info request.PageInfo) ([]model.OrderStatus, int64,
 
 func RemarkOrder(id uint, remark map[string]interface{}) error {
 	return g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Updates(remark).Error
+}
+
+func DeliveryOrder(id uint, delivery request.DeliveryOrder) error {
+	orderDelivery := map[string]interface{}{
+		"delivery_id":   delivery.DeliveryId,
+		"delivery_name": delivery.DeliveryName,
+		"delivery_type": delivery.DeliveryType,
+	}
+	err := g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Updates(orderDelivery).Error
+	if err != nil {
+		return err
+	}
+	var changeMessage string
+	switch delivery.DeliveryType {
+	case model.DeliverTypeFH:
+		changeMessage = fmt.Sprintf("订单已配送【快递名称】:%s; 【快递单号】：%s", delivery.DeliveryName, delivery.DeliveryId)
+	case model.DeliverTypeSH:
+		changeMessage = fmt.Sprintf("订单已配送【送货人姓名】:%s; 【手机号】：%s", delivery.DeliveryName, delivery.DeliveryId)
+	case model.DeliverTypeXN:
+		changeMessage = "订单已配送【虚拟发货】"
+	default:
+		return fmt.Errorf("error deliver type %d", delivery.DeliveryType)
+	}
+
+	orderStatus := model.OrderStatus{
+		ChangeType:    fmt.Sprintf("delivery_%d", delivery.DeliveryType),
+		ChangeMessage: changeMessage,
+		ChangeTime:    time.Now(),
+		OrderID:       id,
+	}
+	err = g.TENANCY_DB.Model(&model.OrderStatus{}).Create(orderStatus).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetOrderInfoList
