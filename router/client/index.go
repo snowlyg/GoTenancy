@@ -147,8 +147,17 @@ func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	{
 		RefundOrderRouter.GET("/getRefundOrderRemarkMap/:id", client.GetRefundOrderRemarkMap)
 		RefundOrderRouter.POST("/remarkRefundOrder/:id", client.RemarkRefundOrder)
+		RefundOrderRouter.GET("/getRefundOrderMap/:id", client.GetRefundOrderMap)
+		RefundOrderRouter.POST("/auditRefundOrder/:id", client.AuditRefundOrder)
 		RefundOrderRouter.POST("/getRefundOrderList", client.GetRefundOrderList)
 		RefundOrderRouter.POST("/getRefundOrderRecord/:id", client.GetRefundOrderRecord)
 		RefundOrderRouter.DELETE("/deleteRefundOrder/:id", client.DeleteRefundOrder)
+	}
+}
+
+func InitExpressRouter(Router *gin.RouterGroup) {
+	ExpressRouter := Router.Group("/express")
+	{
+		ExpressRouter.GET("/getExpressByCode/:code", client.GetExpressByCode)
 	}
 }

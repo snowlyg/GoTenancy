@@ -70,6 +70,20 @@ func GetRefundOrderRemarkMap(ctx *gin.Context) {
 	}
 }
 
+func GetRefundOrderMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if chart, err := service.GetRefundOrderMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithData(chart, ctx)
+	}
+}
+
 // RemarkRefundOrder
 func RemarkRefundOrder(ctx *gin.Context) {
 	var req request.GetById
@@ -83,6 +97,26 @@ func RemarkRefundOrder(ctx *gin.Context) {
 		return
 	}
 	if err := service.RemarkRefundOrder(req.Id, remark, ctx); err != nil {
+		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
+	}
+}
+
+// AuditRefundOrder
+func AuditRefundOrder(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var audit request.OrderAudit
+	if errs := ctx.ShouldBindJSON(&audit); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.AuditRefundOrder(req.Id, audit, ctx); err != nil {
 		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {

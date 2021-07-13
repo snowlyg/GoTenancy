@@ -151,6 +151,11 @@ type Opt struct {
 	Value int    `json:"value"`
 }
 
+type StringOpt struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
+
 // filterDate
 func filterDate(db *gorm.DB, date, perfix string) *gorm.DB {
 	field := "created_at"

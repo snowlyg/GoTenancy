@@ -22,9 +22,11 @@ type OrderList struct {
 }
 
 type OrderProduct struct {
+	ID       uint           `json:"id"`
 	CartInfo datatypes.JSON `json:"cartInfo"`
 	model.BaseOrderProduct
-	OrderID uint `json:"orderID"`
+	OrderID   uint `json:"orderID"`
+	ProductID uint `json:"productId"` // 商品ID
 }
 
 type OrderCondition struct {

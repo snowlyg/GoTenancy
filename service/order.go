@@ -244,26 +244,19 @@ func DeliveryOrder(id uint, delivery request.DeliveryOrder, ctx *gin.Context) er
 	var deliveryName string
 	switch delivery.DeliveryType {
 	case model.DeliverTypeFH:
-		name, ok := delivery.DeliveryName.(float64)
-		if ok {
-			express, err := GetExpressByID(uint(name))
-			if err != nil {
-				return fmt.Errorf("get express err %w", err)
-			}
-			deliveryName = express.Name
+		express, err := GetExpressByCode(delivery.DeliveryName)
+		if err != nil {
+			return fmt.Errorf("get express err %w", err)
 		}
+		deliveryName = express.Name
 		changeMessage = fmt.Sprintf("订单已配送【快递名称】:%s; 【快递单号】：%s", deliveryName, delivery.DeliveryId)
 	case model.DeliverTypeSH:
-		name, ok := delivery.DeliveryName.(string)
-		if ok {
-			deliveryName = name
-		}
-
+		deliveryName = delivery.DeliveryName
 		regexp := regexp.MustCompile(`^1[3456789]{1}\d{9}$`)
 		if !regexp.MatchString(delivery.DeliveryId) {
 			return fmt.Errorf("手机号格式错误")
 		}
-		changeMessage = fmt.Sprintf("订单已配送【送货人姓名】:%s; 【手机号】：%s", delivery.DeliveryName, delivery.DeliveryId)
+		changeMessage = fmt.Sprintf("订单已配送【送货人姓名】:%s; 【手机号】：%s", deliveryName, delivery.DeliveryId)
 	case model.DeliverTypeXN:
 		changeMessage = "订单已配送【虚拟发货】"
 	default:

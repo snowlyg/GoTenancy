@@ -38,6 +38,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/shirou/gopsutil v3.21.3+incompatible
+	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/snowlyg/multi v0.0.0-20210617034456-78c1e847cda0
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

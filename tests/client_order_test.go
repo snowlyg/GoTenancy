@@ -152,7 +152,7 @@ func TestClientOrderDetail(t *testing.T) {
 	obj = auth.POST(fmt.Sprintf("v1/merchant/order/deliveryOrder/%d", orderId)).
 		WithJSON(map[string]interface{}{
 			"deliveryId":   "13412081338",
-			"deliveryName": 1,
+			"deliveryName": "123456789",
 			"deliveryType": 1,
 		}).
 		Expect().Status(http.StatusOK).JSON().Object()

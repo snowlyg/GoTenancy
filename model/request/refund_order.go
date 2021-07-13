@@ -9,3 +9,8 @@ type RefundOrderPageInfo struct {
 	RefundOrderSn string `json:"refundOrderSn" form:"refundOrderSn"`
 	Status        string `json:"status" form:"status"`
 }
+
+type OrderAudit struct {
+	Status      int    `json:"status"  binding:"required"`
+	FailMessage string `json:"failMessage"`
+}

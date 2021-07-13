@@ -241,11 +241,16 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/order/updateOrder/:id", Description: "订单更新", ApiGroup: "orderClient", Method: "POST"},
 	{Path: "/v1/merchant/order/deleteOrder/:id", Description: "删除订单", ApiGroup: "orderClient", Method: "DELETE"},
 	//退款订单
+	{Path: "/v1/merchant/refundOrder/getRefundOrderMap/:id", Description: "退款订单表单", ApiGroup: "refundOrderClient", Method: "GET"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderRemarkMap/:id", Description: "退款订单备注表单", ApiGroup: "refundOrderClient", Method: "GET"},
 	{Path: "/v1/merchant/refundOrder/remarkRefundOrder/:id", Description: "退款订单备注", ApiGroup: "refundOrderClient", Method: "POST"},
+	{Path: "/v1/merchant/refundOrder/auditRefundOrder/:id", Description: "退款订单审核", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderList", Description: "退款订单列表", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderRecord/:id", Description: "退款订单记录", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/deleteRefundOrder/:id", Description: "删除退款订单", ApiGroup: "refundOrderClient", Method: "DELETE"},
+
+	//物流信息
+	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},
 
 	{Path: "/v1/merchant/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecordClient", Method: "POST"},
 

@@ -130,10 +130,10 @@ var configs = []model.SysConfig{
 	{SysConfigCategoryID: 1, ConfigName: "开启商户入驻", ConfigKey: "mer_intention_open", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启商户入驻功能", Sort: 0, UserType: 2, Status: 1},
 	// 289	4	预售尾款支付通知	sms_pay_presell_status	radio	0:关闭
 	// 1:开启	0		1	0	1	2020-11-30 17:46:45
-	// 290	5	打印机终端号	terminal_number	input		0	打印机终端号	0	1	1	2020-07-29 15:47:41
-	// 291	5	打印机应用ID	printing_client_id	input		0	打印机开发者用户ID	0	1	1	2020-07-29 15:55:13
-	// 292	5	打印机用户ID	develop_id	input		0	打印机的应用ID	0	1	1	2020-07-29 15:56:06
-	// 293	5	打印机密匙	printing_api_key	input		0	打印机应用密匙	0	1	1	2020-07-29 15:57:46
+	{SysConfigCategoryID: 5, ConfigName: "打印机终端号", ConfigKey: "terminal_number", ConfigType: "input", Required: 2, Info: "打印机终端号", Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "打印机应用ID", ConfigKey: "printing_client_id", ConfigType: "input", Required: 2, Info: "打印机开发者用户ID", Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "打印机用户ID", ConfigKey: "develop_id", ConfigType: "input", Required: 2, Info: "打印机的应用ID", Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "打印机密匙", ConfigKey: "printing_api_key", ConfigType: "input", Required: 2, Info: "打印机应用密匙", Sort: 0, UserType: 1, Status: 1},
 	{SysConfigCategoryID: 1, ConfigName: "开启直播免审核", ConfigKey: "broadcast_room_type", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启直播免审核", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 1, ConfigName: "开启复制第三方平台商品", ConfigKey: "copy_product_status", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "是否开启复制商品功能", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 1, ConfigName: "复制商品接口KEY", ConfigKey: "copy_product_apikey", ConfigType: "input", ConfigRule: "", Required: 2, Info: "接口key", Sort: 0, UserType: 2, Status: 1},
@@ -153,16 +153,13 @@ var configs = []model.SysConfig{
 	// 309	4	直播审核通过主播通知	sms_broadcast_room_status	radio	0:关闭
 	// 1:开启	0		0	0	1	2020-09-08 15:53:42
 	// 310	4	验证码时效配置(分钟)	sms_time	number		0		0	0	1	2020-09-08 15:53:42
-	// 311	5	打印机自动打印	printing_auto_status	radio	0:关闭
-	// 1:开启	0	开启后订单支付成功后自动打印	0	1	1	2020-10-17 11:25:09
+	{SysConfigCategoryID: 5, ConfigName: "打印机自动打印", ConfigKey: "printing_auto_status", ConfigType: "radio", ConfigRule: "	0:关闭;1:开启", Required: 2, Info: "开启后订单支付成功后自动打印", Sort: 0, UserType: 1, Status: 1},
 	{SysConfigCategoryID: 15, ConfigName: "支付宝支付状态", ConfigKey: "alipay_open", ConfigType: "radio", ConfigRule: "0:关闭 1:开启", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 15, ConfigName: "支付宝app_id", ConfigKey: "alipay_app_id", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 15, ConfigName: "支付宝公钥", ConfigKey: "alipay_public_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
 	{SysConfigCategoryID: 15, ConfigName: "支付密钥", ConfigKey: "alipay_private_key", ConfigType: "input", ConfigRule: "", Required: 2, Info: "", Sort: 0, UserType: 2, Status: 1},
-	// 316	5	打印机开启	printing_status	radio	0:关闭
-	// 1:开启	0		0	1	1	2020-11-10 17:59:49
-	// 317	5	开启发票	mer_open_receipt	radio	0:关闭
-	// 1:开启	0	设置是否开启发票	0	1	1	2020-11-14 11:40:10
+	{SysConfigCategoryID: 5, ConfigName: "打印机开启", ConfigKey: "printing_status", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "", Sort: 0, UserType: 1, Status: 1},
+	{SysConfigCategoryID: 5, ConfigName: "开启发票", ConfigKey: "mer_open_receipt", ConfigType: "radio", ConfigRule: "0:关闭;1:开启", Required: 2, Info: "设置是否开启发票", Sort: 0, UserType: 1, Status: 1},
 }
 
 func (m *config) Init() error {

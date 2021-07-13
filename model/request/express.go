@@ -6,3 +6,7 @@ type ExpressPageInfo struct {
 	Page     int    `json:"page" form:"page" binding:"required"`
 	PageSize int    `json:"pageSize" form:"pageSize" binding:"required"`
 }
+
+type GetByCode struct {
+	Code string `json:"code" uri:"code" form:"code"`
+}

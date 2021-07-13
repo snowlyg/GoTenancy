@@ -41,12 +41,12 @@ func GetExpressMap(id uint, ctx *gin.Context) (Form, error) {
 // GetExpressOptions
 func GetExpressOptions() ([]Option, error) {
 	var options []Option
-	var opts []Opt
-	err := g.TENANCY_DB.Model(&model.Express{}).Select("id as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
+	var opts []StringOpt
+	err := g.TENANCY_DB.Model(&model.Express{}).Select("code as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
 	if err != nil {
 		return options, err
 	}
-	options = append(options, Option{Label: "请选择", Value: 0})
+	options = append(options, Option{Label: "请选择", Value: ""})
 
 	for _, opt := range opts {
 		options = append(options, Option{Label: opt.Label, Value: opt.Value})
@@ -70,6 +70,13 @@ func GetExpressByID(id uint) (model.Express, error) {
 	var express model.Express
 	err := g.TENANCY_DB.Where("id = ?", id).First(&express).Error
 	return express, err
+}
+
+// GetExpressByCode
+// TODO:根据单号获取物流信息，需要对接第三方平台
+func GetExpressByCode(code string) (model.Express, error) {
+	var express model.Express
+	return express, nil
 }
 
 // ChangeExpressStatus
