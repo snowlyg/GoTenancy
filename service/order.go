@@ -53,7 +53,7 @@ func GetOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 
 func GetOrderRemarkByID(id uint) (string, error) {
 	var remark string
-	err := g.TENANCY_DB.Model(&model.Order{}).Select("remark").Where("id = ?", id).First(&remark).Error
+	err := g.TENANCY_DB.Model(&model.Order{}).Select("remark").Where("id = ?", id).Where("is_system_del", g.StatusFalse).First(&remark).Error
 	return remark, err
 }
 
@@ -63,7 +63,7 @@ func getOrderCount(name string) (int64, error) {
 	wheres := getOrderConditions()
 	for _, where := range wheres {
 		if where.Name == name {
-			db := g.TENANCY_DB.Model(&model.Order{})
+			db := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse)
 			if where.Conditions != nil && len(where.Conditions) > 0 {
 				for key, cn := range where.Conditions {
 					if cn == nil {
@@ -96,7 +96,7 @@ func GetFilter() ([]map[string]interface{}, error) {
 			continue
 		}
 		var count int64
-		err := g.TENANCY_DB.Model(&model.Order{}).Where("order_type = ?", chart["orderType"]).Count(&count).Error
+		err := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("order_type = ?", chart["orderType"]).Count(&count).Error
 		if err != nil {
 			return nil, err
 		} else {
@@ -166,6 +166,7 @@ func GetOrderById(id uint) (response.OrderDetail, error) {
 		Joins("left join sys_users on orders.sys_user_id = sys_users.id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
 		Joins(fmt.Sprintf("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id and sys_authorities.authority_type = %d", multi.GeneralAuthority)).
+		Where("orders.is_system_del", g.StatusFalse).
 		Where("orders.id = ?", id).
 		First(&order).Error
 	if err != nil {
@@ -192,7 +193,7 @@ func GetOrderRecord(id uint, info request.PageInfo) ([]model.OrderStatus, int64,
 }
 
 func RemarkOrder(id uint, remark map[string]interface{}) error {
-	return g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Updates(remark).Error
+	return g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("id = ?", id).Updates(remark).Error
 }
 
 func DeliveryOrder(id uint, delivery request.DeliveryOrder) error {
@@ -233,7 +234,7 @@ func DeliveryOrder(id uint, delivery request.DeliveryOrder) error {
 		"delivery_type": delivery.DeliveryType,
 		"status":        model.OrderStatusNoReceive,
 	}
-	err := g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Updates(orderDelivery).Error
+	err := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("id = ?", id).Updates(orderDelivery).Error
 	if err != nil {
 		return fmt.Errorf("update order info %w", err)
 	}
@@ -367,7 +368,7 @@ func getOrderSearch(info request.OrderPageInfo, ctx *gin.Context, db *gorm.DB) (
 	if info.Username != "" {
 		db = db.Where(g.TENANCY_DB.Where("orders.order_sn like ?", info.Keywords+"%").Or("orders.real_name like ?", info.Keywords+"%").Or("orders.user_phone like ?", info.Keywords+"%"))
 	}
-	return db, nil
+	return db.Where("orders.is_system_del", g.StatusFalse), nil
 }
 
 func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]interface{}) ([]map[string]interface{}, error) {
@@ -454,4 +455,9 @@ func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]int
 	}
 
 	return stat, nil
+}
+
+// DeleteOrder
+func DeleteOrder(id uint) error {
+	return g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id).Update("is_system_del", g.StatusTrue).Error
 }

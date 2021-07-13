@@ -9,6 +9,7 @@ type RefundOrderList struct {
 
 	model.BaseRefundOrder
 
+	ActivityType     int32           `json:"activityType" form:"activityType"`
 	OrderSn          string          `json:"orderSn" form:"orderSn"`
 	UserNickName     string          `json:"userNickName" form:"userNickName"`
 	TenancyName      string          `json:"tenancyName" form:"tenancyName"`

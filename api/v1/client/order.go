@@ -158,3 +158,18 @@ func RemarkOrder(ctx *gin.Context) {
 		response.OkWithMessage("操作成功", ctx)
 	}
 }
+
+// DeleteOrder
+func DeleteOrder(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.DeleteOrder(req.Id); err != nil {
+		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
+		response.FailWithMessage("删除失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("删除成功", ctx)
+	}
+}

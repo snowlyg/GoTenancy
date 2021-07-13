@@ -272,9 +272,8 @@ func InitExpressRouter(Router *gin.RouterGroup) {
 }
 
 func InitRefundOrderRouter(Router *gin.RouterGroup) {
-	OrderRouter := Router.Group("/refundOrder")
+	RefundOrderRouter := Router.Group("/refundOrder")
 	{
-		OrderRouter.POST("/getRefundOrderList", admin.GetRefundOrderList)
-		// OrderRouter.GET("/getRefundOrderById/:id", admin.GetRefundOrderById)
+		RefundOrderRouter.POST("/getRefundOrderList", admin.GetRefundOrderList)
 	}
 }

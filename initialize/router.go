@@ -92,6 +92,7 @@ func Routers(app *gin.Engine) {
 			client.InitProductRouter(ClientGroup)            // 商品路由
 			client.InitShippingTemplateRouter(ClientGroup)   // 运费模板路由
 			client.InitOrderRouter(ClientGroup)              // 订单路由
+			client.InitRefundOrderRouter(ClientGroup)        // 退款订单路由
 			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 		}
 

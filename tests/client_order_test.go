@@ -138,7 +138,7 @@ func TestClientOrderDetail(t *testing.T) {
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("获取成功")
 	data := obj.Value("data").Object()
-	data.Keys().ContainsOnly("list", "total", "page", "pageSize", "stat")
+	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
 
