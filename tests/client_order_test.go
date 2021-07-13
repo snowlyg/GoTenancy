@@ -152,7 +152,7 @@ func TestClientOrderDetail(t *testing.T) {
 	obj = auth.POST(fmt.Sprintf("v1/merchant/order/deliveryOrder/%d", orderId)).
 		WithJSON(map[string]interface{}{
 			"deliveryId":   "13412081338",
-			"deliveryName": 34,
+			"deliveryName": 1,
 			"deliveryType": 1,
 		}).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -173,4 +173,20 @@ func TestClientOrderDetail(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("操作成功")
+
+	obj = auth.GET(fmt.Sprintf("v1/merchant/order/getEditOrderMap/%d", orderId)).
+		WithJSON(map[string]interface{}{"remark": "remark"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
+
+	obj = auth.POST(fmt.Sprintf("v1/merchant/order/updateOrder/%d", orderId)).
+		WithJSON(map[string]interface{}{"pay_price": 1000.00, "total_price": 100.00, "total_postage": 10.00}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("操作成功")
+
+	//TODO:: 删除订单，暂时没有生成订单接口，不好接入单元测试
 }

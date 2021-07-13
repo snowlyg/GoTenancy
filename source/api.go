@@ -230,6 +230,7 @@ var baseApis = []model.SysApi{
 	//订单
 	{Path: "/v1/merchant/order/deliveryOrderMap/:id", Description: "订单发货表单", ApiGroup: "orderClient", Method: "GET"},
 	{Path: "/v1/merchant/order/getOrderRemarkMap/:id", Description: "订单备注表单", ApiGroup: "orderClient", Method: "GET"},
+	{Path: "/v1/merchant/order/getEditOrderMap/:id", Description: "订单编辑表单", ApiGroup: "orderClient", Method: "GET"},
 	{Path: "/v1/merchant/order/getOrderList", Description: "订单列表", ApiGroup: "orderClient", Method: "POST"},
 	{Path: "/v1/merchant/order/getOrderChart", Description: "订单表头数量", ApiGroup: "orderClient", Method: "GET"},
 	{Path: "/v1/merchant/order/getOrderFilter", Description: "订单分类统计", ApiGroup: "orderClient", Method: "GET"},
@@ -237,12 +238,14 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/order/getOrderRecord/:id", Description: "订单记录", ApiGroup: "orderClient", Method: "POST"},
 	{Path: "/v1/merchant/order/deliveryOrder/:id", Description: "订单发货", ApiGroup: "orderClient", Method: "POST"},
 	{Path: "/v1/merchant/order/remarkOrder/:id", Description: "订单备注", ApiGroup: "orderClient", Method: "POST"},
+	{Path: "/v1/merchant/order/updateOrder/:id", Description: "订单更新", ApiGroup: "orderClient", Method: "POST"},
 	{Path: "/v1/merchant/order/deleteOrder/:id", Description: "删除订单", ApiGroup: "orderClient", Method: "DELETE"},
 	//退款订单
 	{Path: "/v1/merchant/refundOrder/getRefundOrderRemarkMap/:id", Description: "退款订单备注表单", ApiGroup: "refundOrderClient", Method: "GET"},
 	{Path: "/v1/merchant/refundOrder/remarkRefundOrder/:id", Description: "退款订单备注", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderList", Description: "退款订单列表", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderRecord/:id", Description: "退款订单记录", ApiGroup: "refundOrderClient", Method: "POST"},
+	{Path: "/v1/merchant/refundOrder/deleteRefundOrder/:id", Description: "删除退款订单", ApiGroup: "refundOrderClient", Method: "DELETE"},
 
 	{Path: "/v1/merchant/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecordClient", Method: "POST"},
 

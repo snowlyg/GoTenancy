@@ -33,7 +33,7 @@ func GetOrderList(ctx *gin.Context) {
 
 // GetOrderChart
 func GetOrderChart(ctx *gin.Context) {
-	if chart, err := service.GetChart(); err != nil {
+	if chart, err := service.GetChart(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -48,7 +48,7 @@ func GetOrderById(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if chart, err := service.GetOrderById(req.Id); err != nil {
+	if chart, err := service.GetOrderById(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

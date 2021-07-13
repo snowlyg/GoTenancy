@@ -37,11 +37,11 @@ func DeliveryOrderMap(id uint, ctx *gin.Context) (Form, error) {
 func GetOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	remark, err := GetOrderRemarkByID(id)
+	order, err := GetOrderRemarkAndUpdateByID(id, ctx)
 	if err != nil {
 		return Form{}, err
 	}
-	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"remark","value":"%s","title":"备注","props":{"type":"text","placeholder":"请输入备注"},"validate":[{"message":"请输入备注","required":true,"type":"string","trigger":"change"}]}],"action":"","method":"POST","title":"修改备注","config":{}}`, remark)
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"remark","value":"%s","title":"备注","props":{"type":"text","placeholder":"请输入备注"},"validate":[{"message":"请输入备注","required":true,"type":"string","trigger":"change"}]}],"action":"","method":"POST","title":"修改备注","config":{}}`, order.Remark)
 
 	err = json.Unmarshal([]byte(formStr), &form)
 	if err != nil {
@@ -51,19 +51,41 @@ func GetOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 	return form, err
 }
 
-func GetOrderRemarkByID(id uint) (string, error) {
-	var remark string
-	err := g.TENANCY_DB.Model(&model.Order{}).Select("remark").Where("id = ?", id).Where("is_system_del", g.StatusFalse).First(&remark).Error
-	return remark, err
+func GetEditOrderMap(id uint, ctx *gin.Context) (Form, error) {
+	var form Form
+	var formStr string
+	order, err := GetOrderRemarkAndUpdateByID(id, ctx)
+	if err != nil {
+		return Form{}, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"inputNumber","field":"totalPrice","value":%02f,"title":"订单总价","props":{"placeholder":"请输入订单总价"},"validate":[{"message":"请输入订单总价","required":true,"type":"number","trigger":"change"}]},{"type":"inputNumber","field":"payPrice","value":%02f,"title":"实际支付金额","props":{"placeholder":"请输入实际支付金额"},"validate":[{"message":"请输入实际支付金额","required":true,"type":"number","trigger":"change"}]},{"type":"inputNumber","field":"totalPostage","value":%02f,"title":"订单邮费","props":{"placeholder":"请输入订单邮费"},"validate":[{"message":"请输入订单邮费","required":true,"type":"number","trigger":"change"}]}],"action":"","method":"POST","title":"修改订单","config":{}}`, order.TotalPrice, order.PayPrice, order.TotalPostage)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	form.SetAction(fmt.Sprintf("%s/%d", "/order/updateOrder", id), ctx)
+	return form, err
+}
+
+func GetOrderRemarkAndUpdateByID(id uint, ctx *gin.Context) (request.OrderRemarkAndUpdate, error) {
+	var order request.OrderRemarkAndUpdate
+	db := g.TENANCY_DB.Model(&model.Order{}).Select("remark,total_price,pay_price,total_postage").Where("id = ?", id)
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	err := db.First(&order).Error
+	return order, err
 }
 
 // getOrderCount
-func getOrderCount(name string) (int64, error) {
+func getOrderCount(name string, ctx *gin.Context) (int64, error) {
 	var count int64
 	wheres := getOrderConditions()
 	for _, where := range wheres {
 		if where.Name == name {
-			db := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse)
+			db := g.TENANCY_DB.Model(&model.Order{})
 			if where.Conditions != nil && len(where.Conditions) > 0 {
 				for key, cn := range where.Conditions {
 					if cn == nil {
@@ -72,6 +94,11 @@ func getOrderCount(name string) (int64, error) {
 						db = db.Where(fmt.Sprintf("%s = ?", key), cn)
 					}
 				}
+			}
+
+			isDelField := GetIsDelField(ctx)
+			if isDelField != "" {
+				db = db.Where(isDelField, g.StatusFalse)
 			}
 
 			err := db.Count(&count).Error
@@ -84,7 +111,7 @@ func getOrderCount(name string) (int64, error) {
 	return count, nil
 }
 
-func GetFilter() ([]map[string]interface{}, error) {
+func GetFilter(ctx *gin.Context) ([]map[string]interface{}, error) {
 	charts := []map[string]interface{}{
 		{"count": 0, "orderType": "", "title": "全部"},
 		{"count": 0, "orderType": "1", "title": "普通订单"},
@@ -96,7 +123,12 @@ func GetFilter() ([]map[string]interface{}, error) {
 			continue
 		}
 		var count int64
-		err := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("order_type = ?", chart["orderType"]).Count(&count).Error
+		db := g.TENANCY_DB.Model(&model.Order{})
+		isDelField := GetIsDelField(ctx)
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("order_type = ?", chart["orderType"]).Count(&count).Error
 		if err != nil {
 			return nil, err
 		} else {
@@ -108,7 +140,7 @@ func GetFilter() ([]map[string]interface{}, error) {
 	return charts, nil
 }
 
-func GetChart() (map[string]interface{}, error) {
+func GetChart(ctx *gin.Context) (map[string]interface{}, error) {
 	charts := map[string]interface{}{
 		"all":        0,
 		"complete":   0,
@@ -121,7 +153,7 @@ func GetChart() (map[string]interface{}, error) {
 		"untake":     0,
 	}
 	for name, _ := range charts {
-		if cc, err := getOrderCount(name); err != nil {
+		if cc, err := getOrderCount(name, ctx); err != nil {
 			return nil, err
 		} else {
 			charts[name] = cc
@@ -159,15 +191,20 @@ func getOrderConditionByStatus(status int) response.OrderCondition {
 	return conditions[0]
 }
 
-func GetOrderById(id uint) (response.OrderDetail, error) {
+func GetOrderById(id uint, ctx *gin.Context) (response.OrderDetail, error) {
 	var order response.OrderDetail
-	err := g.TENANCY_DB.Model(&model.Order{}).
+	db := g.TENANCY_DB.Model(&model.Order{}).
 		Select("orders.*,sys_general_infos.nick_name as user_nick_name").
 		Joins("left join sys_users on orders.sys_user_id = sys_users.id").
 		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
-		Joins(fmt.Sprintf("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id and sys_authorities.authority_type = %d", multi.GeneralAuthority)).
-		Where("orders.is_system_del", g.StatusFalse).
-		Where("orders.id = ?", id).
+		Joins(fmt.Sprintf("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id and sys_authorities.authority_type = %d", multi.GeneralAuthority))
+
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where("orders."+isDelField, g.StatusFalse)
+	}
+
+	err := db.Where("orders.id = ?", id).
 		First(&order).Error
 	if err != nil {
 		return order, err
@@ -192,11 +229,16 @@ func GetOrderRecord(id uint, info request.PageInfo) ([]model.OrderStatus, int64,
 	return orderRecord, total, nil
 }
 
-func RemarkOrder(id uint, remark map[string]interface{}) error {
-	return g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("id = ?", id).Updates(remark).Error
+func RemarkOrder(id uint, remark map[string]interface{}, ctx *gin.Context) error {
+	db := g.TENANCY_DB.Model(&model.Order{})
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	return db.Where("id = ?", id).Updates(remark).Error
 }
 
-func DeliveryOrder(id uint, delivery request.DeliveryOrder) error {
+func DeliveryOrder(id uint, delivery request.DeliveryOrder, ctx *gin.Context) error {
 
 	var changeMessage string
 	var deliveryName string
@@ -234,7 +276,12 @@ func DeliveryOrder(id uint, delivery request.DeliveryOrder) error {
 		"delivery_type": delivery.DeliveryType,
 		"status":        model.OrderStatusNoReceive,
 	}
-	err := g.TENANCY_DB.Model(&model.Order{}).Where("is_system_del", g.StatusFalse).Where("id = ?", id).Updates(orderDelivery).Error
+	db := g.TENANCY_DB.Model(&model.Order{})
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	err := db.Where("id = ?", id).Updates(orderDelivery).Error
 	if err != nil {
 		return fmt.Errorf("update order info %w", err)
 	}
@@ -368,7 +415,11 @@ func getOrderSearch(info request.OrderPageInfo, ctx *gin.Context, db *gorm.DB) (
 	if info.Username != "" {
 		db = db.Where(g.TENANCY_DB.Where("orders.order_sn like ?", info.Keywords+"%").Or("orders.real_name like ?", info.Keywords+"%").Or("orders.user_phone like ?", info.Keywords+"%"))
 	}
-	return db.Where("orders.is_system_del", g.StatusFalse), nil
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where("orders."+isDelField, g.StatusFalse)
+	}
+	return db, nil
 }
 
 func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]interface{}) ([]map[string]interface{}, error) {
@@ -411,7 +462,7 @@ func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]int
 			return nil, err
 		}
 		if len(orderIds) > 0 {
-			stat[2]["count"], _ = GetRefundOrder(orderIds)
+			stat[2]["count"], _ = GetRefundOrder(orderIds, ctx)
 		}
 	}
 
@@ -455,6 +506,20 @@ func getStat(info request.OrderPageInfo, ctx *gin.Context, stat []map[string]int
 	}
 
 	return stat, nil
+}
+
+// UpdateOrder
+func UpdateOrder(id uint, order request.OrderRemarkAndUpdate, ctx *gin.Context) error {
+	db := g.TENANCY_DB.Model(&model.Order{}).Where("id = ?", id)
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	return db.Updates(map[string]interface{}{
+		"pay_price":     order.PayPrice,
+		"total_price":   order.TotalPrice,
+		"total_postage": order.TotalPostage,
+	}).Error
 }
 
 // DeleteOrder

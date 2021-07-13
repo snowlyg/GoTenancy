@@ -14,14 +14,19 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetRefundOrder(orderIds []uint) (float64, error) {
+func GetRefundOrder(orderIds []uint, ctx *gin.Context) (float64, error) {
 	var refundPayPrice request.Result
-	err := g.TENANCY_DB.Model(&model.RefundOrder{}).
+	db := g.TENANCY_DB.Model(&model.RefundOrder{}).
 		Select("sum(refund_price) as count").
 		Where("order_id in ?", orderIds).
-		Where("status = ?", model.RefundStatusEnd).
-		Where("is_system_del", g.StatusFalse).
-		First(&refundPayPrice).Error
+		Where("status = ?", model.RefundStatusEnd)
+
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+
+	err := db.First(&refundPayPrice).Error
 	if err != nil {
 		return 0, err
 	}
@@ -52,7 +57,12 @@ func getRefundOrderSearch(info request.RefundOrderPageInfo, ctx *gin.Context, db
 		db = db.Where("refund_orders.refund_order_sn like ?", info.RefundOrderSn+"%")
 	}
 
-	return db.Where("is_system_del", g.StatusFalse), nil
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where("refund_orders."+isDelField, g.StatusFalse)
+	}
+
+	return db, nil
 }
 
 // GetRefundOrderInfoList
@@ -80,7 +90,7 @@ func GetRefundOrderInfoList(info request.RefundOrderPageInfo, ctx *gin.Context) 
 	if err != nil {
 		return refundOrderList, stat, total, err
 	}
-	stat, err = getRefundStat(stat)
+	stat, err = getRefundStat(stat, ctx)
 	if err != nil {
 		return refundOrderList, stat, total, err
 	}
@@ -121,49 +131,87 @@ func GetRefundOrderInfoList(info request.RefundOrderPageInfo, ctx *gin.Context) 
 	return refundOrderList, stat, total, nil
 }
 
-func getRefundStat(stat map[string]int64) (map[string]int64, error) {
+func getRefundStat(stat map[string]int64, ctx *gin.Context) (map[string]int64, error) {
+	isDelField := GetIsDelField(ctx)
+
 	// 已支付订单数量
-	var all int64
-	err := g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Count(&all).Error
-	if err != nil {
-		return nil, err
+	{
+		var all int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Count(&all).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["all"] = all
 	}
-	stat["all"] = all
 
-	var agree int64
-	err = g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("status = ?", model.RefundStatusAgree).Count(&agree).Error
-	if err != nil {
-		return nil, err
+	{
+		var agree int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("status = ?", model.RefundStatusAgree).Count(&agree).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["agree"] = agree
 	}
-	stat["agree"] = agree
 
-	var audit int64
-	err = g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("status = ?", model.RefundStatusAudit).Count(&audit).Error
-	if err != nil {
-		return nil, err
+	{
+		var audit int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("status = ?", model.RefundStatusAudit).Count(&audit).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["audit"] = audit
 	}
-	stat["audit"] = audit
 
-	var backgood int64
-	err = g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("status = ?", model.RefundStatusBackgood).Count(&backgood).Error
-	if err != nil {
-		return nil, err
+	{
+		var backgood int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("status = ?", model.RefundStatusBackgood).Count(&backgood).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["backgood"] = backgood
 	}
-	stat["backgood"] = backgood
 
-	var end int64
-	err = g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("status = ?", model.RefundStatusEnd).Count(&end).Error
-	if err != nil {
-		return nil, err
+	{
+		var end int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("status = ?", model.RefundStatusEnd).Count(&end).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["end"] = end
 	}
-	stat["end"] = end
 
-	var refuse int64
-	err = g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("status = ?", model.RefundStatusRefuse).Count(&refuse).Error
-	if err != nil {
-		return nil, err
+	{
+		var refuse int64
+		db := g.TENANCY_DB.Model(&model.RefundOrder{})
+		if isDelField != "" {
+			db = db.Where(isDelField, g.StatusFalse)
+		}
+		err := db.Where("status = ?", model.RefundStatusRefuse).Count(&refuse).Error
+		if err != nil {
+			return nil, err
+		}
+		stat["refuse"] = refuse
 	}
-	stat["refuse"] = refuse
 
 	return stat, nil
 }
@@ -188,7 +236,7 @@ func GetRefundOrderRecord(id uint, info request.PageInfo) ([]model.RefundStatus,
 func GetRefundOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	remark, err := GetRefundOrderRemarkByID(id)
+	remark, err := GetRefundOrderRemarkByID(id, ctx)
 	if err != nil {
 		return Form{}, err
 	}
@@ -202,12 +250,27 @@ func GetRefundOrderRemarkMap(id uint, ctx *gin.Context) (Form, error) {
 	return form, err
 }
 
-func GetRefundOrderRemarkByID(id uint) (string, error) {
+func GetRefundOrderRemarkByID(id uint, ctx *gin.Context) (string, error) {
 	var merMark string
-	err := g.TENANCY_DB.Model(&model.RefundOrder{}).Select("mer_mark").Where("id = ?", id).Where("is_system_del", g.StatusFalse).First(&merMark).Error
+	db := g.TENANCY_DB.Model(&model.RefundOrder{}).Select("mer_mark").Where("id = ?", id)
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	err := db.First(&merMark).Error
 	return merMark, err
 }
 
-func RemarkRefundOrder(id uint, merMark map[string]interface{}) error {
-	return g.TENANCY_DB.Model(&model.RefundOrder{}).Where("is_system_del", g.StatusFalse).Where("id = ?", id).Updates(merMark).Error
+func RemarkRefundOrder(id uint, merMark map[string]interface{}, ctx *gin.Context) error {
+	db := g.TENANCY_DB.Model(&model.RefundOrder{})
+	isDelField := GetIsDelField(ctx)
+	if isDelField != "" {
+		db = db.Where(isDelField, g.StatusFalse)
+	}
+	return db.Where("id = ?", id).Updates(merMark).Error
+}
+
+// DeleteRefundOrder
+func DeleteRefundOrder(id uint) error {
+	return g.TENANCY_DB.Model(&model.RefundOrder{}).Where("id = ?", id).Update("is_system_del", g.StatusTrue).Error
 }

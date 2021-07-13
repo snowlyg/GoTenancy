@@ -37,6 +37,20 @@ func GetOrderRemarkMap(ctx *gin.Context) {
 	}
 }
 
+func GetEditOrderMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if chart, err := service.GetEditOrderMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithData(chart, ctx)
+	}
+}
+
 // GetOrderList
 func GetOrderList(ctx *gin.Context) {
 	var pageInfo request.OrderPageInfo
@@ -61,7 +75,7 @@ func GetOrderList(ctx *gin.Context) {
 
 // GetOrderChart
 func GetOrderChart(ctx *gin.Context) {
-	if chart, err := service.GetChart(); err != nil {
+	if chart, err := service.GetChart(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -71,7 +85,7 @@ func GetOrderChart(ctx *gin.Context) {
 
 // GetOrderFilter
 func GetOrderFilter(ctx *gin.Context) {
-	if chart, err := service.GetFilter(); err != nil {
+	if chart, err := service.GetFilter(ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -86,7 +100,7 @@ func GetOrderById(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if chart, err := service.GetOrderById(req.Id); err != nil {
+	if chart, err := service.GetOrderById(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -131,7 +145,7 @@ func DeliveryOrder(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeliveryOrder(req.Id, delivery); err != nil {
+	if err := service.DeliveryOrder(req.Id, delivery, ctx); err != nil {
 		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
@@ -139,7 +153,7 @@ func DeliveryOrder(ctx *gin.Context) {
 	}
 }
 
-// RemarkOrder
+// UpdateOrder
 func RemarkOrder(ctx *gin.Context) {
 	var req request.GetById
 	if errs := ctx.ShouldBindUri(&req); errs != nil {
@@ -151,7 +165,27 @@ func RemarkOrder(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.RemarkOrder(req.Id, remark); err != nil {
+	if err := service.RemarkOrder(req.Id, remark, ctx); err != nil {
+		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
+	}
+}
+
+// UpdateOrder
+func UpdateOrder(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var order request.OrderRemarkAndUpdate
+	if errs := ctx.ShouldBindJSON(&order); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.UpdateOrder(req.Id, order, ctx); err != nil {
 		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {

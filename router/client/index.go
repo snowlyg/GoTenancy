@@ -129,6 +129,7 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 	{
 		OrderRouter.GET("/deliveryOrderMap/:id", client.DeliveryOrderMap)
 		OrderRouter.GET("/getOrderRemarkMap/:id", client.GetOrderRemarkMap)
+		OrderRouter.GET("/getEditOrderMap/:id", client.GetEditOrderMap)
 		OrderRouter.POST("/getOrderList", client.GetOrderList)
 		OrderRouter.GET("/getOrderChart", client.GetOrderChart)
 		OrderRouter.GET("/getOrderFilter", client.GetOrderFilter)
@@ -136,6 +137,7 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 		OrderRouter.POST("/getOrderRecord/:id", client.GetOrderRecord)
 		OrderRouter.POST("/deliveryOrder/:id", client.DeliveryOrder)
 		OrderRouter.POST("/remarkOrder/:id", client.RemarkOrder)
+		OrderRouter.POST("/updateOrder/:id", client.UpdateOrder)
 		OrderRouter.DELETE("/deleteOrder/:id", client.DeleteOrder)
 	}
 }
@@ -147,5 +149,6 @@ func InitRefundOrderRouter(Router *gin.RouterGroup) {
 		RefundOrderRouter.POST("/remarkRefundOrder/:id", client.RemarkRefundOrder)
 		RefundOrderRouter.POST("/getRefundOrderList", client.GetRefundOrderList)
 		RefundOrderRouter.POST("/getRefundOrderRecord/:id", client.GetRefundOrderRecord)
+		RefundOrderRouter.DELETE("/deleteRefundOrder/:id", client.DeleteRefundOrder)
 	}
 }

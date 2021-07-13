@@ -48,6 +48,13 @@ type CartInfoProductAttr struct {
 	Cost      float64 `json:"cost,omitempty" form:"cost"`
 }
 
+type OrderRemarkAndUpdate struct {
+	Remark       string  `json:"remark"`
+	TotalPrice   float64 `json:"totalPrice"` // 订单总价
+	TotalPostage float64 `json:"totalPostage"`
+	PayPrice     float64 `json:"payPrice"`
+}
+
 type OrderRemark map[string]interface{}
 type DeliveryOrder struct {
 	DeliveryId   string      `json:"deliveryId" form:"deliveryId"`

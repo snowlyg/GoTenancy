@@ -188,3 +188,13 @@ func filterDate(db *gorm.DB, date, perfix string) *gorm.DB {
 	}
 	return db
 }
+
+func GetIsDelField(ctx *gin.Context) string {
+	if multi.IsAdmin(ctx) {
+		return ""
+	} else if multi.IsTenancy(ctx) {
+		return "is_system_del"
+	}
+	// 用户删除
+	return "is_del"
+}
