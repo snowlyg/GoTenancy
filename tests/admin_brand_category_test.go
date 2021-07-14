@@ -52,75 +52,77 @@ func TestBrandCategoryProcess(t *testing.T) {
 	brandCategory.Value("level").Number().Equal(data["level"].(int))
 	brandCategoryId := brandCategory.Value("id").Number().Raw()
 
-	update := map[string]interface{}{
-		"cateName": "家电",
-		"status":   g.StatusTrue,
-		"path":     "http://qmplusimg.henrongyi.top/head.png",
-		"sort":     2,
-		"level":    1,
-		"pid":      1,
+	if brandCategoryId > 0 {
+
+		update := map[string]interface{}{
+			"cateName": "家电",
+			"status":   g.StatusTrue,
+			"path":     "http://qmplusimg.henrongyi.top/head.png",
+			"sort":     2,
+			"level":    1,
+			"pid":      1,
+		}
+
+		obj = auth.PUT(fmt.Sprintf("v1/admin/brandCategory/updateBrandCategory/%d", int(brandCategoryId))).
+			WithJSON(update).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+		brandCategory = obj.Value("data").Object()
+
+		brandCategory.Value("id").Number().Ge(0)
+		brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
+		brandCategory.Value("status").Number().Equal(update["status"].(int))
+		brandCategory.Value("path").String().Equal(update["path"].(string))
+		brandCategory.Value("sort").Number().Equal(update["sort"].(int))
+		brandCategory.Value("pid").Number().Equal(update["pid"].(int))
+		brandCategory.Value("level").Number().Equal(update["level"].(int))
+
+		obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getBrandCategoryById/%d", int(brandCategoryId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		brandCategory = obj.Value("data").Object()
+
+		brandCategory.Value("id").Number().Ge(0)
+		brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
+		brandCategory.Value("status").Number().Equal(update["status"].(int))
+		brandCategory.Value("path").String().Equal(update["path"].(string))
+		brandCategory.Value("sort").Number().Equal(update["sort"].(int))
+		brandCategory.Value("pid").Number().Equal(update["pid"].(int))
+		brandCategory.Value("level").Number().Equal(update["level"].(int))
+
+		obj = auth.POST("v1/admin/brandCategory/changeBrandCategoryStatus").
+			WithJSON(map[string]interface{}{
+				"id":     brandCategoryId,
+				"status": g.StatusTrue,
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
+
+		obj = auth.GET("v1/admin/brandCategory/getCreateBrandCategoryMap").
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
+
+		obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getUpdateBrandCategoryMap/%d", int(brandCategoryId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
+
+		// deleteBrandCategory
+		obj = auth.DELETE(fmt.Sprintf("v1/admin/brandCategory/deleteBrandCategory/%d", int(brandCategoryId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 	}
-
-	obj = auth.PUT(fmt.Sprintf("v1/admin/brandCategory/updateBrandCategory/%d", int(brandCategoryId))).
-		WithJSON(update).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-	brandCategory = obj.Value("data").Object()
-
-	brandCategory.Value("id").Number().Ge(0)
-	brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
-	brandCategory.Value("status").Number().Equal(update["status"].(int))
-	brandCategory.Value("path").String().Equal(update["path"].(string))
-	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
-	brandCategory.Value("level").Number().Equal(update["level"].(int))
-
-	obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getBrandCategoryById/%d", int(brandCategoryId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	brandCategory = obj.Value("data").Object()
-
-	brandCategory.Value("id").Number().Ge(0)
-	brandCategory.Value("cateName").String().Equal(update["cateName"].(string))
-	brandCategory.Value("status").Number().Equal(update["status"].(int))
-	brandCategory.Value("path").String().Equal(update["path"].(string))
-	brandCategory.Value("sort").Number().Equal(update["sort"].(int))
-	brandCategory.Value("pid").Number().Equal(update["pid"].(int))
-	brandCategory.Value("level").Number().Equal(update["level"].(int))
-
-	obj = auth.POST("v1/admin/brandCategory/changeBrandCategoryStatus").
-		WithJSON(map[string]interface{}{
-			"id":     brandCategoryId,
-			"status": g.StatusTrue,
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	obj = auth.GET("v1/admin/brandCategory/getCreateBrandCategoryMap").
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	obj = auth.GET(fmt.Sprintf("v1/admin/brandCategory/getUpdateBrandCategoryMap/%d", int(brandCategoryId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	// deleteBrandCategory
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/brandCategory/deleteBrandCategory/%d", int(brandCategoryId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
-
 }
 
 func TestBrandCategoryRegisterError(t *testing.T) {

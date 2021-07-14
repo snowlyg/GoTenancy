@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/snowlyg/go-tenancy/source"
-	"github.com/snowlyg/multi"
 )
 
 func TestAdminUserList(t *testing.T) {
@@ -32,6 +31,50 @@ func TestAdminUserList(t *testing.T) {
 	first.Value("id").Number().Ge(0)
 }
 
+func TestAdminLoginUser(t *testing.T) {
+	auth := baseWithLoginTester(t)
+	defer baseLogOut(auth)
+	// changePassword success
+	obj := auth.POST("v1/admin/user/changePassword").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "confirmPassword": "456789"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
+
+	// changePassword error
+	obj = auth.POST("v1/admin/user/changePassword").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "123456", "newPassword": "456789", "confirmPassword": "456789"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(4000)
+	obj.Value("message").String().Equal("修改失败，原密码与当前账户不符")
+
+	// changeProfile success
+	obj = auth.POST("v1/admin/user/changeProfile").
+		WithJSON(map[string]interface{}{"nickName": "admin", "phone": "123456"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
+
+	// changeProfile success
+	obj = auth.POST("v1/admin/user/changeProfile").
+		WithJSON(map[string]interface{}{"nickName": "超级管理员", "phone": "123456"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
+
+	// changePassword success
+	obj = auth.POST("v1/admin/user/changePassword").
+		WithJSON(map[string]interface{}{"username": "admin", "password": "456789", "newPassword": "123456", "confirmPassword": "123456"}).
+		Expect().Status(http.StatusOK).JSON().Object()
+	obj.Keys().ContainsOnly("status", "data", "message")
+	obj.Value("status").Number().Equal(200)
+	obj.Value("message").String().Equal("修改成功")
+}
+
 func TestAdminUserProcess(t *testing.T) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
@@ -47,54 +90,33 @@ func TestAdminUserProcess(t *testing.T) {
 	user.Value("userName").String().Equal("chindeo")
 	user.Value("authorityId").String().Equal(source.AdminAuthorityId)
 	userId := user.Value("id").Number().Raw()
+	if userId > 0 {
 
-	// changePassword error
-	obj = auth.POST("v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("修改成功")
+		// setUserAuthority
+		obj = auth.POST("v1/admin/user/setUserAuthority").
+			WithJSON(map[string]interface{}{"id": userId, "authorityId": source.AdminAuthorityId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("修改成功")
 
-	// changePassword error
-	obj = auth.POST("v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": multi.AdminAuthority}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("修改失败，原密码与当前账户不符")
+		// setAdminInfo
+		obj = auth.PUT(fmt.Sprintf("v1/admin/user/setUserInfo/%d", int(userId))).
+			WithJSON(map[string]interface{}{"email": "admin@admin.com", "phone": "13800138001"}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
 
-	// changePassword error
-	obj = auth.POST("v1/admin/user/changePassword").
-		WithJSON(map[string]interface{}{"username": "chindeo", "password": "123456", "newPassword": "456789", "authorityType": 0}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(4000)
-	obj.Value("message").String().Equal("Key: 'ChangePasswordStruct.AuthorityType' Error:Field validation for 'AuthorityType' failed on the 'required' tag")
+		// setUserAuthority
+		obj = auth.DELETE("v1/admin/user/deleteUser").
+			WithJSON(map[string]interface{}{"id": userId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 
-	// setUserAuthority
-	obj = auth.POST("v1/admin/user/setUserAuthority").
-		WithJSON(map[string]interface{}{"id": userId, "authorityId": source.AdminAuthorityId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("修改成功")
-
-	// setAdminInfo
-	obj = auth.PUT(fmt.Sprintf("v1/admin/user/setUserInfo/%d", int(userId))).
-		WithJSON(map[string]interface{}{"email": "admin@admin.com", "phone": "13800138001"}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	// setUserAuthority
-	obj = auth.DELETE("v1/admin/user/deleteUser").
-		WithJSON(map[string]interface{}{"id": userId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
+	}
 
 }
 

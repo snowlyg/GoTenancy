@@ -77,85 +77,87 @@ func TestAddressProcess(t *testing.T) {
 	address.Value("disease").String().Equal(data["disease"].(string))
 	addressId := address.Value("id").Number().Raw()
 
-	update := map[string]interface{}{
-		"id":           addressId,
-		"name":         "八两金1",
-		"phone":        "138456874191",
-		"sex":          1,
-		"country":      "中国1",
-		"province":     "广东省1",
-		"city":         "东莞市1",
-		"district":     "寮步镇1",
-		"isDefault":    false,
-		"detail":       "松山湖阿里产业园1",
-		"postcode":     "4135141",
-		"age":          321,
-		"hospitalName": "深圳宝安中心人民医院1",
-		"locName":      "泌尿科一区1",
-		"bedNum":       "151",
-		"hospitalNo":   "889566551",
-		"disease":      "不孕不育1",
+	if addressId > 0 {
+		update := map[string]interface{}{
+			"id":           addressId,
+			"name":         "八两金1",
+			"phone":        "138456874191",
+			"sex":          1,
+			"country":      "中国1",
+			"province":     "广东省1",
+			"city":         "东莞市1",
+			"district":     "寮步镇1",
+			"isDefault":    false,
+			"detail":       "松山湖阿里产业园1",
+			"postcode":     "4135141",
+			"age":          321,
+			"hospitalName": "深圳宝安中心人民医院1",
+			"locName":      "泌尿科一区1",
+			"bedNum":       "151",
+			"hospitalNo":   "889566551",
+			"disease":      "不孕不育1",
+		}
+
+		obj = auth.PUT("v1/general/address/updateAddress").
+			WithJSON(update).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+		address = obj.Value("data").Object()
+
+		address.Value("id").Number().Ge(0)
+		address.Value("name").String().Equal(update["name"].(string))
+		address.Value("phone").String().Equal(update["phone"].(string))
+		address.Value("sex").Number().Equal(update["sex"].(int))
+		address.Value("country").String().Equal(update["country"].(string))
+		address.Value("province").String().Equal(update["province"].(string))
+		address.Value("city").String().Equal(update["city"].(string))
+		address.Value("district").String().Equal(update["district"].(string))
+		address.Value("detail").String().Equal(update["detail"].(string))
+		address.Value("postcode").String().Equal(update["postcode"].(string))
+		address.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
+		address.Value("age").Number().Equal(update["age"].(int))
+		address.Value("hospitalName").String().Equal(update["hospitalName"].(string))
+		address.Value("locName").String().Equal(update["locName"].(string))
+		address.Value("bedNum").String().Equal(update["bedNum"].(string))
+		address.Value("hospitalNo").String().Equal(update["hospitalNo"].(string))
+		address.Value("disease").String().Equal(update["disease"].(string))
+
+		obj = auth.POST("v1/general/address/getAddressById").
+			WithJSON(map[string]interface{}{"id": addressId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		address = obj.Value("data").Object()
+
+		address.Value("id").Number().Ge(0)
+		address.Value("name").String().Equal(update["name"].(string))
+		address.Value("phone").String().Equal(update["phone"].(string))
+		address.Value("sex").Number().Equal(update["sex"].(int))
+		address.Value("country").String().Equal(update["country"].(string))
+		address.Value("province").String().Equal(update["province"].(string))
+		address.Value("city").String().Equal(update["city"].(string))
+		address.Value("district").String().Equal(update["district"].(string))
+		address.Value("detail").String().Equal(update["detail"].(string))
+		address.Value("postcode").String().Equal(update["postcode"].(string))
+		address.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
+		address.Value("age").Number().Equal(update["age"].(int))
+		address.Value("hospitalName").String().Equal(update["hospitalName"].(string))
+		address.Value("locName").String().Equal(update["locName"].(string))
+		address.Value("bedNum").String().Equal(update["bedNum"].(string))
+		address.Value("hospitalNo").String().Equal(update["hospitalNo"].(string))
+		address.Value("disease").String().Equal(update["disease"].(string))
+
+		// setUserAuthority
+		obj = auth.DELETE("v1/general/address/deleteAddress").
+			WithJSON(map[string]interface{}{"id": addressId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 	}
-
-	obj = auth.PUT("v1/general/address/updateAddress").
-		WithJSON(update).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-	address = obj.Value("data").Object()
-
-	address.Value("id").Number().Ge(0)
-	address.Value("name").String().Equal(update["name"].(string))
-	address.Value("phone").String().Equal(update["phone"].(string))
-	address.Value("sex").Number().Equal(update["sex"].(int))
-	address.Value("country").String().Equal(update["country"].(string))
-	address.Value("province").String().Equal(update["province"].(string))
-	address.Value("city").String().Equal(update["city"].(string))
-	address.Value("district").String().Equal(update["district"].(string))
-	address.Value("detail").String().Equal(update["detail"].(string))
-	address.Value("postcode").String().Equal(update["postcode"].(string))
-	address.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
-	address.Value("age").Number().Equal(update["age"].(int))
-	address.Value("hospitalName").String().Equal(update["hospitalName"].(string))
-	address.Value("locName").String().Equal(update["locName"].(string))
-	address.Value("bedNum").String().Equal(update["bedNum"].(string))
-	address.Value("hospitalNo").String().Equal(update["hospitalNo"].(string))
-	address.Value("disease").String().Equal(update["disease"].(string))
-
-	obj = auth.POST("v1/general/address/getAddressById").
-		WithJSON(map[string]interface{}{"id": addressId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	address = obj.Value("data").Object()
-
-	address.Value("id").Number().Ge(0)
-	address.Value("name").String().Equal(update["name"].(string))
-	address.Value("phone").String().Equal(update["phone"].(string))
-	address.Value("sex").Number().Equal(update["sex"].(int))
-	address.Value("country").String().Equal(update["country"].(string))
-	address.Value("province").String().Equal(update["province"].(string))
-	address.Value("city").String().Equal(update["city"].(string))
-	address.Value("district").String().Equal(update["district"].(string))
-	address.Value("detail").String().Equal(update["detail"].(string))
-	address.Value("postcode").String().Equal(update["postcode"].(string))
-	address.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
-	address.Value("age").Number().Equal(update["age"].(int))
-	address.Value("hospitalName").String().Equal(update["hospitalName"].(string))
-	address.Value("locName").String().Equal(update["locName"].(string))
-	address.Value("bedNum").String().Equal(update["bedNum"].(string))
-	address.Value("hospitalNo").String().Equal(update["hospitalNo"].(string))
-	address.Value("disease").String().Equal(update["disease"].(string))
-
-	// setUserAuthority
-	obj = auth.DELETE("v1/general/address/deleteAddress").
-		WithJSON(map[string]interface{}{"id": addressId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
 
 }
 

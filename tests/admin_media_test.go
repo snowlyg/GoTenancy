@@ -42,31 +42,33 @@ func TestMediaProcess(t *testing.T) {
 
 	obj.Value("data").Object().Value("src").String().NotEmpty()
 	mediaId := obj.Value("data").Object().Value("id").Number().Raw()
+	if mediaId > 0 {
+		// getUpdateMediaMap
+		obj = auth.GET(fmt.Sprintf("v1/admin/media/getUpdateMediaMap/%d", int(mediaId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
 
-	// getUpdateMediaMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/media/getUpdateMediaMap/%d", int(mediaId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
+		// changeTenancyStatus
+		obj = auth.POST(fmt.Sprintf("v1/admin/media/updateMediaName/%d", int(mediaId))).
+			WithJSON(map[string]interface{}{
+				"id":   mediaId,
+				"name": "name_jpg",
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("修改成功")
 
-	// changeTenancyStatus
-	obj = auth.POST(fmt.Sprintf("v1/admin/media/updateMediaName/%d", int(mediaId))).
-		WithJSON(map[string]interface{}{
-			"id":   mediaId,
-			"name": "name_jpg",
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("修改成功")
+		// deleteFile
+		obj = auth.DELETE("v1/admin/media/deleteFile").
+			WithJSON(map[string]interface{}{"ids": []float64{mediaId}}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 
-	// deleteFile
-	obj = auth.DELETE("v1/admin/media/deleteFile").
-		WithJSON(map[string]interface{}{"ids": []float64{mediaId}}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
+	}
 
 }

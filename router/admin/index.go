@@ -236,6 +236,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/registerAdmin", admin.RegisterAdmin)       // 注册
 		UserRouter.POST("/registerTenancy", admin.RegisterTenancy)   // 注册
 		UserRouter.POST("/changePassword", admin.ChangePassword)     // 修改密码
+		UserRouter.POST("/changeProfile", admin.ChangeProfile)       // 修改密码
 		UserRouter.POST("/getAdminList", admin.GetAdminList)         // 分页获取管理员列表
 		UserRouter.POST("/getTenancyList", admin.GetTenancyList)     // 分页获取商户列表
 		UserRouter.POST("/getGeneralList", admin.GetGeneralList)     // 分页获取普通用户列表

@@ -88,108 +88,109 @@ func TestConfigProcess(t *testing.T) {
 
 	configId := config.Value("id").Number().Raw()
 	configKey := config.Value("configKey").String().Raw()
+	if configId > 0 {
+		// getCreateConfigMap
+		obj = auth.GET("v1/admin/config/getCreateConfigMap").
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
 
-	// getCreateConfigMap
-	obj = auth.GET("v1/admin/config/getCreateConfigMap").
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
+		// getUpdateConfigMap
+		obj = auth.GET(fmt.Sprintf("v1/admin/config/getUpdateConfigMap/%d", int(configId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
 
-	// getUpdateConfigMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/config/getUpdateConfigMap/%d", int(configId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
+		update := map[string]interface{}{
+			"configKey":           "sdfsdfsdf",
+			"configName":          "sdfgdfgdsg",
+			"configRule":          "",
+			"configType":          "number",
+			"info":                "sdafgasdfdsf",
+			"required":            1,
+			"sort":                1,
+			"status":              1,
+			"sysConfigCategoryId": 2,
+			"userType":            2,
+		}
 
-	update := map[string]interface{}{
-		"configKey":           "sdfsdfsdf",
-		"configName":          "sdfgdfgdsg",
-		"configRule":          "",
-		"configType":          "number",
-		"info":                "sdafgasdfdsf",
-		"required":            1,
-		"sort":                1,
-		"status":              1,
-		"sysConfigCategoryId": 2,
-		"userType":            2,
+		obj = auth.PUT(fmt.Sprintf("v1/admin/config/updateConfig/%d", int(configId))).
+			WithJSON(update).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+		config = obj.Value("data").Object()
+
+		config.Value("configKey").String().Equal(update["configKey"].(string))
+		config.Value("configName").String().Equal(update["configName"].(string))
+		config.Value("configRule").String().Equal(update["configRule"].(string))
+		config.Value("configType").String().Equal(update["configType"].(string))
+		config.Value("info").String().Equal(update["info"].(string))
+		config.Value("required").Number().Equal(update["required"].(int))
+		config.Value("sort").Number().Equal(update["sort"].(int))
+		config.Value("status").Number().Equal(update["status"].(int))
+		config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
+		config.Value("userType").Number().Equal(update["userType"].(int))
+
+		obj = auth.GET("v1/admin/config/getConfigByKey/" + configKey).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		config = obj.Value("data").Object()
+
+		config.Value("id").Number().Ge(0)
+		config.Value("configKey").String().Equal(update["configKey"].(string))
+		config.Value("configName").String().Equal(update["configName"].(string))
+		config.Value("configRule").String().Equal(update["configRule"].(string))
+		config.Value("configType").String().Equal(update["configType"].(string))
+		config.Value("info").String().Equal(update["info"].(string))
+		config.Value("required").Number().Equal(update["required"].(int))
+		config.Value("sort").Number().Equal(update["sort"].(int))
+		config.Value("status").Number().Equal(update["status"].(int))
+		config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
+		config.Value("userType").Number().Equal(update["userType"].(int))
+
+		obj = auth.GET(fmt.Sprintf("v1/admin/config/getConfigByID/%d", int(configId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		config = obj.Value("data").Object()
+
+		config.Value("id").Number().Ge(0)
+		config.Value("configKey").String().Equal(update["configKey"].(string))
+		config.Value("configName").String().Equal(update["configName"].(string))
+		config.Value("configRule").String().Equal(update["configRule"].(string))
+		config.Value("configType").String().Equal(update["configType"].(string))
+		config.Value("info").String().Equal(update["info"].(string))
+		config.Value("required").Number().Equal(update["required"].(int))
+		config.Value("sort").Number().Equal(update["sort"].(int))
+		config.Value("status").Number().Equal(update["status"].(int))
+		config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
+		config.Value("userType").Number().Equal(update["userType"].(int))
+
+		// changeConfigStatus
+		obj = auth.POST("v1/admin/config/changeConfigStatus").
+			WithJSON(map[string]interface{}{
+				"id":     configId,
+				"status": 2,
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
+
+		// setUserAuthority
+		obj = auth.DELETE(fmt.Sprintf("v1/admin/config/deleteConfig/%d", int(configId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 	}
-
-	obj = auth.PUT(fmt.Sprintf("v1/admin/config/updateConfig/%d", int(configId))).
-		WithJSON(update).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-	config = obj.Value("data").Object()
-
-	config.Value("configKey").String().Equal(update["configKey"].(string))
-	config.Value("configName").String().Equal(update["configName"].(string))
-	config.Value("configRule").String().Equal(update["configRule"].(string))
-	config.Value("configType").String().Equal(update["configType"].(string))
-	config.Value("info").String().Equal(update["info"].(string))
-	config.Value("required").Number().Equal(update["required"].(int))
-	config.Value("sort").Number().Equal(update["sort"].(int))
-	config.Value("status").Number().Equal(update["status"].(int))
-	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
-	config.Value("userType").Number().Equal(update["userType"].(int))
-
-	obj = auth.GET("v1/admin/config/getConfigByKey/" + configKey).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	config = obj.Value("data").Object()
-
-	config.Value("id").Number().Ge(0)
-	config.Value("configKey").String().Equal(update["configKey"].(string))
-	config.Value("configName").String().Equal(update["configName"].(string))
-	config.Value("configRule").String().Equal(update["configRule"].(string))
-	config.Value("configType").String().Equal(update["configType"].(string))
-	config.Value("info").String().Equal(update["info"].(string))
-	config.Value("required").Number().Equal(update["required"].(int))
-	config.Value("sort").Number().Equal(update["sort"].(int))
-	config.Value("status").Number().Equal(update["status"].(int))
-	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
-	config.Value("userType").Number().Equal(update["userType"].(int))
-
-	obj = auth.GET(fmt.Sprintf("v1/admin/config/getConfigByID/%d", int(configId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	config = obj.Value("data").Object()
-
-	config.Value("id").Number().Ge(0)
-	config.Value("configKey").String().Equal(update["configKey"].(string))
-	config.Value("configName").String().Equal(update["configName"].(string))
-	config.Value("configRule").String().Equal(update["configRule"].(string))
-	config.Value("configType").String().Equal(update["configType"].(string))
-	config.Value("info").String().Equal(update["info"].(string))
-	config.Value("required").Number().Equal(update["required"].(int))
-	config.Value("sort").Number().Equal(update["sort"].(int))
-	config.Value("status").Number().Equal(update["status"].(int))
-	config.Value("sysConfigCategoryId").Number().Equal(update["sysConfigCategoryId"].(int))
-	config.Value("userType").Number().Equal(update["userType"].(int))
-
-	// changeConfigStatus
-	obj = auth.POST("v1/admin/config/changeConfigStatus").
-		WithJSON(map[string]interface{}{
-			"id":     configId,
-			"status": 2,
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/config/deleteConfig/%d", int(configId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
 
 }
 

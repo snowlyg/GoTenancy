@@ -63,68 +63,69 @@ func TestReceiptProcess(t *testing.T) {
 	receipt.Value("receiptTitleType").Number().Equal(data["receiptTitleType"].(int))
 	receipt.Value("isDefault").Boolean().Equal(data["isDefault"].(bool))
 	receiptId := receipt.Value("id").Number().Raw()
+	if receiptId > 0 {
+		update := map[string]interface{}{
+			"id":               receiptId,
+			"receiptType":      2,
+			"receiptTitle":     "深圳宝安中心人民医院",
+			"receiptTitleType": 2,
+			"dutyGaragraph":    "深圳宝安中心人民医院",
+			"email":            "8485747@qq.com",
+			"bankName":         "中国农业银行",
+			"bankCode":         "4564462555641555",
+			"address":          "松山湖阿里产业园",
+			"tel":              "13845687419",
+			"isDefault":        true,
+		}
 
-	update := map[string]interface{}{
-		"id":               receiptId,
-		"receiptType":      2,
-		"receiptTitle":     "深圳宝安中心人民医院",
-		"receiptTitleType": 2,
-		"dutyGaragraph":    "深圳宝安中心人民医院",
-		"email":            "8485747@qq.com",
-		"bankName":         "中国农业银行",
-		"bankCode":         "4564462555641555",
-		"address":          "松山湖阿里产业园",
-		"tel":              "13845687419",
-		"isDefault":        true,
+		obj = auth.PUT("v1/general/receipt/updateReceipt").
+			WithJSON(update).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+		receipt = obj.Value("data").Object()
+
+		receipt.Value("id").Number().Ge(0)
+		receipt.Value("receiptTitle").String().Equal(update["receiptTitle"].(string))
+		receipt.Value("dutyGaragraph").String().Equal(update["dutyGaragraph"].(string))
+		receipt.Value("email").String().Equal(update["email"].(string))
+		receipt.Value("bankName").String().Equal(update["bankName"].(string))
+		receipt.Value("bankCode").String().Equal(update["bankCode"].(string))
+		receipt.Value("address").String().Equal(update["address"].(string))
+		receipt.Value("tel").String().Equal(update["tel"].(string))
+		receipt.Value("receiptType").Number().Equal(update["receiptType"].(int))
+		receipt.Value("receiptTitleType").Number().Equal(update["receiptTitleType"].(int))
+		receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
+
+		obj = auth.POST("v1/general/receipt/getReceiptById").
+			WithJSON(map[string]interface{}{"id": receiptId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		receipt = obj.Value("data").Object()
+
+		receipt.Value("id").Number().Ge(0)
+		receipt.Value("receiptTitle").String().Equal(update["receiptTitle"].(string))
+		receipt.Value("dutyGaragraph").String().Equal(update["dutyGaragraph"].(string))
+		receipt.Value("email").String().Equal(update["email"].(string))
+		receipt.Value("bankName").String().Equal(update["bankName"].(string))
+		receipt.Value("bankCode").String().Equal(update["bankCode"].(string))
+		receipt.Value("address").String().Equal(update["address"].(string))
+		receipt.Value("tel").String().Equal(update["tel"].(string))
+		receipt.Value("receiptType").Number().Equal(update["receiptType"].(int))
+		receipt.Value("receiptTitleType").Number().Equal(update["receiptTitleType"].(int))
+		receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
+
+		// setUserAuthority
+		obj = auth.DELETE("v1/general/receipt/deleteReceipt").
+			WithJSON(map[string]interface{}{"id": receiptId}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 	}
-
-	obj = auth.PUT("v1/general/receipt/updateReceipt").
-		WithJSON(update).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-	receipt = obj.Value("data").Object()
-
-	receipt.Value("id").Number().Ge(0)
-	receipt.Value("receiptTitle").String().Equal(update["receiptTitle"].(string))
-	receipt.Value("dutyGaragraph").String().Equal(update["dutyGaragraph"].(string))
-	receipt.Value("email").String().Equal(update["email"].(string))
-	receipt.Value("bankName").String().Equal(update["bankName"].(string))
-	receipt.Value("bankCode").String().Equal(update["bankCode"].(string))
-	receipt.Value("address").String().Equal(update["address"].(string))
-	receipt.Value("tel").String().Equal(update["tel"].(string))
-	receipt.Value("receiptType").Number().Equal(update["receiptType"].(int))
-	receipt.Value("receiptTitleType").Number().Equal(update["receiptTitleType"].(int))
-	receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
-
-	obj = auth.POST("v1/general/receipt/getReceiptById").
-		WithJSON(map[string]interface{}{"id": receiptId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	receipt = obj.Value("data").Object()
-
-	receipt.Value("id").Number().Ge(0)
-	receipt.Value("receiptTitle").String().Equal(update["receiptTitle"].(string))
-	receipt.Value("dutyGaragraph").String().Equal(update["dutyGaragraph"].(string))
-	receipt.Value("email").String().Equal(update["email"].(string))
-	receipt.Value("bankName").String().Equal(update["bankName"].(string))
-	receipt.Value("bankCode").String().Equal(update["bankCode"].(string))
-	receipt.Value("address").String().Equal(update["address"].(string))
-	receipt.Value("tel").String().Equal(update["tel"].(string))
-	receipt.Value("receiptType").Number().Equal(update["receiptType"].(int))
-	receipt.Value("receiptTitleType").Number().Equal(update["receiptTitleType"].(int))
-	receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
-
-	// setUserAuthority
-	obj = auth.DELETE("v1/general/receipt/deleteReceipt").
-		WithJSON(map[string]interface{}{"id": receiptId}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
 
 }
 func TestReceiptRegisterReceiptTitleError(t *testing.T) {

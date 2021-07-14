@@ -58,43 +58,44 @@ func TestAttrTemplateProcess(t *testing.T) {
 	attrTemplate.Value("sysTenancyId").Number().Equal(1)
 	attrTemplate.Value("templateValue").Array().First().Object().Value("value").Equal(value)
 	attrTemplate.Value("templateValue").Array().First().Object().Value("detail").Array().First().Equal(detail)
-
 	attrTemplateId := attrTemplate.Value("id").Number().Raw()
+	if attrTemplateId > 0 {
 
-	data = map[string]interface{}{
-		"templateName": "fsdaf ",
-		"templateValue": []map[string]interface{}{
-			{"value": value, "detail": []string{detail}},
-		},
+		data = map[string]interface{}{
+			"templateName": "fsdaf ",
+			"templateValue": []map[string]interface{}{
+				{"value": value, "detail": []string{detail}},
+			},
+		}
+
+		obj = auth.PUT(fmt.Sprintf("v1/merchant/attrTemplate/updateAttrTemplate/%d", int(attrTemplateId))).
+			WithJSON(data).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+
+		obj = auth.GET(fmt.Sprintf("v1/merchant/attrTemplate/getAttrTemplateById/%d", int(attrTemplateId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		attrTemplate = obj.Value("data").Object()
+
+		attrTemplate.Value("id").Number().Ge(0)
+		attrTemplate.Value("templateName").String().Equal(data["templateName"].(string))
+		attrTemplate.Value("createdAt").String().NotEmpty()
+		attrTemplate.Value("updatedAt").String().NotEmpty()
+		attrTemplate.Value("sysTenancyId").Number().Equal(1)
+		attrTemplate.Value("templateValue").Array().First().Object().Value("value").Equal(value)
+		attrTemplate.Value("templateValue").Array().First().Object().Value("detail").Array().First().Equal(detail)
+
+		// deleteCategory
+		obj = auth.DELETE(fmt.Sprintf("v1/merchant/attrTemplate/deleteAttrTemplate/%d", int(attrTemplateId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
 	}
-
-	obj = auth.PUT(fmt.Sprintf("v1/merchant/attrTemplate/updateAttrTemplate/%d", int(attrTemplateId))).
-		WithJSON(data).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-
-	obj = auth.GET(fmt.Sprintf("v1/merchant/attrTemplate/getAttrTemplateById/%d", int(attrTemplateId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	attrTemplate = obj.Value("data").Object()
-
-	attrTemplate.Value("id").Number().Ge(0)
-	attrTemplate.Value("templateName").String().Equal(data["templateName"].(string))
-	attrTemplate.Value("createdAt").String().NotEmpty()
-	attrTemplate.Value("updatedAt").String().NotEmpty()
-	attrTemplate.Value("sysTenancyId").Number().Equal(1)
-	attrTemplate.Value("templateValue").Array().First().Object().Value("value").Equal(value)
-	attrTemplate.Value("templateValue").Array().First().Object().Value("detail").Array().First().Equal(detail)
-
-	// deleteCategory
-	obj = auth.DELETE(fmt.Sprintf("v1/merchant/attrTemplate/deleteAttrTemplate/%d", int(attrTemplateId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
 
 }

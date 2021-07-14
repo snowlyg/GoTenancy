@@ -49,17 +49,34 @@ func RegisterTenancy(ctx *gin.Context) {
 
 // ChangePassword 用户修改密码
 func ChangePassword(ctx *gin.Context) {
-	var user request.ChangePasswordStruct
+	var user request.ChangePassword
 	if errs := ctx.ShouldBindJSON(&user); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if user.NewPassword != user.AgainPassword {
+	if user.NewPassword != user.ConfirmPassword {
 		response.FailWithMessage("两次输入密码不一致", ctx)
 		return
 	}
 	U := &model.SysUser{Username: multi.GetUsername(ctx), Password: user.Password}
 	err := service.ChangePassword(U, user.NewPassword, multi.GetAuthorityType(ctx))
+	if err != nil {
+		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
+		response.FailWithMessage(err.Error(), ctx)
+	} else {
+		response.OkWithMessage("修改成功", ctx)
+	}
+}
+
+// ChangeProfile 用户修改信息
+func ChangeProfile(ctx *gin.Context) {
+	var user request.ChangeProfile
+	if errs := ctx.ShouldBindJSON(&user); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+
+	err := service.ChangeProfile(user, multi.GetUserId(ctx))
 	if err != nil {
 		g.TENANCY_LOG.Error("修改失败", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)

@@ -161,97 +161,98 @@ func TestTenancyProcess(t *testing.T) {
 	tenancy.Value("sysRegionCode").Number().Equal(data["sysRegionCode"].(int))
 	tenancy.Value("status").Number().Equal(data["status"].(int))
 	tenancyId := tenancy.Value("id").Number().Raw()
+	if tenancyId > 0 {
 
-	update := map[string]interface{}{
-		"name":          "宝安妇女儿童附属医院",
-		"tele":          "0755-235689111",
-		"address":       "xxx街道667号",
-		"businessTime":  "08:30-17:40",
-		"status":        g.StatusTrue,
-		"sysRegionCode": 3,
+		update := map[string]interface{}{
+			"name":          "宝安妇女儿童附属医院",
+			"tele":          "0755-235689111",
+			"address":       "xxx街道667号",
+			"businessTime":  "08:30-17:40",
+			"status":        g.StatusTrue,
+			"sysRegionCode": 3,
+		}
+
+		obj = auth.PUT(fmt.Sprintf("v1/admin/tenancy/updateTenancy/%d", int(tenancyId))).
+			WithJSON(update).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("更新成功")
+		tenancy = obj.Value("data").Object()
+
+		tenancy.Value("name").String().Equal(update["name"].(string))
+		tenancy.Value("tele").String().Equal(update["tele"].(string))
+		tenancy.Value("address").String().Equal(update["address"].(string))
+		tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
+		tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
+		tenancy.Value("status").Number().Equal(update["status"].(int))
+
+		obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/getTenancyById/%d", int(tenancyId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("操作成功")
+		tenancy = obj.Value("data").Object()
+
+		tenancy.Value("id").Number().Ge(0)
+		tenancy.Value("uuid").String().NotEmpty()
+		tenancy.Value("name").String().Equal(update["name"].(string))
+		tenancy.Value("tele").String().Equal(update["tele"].(string))
+		tenancy.Value("address").String().Equal(update["address"].(string))
+		tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
+		tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
+		tenancy.Value("status").Number().Equal(update["status"].(int))
+
+		// setTenancyRegion
+		obj = auth.POST("v1/admin/tenancy/setTenancyRegion").
+			WithJSON(map[string]interface{}{
+				"id":            tenancyId,
+				"sysRegionCode": 2,
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
+
+		// changeCopyMap
+		obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/changeCopyMap/%d", int(tenancyId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("获取成功")
+
+		// setCopyProductNum
+		obj = auth.POST(fmt.Sprintf("v1/admin/tenancy/setCopyProductNum/%d", int(tenancyId))).
+			WithJSON(map[string]interface{}{
+				"copyNum": 0,
+				"num":     2,
+				"type":    1,
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
+
+		// changeTenancyStatus
+		obj = auth.POST("v1/admin/tenancy/changeTenancyStatus").
+			WithJSON(map[string]interface{}{
+				"id":     tenancyId,
+				"status": 2,
+			}).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("设置成功")
+
+		// setUserAuthority
+		obj = auth.DELETE(fmt.Sprintf("v1/admin/tenancy/deleteTenancy/%d", int(tenancyId))).
+			Expect().Status(http.StatusOK).JSON().Object()
+		obj.Keys().ContainsOnly("status", "data", "message")
+		obj.Value("status").Number().Equal(200)
+		obj.Value("message").String().Equal("删除成功")
+
 	}
-
-	obj = auth.PUT(fmt.Sprintf("v1/admin/tenancy/updateTenancy/%d", int(tenancyId))).
-		WithJSON(update).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("更新成功")
-	tenancy = obj.Value("data").Object()
-
-	tenancy.Value("name").String().Equal(update["name"].(string))
-	tenancy.Value("tele").String().Equal(update["tele"].(string))
-	tenancy.Value("address").String().Equal(update["address"].(string))
-	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
-	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
-	tenancy.Value("status").Number().Equal(update["status"].(int))
-
-	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/getTenancyById/%d", int(tenancyId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("操作成功")
-	tenancy = obj.Value("data").Object()
-
-	tenancy.Value("id").Number().Ge(0)
-	tenancy.Value("uuid").String().NotEmpty()
-	tenancy.Value("name").String().Equal(update["name"].(string))
-	tenancy.Value("tele").String().Equal(update["tele"].(string))
-	tenancy.Value("address").String().Equal(update["address"].(string))
-	tenancy.Value("businessTime").String().Equal(update["businessTime"].(string))
-	tenancy.Value("sysRegionCode").Number().Equal(update["sysRegionCode"].(int))
-	tenancy.Value("status").Number().Equal(update["status"].(int))
-
-	// setTenancyRegion
-	obj = auth.POST("v1/admin/tenancy/setTenancyRegion").
-		WithJSON(map[string]interface{}{
-			"id":            tenancyId,
-			"sysRegionCode": 2,
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	// changeCopyMap
-	obj = auth.GET(fmt.Sprintf("v1/admin/tenancy/changeCopyMap/%d", int(tenancyId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("获取成功")
-
-	// setCopyProductNum
-	obj = auth.POST(fmt.Sprintf("v1/admin/tenancy/setCopyProductNum/%d", int(tenancyId))).
-		WithJSON(map[string]interface{}{
-			"copyNum": 0,
-			"num":     2,
-			"type":    1,
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	// changeTenancyStatus
-	obj = auth.POST("v1/admin/tenancy/changeTenancyStatus").
-		WithJSON(map[string]interface{}{
-			"id":     tenancyId,
-			"status": 2,
-		}).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("设置成功")
-
-	// setUserAuthority
-	obj = auth.DELETE(fmt.Sprintf("v1/admin/tenancy/deleteTenancy/%d", int(tenancyId))).
-		Expect().Status(http.StatusOK).JSON().Object()
-	obj.Keys().ContainsOnly("status", "data", "message")
-	obj.Value("status").Number().Equal(200)
-	obj.Value("message").String().Equal("删除成功")
-
 }
-
 func TestTenancyRegisterError(t *testing.T) {
 	data := map[string]interface{}{
 		"name":          "宝安中心人民医院",

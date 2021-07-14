@@ -16,10 +16,16 @@ type Login struct {
 }
 
 // Modify password structure
-type ChangePasswordStruct struct {
-	Password      string `json:"password" binding:"required"`
-	NewPassword   string `json:"newPassword" binding:"required"`
-	AgainPassword string `json:"againPassword" binding:"required"`
+type ChangePassword struct {
+	Password        string `json:"password" binding:"required"`
+	NewPassword     string `json:"newPassword" binding:"required"`
+	ConfirmPassword string `json:"confirmPassword" binding:"required"`
+}
+
+// Modify password structure
+type ChangeProfile struct {
+	NickName string `json:"nickName" binding:"required"`
+	Phone    string `json:"phone" binding:"required"`
 }
 
 // Modify  user's auth structure

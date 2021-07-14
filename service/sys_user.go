@@ -242,6 +242,16 @@ func ChangePassword(u *model.SysUser, newPassword string, authorityType int) err
 	return nil
 }
 
+// ChangeProfile 修改用户信息
+func ChangeProfile(user request.ChangeProfile, sysUserId uint) error {
+	err := g.TENANCY_DB.Model(&model.SysAdminInfo{}).Where("sys_user_id = ?", sysUserId).
+		Updates(map[string]interface{}{"nick_name": user.NickName, "phone": user.Phone}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetAdminInfoList 分页获取数据
 func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, error) {
 	var userList []response.SysAdminUser

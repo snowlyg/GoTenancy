@@ -18,6 +18,7 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/auth/clean", Description: "清空", ApiGroup: "user", Method: "GET"},
 	{Path: "/v1/admin/user/register", Description: "用户注册", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/changePassword", Description: "修改密码", ApiGroup: "user", Method: "POST"},
+	{Path: "/v1/admin/user/changeProfile", Description: "修改个人信息", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getAdminList", Description: "获取管理员列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getTenancyList", Description: "获取商户员工列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getGeneralList", Description: "获取普通用户列表", ApiGroup: "user", Method: "POST"},
