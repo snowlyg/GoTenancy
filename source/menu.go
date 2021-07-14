@@ -819,7 +819,7 @@ var menus = []model.SysBaseMenu{
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1116}, 1112, "1119/1112/", "", "获取未读公告数", "systemNoticeLogUnreadCount",Params:  "", Sort: 1,Hidden: 0, IsTenancy:1,IsMenu: 2},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1117}, 1043, "1043/", "", "编辑标签表单", "merchantUserChangeLabelForm",Params:  "", Sort: 1,Hidden: 0, IsTenancy:1,IsMenu: 2},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1118}, 1043, "1043/", "", "更新标签", "merchantUserChangeLabel",Params:  "", Sort: 1,Hidden: 0, IsTenancy:1,IsMenu: 2},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1119}, Pid: 0, Path: "/", Icon: "message", MenuName: "公告列表", Route: "/merchant/station/notice", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
+	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1119}, Pid: 0, Path: "/", Icon: "message", MenuName: "公告列表", Route: "/merchant/station/notice", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1120}, 110, "/110/", "", "公告管理", "/station/notice",Params:  "[]", Sort: 0,Hidden: 2, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1121}, 178, "/110/34/41/174/178/", "", "编辑表单", "systemAttachmentUpdateForm",Params:  "", Sort: 1,Hidden: 2, IsTenancy:2,IsMenu: 2},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1122}, 178, "/110/34/41/174/178/", "", "编辑", "systemAttachmentUpdate",Params:  "", Sort: 1,Hidden: 2, IsTenancy:2,IsMenu: 2},

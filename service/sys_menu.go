@@ -35,7 +35,7 @@ func GetMenuMap(id uint, ctx *gin.Context, isTenancy bool) (Form, error) {
 		form.SetAction(fmt.Sprintf("/menu/updateBaseMenu/%d", id), ctx)
 	} else {
 		if isTenancy {
-			form.SetAction("/menu/getAddTenancyMenuMap", ctx)
+			form.SetAction("/menu/addTenancyBaseMenu", ctx)
 		} else {
 			form.SetAction("/menu/addBaseMenu", ctx)
 		}
