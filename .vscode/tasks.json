@@ -14,14 +14,38 @@
       "command": "go test -timeout 60s -run [^TestInitDB$] github.com/snowlyg/go-tenancy/tests"
     },
     {
-      "label": "tidy",
+      "label": "set goos to linux",
       "type": "shell",
-      "command": "go mod tidy"
+      "command": "go env -w GOOS=linux"
     },
     {
-      "label": "build",
+      "label": "building",
       "type": "shell",
-      "command": "go build -o ./tmp/main.exe main.go"
+      "dependsOn": [
+        "set goos to linux",
+      ],
+      "command": "go build -ldflags '-w -s' -o ./main main.go"
+    },
+    {
+      "label": "upx",
+      "type": "shell",
+      "command": "./upx -9 ./main",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": [
+        "building",
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "build linux",
+      "type": "shell",
+      "dependsOn": [
+        "upx",
+      ],
+      "command": "go env -w GOOS=windows"
     },
     {
       "label": "git push gitee",

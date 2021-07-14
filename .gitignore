@@ -12,6 +12,7 @@ air.*
 config.yaml
 tests/config.yaml
 latest_log
+main
 
 # ext
 *.log

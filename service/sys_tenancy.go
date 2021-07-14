@@ -57,7 +57,7 @@ func LoginTenancy(id uint) (response.LoginTenancy, error) {
 	}
 	loginTenancy.Token = token
 	loginTenancy.Exp = exp
-	loginTenancy.Url = "http://localhost:9528/merchant"
+	loginTenancy.Url = g.TENANCY_CONFIG.System.ClientURL + g.TENANCY_CONFIG.System.ClientPreix
 
 	return loginTenancy, nil
 }
