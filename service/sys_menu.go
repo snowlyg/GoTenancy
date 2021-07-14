@@ -1,7 +1,9 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
@@ -10,6 +12,47 @@ import (
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
+
+// GetMenuMap
+func GetMenuMap(id uint, ctx *gin.Context, isTenancy bool) (Form, error) {
+	var form Form
+	var formStr string
+	if id > 0 {
+		menu, err := GetMenuByID(id)
+		if err != nil {
+			return form, err
+		}
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":%d,"title":"父级分类","props":{"type":"other","options":[],"placeholder":"请选择父级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"is_menu","value":%d,"title":"权限类型","props":{"multiple":false,"placeholder":"请选择权限类型"},"control":[{"value":2,"rule":[{"type":"input","field":"menu_name","value":"%s","title":"路由名称","props":{"type":"text","placeholder":"请输入路由名称"},"validate":[{"message":"请输入路由名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"params","value":"%s","title":"参数","props":{"type":"textarea","placeholder":"路由参数:\r\nkey1:value1\r\nkey2:value2"}}]},{"value":1,"rule":[{"type":"switch","field":"hidden","value":%d,"title":"是否显示","props":{"activeValue":2,"inactiveValue":1,"inactiveText":"关闭","activeText":"开启"}},{"type":"frame","field":"icon","value":"%s","title":"菜单图标","props":{"type":"input","maxLength":1,"title":"请选择菜单图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"input","field":"menu_name","value":"%s","title":"菜单名称","props":{"type":"text","placeholder":"请输入菜单名称"},"validate":[{"message":"请输入菜单名称","required":true,"type":"string","trigger":"change"}]}]}],"options":[{"value":1,"label":"菜单"}]},{"type":"input","field":"route","value":"%s","title":"路由","props":{"type":"text","placeholder":"请输入路由"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"POST","title":"编辑菜单","config":{}}`, menu.Pid, menu.IsMenu, menu.MenuName, menu.Params, menu.Hidden, menu.Icon, menu.MenuName, menu.Route, menu.Sort)
+
+	} else {
+		formStr = fmt.Sprintf(`{"rule":[{"type":"cascader","field":"pid","value":0,"title":"父级分类","props":{"type":"other","options":[],"placeholder":"请选择父级分类","props":{"checkStrictly":true,"emitPath":false}}},{"type":"select","field":"is_menu","value":%d,"title":"权限类型","props":{"multiple":false,"placeholder":"请选择权限类型"},"control":[{"value":2,"rule":[{"type":"input","field":"menu_name","value":"%s","title":"路由名称","props":{"type":"text","placeholder":"请输入路由名称"},"validate":[{"message":"请输入路由名称","required":true,"type":"string","trigger":"change"}]},{"type":"input","field":"params","value":"%s","title":"参数","props":{"type":"textarea","placeholder":"路由参数:\r\nkey1:value1\r\nkey2:value2"}}]},{"value":1,"rule":[{"type":"switch","field":"hidden","value":%d,"title":"是否显示","props":{"activeValue":2,"inactiveValue":1,"inactiveText":"关闭","activeText":"开启"}},{"type":"frame","field":"icon","value":"","title":"菜单图标","props":{"type":"input","maxLength":1,"title":"请选择菜单图标","src":"\/admin\/setting\/icons?field=icon","icon":"el-icon-circle-plus-outline","height":"338px","width":"700px","modal":{"modal":false}}},{"type":"input","field":"menu_name","value":"%s","title":"菜单名称","props":{"type":"text","placeholder":"请输入菜单名称"},"validate":[{"message":"请输入菜单名称","required":true,"type":"string","trigger":"change"}]}]}],"options":[{"value":1,"label":"菜单"}]},{"type":"input","field":"route","value":"%s","title":"路由","props":{"type":"text","placeholder":"请输入路由"}},{"type":"inputNumber","field":"sort","value":%d,"title":"排序","props":{"placeholder":"请输入排序"}}],"action":"","method":"POST","title":"添加菜单","config":{}}`, 1, "", "", 2, "", "", 0)
+	}
+	err := json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	if id > 0 {
+		form.SetAction(fmt.Sprintf("/menu/updateBaseMenu/%d", id), ctx)
+	} else {
+		if isTenancy {
+			form.SetAction("/menu/getAddTenancyMenuMap", ctx)
+		} else {
+			form.SetAction("/menu/addBaseMenu", ctx)
+		}
+	}
+	opts, err := GetMenusOptions()
+	if err != nil {
+		return form, err
+	}
+	form.Rule[0].Props["options"] = opts
+	return form, err
+}
+
+func GetMenuByID(id uint) (model.SysBaseMenu, error) {
+	var menu model.SysBaseMenu
+	err := g.TENANCY_DB.Model(&model.SysBaseMenu{}).Where("id = ?", id).First(&menu).Error
+	return menu, err
+}
 
 // getMenuTreeMap 获取路由总树map
 func getMenuTreeMap(ctx *gin.Context) (map[uint][]model.SysMenu, error) {
@@ -128,4 +171,33 @@ func GetMenuAuthority(info *request.GetAuthorityId) ([]model.SysMenu, error) {
 	//sql := "SELECT authority_menu.keep_alive,authority_menu.default_menu,authority_menu.created_at,authority_menu.updated_at,authority_menu.deleted_at,authority_menu.menu_level,authority_menu.parent_id,authority_menu.path,authority_menu.`name`,authority_menu.hidden,authority_menu.component,authority_menu.title,authority_menu.icon,authority_menu.sort,authority_menu.menu_id,authority_menu.authority_id FROM authority_menu WHERE authority_menu.authority_id = ? ORDER BY authority_menu.sort ASC"
 	//err = g.TENANCY_DB.Raw(sql, authorityId).Scan(&menus).Error
 	return menus, err
+}
+
+// GetMenusOptions
+func GetMenusOptions() ([]Option, error) {
+	var options []Option
+	options = append(options, Option{Label: "请选择", Value: 0})
+	treeMap, err := getBaseMenuTreeMap(1)
+
+	for _, opt := range treeMap[0] {
+		options = append(options, Option{Label: opt.MenuName, Value: opt.ID})
+	}
+	for i := 0; i < len(options); i++ {
+		getMenusOption(&options[i], treeMap)
+	}
+
+	return options, err
+}
+
+// getMenusOption
+func getMenusOption(op *Option, treeMap map[uint][]model.SysBaseMenu) {
+	id, ok := op.Value.(uint)
+	if ok {
+		for _, opt := range treeMap[id] {
+			op.Children = append(op.Children, Option{Label: opt.MenuName, Value: opt.ID})
+		}
+		for i := 0; i < len(op.Children); i++ {
+			getMenusOption(&op.Children[i], treeMap)
+		}
+	}
 }

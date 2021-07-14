@@ -142,25 +142,22 @@ func InitMediaRouter(Router *gin.RouterGroup) {
 func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	MenuRouter := Router.Group("/menu")
 	{
-		MenuRouter.GET("/getMenu", admin.GetMenu)                    // 获取菜单树
-		MenuRouter.GET("/getMenuList", admin.GetMenuList)            // 分页获取基础menu列表
-		MenuRouter.POST("/addBaseMenu", admin.AddBaseMenu)           // 新增菜单
-		MenuRouter.POST("/getBaseMenuTree", admin.GetBaseMenuTree)   // 获取用户动态路由
-		MenuRouter.POST("/addMenuAuthority", admin.AddMenuAuthority) // 增加menu和角色关联关系
-		MenuRouter.POST("/getMenuAuthority", admin.GetMenuAuthority) // 获取指定角色menu
-		MenuRouter.DELETE("/deleteBaseMenu", admin.DeleteBaseMenu)   // 删除菜单
-		MenuRouter.POST("/updateBaseMenu", admin.UpdateBaseMenu)     // 更新菜单
-		MenuRouter.POST("/getBaseMenuById", admin.GetBaseMenuById)   // 根据id获取菜单
+		MenuRouter.GET("/getMenu", admin.GetMenu)                           // 获取菜单树
+		MenuRouter.GET("/getAddMenuMap", admin.GetAddMenuMap)               // 添加表单
+		MenuRouter.GET("/getAddTenancyMenuMap", admin.GetAddTenancyMenuMap) // 添加商户菜单表单
+		MenuRouter.GET("/getEditMenuMap/:id", admin.GetEditMenuMap)         // 编辑表单
+		MenuRouter.GET("/getMenuList", admin.GetMenuList)                   // 分页获取基础menu列表
+		MenuRouter.POST("/addBaseMenu", admin.AddBaseMenu)                  // 新增菜单
+		MenuRouter.POST("/addTenancyBaseMenu", admin.AddTenancyBaseMenu)    // 新增商户菜单
+		MenuRouter.POST("/getBaseMenuTree", admin.GetBaseMenuTree)          // 获取用户动态路由
+		MenuRouter.POST("/addMenuAuthority", admin.AddMenuAuthority)        // 增加menu和角色关联关系
+		MenuRouter.POST("/getMenuAuthority", admin.GetMenuAuthority)        // 获取指定角色menu
+		MenuRouter.DELETE("/deleteBaseMenu/:id", admin.DeleteBaseMenu)      // 删除菜单
+		MenuRouter.POST("/updateBaseMenu/:id", admin.UpdateBaseMenu)        // 更新菜单
+		MenuRouter.POST("/getBaseMenuById/:id", admin.GetBaseMenuById)      // 根据id获取菜单
 		ClientMenuRouter := MenuRouter.Group("/merchant")
 		{
 			ClientMenuRouter.GET("/getClientMenuList", admin.GetClientMenuList) // 分页获取基础menu列表
-			ClientMenuRouter.POST("/addBaseMenu", admin.AddBaseMenu)            // 新增菜单
-			ClientMenuRouter.POST("/getBaseMenuTree", admin.GetBaseMenuTree)    // 获取用户动态路由
-			ClientMenuRouter.POST("/addMenuAuthority", admin.AddMenuAuthority)  // 增加menu和角色关联关系
-			ClientMenuRouter.POST("/getMenuAuthority", admin.GetMenuAuthority)  // 获取指定角色menu
-			ClientMenuRouter.DELETE("/deleteBaseMenu", admin.DeleteBaseMenu)    // 删除菜单
-			ClientMenuRouter.POST("/updateBaseMenu", admin.UpdateBaseMenu)      // 更新菜单
-			ClientMenuRouter.POST("/getBaseMenuById", admin.GetBaseMenuById)    // 根据id获取菜单
 		}
 	}
 

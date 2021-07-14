@@ -34,7 +34,7 @@ func DeleteBaseMenu(id uint) error {
 }
 
 // UpdateBaseMenu 更新路由
-func UpdateBaseMenu(menu model.SysBaseMenu) error {
+func UpdateBaseMenu(id uint, menu model.SysBaseMenu) error {
 	var oldMenu model.SysBaseMenu
 	upDateMap := make(map[string]interface{})
 	upDateMap["pid"] = menu.Pid
@@ -46,9 +46,9 @@ func UpdateBaseMenu(menu model.SysBaseMenu) error {
 	upDateMap["sort"] = menu.Sort
 
 	err := g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
-		db := tx.Where("id = ?", menu.ID).Find(&oldMenu)
+		db := tx.Where("id = ?", id).Find(&oldMenu)
 		if oldMenu.MenuName != menu.MenuName {
-			err := tx.Where("id <> ? AND menu_name = ?", menu.ID, menu.MenuName).First(&model.SysBaseMenu{}).Error
+			err := tx.Where("id <> ? AND menu_name = ?", id, menu.MenuName).First(&model.SysBaseMenu{}).Error
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				g.TENANCY_LOG.Debug("存在相同name修改失败")
 				return errors.New("存在相同name修改失败")

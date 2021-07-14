@@ -127,8 +127,12 @@ func TestClientOrderDetail(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("操作成功")
-
-	obj = auth.POST(fmt.Sprintf("v1/merchant/order/getOrderRecord/%d", orderId)).
+}
+func TestClientOrderRecord(t *testing.T) {
+	orderId := 1
+	auth := tenancyWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.POST(fmt.Sprintf("v1/merchant/order/getOrderRecord/%d", orderId)).
 		WithJSON(map[string]interface{}{
 			"page":     1,
 			"pageSize": 10,
@@ -141,9 +145,12 @@ func TestClientOrderDetail(t *testing.T) {
 	data.Keys().ContainsOnly("list", "total", "page", "pageSize")
 	data.Value("pageSize").Number().Equal(10)
 	data.Value("page").Number().Equal(1)
-
-	obj = auth.GET(fmt.Sprintf("v1/merchant/order/deliveryOrderMap/%d", orderId)).
-		WithJSON(map[string]interface{}{"remark": "remark"}).
+}
+func TestClientOrderDelivery(t *testing.T) {
+	orderId := 1
+	auth := tenancyWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET(fmt.Sprintf("v1/merchant/order/deliveryOrderMap/%d", orderId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -159,9 +166,12 @@ func TestClientOrderDetail(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("操作成功")
-
-	obj = auth.GET(fmt.Sprintf("v1/merchant/order/getOrderRemarkMap/%d", orderId)).
-		WithJSON(map[string]interface{}{"remark": "remark"}).
+}
+func TestClientOrderRemark(t *testing.T) {
+	orderId := 1
+	auth := tenancyWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET(fmt.Sprintf("v1/merchant/order/getOrderRemarkMap/%d", orderId)).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
@@ -173,8 +183,13 @@ func TestClientOrderDetail(t *testing.T) {
 	obj.Keys().ContainsOnly("status", "data", "message")
 	obj.Value("status").Number().Equal(200)
 	obj.Value("message").String().Equal("操作成功")
+}
 
-	obj = auth.GET(fmt.Sprintf("v1/merchant/order/getEditOrderMap/%d", orderId)).
+func TestClientOrderEdit(t *testing.T) {
+	orderId := 1
+	auth := tenancyWithLoginTester(t)
+	defer baseLogOut(auth)
+	obj := auth.GET(fmt.Sprintf("v1/merchant/order/getEditOrderMap/%d", orderId)).
 		WithJSON(map[string]interface{}{"remark": "remark"}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

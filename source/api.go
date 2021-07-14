@@ -40,14 +40,18 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/authority/copyAuthority", Description: "拷贝角色", ApiGroup: "authority", Method: "POST"},
 
 	{Path: "/v1/admin/menu/getMenu", Description: "获取菜单树", ApiGroup: "menu", Method: "GET"},
+	{Path: "/v1/admin/menu/getAddMenuMap", Description: "添加表单", ApiGroup: "menu", Method: "GET"},
+	{Path: "/v1/admin/menu/getAddTenancyMenuMap", Description: "添加是商户菜单表单", ApiGroup: "menu", Method: "GET"},
+	{Path: "/v1/admin/menu/getEditMenuMap/:id", Description: "编辑表单", ApiGroup: "menu", Method: "GET"},
 	{Path: "/v1/admin/menu/getMenuList", Description: "分页获取基础menu列表", ApiGroup: "menu", Method: "GET"},
 	{Path: "/v1/admin/menu/addBaseMenu", Description: "新增菜单", ApiGroup: "menu", Method: "POST"},
+	{Path: "/v1/admin/menu/addTenancyBaseMenu", Description: "新增商户菜单", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getBaseMenuTree", Description: "获取用户动态路由", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/addMenuAuthority", Description: "增加menu和角色关联关系", ApiGroup: "menu", Method: "POST"},
 	{Path: "/v1/admin/menu/getMenuAuthority", Description: "获取指定角色menu", ApiGroup: "menu", Method: "POST"},
-	{Path: "/v1/admin/menu/deleteBaseMenu", Description: "删除菜单", ApiGroup: "menu", Method: "POST"},
-	{Path: "/v1/admin/menu/updateBaseMenu", Description: "更新菜单", ApiGroup: "menu", Method: "POST"},
-	{Path: "/v1/admin/menu/getBaseMenuById", Description: "根据id获取菜单", ApiGroup: "menu", Method: "POST"},
+	{Path: "/v1/admin/menu/deleteBaseMenu/:id", Description: "删除菜单", ApiGroup: "menu", Method: "POST"},
+	{Path: "/v1/admin/menu/updateBaseMenu/:id", Description: "更新菜单", ApiGroup: "menu", Method: "POST"},
+	{Path: "/v1/admin/menu/getBaseMenuById/:id", Description: "根据id获取菜单", ApiGroup: "menu", Method: "POST"},
 
 	{Path: "/v1/admin/menu/merchant/getClientMenuList", Description: "获取商户菜单", ApiGroup: "menu", Method: "GET"},
 

@@ -199,7 +199,7 @@ func GetProductByID(id uint) (response.ProductDetail, error) {
 	if err != nil {
 		return response.ProductDetail{}, err
 	}
-	var values []request.Value
+	values := []request.Value{}
 	for _, attr := range attrs {
 		value := request.Value{Value: attr.AttrName, Detail: strings.Split(attr.AttrValues, ",")}
 		values = append(values, value)

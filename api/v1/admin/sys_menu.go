@@ -10,6 +10,41 @@ import (
 	"go.uber.org/zap"
 )
 
+// GetAddMenuMap 添加表单
+func GetAddMenuMap(ctx *gin.Context) {
+	if menus, err := service.GetMenuMap(0, ctx, false); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(menus, "获取成功", ctx)
+	}
+}
+
+// GetAddTenancyMenuMap 添加商户菜单表单
+func GetAddTenancyMenuMap(ctx *gin.Context) {
+	if menus, err := service.GetMenuMap(0, ctx, true); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(menus, "获取成功", ctx)
+	}
+}
+
+// GetMenu 编辑表单
+func GetEditMenuMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if menus, err := service.GetMenuMap(req.Id, ctx, false); err != nil {
+		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(menus, "获取成功", ctx)
+	}
+}
+
 // GetMenu 获取用户动态路由
 func GetMenu(ctx *gin.Context) {
 	if menus, err := service.GetMenuTree(ctx); err != nil {
@@ -67,6 +102,24 @@ func AddBaseMenu(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
+	menu.IsTenancy = g.StatusFalse
+	if menu, err := service.AddBaseMenu(menu); err != nil {
+		g.TENANCY_LOG.Error("添加失败!", zap.Any("err", err))
+
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(menu, "添加成功", ctx)
+	}
+}
+
+// AddTenancyBaseMenu 新增菜单
+func AddTenancyBaseMenu(ctx *gin.Context) {
+	var menu model.SysBaseMenu
+	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	menu.IsTenancy = g.StatusTrue
 	if menu, err := service.AddBaseMenu(menu); err != nil {
 		g.TENANCY_LOG.Error("添加失败!", zap.Any("err", err))
 
@@ -78,12 +131,12 @@ func AddBaseMenu(ctx *gin.Context) {
 
 // DeleteBaseMenu 删除菜单
 func DeleteBaseMenu(ctx *gin.Context) {
-	var menu request.GetById
-	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteBaseMenu(menu.Id); err != nil {
+	if err := service.DeleteBaseMenu(req.Id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
@@ -93,12 +146,17 @@ func DeleteBaseMenu(ctx *gin.Context) {
 
 // UpdateBaseMenu 更新菜单
 func UpdateBaseMenu(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
 	var menu model.SysBaseMenu
 	if errs := ctx.ShouldBindJSON(&menu); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.UpdateBaseMenu(menu); err != nil {
+	if err := service.UpdateBaseMenu(req.Id, menu); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -108,12 +166,12 @@ func UpdateBaseMenu(ctx *gin.Context) {
 
 // GetBaseMenuById 根据id获取菜单
 func GetBaseMenuById(ctx *gin.Context) {
-	var idInfo request.GetById
-	if errs := ctx.ShouldBindJSON(&idInfo); errs != nil {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if menu, err := service.GetBaseMenuById(idInfo.Id); err != nil {
+	if menu, err := service.GetBaseMenuById(req.Id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

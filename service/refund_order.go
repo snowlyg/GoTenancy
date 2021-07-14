@@ -320,7 +320,7 @@ func checkRefundPrice(refundOrder model.RefundOrder, ctx *gin.Context) (float64,
 	refundPriceD := decimal.NewFromFloat(refundPrice)
 	pefundPrice := decimal.NewFromFloat(refundOrder.RefundPrice)
 	if payPrice.Sub(refundPriceD).LessThanOrEqual(pefundPrice) {
-		return 0, fmt.Errorf("退款金额超出订单可退金额 %f %f %f", order.PayPrice, refundPrice, refundOrder.RefundPrice)
+		return 0, fmt.Errorf("退款金额超出订单可退金额")
 	}
 	return refundPrice, nil
 }
