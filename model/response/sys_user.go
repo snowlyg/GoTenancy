@@ -1,7 +1,7 @@
 package response
 
 import (
-	"time"
+	"github.com/snowlyg/go-tenancy/model"
 )
 
 type LoginResponse struct {
@@ -37,25 +37,15 @@ type SysTenancyUser struct {
 	DefaultRouter string `json:"defaultRouter"`
 }
 
-type SysGeneralUser struct {
+type GeneralUser struct {
 	TenancyResponse
-	Username      string    `json:"userName"`
-	Email         string    `json:"email"`
-	Phone         string    `json:"phone"`
-	NickName      string    `json:"nickName"`
-	AuthorityName string    `json:"authorityName"`
-	AuthorityType int       `json:"authorityType"`
-	AuthorityId   string    `json:"authorityId"`
-	AvatarUrl     string    `json:"avatarUrl"`
-	Sex           int       `json:"sex"`
-	Subscribe     bool      `json:"subscribe"`
-	OpenId        string    `json:"openId"`
-	UnionId       string    `json:"unionId"`
-	Country       string    `json:"country"`
-	Province      string    `json:"province"`
-	City          string    `json:"city"`
-	IdCard        string    `json:"idCard"`
-	IsAuth        bool      `json:"isAuth"`
-	RealName      string    `json:"realName"`
-	Birthday      time.Time `json:"birthday"`
+	Username      string            `json:"userName"`
+	AuthorityName string            `json:"authorityName"`
+	AuthorityType int               `json:"authorityType"`
+	AuthorityId   string            `json:"authorityId"`
+	GroupName     string            `json:"groupName"`
+	LabelID       uint              `json:"labelId"` // 用户标签 id
+	Label         []model.UserLabel `gorm:"-" json:"label"`
+
+	model.BaseGeneralInfo
 }

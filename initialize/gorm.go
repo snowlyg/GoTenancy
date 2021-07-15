@@ -27,9 +27,9 @@ func Gorm() *gorm.DB {
 func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		model.SysUser{},
-		model.SysAdminInfo{},
-		model.SysTenancyInfo{},
-		model.SysGeneralInfo{},
+		model.AdminInfo{},
+		model.TenancyInfo{},
+		model.GeneralInfo{},
 		model.SysAuthority{},
 		model.SysApi{},
 		model.SysBaseMenu{},

@@ -128,7 +128,7 @@ func GetTenancyList(ctx *gin.Context) {
 
 // GetGeneralList 分页获取用户列表
 func GetGeneralList(ctx *gin.Context) {
-	var pageInfo request.PageInfo
+	var pageInfo request.UserPageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -191,7 +191,7 @@ func SetUserInfo(ctx *gin.Context) {
 	}
 
 	if user.IsAdmin() {
-		var admin model.SysAdminInfo
+		var admin model.AdminInfo
 		_ = ctx.ShouldBindJSON(&admin)
 		if _, err := service.SetUserAdminInfo(admin, user.AdminInfo.ID, userId); err != nil {
 			g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
@@ -200,7 +200,7 @@ func SetUserInfo(ctx *gin.Context) {
 			response.OkWithMessage("设置成功", ctx)
 		}
 	} else if user.IsTenancy() {
-		var tenancy model.SysTenancyInfo
+		var tenancy model.TenancyInfo
 		_ = ctx.ShouldBindJSON(&tenancy)
 		tenancy.ID = user.TenancyInfo.ID
 		if _, err := service.SetUserTenancyInfo(tenancy, user.TenancyInfo.ID, userId); err != nil {

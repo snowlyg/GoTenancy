@@ -73,6 +73,13 @@ func GetUserLabelByID(id uint) (model.UserLabel, error) {
 	return userLabel, err
 }
 
+// GetUserLabelByIds
+func GetUserLabelByIds(ids []uint) ([]model.UserLabel, error) {
+	var userLabels []model.UserLabel
+	err := g.TENANCY_DB.Where("id in ?", ids).Find(&userLabels).Error
+	return userLabels, err
+}
+
 // UpdateUserLabel
 func UpdateUserLabel(userLabel model.UserLabel, id uint) (model.UserLabel, error) {
 	err := g.TENANCY_DB.Where("label_name = ?", userLabel.LabelName).Where("sys_tenancy_id = ?", userLabel.SysTenancyID).Where("id <> ?", id).First(&userLabel).Error

@@ -82,11 +82,11 @@ func GetRefundOrderInfoList(info request.RefundOrderPageInfo, ctx *gin.Context) 
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.RefundOrder{}).
-		Select("refund_orders.*,sys_tenancies.name as tenancy_name,sys_tenancies.is_trader as is_trader,sys_general_infos.nick_name as user_nick_name,orders.order_sn as order_sn,orders.activity_type as activity_type").
+		Select("refund_orders.*,sys_tenancies.name as tenancy_name,sys_tenancies.is_trader as is_trader,general_infos.nick_name as user_nick_name,orders.order_sn as order_sn,orders.activity_type as activity_type").
 		Joins("left join orders on refund_orders.order_id = orders.id").
 		Joins("left join sys_tenancies on refund_orders.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_users on refund_orders.sys_user_id = sys_users.id").
-		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id")
+		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id")
 
 	db, err := getRefundOrderSearch(info, ctx, db)
 	if err != nil {

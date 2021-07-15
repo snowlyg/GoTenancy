@@ -48,7 +48,7 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch, ctx *g
 	if multi.IsTenancy(ctx) {
 		var userIds []int64
 		tenancyId := multi.GetTenancyId(ctx)
-		err = g.TENANCY_DB.Model(&model.SysTenancyInfo{}).Select("sys_user_id").Where("sys_tenancy_id = ?", tenancyId).Find(&userIds).Error
+		err = g.TENANCY_DB.Model(&model.TenancyInfo{}).Select("sys_user_id").Where("sys_tenancy_id = ?", tenancyId).Find(&userIds).Error
 		if err == nil {
 			db = db.Where("user_id in ?", userIds)
 		} else if !errors.Is(err, gorm.ErrRecordNotFound) {

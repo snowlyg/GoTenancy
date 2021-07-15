@@ -23,9 +23,9 @@ func LoginTenancy(id uint) (response.LoginTenancy, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_authorities.authority_type = ?", multi.TenancyAuthority).
 		Where("sys_tenancies.id = ?", id).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
-		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
-		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,tenancy_infos.email, tenancy_infos.phone, tenancy_infos.nick_name, tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join tenancy_infos on tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_tenancies on tenancy_infos.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&loginTenancy.Admin).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {

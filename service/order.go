@@ -194,9 +194,9 @@ func getOrderConditionByStatus(status int) response.OrderCondition {
 func GetOrderById(id uint, ctx *gin.Context) (response.OrderDetail, error) {
 	var order response.OrderDetail
 	db := g.TENANCY_DB.Model(&model.Order{}).
-		Select("orders.*,sys_general_infos.nick_name as user_nick_name").
+		Select("orders.*,general_infos.nick_name as user_nick_name").
 		Joins("left join sys_users on orders.sys_user_id = sys_users.id").
-		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
+		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
 		Joins(fmt.Sprintf("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id and sys_authorities.authority_type = %d", multi.GeneralAuthority))
 
 	isDelField := GetIsDelField(ctx)

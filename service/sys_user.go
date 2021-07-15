@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/snowlyg/go-tenancy/g"
@@ -57,8 +58,8 @@ func adminLogin(u *model.SysUser) (response.LoginResponse, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.AdminAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
-		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, admin_infos.email, admin_infos.phone, admin_infos.nick_name, admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join admin_infos on admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&admin).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -113,9 +114,9 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.TenancyAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
-		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
-		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_tenancies.id  as tenancy_id,sys_tenancies.name as tenancy_name,tenancy_infos.email, tenancy_infos.phone, tenancy_infos.nick_name, tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join tenancy_infos on tenancy_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_tenancies on tenancy_infos.sys_tenancy_id = sys_tenancies.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&tenancy).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -166,14 +167,14 @@ func tenancyLogin(u *model.SysUser) (response.LoginResponse, error) {
 
 // generalLogin
 func generalLogin(u *model.SysUser) (response.LoginResponse, error) {
-	var general response.SysGeneralUser
+	var general response.GeneralUser
 	var token string
 	u.Password = utils.MD5V([]byte(u.Password))
 	err := g.TENANCY_DB.Model(&model.SysUser{}).
 		Where("sys_users.username = ? AND sys_users.password = ?", u.Username, u.Password).
 		Where("sys_authorities.authority_type = ?", multi.GeneralAuthority).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email,sys_general_infos.phone,sys_general_infos.nick_name,sys_general_infos.avatar_url,sys_general_infos.sex,sys_general_infos.subscribe,sys_general_infos.open_id,sys_general_infos.union_id,sys_general_infos.country,sys_general_infos.province,sys_general_infos.city,sys_general_infos.id_card,sys_general_infos.is_auth,sys_general_infos.real_name,sys_general_infos.birthday,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
-		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.email,general_infos.phone,general_infos.nick_name,general_infos.avatar_url,general_infos.sex,general_infos.subscribe,general_infos.open_id,general_infos.union_id,general_infos.country,general_infos.province,general_infos.city,general_infos.id_card,general_infos.is_auth,general_infos.real_name,general_infos.birthday,sys_authorities.authority_name,sys_authorities.authority_type,sys_authorities.default_router,sys_users.authority_id").
+		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		First(&general).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -244,7 +245,7 @@ func ChangePassword(u *model.SysUser, newPassword string, authorityType int) err
 
 // ChangeProfile 修改用户信息
 func ChangeProfile(user request.ChangeProfile, sysUserId uint) error {
-	err := g.TENANCY_DB.Model(&model.SysAdminInfo{}).Where("sys_user_id = ?", sysUserId).
+	err := g.TENANCY_DB.Model(&model.AdminInfo{}).Where("sys_user_id = ?", sysUserId).
 		Updates(map[string]interface{}{"nick_name": user.NickName, "phone": user.Phone}).Error
 	if err != nil {
 		return err
@@ -272,8 +273,8 @@ func GetAdminInfoList(info request.PageInfo) ([]response.SysAdminUser, int64, er
 		db = db.Limit(limit).Offset(offset)
 	}
 	err = db.
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_admin_infos.email, sys_admin_infos.phone, sys_admin_infos.nick_name, sys_admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
-		Joins("left join sys_admin_infos on sys_admin_infos.sys_user_id = sys_users.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, admin_infos.email, admin_infos.phone, admin_infos.nick_name, admin_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
+		Joins("left join admin_infos on admin_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Find(&userList).Error
 	return userList, total, err
@@ -299,26 +300,69 @@ func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64
 		db = db.Limit(limit).Offset(offset)
 	}
 	err = db.
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_tenancy_infos.email, sys_tenancy_infos.phone, sys_tenancy_infos.nick_name, sys_tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
-		Joins("left join sys_tenancy_infos on sys_tenancy_infos.sys_user_id = sys_users.id").
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, tenancy_infos.email, tenancy_infos.phone, tenancy_infos.nick_name, tenancy_infos.header_img,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,sys_tenancies.name as tenancy_name").
+		Joins("left join tenancy_infos on tenancy_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
-		Joins("left join sys_tenancies on sys_tenancy_infos.sys_tenancy_id = sys_tenancies.id").
+		Joins("left join sys_tenancies on tenancy_infos.sys_tenancy_id = sys_tenancies.id").
 		Find(&userList).Error
 	return userList, total, err
 }
 
 // GetGeneralInfoList 分页获取数据
-func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64, error) {
-	var userList []response.SysGeneralUser
-	var generalAuthorityIds []int
+func GetGeneralInfoList(info request.UserPageInfo) ([]response.GeneralUser, int64, error) {
+	var userList []response.GeneralUser
 	var total int64
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	err := g.TENANCY_DB.Model(&model.SysAuthority{}).Where("authority_type", multi.GeneralAuthority).Select("authority_id").Find(&generalAuthorityIds).Error
+
+	generalAuthorityIds, err := GetUserAuthorityIds()
 	if err != nil {
 		return userList, 0, err
 	}
-	db := g.TENANCY_DB.Model(&model.SysUser{}).Where("sys_users.authority_id IN (?)", generalAuthorityIds)
+
+	db := g.TENANCY_DB.Model(&model.SysUser{}).
+		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name").
+		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
+		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
+		Joins("left join user_groups on general_infos.group_id = user_groups.id").
+		Where("sys_users.authority_id IN (?)", generalAuthorityIds)
+	if info.UserTimeType != "" && info.UserTime != "" {
+		userTimes := strings.Split(info.UserTime, "-")
+		start, err := time.Parse("2006/01/02", userTimes[0])
+		if err != nil {
+			return userList, total, fmt.Errorf("parse time %w", err)
+		}
+		end, err := time.Parse("2006/01/02", userTimes[1])
+		if err != nil {
+			return userList, total, fmt.Errorf("parse time %w", err)
+		}
+		if info.UserTimeType == "add_time" {
+			db = db.Where("general_infos.created_at BETWEEN ? AND ?", start, end)
+		} else if info.UserTimeType == "visit" {
+			db = db.Where("general_infos.last_time BETWEEN ? AND ?", start, end)
+		}
+	}
+
+	if info.PayCount != "" {
+		if info.PayCount == "0" {
+			db = db.Where("general_infos.pay_count = ?", info.PayCount)
+		} else {
+			db = db.Where("general_infos.pay_count >= ?", info.PayCount)
+		}
+	}
+	if info.GroupId != "" {
+		db = db.Where("general_infos.group_id = ?", info.GroupId)
+	}
+	if info.LabelId != "" {
+		db = db.Where("general_infos.label_id = ?", info.LabelId)
+	}
+	if info.Sex != "" {
+		db = db.Where("general_infos.sex = ?", info.Sex)
+	}
+	if info.NickName != "" {
+		db = db.Where("general_infos.nick_name like ?", info.NickName+"%")
+	}
+
 	if limit > 0 {
 		err = db.Count(&total).Error
 		if err != nil {
@@ -326,11 +370,30 @@ func GetGeneralInfoList(info request.PageInfo) ([]response.SysGeneralUser, int64
 		}
 		db = db.Limit(limit).Offset(offset)
 	}
-	err = db.
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, sys_general_infos.email, sys_general_infos.phone, sys_general_infos.nick_name, sys_general_infos.avatar_url,sys_general_infos.sex, sys_general_infos.subscribe,sys_general_infos.open_id,sys_general_infos.union_id,sys_general_infos.country,sys_general_infos.province,sys_general_infos.city,sys_general_infos.id_card,sys_general_infos.is_auth,sys_general_infos.real_name,sys_general_infos.birthday,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id").
-		Joins("left join sys_general_infos on sys_general_infos.sys_user_id = sys_users.id").
-		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
-		Find(&userList).Error
+
+	err = db.Find(&userList).Error
+	if err != nil {
+		return userList, total, err
+	}
+
+	if len(userList) > 0 {
+		userLabelIds := []uint{}
+		for _, user := range userList {
+			userLabelIds = append(userLabelIds, user.LabelID)
+		}
+		userLabels, err := GetUserLabelByIds(userLabelIds)
+		if err != nil {
+			return userList, total, err
+		}
+		for i := 0; i < len(userList); i++ {
+			for _, userLabel := range userLabels {
+				if userList[i].LabelID == userLabel.ID {
+					userList[i].Label = append(userList[i].Label, userLabel)
+				}
+			}
+		}
+	}
+
 	return userList, total, err
 }
 
@@ -346,7 +409,7 @@ func DeleteUser(id uint) (err error) {
 }
 
 // SetUserAdminInfo 设置admin信息
-func SetUserAdminInfo(reqUser model.SysAdminInfo, infoId uint, userId string) (model.SysAdminInfo, error) {
+func SetUserAdminInfo(reqUser model.AdminInfo, infoId uint, userId string) (model.AdminInfo, error) {
 	if infoId > 0 {
 		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
@@ -368,7 +431,7 @@ func SetUserAdminInfo(reqUser model.SysAdminInfo, infoId uint, userId string) (m
 }
 
 // SetUserTenancyInfo 设置商户信息
-func SetUserTenancyInfo(reqUser model.SysTenancyInfo, infoId uint, userId string) (model.SysTenancyInfo, error) {
+func SetUserTenancyInfo(reqUser model.TenancyInfo, infoId uint, userId string) (model.TenancyInfo, error) {
 	if infoId > 0 {
 		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
@@ -390,7 +453,7 @@ func SetUserTenancyInfo(reqUser model.SysTenancyInfo, infoId uint, userId string
 }
 
 // SetUserGeneralInfo 设置普通用户信息
-func SetUserGeneralInfo(reqUser model.SysGeneralInfo, infoId uint, userId string) (model.SysGeneralInfo, error) {
+func SetUserGeneralInfo(reqUser model.GeneralInfo, infoId uint, userId string) (model.GeneralInfo, error) {
 	if infoId > 0 {
 		reqUser.ID = infoId
 		err := g.TENANCY_DB.Updates(&reqUser).Error
