@@ -295,7 +295,7 @@ func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	}
 }
 
-// 物流信息
+// 用户分组
 func InitUserGroupRouter(Router *gin.RouterGroup) {
 	UserGroupRouter := Router.Group("/userGroup")
 	{
@@ -305,5 +305,18 @@ func InitUserGroupRouter(Router *gin.RouterGroup) {
 		UserGroupRouter.POST("/createUserGroup", admin.CreateUserGroup)
 		UserGroupRouter.PUT("/updateUserGroup/:id", admin.UpdateUserGroup)
 		UserGroupRouter.DELETE("/deleteUserGroup/:id", admin.DeleteUserGroup)
+	}
+}
+
+// 用户标签
+func InitUserLabelRouter(Router *gin.RouterGroup) {
+	UserLabelRouter := Router.Group("/userLabel")
+	{
+		UserLabelRouter.POST("/getUserLabelList", admin.GetUserLabelList)
+		UserLabelRouter.GET("/getCreateUserLabelMap", admin.GetCreateUserLabelMap)
+		UserLabelRouter.GET("/getUpdateUserLabelMap/:id", admin.GetUpdateUserLabelMap)
+		UserLabelRouter.POST("/createUserLabel", admin.CreateUserLabel)
+		UserLabelRouter.PUT("/updateUserLabel/:id", admin.UpdateUserLabel)
+		UserLabelRouter.DELETE("/deleteUserLabel/:id", admin.DeleteUserLabel)
 	}
 }

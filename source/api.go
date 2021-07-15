@@ -265,13 +265,20 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/express/changeExpressStatus", Description: "物流状态切换", ApiGroup: "express", Method: "POST"},
 	{Path: "/v1/admin/express/updateExpress/:id", Description: "更新物流", ApiGroup: "express", Method: "PUT"},
 	{Path: "/v1/admin/express/deleteExpress/:id", Description: "删除物流", ApiGroup: "express", Method: "DELETE"},
-	// 物流公司
-	{Path: "/v1/admin/userGroup/getCreateUserGroupMap", Description: "物流添加表单", ApiGroup: "userGroup", Method: "GET"},
-	{Path: "/v1/admin/userGroup/getUpdateUserGroupMap/:id", Description: "物流编辑表单", ApiGroup: "userGroup", Method: "GET"},
-	{Path: "/v1/admin/userGroup/getUserGroupList", Description: "物流列表", ApiGroup: "userGroup", Method: "POST"},
-	{Path: "/v1/admin/userGroup/createUserGroup", Description: "添加物流", ApiGroup: "userGroup", Method: "POST"},
-	{Path: "/v1/admin/userGroup/updateUserGroup/:id", Description: "更新物流", ApiGroup: "userGroup", Method: "PUT"},
-	{Path: "/v1/admin/userGroup/deleteUserGroup/:id", Description: "删除物流", ApiGroup: "userGroup", Method: "DELETE"},
+	// 用户分组
+	{Path: "/v1/admin/userGroup/getCreateUserGroupMap", Description: "用户分组添加表单", ApiGroup: "userGroup", Method: "GET"},
+	{Path: "/v1/admin/userGroup/getUpdateUserGroupMap/:id", Description: "用户分组编辑表单", ApiGroup: "userGroup", Method: "GET"},
+	{Path: "/v1/admin/userGroup/getUserGroupList", Description: "用户分组列表", ApiGroup: "userGroup", Method: "POST"},
+	{Path: "/v1/admin/userGroup/createUserGroup", Description: "添加用户分组", ApiGroup: "userGroup", Method: "POST"},
+	{Path: "/v1/admin/userGroup/updateUserGroup/:id", Description: "更新用户分组", ApiGroup: "userGroup", Method: "PUT"},
+	{Path: "/v1/admin/userGroup/deleteUserGroup/:id", Description: "删除用户分组", ApiGroup: "userGroup", Method: "DELETE"},
+	// 用户标签
+	{Path: "/v1/admin/labelGroup/getCreateUserLabelMap", Description: "用户标签添加表单", ApiGroup: "labelGroup", Method: "GET"},
+	{Path: "/v1/admin/labelGroup/getUpdateUserLabelMap/:id", Description: "用户标签编辑表单", ApiGroup: "labelGroup", Method: "GET"},
+	{Path: "/v1/admin/labelGroup/getUserLabelList", Description: "用户标签列表", ApiGroup: "labelGroup", Method: "POST"},
+	{Path: "/v1/admin/labelGroup/createUserLabel", Description: "添加用户标签", ApiGroup: "labelGroup", Method: "POST"},
+	{Path: "/v1/admin/labelGroup/updateUserLabel/:id", Description: "更新用户标签", ApiGroup: "labelGroup", Method: "PUT"},
+	{Path: "/v1/admin/labelGroup/deleteUserLabel/:id", Description: "删除用户标签", ApiGroup: "labelGroup", Method: "DELETE"},
 
 	//物流信息
 	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},

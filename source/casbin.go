@@ -196,6 +196,15 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/updateUserGroup/:id", V2: "PUT"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/deleteUserGroup/:id", V2: "DELETE"},
 
+	// 用户分组
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/getCreateUserLabelMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/getUpdateUserLabelMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/getUserLabelList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/createUserLabel", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/changeUserLabelStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/updateUserLabel/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userLabel/deleteUserLabel/:id", V2: "DELETE"},
+
 	// TODO:商户用户权限
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
