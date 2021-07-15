@@ -193,8 +193,7 @@ func InitDB(conf request.InitDB) error {
 		source.Config,
 		source.SysConfigCategory,
 		source.SysConfigValue,
-		source.Address,
-		source.Receipt,
+
 		source.Brand,
 		source.BrandCategory,
 		source.Category,
@@ -211,6 +210,10 @@ func InitDB(conf request.InitDB) error {
 		source.RefundOrder,
 
 		source.Express,
+
+		source.UserGroup,
+		source.Address,
+		source.Receipt,
 	)
 	if err != nil {
 		_ = WriteConfig(g.TENANCY_VP, BaseMysql)

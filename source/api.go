@@ -256,6 +256,22 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/refundOrder/getRefundOrderList", Description: "退款订单列表", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/getRefundOrderRecord/:id", Description: "退款订单记录", ApiGroup: "refundOrderClient", Method: "POST"},
 	{Path: "/v1/merchant/refundOrder/deleteRefundOrder/:id", Description: "删除退款订单", ApiGroup: "refundOrderClient", Method: "DELETE"},
+	// 物流公司
+	{Path: "/v1/admin/express/getCreateExpressMap", Description: "物流添加表单", ApiGroup: "express", Method: "GET"},
+	{Path: "/v1/admin/express/getUpdateExpressMap/:id", Description: "物流编辑表单", ApiGroup: "express", Method: "GET"},
+	{Path: "/v1/admin/express/getExpressList", Description: "物流列表", ApiGroup: "express", Method: "POST"},
+	{Path: "/v1/admin/express/createExpress", Description: "添加物流", ApiGroup: "express", Method: "POST"},
+	{Path: "/v1/admin/express/getExpressById/:id", Description: "物流详情", ApiGroup: "express", Method: "GET"},
+	{Path: "/v1/admin/express/changeExpressStatus", Description: "物流状态切换", ApiGroup: "express", Method: "POST"},
+	{Path: "/v1/admin/express/updateExpress/:id", Description: "更新物流", ApiGroup: "express", Method: "PUT"},
+	{Path: "/v1/admin/express/deleteExpress/:id", Description: "删除物流", ApiGroup: "express", Method: "DELETE"},
+	// 物流公司
+	{Path: "/v1/admin/userGroup/getCreateUserGroupMap", Description: "物流添加表单", ApiGroup: "userGroup", Method: "GET"},
+	{Path: "/v1/admin/userGroup/getUpdateUserGroupMap/:id", Description: "物流编辑表单", ApiGroup: "userGroup", Method: "GET"},
+	{Path: "/v1/admin/userGroup/getUserGroupList", Description: "物流列表", ApiGroup: "userGroup", Method: "POST"},
+	{Path: "/v1/admin/userGroup/createUserGroup", Description: "添加物流", ApiGroup: "userGroup", Method: "POST"},
+	{Path: "/v1/admin/userGroup/updateUserGroup/:id", Description: "更新物流", ApiGroup: "userGroup", Method: "PUT"},
+	{Path: "/v1/admin/userGroup/deleteUserGroup/:id", Description: "删除物流", ApiGroup: "userGroup", Method: "DELETE"},
 
 	//物流信息
 	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},
@@ -264,17 +280,17 @@ var baseApis = []model.SysApi{
 
 	//TODO:: 用户权限
 	// 我的地址
-	{Path: "/v1/user/address/getAddressList", Description: "地址列表", ApiGroup: "expressClient", Method: "POST"},
-	{Path: "/v1/user/address/createAddress", Description: "添加地址", ApiGroup: "expressClient", Method: "POST"},
-	{Path: "/v1/user/address/getAddressById/:id", Description: "地址详情", ApiGroup: "expressClient", Method: "GET"},
-	{Path: "/v1/user/address/updateAddress/:id", Description: "更新地址", ApiGroup: "expressClient", Method: "PUT"},
-	{Path: "/v1/user/address/deleteAddress/:id", Description: "删除地址", ApiGroup: "expressClient", Method: "DELETE"},
+	{Path: "/v1/user/address/getAddressList", Description: "地址列表", ApiGroup: "address", Method: "POST"},
+	{Path: "/v1/user/address/createAddress", Description: "添加地址", ApiGroup: "address", Method: "POST"},
+	{Path: "/v1/user/address/getAddressById/:id", Description: "地址详情", ApiGroup: "address", Method: "GET"},
+	{Path: "/v1/user/address/updateAddress/:id", Description: "更新地址", ApiGroup: "address", Method: "PUT"},
+	{Path: "/v1/user/address/deleteAddress/:id", Description: "删除地址", ApiGroup: "address", Method: "DELETE"},
 	// 我的发票
-	{Path: "/v1/user/receipt/getReceiptList", Description: "发票列表", ApiGroup: "expressClient", Method: "POST"},
-	{Path: "/v1/user/receipt/createReceipt", Description: "添加发票", ApiGroup: "expressClient", Method: "POST"},
-	{Path: "/v1/user/receipt/getReceiptById/:id", Description: "发票详情", ApiGroup: "expressClient", Method: "GET"},
-	{Path: "/v1/user/receipt/updateReceipt/:id", Description: "更新发票", ApiGroup: "expressClient", Method: "PUT"},
-	{Path: "/v1/user/receipt/deleteReceipt/:id", Description: "删除发票", ApiGroup: "expressClient", Method: "DELETE"},
+	{Path: "/v1/user/receipt/getReceiptList", Description: "发票列表", ApiGroup: "receipt", Method: "POST"},
+	{Path: "/v1/user/receipt/createReceipt", Description: "添加发票", ApiGroup: "receipt", Method: "POST"},
+	{Path: "/v1/user/receipt/getReceiptById/:id", Description: "发票详情", ApiGroup: "receipt", Method: "GET"},
+	{Path: "/v1/user/receipt/updateReceipt/:id", Description: "更新发票", ApiGroup: "receipt", Method: "PUT"},
+	{Path: "/v1/user/receipt/deleteReceipt/:id", Description: "删除发票", ApiGroup: "receipt", Method: "DELETE"},
 }
 
 //@description: sys_apis 表数据初始化

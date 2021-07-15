@@ -5,6 +5,7 @@ import (
 	admin "github.com/snowlyg/go-tenancy/api/v1/admin"
 )
 
+// api
 func InitApiRouter(Router *gin.RouterGroup) {
 	ApiRouter := Router.Group("/api")
 	{
@@ -18,6 +19,7 @@ func InitApiRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 角色管理
 func InitAuthorityRouter(Router *gin.RouterGroup) {
 	AuthorityRouter := Router.Group("/authority")
 	{
@@ -33,6 +35,7 @@ func InitAuthorityRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 品牌分类
 func InitBrandCategoryRouter(Router *gin.RouterGroup) {
 	BrandCategoryRouter := Router.Group("/brandCategory")
 	{
@@ -47,6 +50,7 @@ func InitBrandCategoryRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 品牌
 func InitBrandRouter(Router *gin.RouterGroup) {
 	BrandRouter := Router.Group("/brand")
 	{
@@ -61,6 +65,7 @@ func InitBrandRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// casbin
 func InitCasbinRouter(Router *gin.RouterGroup) {
 	CasbinRouter := Router.Group("/casbin")
 	{
@@ -69,6 +74,7 @@ func InitCasbinRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 分类
 func InitCategoryRouter(Router *gin.RouterGroup) {
 	CategoryRouter := Router.Group("/productCategory")
 	{
@@ -84,6 +90,7 @@ func InitCategoryRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 配置分类
 func InitConfigCategoryRouter(Router *gin.RouterGroup) {
 	ConfigCategoryRouter := Router.Group("/configCategory")
 	{
@@ -98,6 +105,7 @@ func InitConfigCategoryRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 配置值
 func InitConfigValueRouter(Router *gin.RouterGroup) {
 	ConfigValueRouter := Router.Group("/configValue")
 	{
@@ -105,6 +113,7 @@ func InitConfigValueRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 系统配置
 func InitConfigRouter(Router *gin.RouterGroup) {
 	ConfigRouter := Router.Group("/config")
 	{
@@ -121,6 +130,7 @@ func InitConfigRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 邮件测试
 func InitEmailRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/email")
 	{
@@ -128,6 +138,7 @@ func InitEmailRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 多媒体
 func InitMediaRouter(Router *gin.RouterGroup) {
 	MediaGroup := Router.Group("/media")
 	{
@@ -139,7 +150,8 @@ func InitMediaRouter(Router *gin.RouterGroup) {
 	}
 }
 
-func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
+// 菜单管理
+func InitMenuRouter(Router *gin.RouterGroup) {
 	MenuRouter := Router.Group("/menu")
 	{
 		MenuRouter.GET("/getMenu", admin.GetMenu)                           // 获取菜单树
@@ -160,10 +172,9 @@ func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 			ClientMenuRouter.GET("/getClientMenuList", admin.GetClientMenuList) // 分页获取基础menu列表
 		}
 	}
-
-	return MenuRouter
 }
 
+// 小程序管理
 func InitMiniRouter(Router *gin.RouterGroup) {
 	MiniRouter := Router.Group("/mini")
 	{
@@ -175,6 +186,7 @@ func InitMiniRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 操作日志
 func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
@@ -187,6 +199,7 @@ func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 产品管理
 func InitProductRouter(Router *gin.RouterGroup) {
 	ProductRouter := Router.Group("/product")
 	{
@@ -201,6 +214,7 @@ func InitProductRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 系统设置
 func InitSystemRouter(Router *gin.RouterGroup) {
 	SystemRouter := Router.Group("/system")
 	{
@@ -211,6 +225,7 @@ func InitSystemRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 商户
 func InitTenancyRouter(Router *gin.RouterGroup) {
 	TenancyRouter := Router.Group("/tenancy")
 	{
@@ -230,15 +245,16 @@ func InitTenancyRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 管理员
 func InitUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/user")
 	{
-		UserRouter.POST("/registerAdmin", admin.RegisterAdmin)       // 注册
-		UserRouter.POST("/registerTenancy", admin.RegisterTenancy)   // 注册
+		UserRouter.POST("/registerAdmin", admin.RegisterAdmin)       // 注册管理员
+		UserRouter.POST("/registerTenancy", admin.RegisterTenancy)   // 注册商户管理员
 		UserRouter.POST("/changePassword", admin.ChangePassword)     // 修改密码
 		UserRouter.POST("/changeProfile", admin.ChangeProfile)       // 修改密码
 		UserRouter.POST("/getAdminList", admin.GetAdminList)         // 分页获取管理员列表
-		UserRouter.POST("/getTenancyList", admin.GetTenancyList)     // 分页获取商户列表
+		UserRouter.POST("/getTenancyList", admin.GetTenancyList)     // 分页获取商户管理员列表
 		UserRouter.POST("/getGeneralList", admin.GetGeneralList)     // 分页获取普通用户列表
 		UserRouter.POST("/setUserAuthority", admin.SetUserAuthority) // 设置用户权限
 		UserRouter.DELETE("/deleteUser", admin.DeleteUser)           // 删除用户
@@ -246,6 +262,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 订单管理
 func InitOrderRouter(Router *gin.RouterGroup) {
 	OrderRouter := Router.Group("/order")
 	{
@@ -255,6 +272,7 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 物流信息
 func InitExpressRouter(Router *gin.RouterGroup) {
 	ExpressRouter := Router.Group("/express")
 	{
@@ -269,9 +287,23 @@ func InitExpressRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 退款单
 func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	RefundOrderRouter := Router.Group("/refundOrder")
 	{
 		RefundOrderRouter.POST("/getRefundOrderList", admin.GetRefundOrderList)
+	}
+}
+
+// 物流信息
+func InitUserGroupRouter(Router *gin.RouterGroup) {
+	UserGroupRouter := Router.Group("/userGroup")
+	{
+		UserGroupRouter.POST("/getUserGroupList", admin.GetUserGroupList)
+		UserGroupRouter.GET("/getCreateUserGroupMap", admin.GetCreateUserGroupMap)
+		UserGroupRouter.GET("/getUpdateUserGroupMap/:id", admin.GetUpdateUserGroupMap)
+		UserGroupRouter.POST("/createUserGroup", admin.CreateUserGroup)
+		UserGroupRouter.PUT("/updateUserGroup/:id", admin.UpdateUserGroup)
+		UserGroupRouter.DELETE("/deleteUserGroup/:id", admin.DeleteUserGroup)
 	}
 }

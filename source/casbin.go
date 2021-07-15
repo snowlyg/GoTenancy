@@ -187,6 +187,15 @@ var carbines = []gormadapter.CasbinRule{
 	//退款订单
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/refundOrder/getRefundOrderList", V2: "POST"},
 
+	// 用户分组
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/getCreateUserGroupMap", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/getUpdateUserGroupMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/getUserGroupList", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/createUserGroup", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/changeUserGroupStatus", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/updateUserGroup/:id", V2: "PUT"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/userGroup/deleteUserGroup/:id", V2: "DELETE"},
+
 	// TODO:商户用户权限
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/logout", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/auth/clean", V2: "GET"},
