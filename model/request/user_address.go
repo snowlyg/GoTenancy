@@ -9,7 +9,7 @@ type CreateAddress struct {
 	City         string `json:"city" binding:"required"`
 	District     string `json:"district" binding:"required"`
 	Detail       string `json:"detail" binding:"required"`
-	IsDefault    bool   `json:"isDefault"`
+	IsDefault    int    `json:"isDefault"`
 	Postcode     string `json:"postcode"`
 	Age          int    `json:"age"`
 	HospitalName string `json:"hospitalName"`
@@ -28,7 +28,7 @@ type UpdateAddress struct {
 	Province     string `json:"province" binding:"required"`
 	City         string `json:"city"`
 	District     string `json:"district" binding:"required"`
-	IsDefault    bool   `json:"isDefault"`
+	IsDefault    int    `json:"isDefault"`
 	Detail       string `json:"detail" binding:"required"`
 	Postcode     string `json:"postcode"`
 	Age          int    `json:"age"`

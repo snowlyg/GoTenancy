@@ -6,9 +6,9 @@ import (
 )
 
 func TestReceiptList(t *testing.T) {
-	auth := generalWithLoginTester(t)
+	auth := userWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/general/receipt/getReceiptList").
+	obj := auth.POST("v1/user/receipt/getReceiptList").
 		WithJSON(map[string]interface{}{"page": 1, "pageSize": 10}).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -41,9 +41,9 @@ func TestReceiptProcess(t *testing.T) {
 		"tel":              "13845687419",
 		"isDefault":        true,
 	}
-	auth := generalWithLoginTester(t)
+	auth := userWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/general/receipt/createReceipt").
+	obj := auth.POST("v1/user/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -78,7 +78,7 @@ func TestReceiptProcess(t *testing.T) {
 			"isDefault":        true,
 		}
 
-		obj = auth.PUT("v1/general/receipt/updateReceipt").
+		obj = auth.PUT("v1/user/receipt/updateReceipt").
 			WithJSON(update).
 			Expect().Status(http.StatusOK).JSON().Object()
 		obj.Keys().ContainsOnly("status", "data", "message")
@@ -98,7 +98,7 @@ func TestReceiptProcess(t *testing.T) {
 		receipt.Value("receiptTitleType").Number().Equal(update["receiptTitleType"].(int))
 		receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
 
-		obj = auth.POST("v1/general/receipt/getReceiptById").
+		obj = auth.POST("v1/user/receipt/getReceiptById").
 			WithJSON(map[string]interface{}{"id": receiptId}).
 			Expect().Status(http.StatusOK).JSON().Object()
 		obj.Keys().ContainsOnly("status", "data", "message")
@@ -119,7 +119,7 @@ func TestReceiptProcess(t *testing.T) {
 		receipt.Value("isDefault").Boolean().Equal(update["isDefault"].(bool))
 
 		// setUserAuthority
-		obj = auth.DELETE("v1/general/receipt/deleteReceipt").
+		obj = auth.DELETE("v1/user/receipt/deleteReceipt").
 			WithJSON(map[string]interface{}{"id": receiptId}).
 			Expect().Status(http.StatusOK).JSON().Object()
 		obj.Keys().ContainsOnly("status", "data", "message")
@@ -141,9 +141,9 @@ func TestReceiptRegisterReceiptTitleError(t *testing.T) {
 		"tel":              "13845687419",
 		"isDefault":        true,
 	}
-	auth := generalWithLoginTester(t)
+	auth := userWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/general/receipt/createReceipt").
+	obj := auth.POST("v1/user/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -163,9 +163,9 @@ func TestReceiptRegisterReceiptTypeError(t *testing.T) {
 		"tel":              "13845687419",
 		"isDefault":        true,
 	}
-	auth := generalWithLoginTester(t)
+	auth := userWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/general/receipt/createReceipt").
+	obj := auth.POST("v1/user/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")
@@ -186,9 +186,9 @@ func TestReceiptRegisterEmaileError(t *testing.T) {
 		"tel":              "13845687419",
 		"isDefault":        true,
 	}
-	auth := generalWithLoginTester(t)
+	auth := userWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/general/receipt/createReceipt").
+	obj := auth.POST("v1/user/receipt/createReceipt").
 		WithJSON(data).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

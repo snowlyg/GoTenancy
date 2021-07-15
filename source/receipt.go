@@ -11,13 +11,13 @@ var Receipt = new(receipt)
 
 type receipt struct{}
 
-var receipts = []model.GeneralReceipt{
-	{ReceiptType: 1, ReceiptTitle: "title", ReceiptTitleType: 1, DutyGaragraph: "garagraph", Email: "email", BankName: "bank_name", BankCode: "bank_code", Address: "松山湖阿里产业园", Tel: "413514", IsDefault: true, SysUserID: 3},
+var receipts = []model.UserReceipt{
+	{ReceiptType: 1, ReceiptTitle: "title", ReceiptTitleType: 1, DutyGaragraph: "garagraph", Email: "email", BankName: "bank_name", BankCode: "bank_code", Address: "松山湖阿里产业园", Tel: "413514", IsDefault: g.StatusTrue, SysUserID: 3},
 }
 
 func (m *receipt) Init() error {
 	return g.TENANCY_DB.Transaction(func(tx *gorm.DB) error {
-		if tx.Where("id IN ?", []int{1}).Find(&[]model.GeneralReceipt{}).RowsAffected == 1 {
+		if tx.Where("id IN ?", []int{1}).Find(&[]model.UserReceipt{}).RowsAffected == 1 {
 			color.Danger.Println("\n[Mysql] --> sys_receipts 表的初始数据已存在!")
 			return nil
 		}

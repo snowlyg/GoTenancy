@@ -1,4 +1,4 @@
-package general
+package user
 
 import (
 	"github.com/gin-gonic/gin"
@@ -11,10 +11,10 @@ import (
 	"go.uber.org/zap"
 )
 
-// CreateAddress
-func CreateAddress(ctx *gin.Context) {
-	var address request.CreateAddress
-	if errs := ctx.ShouldBindJSON(&address); errs != nil {
+// CreateReceipt
+func CreateReceipt(ctx *gin.Context) {
+	var receipt request.CreateReceipt
+	if errs := ctx.ShouldBindJSON(&receipt); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -26,36 +26,48 @@ func CreateAddress(ctx *gin.Context) {
 		return
 	}
 
-	if returnAddress, err := service.CreateAddress(address, user_id); err != nil {
+	if returnReceipt, err := service.CreateReceipt(receipt, user_id); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("添加失败"+err.Error(), ctx)
+		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getAddressMap(returnAddress), "创建成功", ctx)
+		response.OkWithDetailed(getReceiptMap(returnReceipt), "创建成功", ctx)
 	}
 }
 
-// UpdateAddress
-func UpdateAddress(ctx *gin.Context) {
-	var address request.UpdateAddress
-	if errs := ctx.ShouldBindJSON(&address); errs != nil {
+// UpdateReceipt
+func UpdateReceipt(ctx *gin.Context) {
+	var receipt request.UpdateReceipt
+	if errs := ctx.ShouldBindJSON(&receipt); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if returnAddress, err := service.UpdateAddress(address); err != nil {
+	if returnReceipt, err := service.UpdateReceipt(receipt); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithDetailed(getAddressMap(returnAddress), "更新成功", ctx)
+		response.OkWithDetailed(getReceiptMap(returnReceipt), "更新成功", ctx)
 	}
 }
 
-// getAddressMap
-func getAddressMap(returnAddress model.GeneralAddress) gin.H {
-	return gin.H{"id": returnAddress.ID, "name": returnAddress.Name, "phone": returnAddress.Phone, "sex": returnAddress.Sex, "country": returnAddress.Country, "province": returnAddress.Province, "city": returnAddress.City, "district": returnAddress.District, "isDefault": returnAddress.IsDefault, "detail": returnAddress.Detail, "postcode": returnAddress.Postcode, "age": returnAddress.Age, "hospitalName": returnAddress.HospitalName, "locName": returnAddress.LocName, "bedNum": returnAddress.BedNum, "hospitalNo": returnAddress.HospitalNO, "disease": returnAddress.Disease}
+// getReceiptMap
+func getReceiptMap(returnReceipt model.UserReceipt) gin.H {
+	return gin.H{
+		"id":               returnReceipt.ID,
+		"receiptType":      returnReceipt.ReceiptType,
+		"receiptTitle":     returnReceipt.ReceiptTitle,
+		"receiptTitleType": returnReceipt.ReceiptTitleType,
+		"dutyGaragraph":    returnReceipt.DutyGaragraph,
+		"email":            returnReceipt.Email,
+		"bankName":         returnReceipt.BankName,
+		"bankCode":         returnReceipt.BankCode,
+		"address":          returnReceipt.Address,
+		"tel":              returnReceipt.Tel,
+		"isDefault":        returnReceipt.IsDefault,
+	}
 }
 
-// GetAddressList
-func GetAddressList(ctx *gin.Context) {
+// GetReceiptList
+func GetReceiptList(ctx *gin.Context) {
 	var pageInfo request.PageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
@@ -69,7 +81,7 @@ func GetAddressList(ctx *gin.Context) {
 		return
 	}
 
-	if list, total, err := service.GetAddressInfoList(pageInfo, user_id); err != nil {
+	if list, total, err := service.GetReceiptInfoList(pageInfo, user_id); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -82,8 +94,8 @@ func GetAddressList(ctx *gin.Context) {
 	}
 }
 
-// GetAddressById
-func GetAddressById(ctx *gin.Context) {
+// GetReceiptById
+func GetReceiptById(ctx *gin.Context) {
 	var reqId request.GetById
 	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
@@ -97,17 +109,17 @@ func GetAddressById(ctx *gin.Context) {
 		return
 	}
 
-	address, err := service.GetAddressByID(reqId.Id, user_id)
+	receipt, err := service.GetReceiptByID(reqId.Id, user_id)
 	if err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithData(address, ctx)
+		response.OkWithData(receipt, ctx)
 	}
 }
 
-// DeleteAddress
-func DeleteAddress(ctx *gin.Context) {
+// DeleteReceipt
+func DeleteReceipt(ctx *gin.Context) {
 	var reqId request.GetById
 	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
@@ -121,7 +133,7 @@ func DeleteAddress(ctx *gin.Context) {
 		return
 	}
 
-	if err := service.DeleteAddress(reqId.Id, user_id); err != nil {
+	if err := service.DeleteReceipt(reqId.Id, user_id); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

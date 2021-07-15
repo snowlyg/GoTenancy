@@ -10,7 +10,7 @@ type CreateReceipt struct {
 	BankCode         string `json:"bankCode" binding:"required"`
 	Address          string `json:"address" binding:"required"`
 	Tel              string `json:"tel" binding:"required"`
-	IsDefault        bool   `json:"isDefault"`
+	IsDefault        int    `json:"isDefault"`
 }
 
 type UpdateReceipt struct {
@@ -24,5 +24,5 @@ type UpdateReceipt struct {
 	BankCode         string `json:"bankCode" binding:"required"`
 	Address          string `json:"address" binding:"required"`
 	Tel              string `json:"tel" binding:"required"`
-	IsDefault        bool   `json:"isDefault"`
+	IsDefault        int    `json:"isDefault"`
 }

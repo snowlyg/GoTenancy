@@ -8,8 +8,8 @@ import (
 	"github.com/snowlyg/go-tenancy/middleware"
 	"github.com/snowlyg/go-tenancy/router/admin"
 	"github.com/snowlyg/go-tenancy/router/client"
-	"github.com/snowlyg/go-tenancy/router/general"
 	"github.com/snowlyg/go-tenancy/router/public"
+	"github.com/snowlyg/go-tenancy/router/user"
 	"github.com/snowlyg/go-tenancy/utils"
 )
 
@@ -95,10 +95,10 @@ func Routers(app *gin.Engine) {
 			client.InitSysOperationRecordRouter(ClientGroup) // 操作记录
 		}
 
-		GeneralGroup := V1Group.Group("/general", middleware.IsGeneral())
+		GeneralGroup := V1Group.Group("/user", middleware.IsGeneral())
 		{
-			general.InitAddressRouter(GeneralGroup) //我的地址管理
-			general.InitReceiptRouter(GeneralGroup) //我的发票管理
+			user.InitAddressRouter(GeneralGroup) //我的地址管理
+			user.InitReceiptRouter(GeneralGroup) //我的发票管理
 		}
 	}
 }

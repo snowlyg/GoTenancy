@@ -7,8 +7,8 @@ import (
 )
 
 // CreateReceipt
-func CreateReceipt(m request.CreateReceipt, user_id uint) (model.GeneralReceipt, error) {
-	var receipt model.GeneralReceipt
+func CreateReceipt(m request.CreateReceipt, user_id uint) (model.UserReceipt, error) {
+	var receipt model.UserReceipt
 	receipt.ReceiptType = m.ReceiptType
 	receipt.ReceiptTitle = m.ReceiptTitle
 	receipt.ReceiptTitleType = m.ReceiptTitleType
@@ -25,14 +25,14 @@ func CreateReceipt(m request.CreateReceipt, user_id uint) (model.GeneralReceipt,
 }
 
 // GetReceiptByID
-func GetReceiptByID(id uint, user_id uint) (model.GeneralReceipt, error) {
-	var receipt model.GeneralReceipt
+func GetReceiptByID(id uint, user_id uint) (model.UserReceipt, error) {
+	var receipt model.UserReceipt
 	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).First(&receipt).Error
 	return receipt, err
 }
 
 // UpdateReceipt
-func UpdateReceipt(m request.UpdateReceipt) (model.GeneralReceipt, error) {
+func UpdateReceipt(m request.UpdateReceipt) (model.UserReceipt, error) {
 	data := map[string]interface{}{
 		"receipt_type":       m.ReceiptType,
 		"receipt_title":      m.ReceiptTitle,
@@ -45,23 +45,23 @@ func UpdateReceipt(m request.UpdateReceipt) (model.GeneralReceipt, error) {
 		"tel":                m.Tel,
 		"is_default":         m.IsDefault,
 	}
-	receipt := model.GeneralReceipt{TENANCY_MODEL: g.TENANCY_MODEL{ID: m.Id}}
+	receipt := model.UserReceipt{TENANCY_MODEL: g.TENANCY_MODEL{ID: m.Id}}
 	err := g.TENANCY_DB.Model(&receipt).Updates(data).Error
 	return receipt, err
 }
 
 // DeleteReceipt
 func DeleteReceipt(id uint, user_id uint) error {
-	var receipt model.GeneralReceipt
+	var receipt model.UserReceipt
 	return g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).Delete(&receipt).Error
 }
 
 // GetReceiptInfoList
-func GetReceiptInfoList(info request.PageInfo, user_id uint) ([]model.GeneralReceipt, int64, error) {
-	var receiptList []model.GeneralReceipt
+func GetReceiptInfoList(info request.PageInfo, user_id uint) ([]model.UserReceipt, int64, error) {
+	var receiptList []model.UserReceipt
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.GeneralReceipt{}).Where("sys_user_id = ?", user_id)
+	db := g.TENANCY_DB.Model(&model.UserReceipt{}).Where("sys_user_id = ?", user_id)
 	var total int64
 	err := db.Count(&total).Error
 	if err != nil {

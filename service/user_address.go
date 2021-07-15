@@ -7,8 +7,8 @@ import (
 )
 
 // CreateAddress
-func CreateAddress(m request.CreateAddress, user_id uint) (model.GeneralAddress, error) {
-	var address model.GeneralAddress
+func CreateAddress(m request.CreateAddress, user_id uint) (model.UserAddress, error) {
+	var address model.UserAddress
 	address.Name = m.Name
 	address.Phone = m.Phone
 	address.Sex = m.Sex
@@ -31,32 +31,32 @@ func CreateAddress(m request.CreateAddress, user_id uint) (model.GeneralAddress,
 }
 
 // GetAddressByID
-func GetAddressByID(id uint, user_id uint) (model.GeneralAddress, error) {
-	var address model.GeneralAddress
+func GetAddressByID(id uint, user_id uint) (model.UserAddress, error) {
+	var address model.UserAddress
 	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).First(&address).Error
 	return address, err
 }
 
 // UpdateAddress
-func UpdateAddress(m request.UpdateAddress) (model.GeneralAddress, error) {
+func UpdateAddress(m request.UpdateAddress) (model.UserAddress, error) {
 	data := map[string]interface{}{"name": m.Name, "phone": m.Phone, "sex": m.Sex, "country": m.Country, "province": m.Province, "city": m.City, "district": m.District, "is_default": m.IsDefault, "detail": m.Detail, "postcode": m.Postcode, "age": m.Age, "hospital_name": m.HospitalName, "loc_name": m.LocName, "bed_num": m.BedNum, "hospital_no": m.HospitalNO, "disease": m.Disease}
-	address := model.GeneralAddress{TENANCY_MODEL: g.TENANCY_MODEL{ID: m.Id}}
+	address := model.UserAddress{TENANCY_MODEL: g.TENANCY_MODEL{ID: m.Id}}
 	err := g.TENANCY_DB.Model(&address).Updates(data).Error
 	return address, err
 }
 
 // DeleteAddress
 func DeleteAddress(id uint, user_id uint) error {
-	var address model.GeneralAddress
+	var address model.UserAddress
 	return g.TENANCY_DB.Where("id = ?", id).Where("sys_user_id = ?", user_id).Delete(&address).Error
 }
 
 // GetAddressInfoList
-func GetAddressInfoList(info request.PageInfo, user_id uint) ([]model.GeneralAddress, int64, error) {
-	var addressList []model.GeneralAddress
+func GetAddressInfoList(info request.PageInfo, user_id uint) ([]model.UserAddress, int64, error) {
+	var addressList []model.UserAddress
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := g.TENANCY_DB.Model(&model.GeneralAddress{}).Where("sys_user_id = ?", user_id)
+	db := g.TENANCY_DB.Model(&model.UserAddress{}).Where("sys_user_id = ?", user_id)
 	var total int64
 	err := db.Count(&total).Error
 	if err != nil {

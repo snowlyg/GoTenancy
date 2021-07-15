@@ -174,6 +174,9 @@ var baseApis = []model.SysApi{
 	//退款订单
 	{Path: "/v1/admin/refundOrder/getRefundOrderList", Description: "退款订单列表", ApiGroup: "refundOrder", Method: "POST"},
 
+	{Path: "/v1/admin/email/emailTest", Description: "发送测试邮件", ApiGroup: "email", Method: "POST"},
+	{Path: "/v1/admin/api/deleteApisByIds", Description: "批量删除api", ApiGroup: "api", Method: "DELETE"},
+
 	// TODO:商户用户权限
 	{Path: "/v1/merchant/config/getConfigMap/:category", Description: "获取配置表单", ApiGroup: "configClient", Method: "GET"},
 	// 配置值保存
@@ -259,8 +262,19 @@ var baseApis = []model.SysApi{
 
 	{Path: "/v1/merchant/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表", ApiGroup: "sysOperationRecordClient", Method: "POST"},
 
-	{Path: "/v1/admin/email/emailTest", Description: "发送测试邮件", ApiGroup: "email", Method: "POST"},
-	{Path: "/v1/admin/api/deleteApisByIds", Description: "批量删除api", ApiGroup: "api", Method: "DELETE"},
+	//TODO:: 用户权限
+	// 我的地址
+	{Path: "/v1/user/address/getAddressList", Description: "地址列表", ApiGroup: "expressClient", Method: "POST"},
+	{Path: "/v1/user/address/createAddress", Description: "添加地址", ApiGroup: "expressClient", Method: "POST"},
+	{Path: "/v1/user/address/getAddressById/:id", Description: "地址详情", ApiGroup: "expressClient", Method: "GET"},
+	{Path: "/v1/user/address/updateAddress/:id", Description: "更新地址", ApiGroup: "expressClient", Method: "PUT"},
+	{Path: "/v1/user/address/deleteAddress/:id", Description: "删除地址", ApiGroup: "expressClient", Method: "DELETE"},
+	// 我的发票
+	{Path: "/v1/user/receipt/getReceiptList", Description: "发票列表", ApiGroup: "expressClient", Method: "POST"},
+	{Path: "/v1/user/receipt/createReceipt", Description: "添加发票", ApiGroup: "expressClient", Method: "POST"},
+	{Path: "/v1/user/receipt/getReceiptById/:id", Description: "发票详情", ApiGroup: "expressClient", Method: "GET"},
+	{Path: "/v1/user/receipt/updateReceipt/:id", Description: "更新发票", ApiGroup: "expressClient", Method: "PUT"},
+	{Path: "/v1/user/receipt/deleteReceipt/:id", Description: "删除发票", ApiGroup: "expressClient", Method: "DELETE"},
 }
 
 //@description: sys_apis 表数据初始化

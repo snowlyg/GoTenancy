@@ -70,8 +70,16 @@ func MysqlTables(db *gorm.DB) {
 		model.RefundProduct{},
 		model.RefundStatus{},
 
-		model.GeneralAddress{},
-		model.GeneralReceipt{},
+		model.UserAddress{},
+		model.UserReceipt{},
+		model.UserBill{},
+		model.UserExtract{},
+		model.UserGroup{},
+		model.UserLabel{},
+		model.UserMerchant{},
+		model.UserRecharge{},
+		model.UserRelation{},
+		model.UserVisit{},
 	)
 	if err != nil {
 		g.TENANCY_LOG.Error("register table failed", zap.Any("err", err))

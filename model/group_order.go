@@ -21,7 +21,7 @@ type GroupOrder struct {
 	PayPostage   float64 `gorm:"column:pay_postage;type:decimal(8,2) unsigned;not null;default:0.00" json:"payPostage"`     // 支付邮费
 	Cost         float64 `gorm:"column:cost;type:decimal(8,2) unsigned;not null" json:"cost"`                               // 成本价
 
-	Paid     uint8     `gorm:"index:paid;column:paid;type:tinyint unsigned;not null;default:0" json:"paid"` // 是否支付
+	Paid     uint      `gorm:"index:paid;column:paid;type:tinyint unsigned;not null;default:0" json:"paid"` // 是否支付
 	PayTime  time.Time `gorm:"column:pay_time;type:timestamp" json:"payTime"`                               // 支付时间
 	PayType  int       `gorm:"column:pay_type;type:tinyint(1);not null" json:"payType"`                     // 支付方式  1=微信 2=小程序 3=h5 4=余额  5=支付宝
 	IsRemind uint8     `gorm:"column:is_remind;type:tinyint unsigned;not null;default:2" json:"isRemind"`
