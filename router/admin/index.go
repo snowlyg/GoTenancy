@@ -255,10 +255,23 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/changeProfile", admin.ChangeProfile)       // 修改密码
 		UserRouter.POST("/getAdminList", admin.GetAdminList)         // 分页获取管理员列表
 		UserRouter.POST("/getTenancyList", admin.GetTenancyList)     // 分页获取商户管理员列表
-		UserRouter.POST("/getGeneralList", admin.GetGeneralList)     // 分页获取普通用户列表
 		UserRouter.POST("/setUserAuthority", admin.SetUserAuthority) // 设置用户权限
 		UserRouter.DELETE("/deleteUser", admin.DeleteUser)           // 删除用户
 		UserRouter.PUT("/setUserInfo/:user_id", admin.SetUserInfo)   // 设置用户信息
+
+	}
+}
+
+// 管理员
+func InitCUserRouter(Router *gin.RouterGroup) {
+	UserRouter := Router.Group("/cuser")
+	{
+		UserRouter.GET("/setNowMoneyMap/:id", admin.SetNowMoneyMap)     // 设置余额表单
+		UserRouter.POST("/setNowMoney/:id", admin.SetNowMoney)          // 设置余额
+		UserRouter.GET("/getGeneralDetail/:id", admin.GetGeneralDetail) // 用户消费详情
+		UserRouter.POST("/getGeneralList", admin.GetGeneralList)        // 分页获取c用户列表
+		UserRouter.POST("/getOrderList/:id", admin.GetUserOrderList)    // 用户订单列表
+		UserRouter.POST("/getBillList/:id", admin.GetBillList)          // 订单列表
 	}
 }
 

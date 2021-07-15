@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/snowlyg/go-tenancy/g"
@@ -305,95 +304,6 @@ func GetTenancyInfoList(info request.PageInfo) ([]response.SysTenancyUser, int64
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Joins("left join sys_tenancies on tenancy_infos.sys_tenancy_id = sys_tenancies.id").
 		Find(&userList).Error
-	return userList, total, err
-}
-
-// GetGeneralInfoList 分页获取数据
-func GetGeneralInfoList(info request.UserPageInfo) ([]response.GeneralUser, int64, error) {
-	var userList []response.GeneralUser
-	var total int64
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-
-	generalAuthorityIds, err := GetUserAuthorityIds()
-	if err != nil {
-		return userList, 0, err
-	}
-
-	db := g.TENANCY_DB.Model(&model.SysUser{}).
-		Select("sys_users.id,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name").
-		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
-		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
-		Joins("left join user_groups on general_infos.group_id = user_groups.id").
-		Where("sys_users.authority_id IN (?)", generalAuthorityIds)
-	if info.UserTimeType != "" && info.UserTime != "" {
-		userTimes := strings.Split(info.UserTime, "-")
-		start, err := time.Parse("2006/01/02", userTimes[0])
-		if err != nil {
-			return userList, total, fmt.Errorf("parse time %w", err)
-		}
-		end, err := time.Parse("2006/01/02", userTimes[1])
-		if err != nil {
-			return userList, total, fmt.Errorf("parse time %w", err)
-		}
-		if info.UserTimeType == "add_time" {
-			db = db.Where("general_infos.created_at BETWEEN ? AND ?", start, end)
-		} else if info.UserTimeType == "visit" {
-			db = db.Where("general_infos.last_time BETWEEN ? AND ?", start, end)
-		}
-	}
-
-	if info.PayCount != "" {
-		if info.PayCount == "0" {
-			db = db.Where("general_infos.pay_count = ?", info.PayCount)
-		} else {
-			db = db.Where("general_infos.pay_count >= ?", info.PayCount)
-		}
-	}
-	if info.GroupId != "" {
-		db = db.Where("general_infos.group_id = ?", info.GroupId)
-	}
-	if info.LabelId != "" {
-		db = db.Where("general_infos.label_id = ?", info.LabelId)
-	}
-	if info.Sex != "" {
-		db = db.Where("general_infos.sex = ?", info.Sex)
-	}
-	if info.NickName != "" {
-		db = db.Where("general_infos.nick_name like ?", info.NickName+"%")
-	}
-
-	if limit > 0 {
-		err = db.Count(&total).Error
-		if err != nil {
-			return userList, total, err
-		}
-		db = db.Limit(limit).Offset(offset)
-	}
-
-	err = db.Find(&userList).Error
-	if err != nil {
-		return userList, total, err
-	}
-
-	if len(userList) > 0 {
-		userLabelIds := []uint{}
-		for _, user := range userList {
-			userLabelIds = append(userLabelIds, user.LabelID)
-		}
-		userLabels, err := GetUserLabelByIds(userLabelIds)
-		if err != nil {
-			return userList, total, err
-		}
-		for i := 0; i < len(userList); i++ {
-			for _, userLabel := range userLabels {
-				if userList[i].LabelID == userLabel.ID {
-					userList[i].Label = append(userList[i].Label, userLabel)
-				}
-			}
-		}
-	}
-
 	return userList, total, err
 }
 

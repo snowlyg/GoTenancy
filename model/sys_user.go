@@ -101,6 +101,6 @@ type BaseGeneralInfo struct {
 	NowMoney float64   `gorm:"column:now_money;type:decimal(8,2) unsigned;not null;default:0.00" json:"nowMoney"`  // 用户余额
 	UserType string    `gorm:"column:user_type;type:varchar(32);not null" json:"userType"`                         // 用户类型 h5,小程序 routine ,微信 wechat
 	MainUId  uint      `gorm:"index:main_uid;column:main_uid;type:int unsigned;default:0" json:"mainUid"`          // 主账号
-	PayCount uint      `gorm:"column:pay_count;type:int unsigned;not null;default:0" json:"payCount"`              // 用户购买次数
+	PayCount int       `gorm:"column:pay_count;type:int unsigned;not null;default:0" json:"payCount"`              // 用户购买次数
 	PayPrice float64   `gorm:"column:pay_price;type:decimal(10,2) unsigned;not null;default:0.00" json:"payPrice"` // 用户消费金额
 }

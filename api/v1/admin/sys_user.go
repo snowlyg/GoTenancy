@@ -126,26 +126,6 @@ func GetTenancyList(ctx *gin.Context) {
 	}
 }
 
-// GetGeneralList 分页获取用户列表
-func GetGeneralList(ctx *gin.Context) {
-	var pageInfo request.UserPageInfo
-	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	if list, total, err := service.GetGeneralInfoList(pageInfo); err != nil {
-		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
-	} else {
-		response.OkWithDetailed(response.PageResult{
-			List:     list,
-			Total:    total,
-			Page:     pageInfo.Page,
-			PageSize: pageInfo.PageSize,
-		}, "获取成功", ctx)
-	}
-}
-
 // SetUserAuthority 设置用户权限
 func SetUserAuthority(ctx *gin.Context) {
 	var sua request.SetUserAuth

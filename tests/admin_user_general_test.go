@@ -33,7 +33,7 @@ func TestGeneralUserList(t *testing.T) {
 func userGeneralTest(t *testing.T, params map[string]interface{}, length int) {
 	auth := baseWithLoginTester(t)
 	defer baseLogOut(auth)
-	obj := auth.POST("v1/admin/user/getGeneralList").
+	obj := auth.POST("v1/admin/cuser/getGeneralList").
 		WithJSON(params).
 		Expect().Status(http.StatusOK).JSON().Object()
 	obj.Keys().ContainsOnly("status", "data", "message")

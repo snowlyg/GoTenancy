@@ -15,6 +15,6 @@ type UserBill struct {
 	Mark     string  `gorm:"column:mark;type:varchar(512);not null" json:"mark"`                             // 备注
 	Status   int     `gorm:"column:status;type:tinyint(1);not null;default:2" json:"status"`                 // 1 = 待确定 2 = 有效 3 = 无效
 
-	SysUserID uint   `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
-	LinkID    string `gorm:"index:type;column:link_id;type:varchar(32);not null;default:0" json:"linkId"` // 关联id
+	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
+	LinkID    uint `gorm:"index:type;column:link_id;type:varchar(32);not null;default:0" json:"linkId"` // 关联id
 }

@@ -321,6 +321,9 @@ func GetOrderInfoList(info request.OrderPageInfo, ctx *gin.Context) ([]response.
 		return orderList, stat, total, err
 	}
 
+	if info.SysUserId > 0 {
+		db.Where("orders.sys_user_id = ?", info.SysUserId)
+	}
 	err = db.Count(&total).Error
 	if err != nil {
 		return orderList, stat, total, err

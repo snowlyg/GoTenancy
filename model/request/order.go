@@ -5,10 +5,11 @@ import "github.com/snowlyg/go-tenancy/model"
 type OrderPageInfo struct {
 	Page         int    `json:"page" form:"page" binding:"required"`
 	PageSize     int    `json:"pageSize" form:"pageSize" binding:"required"`
+	SysTenancyId int    `json:"sysTenancyId" form:"sysTenancyId"`
+	SysUserId    uint   `json:"sysUserId" form:"sysUserId"`
 	Date         string `json:"date" form:"date"`
 	IsTrader     string `json:"isTrader" form:"isTrader"`
 	Keywords     string `json:"keywords" form:"keywords"`
-	SysTenancyId int    `json:"sysTenancyId" form:"sysTenancyId"`
 	OrderSn      string `json:"orderSn" form:"orderSn"`
 	Status       string `json:"status" form:"status"`
 	Username     string `json:"username" form:"username"`

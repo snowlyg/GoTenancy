@@ -21,10 +21,16 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/user/changeProfile", Description: "修改个人信息", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getAdminList", Description: "获取管理员列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/getTenancyList", Description: "获取商户员工列表", ApiGroup: "user", Method: "POST"},
-	{Path: "/v1/admin/user/getGeneralList", Description: "获取普通用户列表", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/setUserAuthority", Description: "修改用户角色", ApiGroup: "user", Method: "POST"},
 	{Path: "/v1/admin/user/setUserInfo", Description: "设置用户信息", ApiGroup: "user", Method: "PUT"},
 	{Path: "/v1/admin/user/deleteUser", Description: "删除用户", ApiGroup: "user", Method: "DELETE"},
+
+	{Path: "/v1/admin/cuser/getGeneralList", Description: "获取c用户列表", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/getGeneralDetail/:id", Description: "获取c用户列表", ApiGroup: "cuser", Method: "GET"},
+	{Path: "/v1/admin/cuser/getOrderList/:id", Description: "消费列表", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/getBillList/:id", Description: "余额变动", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/setNowMoney/:id", Description: "设置余额", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/setNowMoneyMap/:id", Description: "设置余额表单", ApiGroup: "cuser", Method: "GET"},
 
 	{Path: "/v1/admin/api/createApi", Description: "创建api", ApiGroup: "api", Method: "POST"},
 	{Path: "/v1/admin/api/getApiList", Description: "获取api列表", ApiGroup: "api", Method: "POST"},

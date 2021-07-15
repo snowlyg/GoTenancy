@@ -28,7 +28,7 @@ func GetEditProductFictiMap(id uint, ctx *gin.Context) (Form, error) {
 	if err != nil {
 		return form, err
 	}
-	form.SetAction(fmt.Sprintf("%s/%d", "product/setProductFicti", id), ctx)
+	form.SetAction(fmt.Sprintf("%s/%d", "/product/setProductFicti", id), ctx)
 	return form, err
 }
 
