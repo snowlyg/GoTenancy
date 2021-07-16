@@ -19,7 +19,7 @@ func GetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	if id > 0 {
-		userLabel, err := GetUserLabelByID(id)
+		userLabel, err := GetUserLabelByID(id, ctx)
 		if err != nil {
 			return form, err
 		}
@@ -41,10 +41,10 @@ func GetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // GetUserLabelOptions
-func GetUserLabelOptions() ([]Option, error) {
+func GetUserLabelOptions(ctx *gin.Context) ([]Option, error) {
 	var options []Option
 	var opts []Opt
-	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("id as value,label_name as label").Find(&opts).Error
+	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("id as value,label_name as label").Where("sys_tenancy_id", multi.GetTenancyId(ctx)).Find(&opts).Error
 	if err != nil {
 		return options, err
 	}
@@ -68,19 +68,20 @@ func CreateUserLabel(userLabel model.UserLabel) (model.UserLabel, error) {
 }
 
 // GetUserLabelByID
-func GetUserLabelByID(id uint) (model.UserLabel, error) {
+func GetUserLabelByID(id uint, ctx *gin.Context) (model.UserLabel, error) {
 	var userLabel model.UserLabel
-	err := g.TENANCY_DB.Where("id = ?", id).First(&userLabel).Error
+	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", multi.GetTenancyId(ctx)).First(&userLabel).Error
 	return userLabel, err
 }
 
 // GetUserLabelByIds
-func GetUserLabelByIds(ids []uint) ([]response.UserLabelWithUserId, error) {
+func GetUserLabelByIds(ids []uint, ctx *gin.Context) ([]response.UserLabelWithUserId, error) {
 	var userLabels []response.UserLabelWithUserId
 	err := g.TENANCY_DB.Model(&model.UserLabel{}).
 		Select("user_labels.*,user_user_labels.sys_user_id").
 		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id").
 		Where("user_user_labels.sys_user_id in ?", ids).
+		Where("user_labels.sys_tenancy_id", multi.GetTenancyId(ctx)).
 		Find(&userLabels).Error
 	return userLabels, err
 }
@@ -96,8 +97,8 @@ func UpdateUserLabel(userLabel model.UserLabel, id uint) (model.UserLabel, error
 }
 
 // DeleteUserLabel
-func DeleteUserLabel(id uint) error {
-	return g.TENANCY_DB.Where("id = ?", id).Delete(&model.UserLabel{}).Error
+func DeleteUserLabel(id uint, ctx *gin.Context) error {
+	return g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", multi.GetTenancyId(ctx)).Delete(&model.UserLabel{}).Error
 }
 
 // GetUserLabelInfoList

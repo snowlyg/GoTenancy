@@ -32,7 +32,7 @@ func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.Rule[7].Options = groupOpts
-	opts, err := GetUserLabelOptions()
+	opts, err := GetUserLabelOptions(ctx)
 	if err != nil {
 		return form, err
 	}
@@ -137,7 +137,7 @@ func BatchSetUserLabelMap(ids string, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.SetAction("/cuser/batchSetUserLabel", ctx)
-	opts, err := GetUserLabelOptions()
+	opts, err := GetUserLabelOptions(ctx)
 	if err != nil {
 		return form, err
 	}
@@ -197,7 +197,7 @@ func SetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.SetAction(fmt.Sprintf("%s/%d", "/cuser/setUserLabel", id), ctx)
-	opts, err := GetUserLabelOptions()
+	opts, err := GetUserLabelOptions(ctx)
 	if err != nil {
 		return form, err
 	}
@@ -289,7 +289,7 @@ func GetGeneralDetail(id uint) (response.GeneralUserDetail, error) {
 }
 
 // GetGeneralInfoList 分页获取数据
-func GetGeneralInfoList(info request.UserPageInfo) ([]response.GeneralUser, int64, error) {
+func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response.GeneralUser, int64, error) {
 	var userList []response.GeneralUser
 	var total int64
 	limit := info.PageSize
@@ -365,7 +365,7 @@ func GetGeneralInfoList(info request.UserPageInfo) ([]response.GeneralUser, int6
 		for _, user := range userList {
 			userIds = append(userIds, user.Uid)
 		}
-		userLabels, err := GetUserLabelByIds(userIds)
+		userLabels, err := GetUserLabelByIds(userIds, ctx)
 		fmt.Println(userLabels)
 		if err != nil {
 			return userList, total, err

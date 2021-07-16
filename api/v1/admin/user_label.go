@@ -100,7 +100,7 @@ func DeleteUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteUserLabel(req.Id); err != nil {
+	if err := service.DeleteUserLabel(req.Id, ctx); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {
