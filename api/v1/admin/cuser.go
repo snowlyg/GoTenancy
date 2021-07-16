@@ -29,6 +29,41 @@ func GetGeneralList(ctx *gin.Context) {
 	}
 }
 
+// UpdateUserMap 设置余额表单
+func UpdateUserMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if detail, err := service.UpdateUserMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(detail, "获取成功", ctx)
+	}
+}
+
+// UpdateUser 设置余额
+func UpdateUser(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var update response.GeneralUserDetail
+	if errs := ctx.ShouldBindJSON(&update); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.UpdateUser(req.Id, update); err != nil {
+		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("操作成功", ctx)
+	}
+}
+
 // SetNowMoneyMap 设置余额表单
 func SetNowMoneyMap(ctx *gin.Context) {
 	var req request.GetById
@@ -57,10 +92,10 @@ func SetNowMoney(ctx *gin.Context) {
 		return
 	}
 	if err := service.SetNowMoney(req.Id, setNowMoney); err != nil {
-		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithMessage("获取成功", ctx)
+		response.OkWithMessage("操作成功", ctx)
 	}
 }
 
@@ -152,10 +187,10 @@ func SetUserGroup(ctx *gin.Context) {
 		return
 	}
 	if err := service.SetUserGroup(req.Id, setUserGroup); err != nil {
-		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithMessage("获取成功", ctx)
+		response.OkWithMessage("操作成功", ctx)
 	}
 }
 
@@ -186,11 +221,11 @@ func SetUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.SetUserLabel(req.Id, setUserLabel); err != nil {
-		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
-		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	if err := service.SetUserLabel(req.Id, setUserLabel.LabelId); err != nil {
+		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
+		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
-		response.OkWithMessage("获取成功", ctx)
+		response.OkWithMessage("操作成功", ctx)
 	}
 }
 

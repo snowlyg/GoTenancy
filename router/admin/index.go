@@ -266,6 +266,8 @@ func InitUserRouter(Router *gin.RouterGroup) {
 func InitCUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/cuser")
 	{
+		UserRouter.GET("/editUserMap/:id", admin.UpdateUserMap)              // 批量设置分组表单
+		UserRouter.POST("/editUser/:id", admin.UpdateUser)                   // 设置分组
 		UserRouter.POST("/batchSetUserGroupMap", admin.BatchSetUserGroupMap) // 批量设置分组表单
 		UserRouter.POST("/batchSetUserGroup", admin.BatchSetUserGroup)       // 设置分组
 		UserRouter.POST("/batchSetUserLabelMap", admin.BatchSetUserLabelMap) // 批量设置标签表单

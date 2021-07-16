@@ -35,6 +35,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/cuser/setUserGroupMap/:id", Description: "设置用户分组表单", ApiGroup: "cuser", Method: "GET"},
 	{Path: "/v1/admin/cuser/setUserLabel/:id", Description: "设置用户标签", ApiGroup: "cuser", Method: "POST"},
 	{Path: "/v1/admin/cuser/setUserLabelMap/:id", Description: "设置用户标签表单", ApiGroup: "cuser", Method: "GET"},
+	{Path: "/v1/admin/cuser/editUser/:id", Description: "编辑用户", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/editUserMap/:id", Description: "编辑用户表单", ApiGroup: "cuser", Method: "GET"},
 
 	{Path: "/v1/admin/cuser/batchSetUserGroupMap", Description: "批量设置用户分组", ApiGroup: "cuser", Method: "POST"},
 	{Path: "/v1/admin/cuser/batchSetUserGroup", Description: "批量设置用户分组表单", ApiGroup: "cuser", Method: "POST"},

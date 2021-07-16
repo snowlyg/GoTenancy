@@ -68,6 +68,8 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/setUserGroupMap/:id", V2: "GET"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/setUserLabel/:id", V2: "POST"},
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/setUserLabelMap/:id", V2: "GET"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/editUser/:id", V2: "POST"},
+	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/editUserMap/:id", V2: "GET"},
 
 	// 批量用户分组和标签设置
 	{Ptype: "p", V0: AdminAuthorityId, V1: "/v1/admin/cuser/batchSetUserGroupMap", V2: "POST"},

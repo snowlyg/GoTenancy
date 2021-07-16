@@ -54,7 +54,7 @@ func Routers(app *gin.Engine) {
 		{
 			admin.InitApiRouter(AdminGroup)                // 注册功能api路由
 			admin.InitUserRouter(AdminGroup)               // 注册用户路由
-			admin.InitCUserRouter(AdminGroup)              // 注册用户路由
+			admin.InitCUserRouter(AdminGroup)              // 注册c用户路由
 			admin.InitTenancyRouter(AdminGroup)            // 注册商户路由
 			admin.InitMiniRouter(AdminGroup)               // 注册小程序路由
 			admin.InitBrandRouter(AdminGroup)              // 注册品牌路由

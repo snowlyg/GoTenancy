@@ -14,7 +14,6 @@ var Admin = new(admin)
 
 type admin struct{}
 
-var birthday, _ = time.Parse("2006-01-02", "1994-11-28")
 var admins = []model.SysUser{
 	{Username: "admin", Password: "e10adc3949ba59abbe56e057f20f883e", AuthorityId: AdminAuthorityId, AdminInfo: model.AdminInfo{Email: "admin@admin.com", Phone: "13800138000", NickName: "超级管理员", SysUserID: 1}},
 
@@ -22,9 +21,9 @@ var admins = []model.SysUser{
 }
 
 var users = []model.SysUser{
-	{Username: "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", Password: "e10adc3949ba59abbe56e057f20f883e", AuthorityId: GeneralAuthorityId, GeneralInfo: model.GeneralInfo{BaseGeneralInfo: model.BaseGeneralInfo{Email: "a303176530@admin.com", Phone: "13800138000", NickName: "C端用户", AvatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/PEyYoZmTJtaJdeYWWibrnDUadmXKVYyTtyRq2nxtWbBic5jJTLTT4KHmox1tNvOicgIXxspgmxicghpCFob1icAIWFw/132", Sex: model.Female, Subscribe: 1, OpenId: "own1t5TysymNUqcZm-8giuEvT68M", UnionId: "oZM5VwCgvGUZvkrnrGrdJZI4e12k", IdCard: "445281199411285861", IsAuth: 0, Birthday: birthday, RealName: "余思琳", Mark: "mark", Addres: "address", LastTime: time.Now(), LastIP: "127.0.0.1", NowMoney: 0.00, UserType: "routine", PayCount: 5, PayPrice: 20.00}, SysUserID: 3, GroupID: 1}},
+	{Username: "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM", Password: "e10adc3949ba59abbe56e057f20f883e", AuthorityId: GeneralAuthorityId, GeneralInfo: model.GeneralInfo{BaseGeneralInfo: model.BaseGeneralInfo{Email: "a303176530@admin.com", Phone: "13800138000", NickName: "C端用户", AvatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/PEyYoZmTJtaJdeYWWibrnDUadmXKVYyTtyRq2nxtWbBic5jJTLTT4KHmox1tNvOicgIXxspgmxicghpCFob1icAIWFw/132", Sex: model.Female, Subscribe: 1, OpenId: "own1t5TysymNUqcZm-8giuEvT68M", UnionId: "oZM5VwCgvGUZvkrnrGrdJZI4e12k", IdCard: "445281199411285861", IsAuth: 0, Birthday: model.SetBirthday(), RealName: "余思琳", Mark: "mark", Address: "address", LastTime: time.Now(), LastIP: "127.0.0.1", NowMoney: 0.00, UserType: "routine", PayCount: 5, PayPrice: 20.00}, SysUserID: 3, GroupID: 1}},
 
-	{Username: "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM1", Password: "e10adc3949ba59abbe56e057f20f883e", AuthorityId: GeneralAuthorityId, GeneralInfo: model.GeneralInfo{BaseGeneralInfo: model.BaseGeneralInfo{Email: "a3031765301@admin.com", Phone: "13800138001", NickName: "C端用户1", AvatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/PEyYoZmTJtaJdeYWWibrnDUadmXKVYyTtyRq2nxtWbBic5jJTLTT4KHmox1tNvOicgIXxspgmxicghpCFob1icAIWFw/132", Sex: model.Male, Subscribe: 1, OpenId: "own1t5TysymNUqcZm-8giuEvT68M1", UnionId: "oZM5VwCgvGUZvkrnrGrdJZI4e12k", IdCard: "445281199411285862", IsAuth: 0, Birthday: birthday, RealName: "余思琳1", Mark: "mark", Addres: "address", LastTime: time.Now(), LastIP: "127.0.0.1", NowMoney: 0.00, UserType: "wechat", PayCount: 2, PayPrice: 20.00}, SysUserID: 4, GroupID: 2}},
+	{Username: "oZM5VwD_PCaPKQZ8zRGt-NUdU2uM1", Password: "e10adc3949ba59abbe56e057f20f883e", AuthorityId: GeneralAuthorityId, GeneralInfo: model.GeneralInfo{BaseGeneralInfo: model.BaseGeneralInfo{Email: "a3031765301@admin.com", Phone: "13800138001", NickName: "C端用户1", AvatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/PEyYoZmTJtaJdeYWWibrnDUadmXKVYyTtyRq2nxtWbBic5jJTLTT4KHmox1tNvOicgIXxspgmxicghpCFob1icAIWFw/132", Sex: model.Male, Subscribe: 1, OpenId: "own1t5TysymNUqcZm-8giuEvT68M1", UnionId: "oZM5VwCgvGUZvkrnrGrdJZI4e12k", IdCard: "445281199411285862", IsAuth: 0, Birthday: model.SetBirthday(), RealName: "余思琳1", Mark: "mark", Address: "address", LastTime: time.Now(), LastIP: "127.0.0.1", NowMoney: 0.00, UserType: "wechat", PayCount: 2, PayPrice: 20.00}, SysUserID: 4, GroupID: 2}},
 }
 
 var userUserLabels = []model.UserUserLabel{

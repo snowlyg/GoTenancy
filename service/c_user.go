@@ -13,6 +13,47 @@ import (
 	"github.com/snowlyg/go-tenancy/model/response"
 )
 
+func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
+	var form Form
+	var formStr string
+	user, err := GetGeneralDetail(id)
+	if err != nil {
+		return Form{}, err
+	}
+	formStr = fmt.Sprintf(`{"rule":[{"type":"input","field":"uid","value":%d,"title":"会员 ID","props":{"type":"text","placeholder":"请输入会员 ID","disabled":true},"validate":[{"message":"会员数据类型错误","required":true,"type":"number","trigger":"change"}]},{"type":"input","field":"realName","value":"%s","title":"真实姓名","props":{"type":"text","placeholder":"请输入真实姓名"}},{"type":"input","field":"phone","value":"%s","title":"手机号","props":{"type":"text","placeholder":"请输入手机号"}},{"type":"datePicker","field":"birthday","value":"%s","title":"生日","props":{"type":"date","editable":false,"placeholder":"请选择生日"}},{"type":"input","field":"idCard","value":"%s","title":"身份证","props":{"type":"text","placeholder":"请输入身份证"}},{"type":"input","field":"address","value":"%s","title":"用户地址","props":{"type":"text","placeholder":"请输入用户地址"}},{"type":"input","field":"mark","value":"%s","title":"备注","props":{"type":"textarea","placeholder":"请输入备注"}},{"type":"select","field":"groupId","value":%d,"title":"会员分组","props":{"multiple":false,"placeholder":"请选择会员分组"},"options":[]},{"type":"select","field":"labelId","value":[],"title":"会员标签","props":{"multiple":true,"placeholder":"请选择会员标签"},"options":[]}],"action":"","method":"POST","title":"编辑","config":{}}`, user.Uid, user.RealName, user.Phone, user.Birthday, user.IdCard, user.Address, user.Mark, user.GroupId)
+
+	err = json.Unmarshal([]byte(formStr), &form)
+	if err != nil {
+		return form, err
+	}
+	form.SetAction(fmt.Sprintf("%s/%d", "/cuser/editUser", id), ctx)
+	groupOpts, err := GetUserGroupOptions()
+	if err != nil {
+		return form, err
+	}
+	form.Rule[7].Options = groupOpts
+	opts, err := GetUserLabelOptions()
+	if err != nil {
+		return form, err
+	}
+	form.Rule[8].Value = user.LabelIds
+	form.Rule[8].Options = opts
+	return form, nil
+}
+
+// UpdateUser
+func UpdateUser(id uint, req response.GeneralUserDetail) error {
+	update := map[string]interface{}{"address": req.Address, "birthday": req.Birthday, "id_card": req.IdCard, "group_id": req.GroupId, "mark": req.Mark, "phone": req.Phone, "real_name": req.RealName}
+	err := g.TENANCY_DB.Model(&model.GeneralInfo{}).Where("sys_user_id = ?", id).Updates(update).Error
+	if err != nil {
+		return err
+	}
+	err = SetUserLabel(id, req.LabelIds)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func SetNowMoneyMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
@@ -107,7 +148,7 @@ func BatchSetUserLabelMap(ids string, ctx *gin.Context) (Form, error) {
 // BatchSetUserLabel
 func BatchSetUserLabel(req request.SetUserLabel) error {
 	for _, userId := range req.Ids {
-		SetUserLabel(userId, req)
+		SetUserLabel(userId, req.LabelId)
 	}
 	return nil
 }
@@ -166,7 +207,7 @@ func SetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // SetUserLabel
-func SetUserLabel(id uint, req request.SetUserLabel) error {
+func SetUserLabel(id uint, reqlabelIds []uint) error {
 	labelIds, err := GetUserLabelIdsByUserId(id)
 	if err != nil {
 		return err
@@ -176,7 +217,7 @@ func SetUserLabel(id uint, req request.SetUserLabel) error {
 	var delIds []uint
 	for _, labelId := range labelIds {
 		isDel := true
-		for _, reqLabelId := range req.LabelId {
+		for _, reqLabelId := range reqlabelIds {
 			if labelId == reqLabelId {
 				isDel = false
 				break
@@ -195,7 +236,7 @@ func SetUserLabel(id uint, req request.SetUserLabel) error {
 
 	// 增加
 	var addIds []uint
-	for _, reqLabelId := range req.LabelId {
+	for _, reqLabelId := range reqlabelIds {
 		isAdd := true
 		for _, labelId := range labelIds {
 			if reqLabelId == labelId {
@@ -229,7 +270,7 @@ func GetGeneralDetail(id uint) (response.GeneralUserDetail, error) {
 	}
 
 	err = g.TENANCY_DB.Model(&model.SysUser{}).
-		Select("sys_users.id as uid,general_infos.avatar_url,general_infos.nick_name,general_infos.now_money,general_infos.pay_count,general_infos.pay_price,general_infos.group_id, sum(orders.pay_price) as total_pay_price, count(orders.id) as total_pay_count").
+		Select("sys_users.id as uid,general_infos.mark,general_infos.real_name,general_infos.phone,general_infos.address,general_infos.id_card,general_infos.birthday,general_infos.avatar_url,general_infos.nick_name,general_infos.now_money,general_infos.pay_count,general_infos.pay_price,general_infos.group_id, sum(orders.pay_price) as total_pay_price, count(orders.id) as total_pay_count").
 		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
 		Joins("left join orders on orders.sys_user_id = sys_users.id").
 		Where("sys_users.authority_id IN (?)", generalAuthorityIds).

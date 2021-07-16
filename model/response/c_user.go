@@ -19,14 +19,20 @@ type GeneralUser struct {
 
 type GeneralUserDetail struct {
 	TenancyResponse
-	Uid           uint    `json:"uid"`
-	AvatarUrl     string  `json:"avatarUrl"`
-	NickName      string  `json:"nickName"`
-	NowMoney      float64 `json:"nowMoney"`
-	PayCount      int     `json:"payCount"`
-	PayPrice      float64 `json:"payPrice"`
-	TotalPayCount int     `json:"totalPayCount"`
-	TotalPayPrice float64 `json:"totalPayPrice"`
-	GroupId       uint    `json:"groupId"`
-	LabelIds      []uint  `gorm:"-"  json:"labelId"`
+	Uid           uint           `json:"uid"`
+	AvatarUrl     string         `json:"avatarUrl"`
+	NickName      string         `json:"nickName"`
+	NowMoney      float64        `json:"nowMoney"`
+	PayCount      int            `json:"payCount"`
+	PayPrice      float64        `json:"payPrice"`
+	TotalPayCount int            `json:"totalPayCount"`
+	TotalPayPrice float64        `json:"totalPayPrice"`
+	IdCard        string         `json:"idCard"`
+	RealName      string         `json:"realName"`
+	Birthday      model.Birthday `json:"birthday"`
+	Mark          string         `json:"mark"`
+	Address       string         `json:"address"`
+	Phone         string         `json:"phone"`
+	GroupId       uint           `json:"groupId"`
+	LabelIds      []uint         `gorm:"-"  json:"labelId"`
 }
