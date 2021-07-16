@@ -266,12 +266,20 @@ func InitUserRouter(Router *gin.RouterGroup) {
 func InitCUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/cuser")
 	{
-		UserRouter.GET("/setNowMoneyMap/:id", admin.SetNowMoneyMap)     // 设置余额表单
-		UserRouter.POST("/setNowMoney/:id", admin.SetNowMoney)          // 设置余额
-		UserRouter.GET("/getGeneralDetail/:id", admin.GetGeneralDetail) // 用户消费详情
-		UserRouter.POST("/getGeneralList", admin.GetGeneralList)        // 分页获取c用户列表
-		UserRouter.POST("/getOrderList/:id", admin.GetUserOrderList)    // 用户订单列表
-		UserRouter.POST("/getBillList/:id", admin.GetBillList)          // 订单列表
+		UserRouter.POST("/batchSetUserGroupMap", admin.BatchSetUserGroupMap) // 批量设置分组表单
+		UserRouter.POST("/batchSetUserGroup", admin.BatchSetUserGroup)       // 设置分组
+		UserRouter.POST("/batchSetUserLabelMap", admin.BatchSetUserLabelMap) // 批量设置标签表单
+		UserRouter.POST("/batchSetUserLabel", admin.BatchSetUserLabel)       // 设置标签
+		UserRouter.GET("/setUserGroupMap/:id", admin.SetUserGroupMap)        // 设置分组表单
+		UserRouter.POST("/setUserGroup/:id", admin.SetUserGroup)             // 设置分组
+		UserRouter.GET("/setUserLabelMap/:id", admin.SetUserLabelMap)        // 设置标签表单
+		UserRouter.POST("/setUserLabel/:id", admin.SetUserLabel)             // 设置标签
+		UserRouter.GET("/setNowMoneyMap/:id", admin.SetNowMoneyMap)          // 设置余额表单
+		UserRouter.POST("/setNowMoney/:id", admin.SetNowMoney)               // 设置余额
+		UserRouter.GET("/getGeneralDetail/:id", admin.GetGeneralDetail)      // 用户消费详情
+		UserRouter.POST("/getGeneralList", admin.GetGeneralList)             // 分页获取c用户列表
+		UserRouter.POST("/getOrderList/:id", admin.GetUserOrderList)         // 用户订单列表
+		UserRouter.POST("/getBillList/:id", admin.GetBillList)               // 订单列表
 	}
 }
 

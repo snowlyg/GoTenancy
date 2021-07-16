@@ -31,6 +31,15 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/cuser/getBillList/:id", Description: "余额变动", ApiGroup: "cuser", Method: "POST"},
 	{Path: "/v1/admin/cuser/setNowMoney/:id", Description: "设置余额", ApiGroup: "cuser", Method: "POST"},
 	{Path: "/v1/admin/cuser/setNowMoneyMap/:id", Description: "设置余额表单", ApiGroup: "cuser", Method: "GET"},
+	{Path: "/v1/admin/cuser/setUserGroup/:id", Description: "设置用户分组", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/setUserGroupMap/:id", Description: "设置用户分组表单", ApiGroup: "cuser", Method: "GET"},
+	{Path: "/v1/admin/cuser/setUserLabel/:id", Description: "设置用户标签", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/setUserLabelMap/:id", Description: "设置用户标签表单", ApiGroup: "cuser", Method: "GET"},
+
+	{Path: "/v1/admin/cuser/batchSetUserGroupMap", Description: "批量设置用户分组", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/batchSetUserGroup", Description: "批量设置用户分组表单", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/batchSetUserLabelMap", Description: "批量设置用户标签", ApiGroup: "cuser", Method: "POST"},
+	{Path: "/v1/admin/cuser/batchSetUserLabel", Description: "批量设置用户标签表单", ApiGroup: "cuser", Method: "POST"},
 
 	{Path: "/v1/admin/api/createApi", Description: "创建api", ApiGroup: "api", Method: "POST"},
 	{Path: "/v1/admin/api/getApiList", Description: "获取api列表", ApiGroup: "api", Method: "POST"},

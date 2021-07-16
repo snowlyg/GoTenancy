@@ -4,6 +4,23 @@ type SetNowMoney struct {
 	NowMoney float64 `json:"nowMoney"`
 	Type     int     `json:"type" binding:"required"` // 1:+ ,2:-
 }
+type SetUserGroup struct {
+	GroupId uint   `json:"group_id" form:"group_id"`
+	Ids     []uint `json:"ids" form:"ids"`
+}
+
+type BatchSetUserGroup struct {
+	Ids string `json:"ids" form:"ids"`
+}
+
+type SetUserLabel struct {
+	LabelId []uint `json:"label_id" form:"label_id"`
+	Ids     []uint `json:"ids" form:"ids"`
+}
+
+type BatchSetUserLabel struct {
+	Ids string `json:"ids" form:"ids"`
+}
 
 type UserPageInfo struct {
 	Page         int    `json:"page" form:"page" binding:"required"`

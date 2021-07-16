@@ -41,8 +41,8 @@ func GetUserGroupMap(id uint, ctx *gin.Context) (Form, error) {
 // GetUserGroupOptions
 func GetUserGroupOptions() ([]Option, error) {
 	var options []Option
-	var opts []StringOpt
-	err := g.TENANCY_DB.Model(&model.UserGroup{}).Select("code as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
+	var opts []Opt
+	err := g.TENANCY_DB.Model(&model.UserGroup{}).Select("id as value,group_name as label").Find(&opts).Error
 	if err != nil {
 		return options, err
 	}

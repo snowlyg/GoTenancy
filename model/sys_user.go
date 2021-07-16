@@ -72,7 +72,6 @@ const (
 type GeneralInfo struct {
 	g.TENANCY_MODEL
 	BaseGeneralInfo
-	LabelID   uint `gorm:"column:label_id;type:varchar(64)" json:"labelId"`                     // 用户标签 id
 	GroupID   uint `gorm:"column:group_id;type:int unsigned;not null;default:0" json:"groupId"` // 用户分组id
 	SysUserID uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
 }

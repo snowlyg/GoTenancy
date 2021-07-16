@@ -154,5 +154,5 @@ func GetUserAuthorityIds() ([]int, error) {
 	if err != nil {
 		return generalAuthorityIds, fmt.Errorf("get authority ids %w", err)
 	}
-	return generalAuthorityIds, err
+	return generalAuthorityIds, nil
 }

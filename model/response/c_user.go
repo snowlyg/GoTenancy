@@ -6,20 +6,20 @@ import (
 
 type GeneralUser struct {
 	TenancyResponse
-	Uid           uint              `json:"uid"`
-	Username      string            `json:"userName"`
-	AuthorityName string            `json:"authorityName"`
-	AuthorityType int               `json:"authorityType"`
-	AuthorityId   string            `json:"authorityId"`
-	GroupName     string            `json:"groupName"`
-	LabelID       uint              `json:"labelId"` // 用户标签 id
-	Label         []model.UserLabel `gorm:"-" json:"label"`
+	Uid           uint     `json:"uid"`
+	Username      string   `json:"userName"`
+	AuthorityName string   `json:"authorityName"`
+	AuthorityType int      `json:"authorityType"`
+	AuthorityId   string   `json:"authorityId"`
+	GroupName     string   `json:"groupName"`
+	Label         []string `gorm:"-" json:"label"`
 
 	model.BaseGeneralInfo
 }
 
 type GeneralUserDetail struct {
 	TenancyResponse
+	Uid           uint    `json:"uid"`
 	AvatarUrl     string  `json:"avatarUrl"`
 	NickName      string  `json:"nickName"`
 	NowMoney      float64 `json:"nowMoney"`
@@ -27,4 +27,6 @@ type GeneralUserDetail struct {
 	PayPrice      float64 `json:"payPrice"`
 	TotalPayCount int     `json:"totalPayCount"`
 	TotalPayPrice float64 `json:"totalPayPrice"`
+	GroupId       uint    `json:"groupId"`
+	LabelIds      []uint  `gorm:"-"  json:"labelId"`
 }

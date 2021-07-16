@@ -169,6 +169,7 @@ func InitDB(conf request.InitDB) error {
 		model.UserExtract{},
 		model.UserGroup{},
 		model.UserLabel{},
+		model.UserUserLabel{},
 		model.UserMerchant{},
 		model.UserRecharge{},
 		model.UserRelation{},

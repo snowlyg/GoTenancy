@@ -64,6 +64,136 @@ func SetNowMoney(ctx *gin.Context) {
 	}
 }
 
+// BatchSetUserGroupMap 设置用户分组表单
+func BatchSetUserGroupMap(ctx *gin.Context) {
+	var setUserGroup request.BatchSetUserGroup
+	if errs := ctx.ShouldBindJSON(&setUserGroup); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if detail, err := service.BatchSetUserGroupMap(setUserGroup.Ids, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(detail, "获取成功", ctx)
+	}
+}
+
+// BatchSetUserGroup 设置用户分组
+func BatchSetUserGroup(ctx *gin.Context) {
+	var setUserGroup request.SetUserGroup
+	if errs := ctx.ShouldBindJSON(&setUserGroup); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.BatchSetUserGroup(setUserGroup); err != nil {
+		g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+		response.FailWithMessage("设置失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
+	}
+}
+
+// BatchSetUserLabelMap 设置用户分组表单
+func BatchSetUserLabelMap(ctx *gin.Context) {
+	var setUserGroup request.BatchSetUserLabel
+	if errs := ctx.ShouldBindJSON(&setUserGroup); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if detail, err := service.BatchSetUserLabelMap(setUserGroup.Ids, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(detail, "获取成功", ctx)
+	}
+}
+
+// BatchSetUserLabel 设置用户分组
+func BatchSetUserLabel(ctx *gin.Context) {
+	var setUserGroup request.SetUserLabel
+	if errs := ctx.ShouldBindJSON(&setUserGroup); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.BatchSetUserLabel(setUserGroup); err != nil {
+		g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
+		response.FailWithMessage("设置失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("设置成功", ctx)
+	}
+}
+
+// SetUserGroupMap 设置用户分组表单
+func SetUserGroupMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if detail, err := service.SetUserGroupMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(detail, "获取成功", ctx)
+	}
+}
+
+// SetUserGroup 设置用户分组
+func SetUserGroup(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var setUserGroup request.SetUserGroup
+	if errs := ctx.ShouldBindJSON(&setUserGroup); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.SetUserGroup(req.Id, setUserGroup); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("获取成功", ctx)
+	}
+}
+
+// SetUserLabelMap 设置用户分组表单
+func SetUserLabelMap(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if detail, err := service.SetUserLabelMap(req.Id, ctx); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithDetailed(detail, "获取成功", ctx)
+	}
+}
+
+// SetUserLabel 设置用户分组
+func SetUserLabel(ctx *gin.Context) {
+	var req request.GetById
+	if errs := ctx.ShouldBindUri(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	var setUserLabel request.SetUserLabel
+	if errs := ctx.ShouldBindJSON(&setUserLabel); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := service.SetUserLabel(req.Id, setUserLabel); err != nil {
+		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败:"+err.Error(), ctx)
+	} else {
+		response.OkWithMessage("获取成功", ctx)
+	}
+}
+
 // GetGeneralDetail 用户详情
 func GetGeneralDetail(ctx *gin.Context) {
 	var req request.GetById

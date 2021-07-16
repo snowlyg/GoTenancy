@@ -163,7 +163,7 @@ var menus = []model.SysBaseMenu{
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1024}, 1022, "/719/1022/", "", "预售协议", "/marketing/presell/agreement",Params:  "[]", Sort: 0,Hidden: 2, IsTenancy:2,IsMenu: 1},
 	// {TENANCY_MODEL: g.TENANCY_MODEL{ID: 1025}, Pid: 106, Path: "106/", Icon: "", MenuName: "预售", Route: "/merchant/marketing/presell/list", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1026}, Pid: 669, Path: "/110/669/", Icon: "", MenuName: "支付宝支付配置", Route: "/admin/systemForm/Basics/alipay", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 2, IsMenu: 1},
-	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1027}, Pid: 0, Path: "/", Icon: "user-solid", MenuName: "用户", Route: "/merchant/user", Params: "[]", Sort: 1, Hidden: 2, IsTenancy: 2, IsMenu: 1},
+	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1027}, Pid: 0, Path: "/", Icon: "user-solid", MenuName: "用户", Route: "/merchant/user", Params: "[]", Sort: 1, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1028}, Pid: 1027, Path: "1027/", Icon: "", MenuName: "标签管理", Route: "/merchant/user/_label", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1029}, Pid: 1028, Path: "1028/", Icon: "", MenuName: "手动标签", Route: "/merchant/user/label", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},
 	{TENANCY_MODEL: g.TENANCY_MODEL{ID: 1030}, Pid: 1028, Path: "1028/", Icon: "", MenuName: "自动标签", Route: "/merchant/user/maticlabel", Params: "[]", Sort: 0, Hidden: 2, IsTenancy: 1, IsMenu: 1},

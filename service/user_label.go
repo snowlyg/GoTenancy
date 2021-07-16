@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
+	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
@@ -42,8 +43,8 @@ func GetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 // GetUserLabelOptions
 func GetUserLabelOptions() ([]Option, error) {
 	var options []Option
-	var opts []StringOpt
-	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("code as value,name as label").Where("status = ?", g.StatusTrue).Find(&opts).Error
+	var opts []Opt
+	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("id as value,label_name as label").Find(&opts).Error
 	if err != nil {
 		return options, err
 	}
@@ -74,9 +75,13 @@ func GetUserLabelByID(id uint) (model.UserLabel, error) {
 }
 
 // GetUserLabelByIds
-func GetUserLabelByIds(ids []uint) ([]model.UserLabel, error) {
-	var userLabels []model.UserLabel
-	err := g.TENANCY_DB.Where("id in ?", ids).Find(&userLabels).Error
+func GetUserLabelByIds(ids []uint) ([]response.UserLabelWithUserId, error) {
+	var userLabels []response.UserLabelWithUserId
+	err := g.TENANCY_DB.Model(&model.UserLabel{}).
+		Select("user_labels.*,user_user_labels.sys_user_id").
+		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id").
+		Where("user_user_labels.sys_user_id in ?", ids).
+		Find(&userLabels).Error
 	return userLabels, err
 }
 
