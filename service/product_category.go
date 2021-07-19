@@ -34,9 +34,9 @@ func GetProductCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 	}
 
 	if id > 0 {
-		form.SetAction(fmt.Sprintf("/category/updateProductCategory/%d", id), ctx)
+		form.SetAction(fmt.Sprintf("/productCategory/updateProductCategory/%d", id), ctx)
 	} else {
-		form.SetAction("/category/createProductCategory", ctx)
+		form.SetAction("/productCategory/createProductCategory", ctx)
 	}
 	opts, err := GetProductCategoriesOptions(multi.GetTenancyId(ctx))
 	if err != nil {
