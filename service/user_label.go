@@ -102,12 +102,15 @@ func DeleteUserLabel(id uint, ctx *gin.Context) error {
 }
 
 // GetUserLabelInfoList
-func GetUserLabelInfoList(info request.PageInfo, ctx *gin.Context) ([]model.UserLabel, int64, error) {
+func GetUserLabelInfoList(info request.UserLabelPageInfo, ctx *gin.Context) ([]model.UserLabel, int64, error) {
 	var userLabelList []model.UserLabel
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := g.TENANCY_DB.Model(&model.UserLabel{})
 	var total int64
+	if info.LabelType > 0 {
+		db = db.Where("type = ?", info.LabelType)
+	}
 	db = db.Where("sys_tenancy_id", multi.GetTenancyId(ctx))
 	err := db.Count(&total).Error
 	if err != nil {

@@ -1,4 +1,4 @@
-package admin
+package client
 
 import (
 	"github.com/gin-gonic/gin"
@@ -73,8 +73,8 @@ func UpdateUserLabel(ctx *gin.Context) {
 	}
 }
 
-// GetUserLabelList
-func GetUserLabelList(ctx *gin.Context) {
+// GetLabelList
+func GetLabelList(ctx *gin.Context) {
 	var pageInfo request.UserLabelPageInfo
 	if errs := ctx.ShouldBindJSON(&pageInfo); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)

@@ -290,12 +290,19 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/admin/userGroup/updateUserGroup/:id", Description: "更新用户分组", ApiGroup: "userGroup", Method: "PUT"},
 	{Path: "/v1/admin/userGroup/deleteUserGroup/:id", Description: "删除用户分组", ApiGroup: "userGroup", Method: "DELETE"},
 	// 用户标签
-	{Path: "/v1/admin/labelGroup/getCreateUserLabelMap", Description: "用户标签添加表单", ApiGroup: "labelGroup", Method: "GET"},
-	{Path: "/v1/admin/labelGroup/getUpdateUserLabelMap/:id", Description: "用户标签编辑表单", ApiGroup: "labelGroup", Method: "GET"},
-	{Path: "/v1/admin/labelGroup/getUserLabelList", Description: "用户标签列表", ApiGroup: "labelGroup", Method: "POST"},
-	{Path: "/v1/admin/labelGroup/createUserLabel", Description: "添加用户标签", ApiGroup: "labelGroup", Method: "POST"},
-	{Path: "/v1/admin/labelGroup/updateUserLabel/:id", Description: "更新用户标签", ApiGroup: "labelGroup", Method: "PUT"},
-	{Path: "/v1/admin/labelGroup/deleteUserLabel/:id", Description: "删除用户标签", ApiGroup: "labelGroup", Method: "DELETE"},
+	{Path: "/v1/admin/userLabel/getCreateUserLabelMap", Description: "用户标签添加表单", ApiGroup: "userLabel", Method: "GET"},
+	{Path: "/v1/admin/userLabel/getUpdateUserLabelMap/:id", Description: "用户标签编辑表单", ApiGroup: "userLabel", Method: "GET"},
+	{Path: "/v1/admin/userLabel/getUserLabelList", Description: "用户标签列表", ApiGroup: "userLabel", Method: "POST"},
+	{Path: "/v1/admin/userLabel/createUserLabel", Description: "添加用户标签", ApiGroup: "userLabel", Method: "POST"},
+	{Path: "/v1/admin/userLabel/updateUserLabel/:id", Description: "更新用户标签", ApiGroup: "userLabel", Method: "PUT"},
+	{Path: "/v1/admin/userLabel/deleteUserLabel/:id", Description: "删除用户标签", ApiGroup: "userLabel", Method: "DELETE"},
+	// 用户标签
+	{Path: "/v1/merchant/userLabel/getLabelList", Description: "用户标签列表", ApiGroup: "userLabelClient", Method: "POST"},
+	{Path: "/v1/merchant/userLabel/getCreateUserLabelMap", Description: "用户标签添加表单", ApiGroup: "userLabelClient", Method: "GET"},
+	{Path: "/v1/merchant/userLabel/getUpdateUserLabelMap/:id", Description: "用户标签编辑表单", ApiGroup: "userLabelClient", Method: "GET"},
+	{Path: "/v1/merchant/userLabel/createUserLabel", Description: "添加用户标签", ApiGroup: "userLabelClient", Method: "POST"},
+	{Path: "/v1/merchant/userLabel/updateUserLabel/:id", Description: "更新用户标签", ApiGroup: "userLabelClient", Method: "PUT"},
+	{Path: "/v1/merchant/userLabel/deleteUserLabel/:id", Description: "删除用户标签", ApiGroup: "userLabelClient", Method: "DELETE"},
 
 	//物流信息
 	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},

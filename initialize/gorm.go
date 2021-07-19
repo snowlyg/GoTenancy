@@ -77,6 +77,7 @@ func MysqlTables(db *gorm.DB) {
 		model.UserGroup{},
 		model.UserLabel{},
 		model.UserUserLabel{},
+		model.LabelRule{},
 		model.UserMerchant{},
 		model.UserRecharge{},
 		model.UserRelation{},

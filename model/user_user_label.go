@@ -7,5 +7,5 @@ type UserUserLabel struct {
 	g.TENANCY_MODEL
 
 	SysUserID   uint `json:"sysUserId" form:"sysUserId" gorm:"column:sys_user_id;comment:关联标记"`
-	UserLabelID uint `gorm:"column:user_label_id;" json:"userLabelId"` // 1=手动标签 2=自动标签
+	UserLabelID uint `gorm:"column:user_label_id;" json:"userLabelId"`
 }

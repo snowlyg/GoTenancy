@@ -170,6 +170,7 @@ func InitDB(conf request.InitDB) error {
 		model.UserGroup{},
 		model.UserLabel{},
 		model.UserUserLabel{},
+		model.LabelRule{},
 		model.UserMerchant{},
 		model.UserRecharge{},
 		model.UserRelation{},

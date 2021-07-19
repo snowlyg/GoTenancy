@@ -96,6 +96,7 @@ func InitTenancyRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 菜单
 func InitMenuRouter(Router *gin.RouterGroup) (R *gin.RouterGroup) {
 	MenuRouter := Router.Group("/menu")
 	{
@@ -117,6 +118,7 @@ func InitShippingTemplateRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 操作日志
 func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	SysOperationRecordRouter := Router.Group("/sysOperationRecord")
 	{
@@ -124,6 +126,7 @@ func InitSysOperationRecordRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 订单
 func InitOrderRouter(Router *gin.RouterGroup) {
 	OrderRouter := Router.Group("/order")
 	{
@@ -142,6 +145,7 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 退款单
 func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	RefundOrderRouter := Router.Group("/refundOrder")
 	{
@@ -155,9 +159,34 @@ func InitRefundOrderRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 物流信息
 func InitExpressRouter(Router *gin.RouterGroup) {
 	ExpressRouter := Router.Group("/express")
 	{
 		ExpressRouter.GET("/getExpressByCode/:code", client.GetExpressByCode)
+	}
+}
+
+// 用户标签
+func InitUserLabelRouter(Router *gin.RouterGroup) {
+	UserLabelRouter := Router.Group("/userLabel")
+	{
+		UserLabelRouter.POST("/getLabelList", client.GetLabelList)
+		UserLabelRouter.GET("/getCreateUserLabelMap", client.GetCreateUserLabelMap)
+		UserLabelRouter.GET("/getUpdateUserLabelMap/:id", client.GetUpdateUserLabelMap)
+		UserLabelRouter.POST("/createUserLabel", client.CreateUserLabel)
+		UserLabelRouter.PUT("/updateUserLabel/:id", client.UpdateUserLabel)
+		UserLabelRouter.DELETE("/deleteUserLabel/:id", client.DeleteUserLabel)
+
+		// 自动标签
+		AutoLabelRouter := Router.Group("/auto")
+		{
+			AutoLabelRouter.POST("/getLabelList", client.GetLabelList)
+			// UserLabelRouter.GET("/getCreateUserLabelMap", client.GetCreateUserLabelMap)
+			// UserLabelRouter.GET("/getUpdateUserLabelMap/:id", client.GetUpdateUserLabelMap)
+			// UserLabelRouter.POST("/createUserLabel", client.CreateUserLabel)
+			// UserLabelRouter.PUT("/updateUserLabel/:id", client.UpdateUserLabel)
+			// UserLabelRouter.DELETE("/deleteUserLabel/:id", client.DeleteUserLabel)
+		}
 	}
 }
