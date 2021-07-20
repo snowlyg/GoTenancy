@@ -3,18 +3,16 @@ package service
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
-	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
 // CreateShippingTemplate
-func CreateShippingTemplate(shippingTem model.ShippingTemplate, ctx *gin.Context) (model.ShippingTemplate, error) {
-	shippingTem.SysTenancyID = multi.GetTenancyId(ctx)
+func CreateShippingTemplate(shippingTem model.ShippingTemplate, tenancyId uint) (model.ShippingTemplate, error) {
+	shippingTem.SysTenancyID = tenancyId
 	err := g.TENANCY_DB.Create(&shippingTem).Error
 	return shippingTem, err
 }

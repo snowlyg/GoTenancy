@@ -110,7 +110,7 @@ func UpdateMediaName(updateMediaName request.UpdateMediaName, id string) error {
 }
 
 // UploadFile
-func UploadFile(header *multipart.FileHeader, noSave string, ctx *gin.Context) (model.TenancyMedia, error) {
+func UploadFile(header *multipart.FileHeader, noSave string, tenancyId uint) (model.TenancyMedia, error) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -124,7 +124,7 @@ func UploadFile(header *multipart.FileHeader, noSave string, ctx *gin.Context) (
 		media.Name = header.Filename
 		media.Tag = s[len(s)-1]
 		media.Key = key
-		media.SysTenancyID = multi.GetTenancyId(ctx)
+		media.SysTenancyID = tenancyId
 		return Upload(media)
 	}
 	return media, nil

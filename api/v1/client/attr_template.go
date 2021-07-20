@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -17,7 +18,7 @@ func CreateAttrTemplate(ctx *gin.Context) {
 		return
 	}
 
-	if returnAttrTemplate, err := service.CreateAttrTemplate(attrTemplate, ctx); err != nil {
+	if returnAttrTemplate, err := service.CreateAttrTemplate(attrTemplate, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {

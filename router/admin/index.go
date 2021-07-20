@@ -262,7 +262,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 	}
 }
 
-// 管理员
+// 用户管理
 func InitCUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/cuser")
 	{

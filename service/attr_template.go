@@ -3,19 +3,17 @@ package service
 import (
 	"encoding/json"
 
-	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
-	"github.com/snowlyg/multi"
 )
 
 // CreateAttrTemplate
-func CreateAttrTemplate(req request.AttrTemplate, ctx *gin.Context) (model.AttrTemplate, error) {
+func CreateAttrTemplate(req request.AttrTemplate, tenancyId uint) (model.AttrTemplate, error) {
 	attrTemplate := model.AttrTemplate{
 		TemplateName: req.TemplateName,
-		SysTenancyID: multi.GetTenancyId(ctx),
+		SysTenancyID: tenancyId,
 	}
 	value, err := json.Marshal(&req.TemplateValue)
 	if err != nil {

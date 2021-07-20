@@ -80,7 +80,7 @@ func GetLabelList(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetUserLabelInfoList(pageInfo, ctx); err != nil {
+	if list, total, err := service.GetUserLabelInfoList(pageInfo, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -100,7 +100,7 @@ func DeleteUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteUserLabel(req.Id, ctx); err != nil {
+	if err := service.DeleteUserLabel(req.Id, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

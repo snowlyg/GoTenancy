@@ -19,7 +19,7 @@ func GetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
 	if id > 0 {
-		userLabel, err := GetUserLabelByID(id, ctx)
+		userLabel, err := GetUserLabelByID(id, multi.GetTenancyId(ctx))
 		if err != nil {
 			return form, err
 		}
@@ -41,10 +41,10 @@ func GetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // GetUserLabelOptions
-func GetUserLabelOptions(ctx *gin.Context) ([]Option, error) {
+func GetUserLabelOptions(tenancyId uint) ([]Option, error) {
 	var options []Option
 	var opts []Opt
-	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("id as value,label_name as label").Where("sys_tenancy_id", multi.GetTenancyId(ctx)).Find(&opts).Error
+	err := g.TENANCY_DB.Model(&model.UserLabel{}).Select("id as value,label_name as label").Where("sys_tenancy_id", tenancyId).Find(&opts).Error
 	if err != nil {
 		return options, err
 	}
@@ -68,20 +68,32 @@ func CreateUserLabel(userLabel model.UserLabel) (model.UserLabel, error) {
 }
 
 // GetUserLabelByID
-func GetUserLabelByID(id uint, ctx *gin.Context) (model.UserLabel, error) {
+func GetUserLabelByID(id uint, tenancyId uint) (model.UserLabel, error) {
 	var userLabel model.UserLabel
-	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", multi.GetTenancyId(ctx)).First(&userLabel).Error
+	err := g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", tenancyId).First(&userLabel).Error
 	return userLabel, err
 }
 
+// GetUserLabelByUserIds
+func GetUserLabelByUserIds(ids []uint, tenancyId uint) ([]response.UserLabelWithUserId, error) {
+	var userLabels []response.UserLabelWithUserId
+	err := g.TENANCY_DB.Model(&model.UserLabel{}).
+		Select("user_labels.*,user_user_labels.sys_user_id").
+		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id and sys_tenancy_id =?", tenancyId).
+		Where("user_user_labels.sys_user_id in ?", ids).
+		Where("user_labels.sys_tenancy_id", tenancyId).
+		Find(&userLabels).Error
+	return userLabels, err
+}
+
 // GetUserLabelByIds
-func GetUserLabelByIds(ids []uint, ctx *gin.Context) ([]response.UserLabelWithUserId, error) {
+func GetUserLabelByIds(ids []string, tenancyId uint) ([]response.UserLabelWithUserId, error) {
 	var userLabels []response.UserLabelWithUserId
 	err := g.TENANCY_DB.Model(&model.UserLabel{}).
 		Select("user_labels.*,user_user_labels.sys_user_id").
 		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id").
-		Where("user_user_labels.sys_user_id in ?", ids).
-		Where("user_labels.sys_tenancy_id", multi.GetTenancyId(ctx)).
+		Where("user_user_labels.user_label_id in ?", ids).
+		Where("user_labels.sys_tenancy_id", tenancyId).
 		Find(&userLabels).Error
 	return userLabels, err
 }
@@ -97,12 +109,12 @@ func UpdateUserLabel(userLabel model.UserLabel, id uint) (model.UserLabel, error
 }
 
 // DeleteUserLabel
-func DeleteUserLabel(id uint, ctx *gin.Context) error {
-	return g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", multi.GetTenancyId(ctx)).Delete(&model.UserLabel{}).Error
+func DeleteUserLabel(id uint, tenancyId uint) error {
+	return g.TENANCY_DB.Where("id = ?", id).Where("sys_tenancy_id", tenancyId).Delete(&model.UserLabel{}).Error
 }
 
 // GetUserLabelInfoList
-func GetUserLabelInfoList(info request.UserLabelPageInfo, ctx *gin.Context) ([]model.UserLabel, int64, error) {
+func GetUserLabelInfoList(info request.UserLabelPageInfo, tenancyId uint) ([]model.UserLabel, int64, error) {
 	var userLabelList []model.UserLabel
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
@@ -111,7 +123,7 @@ func GetUserLabelInfoList(info request.UserLabelPageInfo, ctx *gin.Context) ([]m
 	if info.LabelType > 0 {
 		db = db.Where("type = ?", info.LabelType)
 	}
-	db = db.Where("sys_tenancy_id", multi.GetTenancyId(ctx))
+	db = db.Where("sys_tenancy_id", tenancyId)
 	err := db.Count(&total).Error
 	if err != nil {
 		return userLabelList, total, err

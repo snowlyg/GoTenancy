@@ -112,11 +112,11 @@ func getProductConditionByType(ctx *gin.Context, t int) response.ProductConditio
 }
 
 // CreateProduct
-func CreateProduct(req request.CreateProduct, ctx *gin.Context) (model.Product, error) {
+func CreateProduct(req request.CreateProduct, tenancyId uint) (model.Product, error) {
 
 	var product model.Product
 	product.BaseProduct = req.BaseProduct
-	product.SysTenancyID = multi.GetTenancyId(ctx)
+	product.SysTenancyID = tenancyId
 	product.SliderImage = strings.Join(req.SliderImages, ",")
 	product.ProductCategoryID = req.CateId
 	product.IsHot = g.StatusFalse
@@ -338,6 +338,7 @@ func ForceDeleteProduct(id uint) error {
 
 // GetProductInfoList
 func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]response.ProductList, int64, error) {
+	tenancyId := multi.GetTenancyId(ctx)
 	var productList []response.ProductList
 	var total int64
 	limit := info.PageSize
@@ -362,7 +363,7 @@ func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]respo
 	}
 
 	if multi.IsTenancy(ctx) {
-		db = db.Where("products.sys_tenancy_id = ?", multi.GetTenancyId(ctx))
+		db = db.Where("products.sys_tenancy_id = ?", tenancyId)
 	}
 	if info.Keyword != "" {
 		db = db.Where(g.TENANCY_DB.Where("products.store_name like ?", info.Keyword+"%").Or("products.store_info like ?", info.Keyword+"%").Or("products.keyword like ?", info.Keyword+"%").Or("products.bar_code like ?", info.Keyword+"%"))
@@ -370,7 +371,7 @@ func GetProductInfoList(info request.ProductPageInfo, ctx *gin.Context) ([]respo
 
 	// 平台分类id
 	if info.ProductCategoryId > 0 {
-		productIds, err := getProductIdsByProductCategoryId(info.ProductCategoryId, multi.GetTenancyId(ctx))
+		productIds, err := getProductIdsByProductCategoryId(info.ProductCategoryId, tenancyId)
 		if err != nil {
 			return productList, total, err
 		}

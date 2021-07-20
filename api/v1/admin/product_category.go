@@ -44,7 +44,7 @@ func CreateProductCategory(ctx *gin.Context) {
 		return
 	}
 
-	if returnCategory, err := service.CreateProductCategory(category, ctx); err != nil {
+	if returnCategory, err := service.CreateProductCategory(category, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {

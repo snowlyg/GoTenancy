@@ -39,7 +39,7 @@ func UpdateAutoLabel(ctx *gin.Context) {
 		return
 	}
 	label.SysTenancyID = multi.GetTenancyId(ctx)
-	if err := service.UpdateAutoLabel(label, req.Id, ctx); err != nil {
+	if err := service.UpdateAutoLabel(label, req.Id); err != nil {
 		g.TENANCY_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败:"+err.Error(), ctx)
 	} else {
@@ -54,7 +54,7 @@ func GetAutoLabelList(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetAutoUserLabelInfoList(pageInfo, ctx); err != nil {
+	if list, total, err := service.GetAutoUserLabelInfoList(pageInfo, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -74,7 +74,7 @@ func DeleteAutoLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.DeleteAutoLabel(req.Id, ctx); err != nil {
+	if err := service.DeleteAutoLabel(req.Id, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败:"+err.Error(), ctx)
 	} else {

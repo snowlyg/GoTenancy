@@ -1,18 +1,23 @@
 package response
 
 import (
+	"time"
+
 	"github.com/snowlyg/go-tenancy/model"
 )
 
 type GeneralUser struct {
 	TenancyResponse
-	Uid           uint     `json:"uid"`
-	Username      string   `json:"userName"`
-	AuthorityName string   `json:"authorityName"`
-	AuthorityType int      `json:"authorityType"`
-	AuthorityId   string   `json:"authorityId"`
-	GroupName     string   `json:"groupName"`
-	Label         []string `gorm:"-" json:"label"`
+	Uid           uint      `json:"uid"`
+	Username      string    `json:"userName"`
+	AuthorityName string    `json:"authorityName"`
+	AuthorityType int       `json:"authorityType"`
+	AuthorityId   string    `json:"authorityId"`
+	FirstPayTime  time.Time `json:"firstPayTime"`
+	LastPayTime   time.Time `json:"lastPayTime"`
+	GroupName     string    `json:"groupName"`
+	LabelId       string    `json:"labelId"`
+	Label         []string  `gorm:"-" json:"label"`
 
 	model.BaseGeneralInfo
 }

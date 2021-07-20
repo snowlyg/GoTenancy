@@ -189,16 +189,16 @@ func GetTenancyCount() (gin.H, error) {
 }
 
 // GetTenancyInfo
-func GetTenancyInfo(ctx *gin.Context) (response.TenancyInfo, error) {
+func GetTenancyInfo(tenancyId uint) (response.TenancyInfo, error) {
 	var info response.TenancyInfo
-	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Find(&info).Error
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", tenancyId).Find(&info).Error
 	return info, err
 }
 
 // GetTenancyCopyCount
-func GetTenancyCopyCount(ctx *gin.Context) (int64, error) {
+func GetTenancyCopyCount(tenancyId uint) (int64, error) {
 	var copyProductNum int64
-	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", multi.GetTenancyId(ctx)).Select("copy_product_num").Find(&copyProductNum).Error
+	err := g.TENANCY_DB.Model(&model.SysTenancy{}).Where("id = ?", tenancyId).Select("copy_product_num").Find(&copyProductNum).Error
 	return copyProductNum, err
 }
 

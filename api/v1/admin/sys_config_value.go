@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -23,7 +24,7 @@ func SaveConfigValue(ctx *gin.Context) {
 		return
 	}
 
-	if err := service.SaveConfigValue(config, req.Cate, ctx); err != nil {
+	if err := service.SaveConfigValue(config, req.Cate, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("操作失败!", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {

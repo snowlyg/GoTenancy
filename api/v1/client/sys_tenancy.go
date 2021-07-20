@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -31,7 +32,7 @@ func UpdateClientTenancy(ctx *gin.Context) {
 
 // GetTenancyCopyCount
 func GetTenancyCopyCount(ctx *gin.Context) {
-	if copyProductNum, err := service.GetTenancyCopyCount(ctx); err != nil {
+	if copyProductNum, err := service.GetTenancyCopyCount(multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {
@@ -43,7 +44,7 @@ func GetTenancyCopyCount(ctx *gin.Context) {
 
 // GetTenancyInfo 获取Tenancy对应状态数量
 func GetTenancyInfo(ctx *gin.Context) {
-	if tenancies, err := service.GetTenancyInfo(ctx); err != nil {
+	if tenancies, err := service.GetTenancyInfo(multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

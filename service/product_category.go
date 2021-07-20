@@ -47,13 +47,13 @@ func GetProductCategoryMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // CreateProductCategory
-func CreateProductCategory(productCategory model.ProductCategory, ctx *gin.Context) (model.ProductCategory, error) {
+func CreateProductCategory(productCategory model.ProductCategory, tenancyId uint) (model.ProductCategory, error) {
 	err := g.TENANCY_DB.Where("cate_name = ?", productCategory.CateName).First(&productCategory).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return productCategory, errors.New("名称已被注冊")
 	}
 
-	productCategory.SysTenancyID = multi.GetTenancyId(ctx)
+	productCategory.SysTenancyID = tenancyId
 	err = g.TENANCY_DB.Create(&productCategory).Error
 	return productCategory, err
 }
@@ -102,7 +102,7 @@ func getProductCategoryMap(tenancyId uint) (map[int32][]response.ProductCategory
 	var productCategoryList []response.ProductCategory
 	treeMap := make(map[int32][]response.ProductCategory)
 	db := g.TENANCY_DB.Model(&model.ProductCategory{})
-	if tenancyId >= 0 {
+	if int(tenancyId) >= 0 {
 		db = db.Where("sys_tenancy_id = ?", tenancyId)
 	}
 	err := db.Order("sort").Find(&productCategoryList).Error

@@ -46,7 +46,7 @@ func (a *admin) Init() error {
 		if err := tx.Create(&users).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
-		if err := tx.Model(&userUserLabels).Create(&userUserLabels).Error; err != nil { // 遇到错误时回滚事务
+		if err := tx.Model(&model.UserUserLabel{}).Create(&userUserLabels).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
 		color.Info.Println("\n[Mysql] --> sys_users 表初始数据成功!")

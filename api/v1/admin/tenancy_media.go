@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -32,7 +33,7 @@ func UploadFile(ctx *gin.Context) {
 		response.FailWithMessage("接收文件失败", ctx)
 		return
 	}
-	file, err := service.UploadFile(header, noSave, ctx) // 文件上传后拿到文件路径
+	file, err := service.UploadFile(header, noSave, multi.GetTenancyId(ctx)) // 文件上传后拿到文件路径
 	if err != nil {
 		g.TENANCY_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", ctx)

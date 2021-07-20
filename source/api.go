@@ -309,6 +309,11 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/userLabel/auto/updateUserLabel/:id", Description: "更新用户标签", ApiGroup: "userAutoLabelClient", Method: "PUT"},
 	{Path: "/v1/merchant/userLabel/auto/deleteUserLabel/:id", Description: "删除用户标签", ApiGroup: "userAutoLabelClient", Method: "DELETE"},
 
+	// 用户管理
+	{Path: "/v1/merchant/cuser/getGeneralList", Description: "获取c用户列表", ApiGroup: "cuserClient", Method: "POST"},
+	{Path: "/v1/merchant/cuser/getGeneralDetail/:id", Description: "获取c用户列表", ApiGroup: "cuserClient", Method: "GET"},
+	{Path: "/v1/merchant/cuser/getOrderList/:id", Description: "消费列表", ApiGroup: "cuserClient", Method: "POST"},
+
 	//物流信息
 	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},
 

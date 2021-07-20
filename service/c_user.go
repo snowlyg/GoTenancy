@@ -11,6 +11,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
+	"github.com/snowlyg/multi"
 )
 
 func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
@@ -32,7 +33,7 @@ func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.Rule[7].Options = groupOpts
-	opts, err := GetUserLabelOptions(ctx)
+	opts, err := GetUserLabelOptions(multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
@@ -137,7 +138,7 @@ func BatchSetUserLabelMap(ids string, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.SetAction("/cuser/batchSetUserLabel", ctx)
-	opts, err := GetUserLabelOptions(ctx)
+	opts, err := GetUserLabelOptions(multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
@@ -197,7 +198,7 @@ func SetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 		return form, err
 	}
 	form.SetAction(fmt.Sprintf("%s/%d", "/cuser/setUserLabel", id), ctx)
-	opts, err := GetUserLabelOptions(ctx)
+	opts, err := GetUserLabelOptions(multi.GetTenancyId(ctx))
 	if err != nil {
 		return form, err
 	}
@@ -290,6 +291,7 @@ func GetGeneralDetail(id uint) (response.GeneralUserDetail, error) {
 
 // GetGeneralInfoList 分页获取数据
 func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response.GeneralUser, int64, error) {
+	tenancyId := multi.GetTenancyId(ctx)
 	var userList []response.GeneralUser
 	var total int64
 	limit := info.PageSize
@@ -300,12 +302,18 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 		return userList, 0, err
 	}
 
-	db := g.TENANCY_DB.Model(&model.SysUser{}).
-		Select("sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name").
-		Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
+	db := g.TENANCY_DB.Model(&model.SysUser{})
+	if multi.IsTenancy(ctx) {
+		db = db.Select("general_infos.sex,general_infos.nick_name,general_infos.avatar_url,sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name,user_merchants.first_pay_time,user_merchants.last_pay_time,user_merchants.label_id").
+			Joins("left join user_merchants on user_merchants.sys_user_id = sys_users.id and user_merchants.sys_tenancy_id = ?", tenancyId)
+	} else {
+		db = db.Select("sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name")
+	}
+	db = db.Joins("left join general_infos on general_infos.sys_user_id = sys_users.id").
 		Joins("left join sys_authorities on sys_authorities.authority_id = sys_users.authority_id").
 		Joins("left join user_groups on general_infos.group_id = user_groups.id").
 		Where("sys_users.authority_id IN (?)", generalAuthorityIds)
+
 	if info.UserTimeType != "" && info.UserTime != "" {
 		userTimes := strings.Split(info.UserTime, "-")
 		start, err := time.Parse("2006/01/02", userTimes[0])
@@ -334,7 +342,7 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 		db = db.Where("general_infos.group_id = ?", info.GroupId)
 	}
 	if info.LabelId != "" {
-		userIds, err := GetUserIdsByLabelId(info.LabelId)
+		userIds, err := GetUserIdsByLabelId(info.LabelId, tenancyId)
 		if err != nil {
 			return userList, total, err
 		}
@@ -345,6 +353,9 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 	}
 	if info.NickName != "" {
 		db = db.Where("general_infos.nick_name like ?", info.NickName+"%")
+	}
+	if info.UserType != "" {
+		db = db.Where("general_infos.user_type = ?", info.UserType)
 	}
 
 	if limit > 0 {
@@ -361,30 +372,38 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 	}
 
 	if len(userList) > 0 {
-		userIds := []uint{}
-		for _, user := range userList {
-			userIds = append(userIds, user.Uid)
-		}
-		userLabels, err := GetUserLabelByIds(userIds, ctx)
-		fmt.Println(userLabels)
+		userList, err = getCuserLabels(userList, tenancyId)
 		if err != nil {
 			return userList, total, err
-		}
-		for i := 0; i < len(userList); i++ {
-			for _, userLabel := range userLabels {
-				if userLabel.SysUserID == userList[i].Uid {
-					userList[i].Label = append(userList[i].Label, userLabel.LabelName)
-				}
-			}
 		}
 	}
 
 	return userList, total, err
 }
 
-func GetUserIdsByLabelId(labelId string) ([]uint, error) {
+func getCuserLabels(userList []response.GeneralUser, tenancyId uint) ([]response.GeneralUser, error) {
+	userIds := []uint{}
+	for _, user := range userList {
+		userIds = append(userIds, user.Uid)
+	}
+	userLabels, err := GetUserLabelByUserIds(userIds, tenancyId)
+	if err != nil {
+		return userList, err
+	}
+	for i := 0; i < len(userList); i++ {
+		userList[i].Label = []string{}
+		for _, userLabel := range userLabels {
+			if userLabel.SysUserID == userList[i].Uid {
+				userList[i].Label = append(userList[i].Label, userLabel.LabelName)
+			}
+		}
+	}
+	return userList, nil
+}
+
+func GetUserIdsByLabelId(labelId string, tenanacyId uint) ([]uint, error) {
 	var userIds []uint
-	err := g.TENANCY_DB.Model(&model.UserUserLabel{}).Select("sys_user_id").Where("user_label_id = ?", labelId).Find(&userIds).Error
+	err := g.TENANCY_DB.Model(&model.UserUserLabel{}).Select("sys_user_id").Where("user_label_id = ?", labelId).Where("sys_tenancy_id = ?", tenanacyId).Find(&userIds).Error
 	if err != nil {
 		return userIds, fmt.Errorf("get user ids by label id %w", err)
 	}

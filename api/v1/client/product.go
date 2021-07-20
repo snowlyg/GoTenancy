@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -27,7 +28,7 @@ func CreateProduct(ctx *gin.Context) {
 		return
 	}
 
-	if returnProduct, err := service.CreateProduct(product, ctx); err != nil {
+	if returnProduct, err := service.CreateProduct(product, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("添加失败:"+err.Error(), ctx)
 	} else {

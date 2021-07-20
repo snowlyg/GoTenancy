@@ -4,12 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/go-tenancy/g"
 	"github.com/snowlyg/go-tenancy/model"
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
-	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
 
@@ -42,13 +40,13 @@ func CreateAutoLabel(labelRule request.LabelRule) (request.LabelRule, error) {
 }
 
 // GetLabelRuleById
-func GetLabelRuleById(id uint, ctx *gin.Context) (response.LabelRule, error) {
+func GetLabelRuleById(id uint, tenancyId uint) (response.LabelRule, error) {
 	var labelRule response.LabelRule
 	err := g.TENANCY_DB.Model(&model.UserLabel{}).
 		Select("label_rules.*,user_labels.label_name").
 		Joins("left join label_rules on label_rules.user_label_id = user_labels.id").
 		Where("label_rules.id = ?", id).
-		Where("user_labels.sys_tenancy_id", multi.GetTenancyId(ctx)).
+		Where("user_labels.sys_tenancy_id", tenancyId).
 		Find(&labelRule).Error
 	if err != nil {
 		return labelRule, fmt.Errorf("get label rule %w", err)
@@ -57,8 +55,8 @@ func GetLabelRuleById(id uint, ctx *gin.Context) (response.LabelRule, error) {
 }
 
 // UpdateAutoLabel
-func UpdateAutoLabel(labelRule request.LabelRule, id uint, ctx *gin.Context) error {
-	rule, err := GetLabelRuleById(id, ctx)
+func UpdateAutoLabel(labelRule request.LabelRule, id uint) error {
+	rule, err := GetLabelRuleById(id, labelRule.SysTenancyID)
 	if err != nil {
 		return err
 	}
@@ -84,8 +82,8 @@ func UpdateAutoLabel(labelRule request.LabelRule, id uint, ctx *gin.Context) err
 }
 
 // DeleteAutoLabel
-func DeleteAutoLabel(id uint, ctx *gin.Context) error {
-	rule, err := GetLabelRuleById(id, ctx)
+func DeleteAutoLabel(id uint, tenancyId uint) error {
+	rule, err := GetLabelRuleById(id, tenancyId)
 	if err != nil {
 		return err
 	}
@@ -103,7 +101,7 @@ func DeleteAutoLabel(id uint, ctx *gin.Context) error {
 	})
 }
 
-func GetAutoUserLabelInfoList(info request.UserLabelPageInfo, ctx *gin.Context) ([]response.LabelRule, int64, error) {
+func GetAutoUserLabelInfoList(info request.UserLabelPageInfo, tenancyId uint) ([]response.LabelRule, int64, error) {
 	var userLabelList []response.LabelRule
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
@@ -114,7 +112,10 @@ func GetAutoUserLabelInfoList(info request.UserLabelPageInfo, ctx *gin.Context) 
 	if info.LabelType > 0 {
 		db = db.Where("user_labels.type = ?", info.LabelType)
 	}
-	db = db.Where("user_labels.sys_tenancy_id", multi.GetTenancyId(ctx))
+	if info.Keyword != "" {
+		db = db.Where("user_labels.type = ?", info.LabelType)
+	}
+	db = db.Where("user_labels.sys_tenancy_id", tenancyId)
 	err := db.Count(&total).Error
 	if err != nil {
 		return userLabelList, total, err
