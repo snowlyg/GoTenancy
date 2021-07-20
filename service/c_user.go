@@ -17,7 +17,7 @@ import (
 func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	user, err := GetGeneralDetail(id)
+	user, err := GetGeneralDetail(id, multi.GetTenancyId(ctx))
 	if err != nil {
 		return Form{}, err
 	}
@@ -43,13 +43,13 @@ func UpdateUserMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // UpdateUser
-func UpdateUser(id uint, req response.GeneralUserDetail) error {
+func UpdateUser(id, tenancyId uint, req response.GeneralUserDetail) error {
 	update := map[string]interface{}{"address": req.Address, "birthday": req.Birthday, "id_card": req.IdCard, "group_id": req.GroupId, "mark": req.Mark, "phone": req.Phone, "real_name": req.RealName}
 	err := g.TENANCY_DB.Model(&model.GeneralInfo{}).Where("sys_user_id = ?", id).Updates(update).Error
 	if err != nil {
 		return err
 	}
-	err = SetUserLabel(id, req.LabelIds)
+	err = SetUserLabel(id, tenancyId, req.LabelIds)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func UpdateUser(id uint, req response.GeneralUserDetail) error {
 func SetNowMoneyMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	user, err := GetGeneralDetail(id)
+	user, err := GetGeneralDetail(id, multi.GetTenancyId(ctx))
 	if err != nil {
 		return Form{}, err
 	}
@@ -73,8 +73,8 @@ func SetNowMoneyMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // SetNowMoney
-func SetNowMoney(id uint, req request.SetNowMoney) error {
-	user, err := GetGeneralDetail(id)
+func SetNowMoney(id, tenancyId uint, req request.SetNowMoney) error {
+	user, err := GetGeneralDetail(id, tenancyId)
 	if err != nil {
 		return err
 	}
@@ -95,9 +95,9 @@ func SetNowMoney(id uint, req request.SetNowMoney) error {
 	return nil
 }
 
-func GetUserLabelIdsByUserId(id uint) ([]uint, error) {
+func GetUserLabelIdsByUserId(id, tenancyId uint) ([]uint, error) {
 	var labelIds []uint
-	err := g.TENANCY_DB.Model(&model.UserUserLabel{}).Select("user_label_id").Where("sys_user_id = ?", id).Find(&labelIds).Error
+	err := g.TENANCY_DB.Model(&model.UserUserLabel{}).Select("user_label_id").Where("sys_user_id = ?", id).Where("sys_tenancy_id =?", tenancyId).Find(&labelIds).Error
 	if err != nil {
 		return labelIds, fmt.Errorf("get label ids %w", err)
 	}
@@ -147,9 +147,9 @@ func BatchSetUserLabelMap(ids string, ctx *gin.Context) (Form, error) {
 }
 
 // BatchSetUserLabel
-func BatchSetUserLabel(req request.SetUserLabel) error {
+func BatchSetUserLabel(req request.SetUserLabel, tenancyId uint) error {
 	for _, userId := range req.Ids {
-		SetUserLabel(userId, req.LabelId)
+		SetUserLabel(userId, tenancyId, req.LabelId)
 	}
 	return nil
 }
@@ -157,7 +157,7 @@ func BatchSetUserLabel(req request.SetUserLabel) error {
 func SetUserGroupMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	user, err := GetGeneralDetail(id)
+	user, err := GetGeneralDetail(id, multi.GetTenancyId(ctx))
 	if err != nil {
 		return Form{}, err
 	}
@@ -187,7 +187,7 @@ func SetUserGroup(id uint, req request.SetUserGroup) error {
 func SetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 	var form Form
 	var formStr string
-	user, err := GetGeneralDetail(id)
+	user, err := GetGeneralDetail(id, multi.GetTenancyId(ctx))
 	if err != nil {
 		return Form{}, err
 	}
@@ -208,8 +208,8 @@ func SetUserLabelMap(id uint, ctx *gin.Context) (Form, error) {
 }
 
 // SetUserLabel
-func SetUserLabel(id uint, reqlabelIds []uint) error {
-	labelIds, err := GetUserLabelIdsByUserId(id)
+func SetUserLabel(id, tenancyId uint, reqlabelIds []uint) error {
+	labelIds, err := GetUserLabelIdsByUserId(id, tenancyId)
 	if err != nil {
 		return err
 	}
@@ -230,7 +230,7 @@ func SetUserLabel(id uint, reqlabelIds []uint) error {
 	}
 
 	if len(delIds) > 0 {
-		if err = g.TENANCY_DB.Where("sys_user_id = ?", id).Where("user_label_id in ?", delIds).Delete(&model.UserUserLabel{}).Error; err != nil {
+		if err = g.TENANCY_DB.Where("sys_user_id = ?", id).Where("sys_tenancy_id = ?", tenancyId).Where("user_label_id in ?", delIds).Delete(&model.UserUserLabel{}).Error; err != nil {
 			return fmt.Errorf("delete user_user_label %w", err)
 		}
 	}
@@ -253,9 +253,9 @@ func SetUserLabel(id uint, reqlabelIds []uint) error {
 	if len(addIds) > 0 {
 		var labels []model.UserUserLabel
 		for _, addId := range addIds {
-			labels = append(labels, model.UserUserLabel{UserLabelID: addId, SysUserID: id})
+			labels = append(labels, model.UserUserLabel{UserLabelID: addId, SysUserID: id, SysTenancyID: tenancyId})
 		}
-		if err = g.TENANCY_DB.Model(&model.UserUserLabel{}).Where("sys_user_id = ?", id).Where("user_label_id in ?", addIds).Create(&labels).Error; err != nil {
+		if err = g.TENANCY_DB.Model(&model.UserUserLabel{}).Where("sys_tenancy_id = ?", tenancyId).Where("sys_user_id = ?", id).Where("user_label_id in ?", addIds).Create(&labels).Error; err != nil {
 			return fmt.Errorf("create user_user_labels %w", err)
 		}
 	}
@@ -263,7 +263,7 @@ func SetUserLabel(id uint, reqlabelIds []uint) error {
 	return nil
 }
 
-func GetGeneralDetail(id uint) (response.GeneralUserDetail, error) {
+func GetGeneralDetail(id, tenancyId uint) (response.GeneralUserDetail, error) {
 	var user response.GeneralUserDetail
 	generalAuthorityIds, err := GetUserAuthorityIds()
 	if err != nil {
@@ -281,7 +281,7 @@ func GetGeneralDetail(id uint) (response.GeneralUserDetail, error) {
 		return user, fmt.Errorf("get general detail %w", err)
 	}
 
-	labelIds, err := GetUserLabelIdsByUserId(user.Uid)
+	labelIds, err := GetUserLabelIdsByUserId(user.Uid, tenancyId)
 	if err != nil {
 		return user, err
 	}
@@ -304,7 +304,7 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 
 	db := g.TENANCY_DB.Model(&model.SysUser{})
 	if multi.IsTenancy(ctx) {
-		db = db.Select("general_infos.sex,general_infos.nick_name,general_infos.avatar_url,sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name,user_merchants.first_pay_time,user_merchants.last_pay_time,user_merchants.label_id").
+		db = db.Select("general_infos.sex,general_infos.nick_name,general_infos.avatar_url,sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name,user_merchants.first_pay_time,user_merchants.last_pay_time").
 			Joins("left join user_merchants on user_merchants.sys_user_id = sys_users.id and user_merchants.sys_tenancy_id = ?", tenancyId)
 	} else {
 		db = db.Select("sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name")

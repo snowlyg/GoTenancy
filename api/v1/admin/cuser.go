@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -56,7 +57,7 @@ func UpdateUser(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.UpdateUser(req.Id, update); err != nil {
+	if err := service.UpdateUser(req.Id, multi.GetTenancyId(ctx), update); err != nil {
 		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
@@ -91,7 +92,7 @@ func SetNowMoney(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.SetNowMoney(req.Id, setNowMoney); err != nil {
+	if err := service.SetNowMoney(req.Id, multi.GetTenancyId(ctx), setNowMoney); err != nil {
 		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
@@ -151,7 +152,7 @@ func BatchSetUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.BatchSetUserLabel(setUserGroup); err != nil {
+	if err := service.BatchSetUserLabel(setUserGroup, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("设置失败", zap.Any("err", err))
 		response.FailWithMessage("设置失败:"+err.Error(), ctx)
 	} else {
@@ -221,7 +222,7 @@ func SetUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.SetUserLabel(req.Id, setUserLabel.LabelId); err != nil {
+	if err := service.SetUserLabel(req.Id, multi.GetTenancyId(ctx), setUserLabel.LabelId); err != nil {
 		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
@@ -236,7 +237,7 @@ func GetGeneralDetail(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if detail, err := service.GetGeneralDetail(req.Id); err != nil {
+	if detail, err := service.GetGeneralDetail(req.Id, multi.GetTenancyId(ctx)); err != nil {
 		g.TENANCY_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败:"+err.Error(), ctx)
 	} else {

@@ -16,7 +16,6 @@ type GeneralUser struct {
 	FirstPayTime  time.Time `json:"firstPayTime"`
 	LastPayTime   time.Time `json:"lastPayTime"`
 	GroupName     string    `json:"groupName"`
-	LabelId       string    `json:"labelId"`
 	Label         []string  `gorm:"-" json:"label"`
 
 	model.BaseGeneralInfo

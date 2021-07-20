@@ -12,7 +12,7 @@ type UserMerchant struct {
 
 	FirstPayTime time.Time `gorm:"column:first_pay_time;type:timestamp" json:"firstPayTime"`                           // 首次消费时间
 	LastPayTime  time.Time `gorm:"column:last_pay_time;type:timestamp" json:"lastPayTime"`                             // 最后一次消费时间
-	PayNum       uint      `gorm:"column:pay_num;type:int unsigned;not null;default:0" json:"payNum"`                  // 消费次数
+	PayCount     int       `gorm:"column:pay_count;type:int unsigned;not null;default:0" json:"payCount"`              // 消费次数
 	PayPrice     float64   `gorm:"column:pay_price;type:decimal(10,2) unsigned;not null;default:0.00" json:"payPrice"` // 消费金额
 	LastTime     time.Time `gorm:"column:last_time;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"lastTime"` // 最后一次访问时间
 	Status       int       `gorm:"column:status;type:tinyint unsigned;default:1" json:"status"`                        // 状态

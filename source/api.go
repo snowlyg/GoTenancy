@@ -313,6 +313,8 @@ var baseApis = []model.SysApi{
 	{Path: "/v1/merchant/cuser/getGeneralList", Description: "获取c用户列表", ApiGroup: "cuserClient", Method: "POST"},
 	{Path: "/v1/merchant/cuser/getGeneralDetail/:id", Description: "获取c用户列表", ApiGroup: "cuserClient", Method: "GET"},
 	{Path: "/v1/merchant/cuser/getOrderList/:id", Description: "消费列表", ApiGroup: "cuserClient", Method: "POST"},
+	{Path: "/v1/merchant/cuser/setUserLabel/:id", Description: "设置用户标签", ApiGroup: "cuserClient", Method: "POST"},
+	{Path: "/v1/merchant/cuser/setUserLabelMap/:id", Description: "设置用户标签表单", ApiGroup: "cuserClient", Method: "GET"},
 
 	//物流信息
 	{Path: "/v1/merchant/express/getExpressByCode/:code", Description: "物流信息", ApiGroup: "expressClient", Method: "GET"},

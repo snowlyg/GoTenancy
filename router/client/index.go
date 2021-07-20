@@ -193,9 +193,9 @@ func InitUserLabelRouter(Router *gin.RouterGroup) {
 func InitCUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("/cuser")
 	{
-		// 	UserRouter.GET("/setUserLabelMap/:id", client.SetUserLabelMap)        // 设置标签表单
-		// 	UserRouter.POST("/setUserLabel/:id", client.SetUserLabel)             // 设置标签
-		UserRouter.POST("/getOrderList/:id", client.GetUserOrderList) // 用户订单列表
-		UserRouter.POST("/getGeneralList", client.GetGeneralList)     // 分页获取c用户列表
+		UserRouter.GET("/setUserLabelMap/:id", client.SetUserLabelMap) // 设置标签表单
+		UserRouter.POST("/setUserLabel/:id", client.SetUserLabel)      // 设置标签
+		UserRouter.POST("/getOrderList/:id", client.GetUserOrderList)  // 用户订单列表
+		UserRouter.POST("/getGeneralList", client.GetGeneralList)      // 分页获取c用户列表
 	}
 }

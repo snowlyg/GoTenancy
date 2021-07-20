@@ -324,6 +324,8 @@ var carbines = []gormadapter.CasbinRule{
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/cuser/getGeneralList", V2: "POST"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/cuser/getGeneralDetail/:id", V2: "GET"},
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/cuser/getOrderList/:id", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/cuser/setUserLabel/:id", V2: "POST"},
+	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/cuser/setUserLabelMap/:id", V2: "GET"},
 
 	// 物流信息
 	{Ptype: "p", V0: TenancyAuthorityId, V1: "/v1/merchant/express/getExpressByCode/:code", V2: "GET"},

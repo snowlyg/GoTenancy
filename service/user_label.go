@@ -79,8 +79,9 @@ func GetUserLabelByUserIds(ids []uint, tenancyId uint) ([]response.UserLabelWith
 	var userLabels []response.UserLabelWithUserId
 	err := g.TENANCY_DB.Model(&model.UserLabel{}).
 		Select("user_labels.*,user_user_labels.sys_user_id").
-		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id and sys_tenancy_id =?", tenancyId).
+		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id and user_user_labels.sys_tenancy_id =?", tenancyId).
 		Where("user_user_labels.sys_user_id in ?", ids).
+		Where("user_user_labels.deleted_at != null").
 		Where("user_labels.sys_tenancy_id", tenancyId).
 		Find(&userLabels).Error
 	return userLabels, err
@@ -93,6 +94,7 @@ func GetUserLabelByIds(ids []string, tenancyId uint) ([]response.UserLabelWithUs
 		Select("user_labels.*,user_user_labels.sys_user_id").
 		Joins("left join user_user_labels on user_user_labels.user_label_id = user_labels.id").
 		Where("user_user_labels.user_label_id in ?", ids).
+		Where("user_user_labels.deleted_at != null").
 		Where("user_labels.sys_tenancy_id", tenancyId).
 		Find(&userLabels).Error
 	return userLabels, err

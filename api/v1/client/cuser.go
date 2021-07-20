@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/go-tenancy/model/request"
 	"github.com/snowlyg/go-tenancy/model/response"
 	"github.com/snowlyg/go-tenancy/service"
+	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 )
 
@@ -56,7 +57,7 @@ func SetUserLabel(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := service.SetUserLabel(req.Id, setUserLabel.LabelId); err != nil {
+	if err := service.SetUserLabel(req.Id, multi.GetTenancyId(ctx), setUserLabel.LabelId); err != nil {
 		g.TENANCY_LOG.Error("操作失败", zap.Any("err", err))
 		response.FailWithMessage("操作失败:"+err.Error(), ctx)
 	} else {
