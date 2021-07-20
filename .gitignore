@@ -2,7 +2,7 @@
 log/
 cmd/
 tmp/
-crmeb/
+model/old/
 uploads/
 .history/
 

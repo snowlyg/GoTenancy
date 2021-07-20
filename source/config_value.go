@@ -15,7 +15,7 @@ var configValues = []model.SysConfigValue{
 	{ConfigKey: "site_url", Value: "http://127.0.0.1:8089/", SysTenancyID: 0},
 	{ConfigKey: "site_name", Value: "GOTENANCY\u591a\u5546\u6237\u5546\u57ce", SysTenancyID: 0},
 	{ConfigKey: "site_open", Value: "1", SysTenancyID: 0},
-	{ConfigKey: "wechat_name", Value: "crmeb \u591a\u5546\u6237", SysTenancyID: 0},
+	{ConfigKey: "wechat_name", Value: "GOTENANCY \u591a\u5546\u6237", SysTenancyID: 0},
 	{ConfigKey: "set_phone", Value: "18741523695", SysTenancyID: 55},
 	{ConfigKey: "set_email", Value: "mkpmkmp", SysTenancyID: 55},
 	{ConfigKey: "wechat_qrcode", Value: "", SysTenancyID: 0},
