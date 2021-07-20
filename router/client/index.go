@@ -179,14 +179,12 @@ func InitUserLabelRouter(Router *gin.RouterGroup) {
 		UserLabelRouter.DELETE("/deleteUserLabel/:id", client.DeleteUserLabel)
 
 		// 自动标签
-		AutoLabelRouter := Router.Group("/auto")
+		AutoLabelRouter := UserLabelRouter.Group("/auto")
 		{
-			AutoLabelRouter.POST("/getLabelList", client.GetLabelList)
-			// UserLabelRouter.GET("/getCreateUserLabelMap", client.GetCreateUserLabelMap)
-			// UserLabelRouter.GET("/getUpdateUserLabelMap/:id", client.GetUpdateUserLabelMap)
-			// UserLabelRouter.POST("/createUserLabel", client.CreateUserLabel)
-			// UserLabelRouter.PUT("/updateUserLabel/:id", client.UpdateUserLabel)
-			// UserLabelRouter.DELETE("/deleteUserLabel/:id", client.DeleteUserLabel)
+			AutoLabelRouter.POST("/getLabelList", client.GetAutoLabelList)
+			AutoLabelRouter.POST("/createUserLabel", client.CreateAutoLabel)
+			AutoLabelRouter.PUT("/updateUserLabel/:id", client.UpdateAutoLabel)
+			AutoLabelRouter.DELETE("/deleteUserLabel/:id", client.DeleteAutoLabel)
 		}
 	}
 }

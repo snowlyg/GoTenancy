@@ -216,6 +216,7 @@ func InitDB(conf request.InitDB) error {
 		source.UserGroup,
 		source.UserLabel,
 		source.UserBill,
+		source.LabelRule,
 		source.Address,
 		source.Receipt,
 	)
