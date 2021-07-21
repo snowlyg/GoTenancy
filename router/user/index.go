@@ -5,6 +5,7 @@ import (
 	"github.com/snowlyg/go-tenancy/api/v1/user"
 )
 
+//收货地址
 func InitAddressRouter(Router *gin.RouterGroup) {
 	AddressRouter := Router.Group("/address")
 	{
@@ -16,6 +17,7 @@ func InitAddressRouter(Router *gin.RouterGroup) {
 	}
 }
 
+// 发票管理
 func InitReceiptRouter(Router *gin.RouterGroup) {
 	ReceiptRouter := Router.Group("/receipt")
 	{

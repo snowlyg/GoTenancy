@@ -51,6 +51,16 @@
       "label": "git push gitee",
       "type": "shell",
       "command": "git push gitee master"
+    },
+    {
+      "label": "apidoc",
+      "type": "shell",
+      "command": "apidoc -i api/v1/user/ -o resource/apidoc/ -t resource/doc/template/"
+    },
+    {
+      "label": "git push gitee",
+      "type": "shell",
+      "command": "git push gitee master"
     }
   ]
 }
