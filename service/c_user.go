@@ -304,7 +304,7 @@ func GetGeneralInfoList(info request.UserPageInfo, ctx *gin.Context) ([]response
 
 	db := g.TENANCY_DB.Model(&model.SysUser{})
 	if multi.IsTenancy(ctx) {
-		db = db.Select("general_infos.sex,general_infos.nick_name,general_infos.avatar_url,sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name,user_merchants.first_pay_time,user_merchants.last_pay_time").
+		db = db.Select("general_infos.sex,general_infos.nick_name,general_infos.avatar_url,general_infos.user_type,sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name,user_merchants.first_pay_time,user_merchants.last_pay_time").
 			Joins("left join user_merchants on user_merchants.sys_user_id = sys_users.id and user_merchants.sys_tenancy_id = ?", tenancyId)
 	} else {
 		db = db.Select("sys_users.id as uid,sys_users.username,sys_users.authority_id,sys_users.created_at,sys_users.updated_at, general_infos.*,sys_authorities.authority_name,sys_authorities.authority_type,sys_users.authority_id,user_groups.group_name")
